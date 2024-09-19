@@ -23,7 +23,6 @@ public class Player : MonoBehaviour
     float zRot;
 
     [SerializeField] Image reticle;
-    [SerializeField] float aimSense = 100;
     [SerializeField] LayerMask lockOnLayer;
     bool aimingViaGamepad = false;
     Vector2 reticlePosition;
@@ -41,8 +40,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        GetComponent<MeshRenderer>().materials[0].color = GameManager.playerBodyColor;
-        GetComponent<MeshRenderer>().materials[1].color = GameManager.playerStripeColor;
+        GetComponent<MeshRenderer>().materials[0].color = Settings.playerBodyColor;
+        GetComponent<MeshRenderer>().materials[1].color = Settings.playerStripeColor;
 
 
         health = GetComponent<HealthSystem>();
@@ -198,7 +197,7 @@ public class Player : MonoBehaviour
         //Aiming
         if(aimingViaGamepad) 
         {
-            reticlePosition += InputManager.input.actions.Gamepad_Aim.ReadValue<Vector2>() * aimSense * Time.deltaTime;
+            reticlePosition += InputManager.input.actions.Gamepad_Aim.ReadValue<Vector2>() * Settings.aimSense * Time.deltaTime;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;

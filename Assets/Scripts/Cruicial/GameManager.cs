@@ -10,8 +10,6 @@ public class GameManager : MonoBehaviour
     public GameObject[] playerUI;
 
     public static string seed = "Dota2 < League Of Legends";
-    public static Color playerBodyColor = Color.red;
-    public static Color playerStripeColor = new Color(1, 1, 0);
     public static bool gameOver = false;
     public static EventSystem eventSystem;
     public static SceneNodeManager sceneNodeManager;

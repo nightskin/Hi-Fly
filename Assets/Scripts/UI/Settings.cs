@@ -4,9 +4,13 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
+    public static Color playerBodyColor = Color.red;
+    public static Color playerStripeColor = new Color(1, 1, 0);
+    public static float aimSense = 100;
+
     [SerializeField] Slider[] playerBodySliders;
     [SerializeField] Slider[] playerStripeSliders;
-    [SerializeField] InputField seedInput;
+    [SerializeField] Slider aimSlider;
 
     [SerializeField] GameObject playerPreview;
     [SerializeField] Galaxy galaxyPreview;
@@ -21,9 +25,9 @@ public class Settings : MonoBehaviour
         sceneNodeManager = GetComponent<SceneNodeManager>();
     }
 
-    public void ChangeSeed()
+    public void ChangeAimSense()
     {
-        GameManager.seed = seedInput.text;
+        aimSense = aimSlider.value;
     }
 
     public void ExitSettings()
@@ -45,10 +49,10 @@ public class Settings : MonoBehaviour
         eventSystem.SetSelectedGameObject(obj);
     }
 
-    public void OpenWorldSettings()
+    public void OpenControlSettings()
     {
-        sceneNodeManager.SetActiveSceneNode("WorldSettings");
-        GameObject obj = sceneNodeManager.GetSceneNode("WorldSettings").transform.Find("GenerateButton").gameObject;
+        sceneNodeManager.SetActiveSceneNode("ControlSettings");
+        GameObject obj = sceneNodeManager.GetSceneNode("ControlSettings").transform.Find("GenerateButton").gameObject;
         eventSystem.SetSelectedGameObject(obj);
     }
     
@@ -66,7 +70,7 @@ public class Settings : MonoBehaviour
         float g = playerBodySliders[1].value;
         float b = playerBodySliders[2].value;
 
-        GameManager.playerBodyColor = new Color(r, g, b);
+        playerBodyColor = new Color(r, g, b);
         playerPreview.GetComponent<MeshRenderer>().materials[0].color = new Color(r, g, b);
     }
 
@@ -77,7 +81,7 @@ public class Settings : MonoBehaviour
         float g = playerStripeSliders[1].value;
         float b = playerStripeSliders[2].value;
 
-        GameManager.playerStripeColor = new Color(r, g, b);
+        playerStripeColor = new Color(r, g, b);
         playerPreview.GetComponent<MeshRenderer>().materials[1].color = new Color(r, g, b);
     }
 

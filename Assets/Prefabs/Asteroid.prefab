@@ -111,6 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 157dde9dac1cd964f81d24b5fab9ba60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0
-  tiles: 10
+  rockMeshes:
+  - {fileID: -3983063591393173388, guid: 3bac0213e43135f44abc1129a0fbee76, type: 3}
+  - {fileID: 5244915625381210605, guid: 081c80af61aa2bc4ea007db111f50578, type: 3}
+  - {fileID: 4013275331872712965, guid: 8b8dbaa987888b84f8d4018cdc862e9b, type: 3}
+  tiles: {x: 10, y: 10, z: 10}
   tileSize: 10

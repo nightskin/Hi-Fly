@@ -64,8 +64,12 @@ public class Planet : MonoBehaviour
         landColor = Util.RandomColor();
         waterColor = Util.RandomColor();
 
-        transform.GetChild(0).localScale = Vector3.one * (radius * 2 + (layers * 10));
-        transform.GetChild(0).GetComponent<MeshRenderer>().material.SetColor("_WaterColor", waterColor);
+        Transform water = transform.Find("Water");   
+        if(water)
+        {
+            water.localScale = Vector3.one * (radius * 2 + (layers * 10));
+            water.GetComponent<MeshRenderer>().material.SetColor("_WaterColor", waterColor);
+        }
         
         vertices.Clear();
         triangles.Clear();

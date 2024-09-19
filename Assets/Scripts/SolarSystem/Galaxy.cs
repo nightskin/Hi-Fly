@@ -14,12 +14,12 @@ public class Galaxy : MonoBehaviour
 
     List<GameObject> quadrants = new List<GameObject>();
 
-    void Awake()
+    void Start()
     {
         noise = new Noise(GameManager.seed.GetHashCode());
         Random.InitState(GameManager.seed.GetHashCode());
 
-        Generate();
+        ReGenerate();
     }
 
     public void Generate()
