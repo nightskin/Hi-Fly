@@ -5619,7 +5619,7 @@ GameObject:
   - component: {fileID: 5872480459892388688}
   - component: {fileID: 303286065443942689}
   m_Layer: 3
-  m_Name: PlayerShip
+  m_Name: Mesh
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
