@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
@@ -6,8 +7,8 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverMenu;
     public GameObject gamePauseMenu;
 
-    public static Player player;
-    public GameObject[] playerUI;
+    public static PlayerShip playerShip;
+    public GameObject[] playerUiElementsToHide;
 
     public static string seed = "Dota2 < League Of Legends";
     public static bool gameOver = false;
@@ -20,13 +21,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        playerShip = GameObject.FindWithTag("Player").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();
         bgm = GetComponent<AudioSource>();
 
-        InputManager.input.actions.Pause.performed += Pause_performed;
-        InputManager.input.actions.UnPause.performed += UnPause_performed;
+        InputManager.shipInput.actions.Pause.performed += Pause_performed;
+        InputManager.shipInput.actions.UnPause.performed += UnPause_performed;
     }
 
     private void UnPause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -65,9 +66,9 @@ public class GameManager : MonoBehaviour
                 if (!gameOverActive)
                 {
                     Cursor.lockState = CursorLockMode.None;
-                    for(int i = 0; i < playerUI.Length; i++) 
+                    for(int i = 0; i < playerUiElementsToHide.Length; i++) 
                     {
-                        playerUI[i].SetActive(false);
+                        playerUiElementsToHide[i].SetActive(false);
                     }
                     gameOverMenu.SetActive(true);
                     eventSystem.SetSelectedGameObject(gameOverMenu.transform.GetChild(1).gameObject);
@@ -79,8 +80,8 @@ public class GameManager : MonoBehaviour
 
     void OnDisable()
     {
-        InputManager.input.actions.Pause.performed -= Pause_performed;
-        InputManager.input.actions.UnPause.performed -= UnPause_performed;
+        InputManager.shipInput.actions.Pause.performed -= Pause_performed;
+        InputManager.shipInput.actions.UnPause.performed -= UnPause_performed;
     }
 
     public void Pause()
@@ -98,14 +99,14 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         gameOver = false;
-        StartCoroutine(LevelLoader.LoadLevel("Game"));
+        StartCoroutine(LevelLoader.instance.LoadLevel(SceneManager.GetActiveScene().buildIndex));
     }
 
     public void MainMenu()
     {
         Time.timeScale = 1;
         gameOver = false;
-        StartCoroutine(LevelLoader.LoadLevel("Title"));
+        StartCoroutine(LevelLoader.instance.LoadLevel("Title"));
     }
 
     public void QuitGame()

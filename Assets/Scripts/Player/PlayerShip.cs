@@ -3,11 +3,11 @@ using UnityEditor.TerrainTools;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class PlayerShip : MonoBehaviour
 {
     public HealthSystem health;
 
-    [SerializeField] PlayerCamera camera;
+    [SerializeField] ThirdPersonCamera camera;
     [SerializeField] TrailRenderer[] trails;
     Color thrustColor = Color.cyan;
     CharacterController controller;
@@ -49,19 +49,19 @@ public class Player : MonoBehaviour
         if (trails.Length == 0) trails = GetComponentsInChildren<TrailRenderer>();
         reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
         reticle.rectTransform.position = reticlePosition;
-        if (!camera) camera = Camera.main.GetComponent<PlayerCamera>();
+        if (!camera) camera = Camera.main.GetComponent<ThirdPersonCamera>();
         controller = GetComponent<CharacterController>();
         targetSpeed = baseSpeed;
 
 
-        InputManager.input.actions.Shoot.performed += Shoot_performed;
-        InputManager.input.actions.BarrelRoll.performed += BarrelRoll_performed;
-        InputManager.input.actions.Gamepad_Aim.performed += Gamepad_Aim_performed;
-        InputManager.input.actions.Mouse_Aim.performed += Mouse_Aim_performed;
-        InputManager.input.actions.CenterCrosshair.performed += CenterCrosshair_performed;
-        InputManager.input.actions.ToggleEngines.performed += ToggleEngines_performed;
-        InputManager.input.actions.Boost.performed += Boost_performed;
-        InputManager.input.actions.Boost.canceled += Boost_canceled;
+        InputManager.shipInput.actions.Shoot.performed += Shoot_performed;
+        InputManager.shipInput.actions.BarrelRoll.performed += BarrelRoll_performed;
+        InputManager.shipInput.actions.Gamepad_Aim.performed += Gamepad_Aim_performed;
+        InputManager.shipInput.actions.Mouse_Aim.performed += Mouse_Aim_performed;
+        InputManager.shipInput.actions.CenterCrosshair.performed += CenterCrosshair_performed;
+        InputManager.shipInput.actions.ToggleEngines.performed += ToggleEngines_performed;
+        InputManager.shipInput.actions.Boost.performed += Boost_performed;
+        InputManager.shipInput.actions.Boost.canceled += Boost_canceled;
 
     }
     
@@ -88,11 +88,11 @@ public class Player : MonoBehaviour
     
     void OnDisable()
     {
-        InputManager.input.actions.BarrelRoll.performed -= BarrelRoll_performed;
-        InputManager.input.actions.CenterCrosshair.performed -= CenterCrosshair_performed;
-        InputManager.input.actions.ToggleEngines.performed -= ToggleEngines_performed;
-        InputManager.input.actions.Boost.performed -= Boost_performed;
-        InputManager.input.actions.Boost.canceled -= Boost_canceled;
+        InputManager.shipInput.actions.BarrelRoll.performed -= BarrelRoll_performed;
+        InputManager.shipInput.actions.CenterCrosshair.performed -= CenterCrosshair_performed;
+        InputManager.shipInput.actions.ToggleEngines.performed -= ToggleEngines_performed;
+        InputManager.shipInput.actions.Boost.performed -= Boost_performed;
+        InputManager.shipInput.actions.Boost.canceled -= Boost_canceled;
     }
     
     private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -122,7 +122,7 @@ public class Player : MonoBehaviour
 
     private void ToggleEngines_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(!InputManager.input.actions.Boost.IsPressed())
+        if(!InputManager.shipInput.actions.Boost.IsPressed())
         {
             if (targetSpeed > 0)
             {
@@ -188,7 +188,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            zRot = InputManager.input.actions.Move.ReadValue<Vector2>().x * -35;
+            zRot = InputManager.shipInput.actions.Move.ReadValue<Vector2>().x * -35;
             Quaternion targetRot = Quaternion.Euler(camera.transform.localEulerAngles.x, camera.transform.localEulerAngles.y, zRot);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
         }
@@ -197,7 +197,7 @@ public class Player : MonoBehaviour
         //Aiming
         if(aimingViaGamepad) 
         {
-            reticlePosition += InputManager.input.actions.Gamepad_Aim.ReadValue<Vector2>() * Settings.aimSense * Time.deltaTime;
+            reticlePosition += InputManager.shipInput.actions.Gamepad_Aim.ReadValue<Vector2>() * Settings.aimSense * Time.deltaTime;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;
@@ -211,7 +211,7 @@ public class Player : MonoBehaviour
         }
 
         //Shooting
-        if (InputManager.input.actions.Shoot.IsPressed())
+        if (InputManager.shipInput.actions.Shoot.IsPressed())
         {
             if(shootTimer > 0)
             {

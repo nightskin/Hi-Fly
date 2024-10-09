@@ -6,7 +6,7 @@ public class Settings : MonoBehaviour
 {
     public static Color playerBodyColor = Color.red;
     public static Color playerStripeColor = new Color(1, 1, 0);
-    public static float aimSense = 100;
+    public static float aimSense = 1000;
 
     [SerializeField] Slider[] playerBodySliders;
     [SerializeField] Slider[] playerStripeSliders;
@@ -32,7 +32,7 @@ public class Settings : MonoBehaviour
 
     public void ExitSettings()
     {
-        StartCoroutine(LevelLoader.LoadLevel("Menu"));
+        StartCoroutine(LevelLoader.instance.LoadLevel("Menu"));
     }
 
     public void BackToGeneralSettings()
@@ -52,7 +52,7 @@ public class Settings : MonoBehaviour
     public void OpenControlSettings()
     {
         sceneNodeManager.SetActiveSceneNode("ControlSettings");
-        GameObject obj = sceneNodeManager.GetSceneNode("ControlSettings").transform.Find("GenerateButton").gameObject;
+        GameObject obj = sceneNodeManager.GetSceneNode("ControlSettings").transform.Find("AimSensitivity").gameObject;
         eventSystem.SetSelectedGameObject(obj);
     }
     

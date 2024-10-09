@@ -59,7 +59,7 @@ public class EnemyShip : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            Player player = other.GetComponent<Player>();
+            PlayerShip player = other.GetComponent<PlayerShip>();
             player.health.TakeDamage(attackPower);
             if(player.health.IsDead())
             {

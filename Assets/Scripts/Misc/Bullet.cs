@@ -88,7 +88,7 @@ public class Bullet : MonoBehaviour
                 }
                 else if (hit.transform.tag == "Player")
                 {
-                    Player player = hit.transform.GetComponent<Player>();
+                    PlayerShip player = hit.transform.GetComponent<PlayerShip>();
                     if(player)
                     {
                         if (player.evading)

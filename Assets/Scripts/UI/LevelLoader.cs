@@ -4,15 +4,29 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
-    static Animator animator;
-    
+    public static LevelLoader instance { get; private set; }
+
+    Animator animator;
+
+    private void Awake()
+    {
+        if(instance != null && instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+
     void Start()
     {
         animator = GetComponent<Animator>();
         DontDestroyOnLoad(gameObject);
     }
 
-    public static IEnumerator LoadLevel(string name, float duration = 1)
+    public IEnumerator LoadLevel(string name, float duration = 1)
     {
         animator.SetTrigger("start");
 
@@ -21,4 +35,12 @@ public class LevelLoader : MonoBehaviour
         SceneManager.LoadScene(name);
     }
 
+    public IEnumerator LoadLevel(int index, float duration = 1) 
+    {
+        animator.SetTrigger("start");
+
+        yield return new WaitForSeconds(duration);
+
+        SceneManager.LoadScene(index);
+    }
 }

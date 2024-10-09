@@ -7,7 +7,7 @@ public class TitleScreen : MonoBehaviour
     {
         if(Input.anyKeyDown)
         {
-            StartCoroutine(LevelLoader.LoadLevel("Menu"));
+            StartCoroutine(LevelLoader.instance.LoadLevel("Menu"));
         }
     }
 

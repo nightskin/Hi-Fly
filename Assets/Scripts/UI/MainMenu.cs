@@ -6,13 +6,13 @@ public class MainMenu : MonoBehaviour
 {
     public void OpenSettings()
     {
-        StartCoroutine(LevelLoader.LoadLevel("Settings"));
+        StartCoroutine(LevelLoader.instance.LoadLevel("Settings"));
     }
 
 
     public void PlayGame()
     {
-        StartCoroutine(LevelLoader.LoadLevel("Game"));
+        StartCoroutine(LevelLoader.instance.LoadLevel("Game"));
     }
 
 

@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public static PlayerInput input;
+    public static PlayerInput playerInput;
+    public static PlayerShipInput shipInput;
 
     void Awake()
     {
-        input = new PlayerInput();
-        input.Enable();
+        playerInput = new PlayerInput();
+        playerInput.Enable();
+
+        shipInput = new PlayerShipInput();
+        shipInput.Enable();
     }
 }
