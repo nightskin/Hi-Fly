@@ -4,10 +4,10 @@ using UnityEngine.UI;
 public class HealthSystem : MonoBehaviour
 {
     [SerializeField] Slider healthBar;
-    [SerializeField] int maxHP = 100;
+    [SerializeField] float maxHP = 100;
     [SerializeField] Material[] hitMaterial;
     
-    int hp;
+    float hp;
     bool flickering = false;
     float flickerTimer;
     float damageFlicker = 0.05f;
@@ -46,17 +46,17 @@ public class HealthSystem : MonoBehaviour
         }
     }
     
-    public int GetHealth()
+    public float GetHealth()
     {
         return hp;
     }
 
-    public int GetMaxHealth()
+    public float GetMaxHealth()
     {
         return maxHP;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         hp -= damage;
         if(hp < 0) 
@@ -74,7 +74,7 @@ public class HealthSystem : MonoBehaviour
         flickering = true;
     }
 
-    public void Heal(int amount)
+    public void Heal(float amount)
     {
         hp += amount;
         if(hp > maxHP)

@@ -12,6 +12,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     Vector2 cameraRot;
 
+
     void Start()
     {
         if(!boostEffect) boostEffect = transform.GetChild(0).GetComponent<ParticleSystem>();

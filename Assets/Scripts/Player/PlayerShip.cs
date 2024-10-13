@@ -5,6 +5,13 @@ using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
 {
+    public enum Weapon
+    {
+        BULLET,
+        LAZER
+    }
+    public Weapon equipped;
+
     public HealthSystem health;
 
     [SerializeField] ThirdPersonCamera camera;
@@ -30,6 +37,9 @@ public class PlayerShip : MonoBehaviour
     
     [SerializeField] float fireRate = 0.1f;
     ObjectPool bulletPool;
+    ObjectPool lazerPool;
+
+    GameObject lazer = null;
     float shootTimer = 0;
 
     public bool evading = false;
@@ -46,6 +56,7 @@ public class PlayerShip : MonoBehaviour
 
         health = GetComponent<HealthSystem>();
         bulletPool = GameObject.Find("BulletPool").GetComponent<ObjectPool>();
+        lazerPool = GameObject.Find("LazerPool").GetComponent<ObjectPool>();
         if (trails.Length == 0) trails = GetComponentsInChildren<TrailRenderer>();
         reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
         reticle.rectTransform.position = reticlePosition;
@@ -55,6 +66,7 @@ public class PlayerShip : MonoBehaviour
 
 
         InputManager.shipInput.actions.Shoot.performed += Shoot_performed;
+        InputManager.shipInput.actions.Shoot.canceled += Shoot_canceled;
         InputManager.shipInput.actions.BarrelRoll.performed += BarrelRoll_performed;
         InputManager.shipInput.actions.Gamepad_Aim.performed += Gamepad_Aim_performed;
         InputManager.shipInput.actions.Mouse_Aim.performed += Mouse_Aim_performed;
@@ -64,7 +76,9 @@ public class PlayerShip : MonoBehaviour
         InputManager.shipInput.actions.Boost.canceled += Boost_canceled;
 
     }
-    
+
+
+
     void FixedUpdate()
     {
         Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
@@ -117,7 +131,22 @@ public class PlayerShip : MonoBehaviour
 
     private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        shootTimer = 0;
+        if(equipped == Weapon.BULLET)
+        {
+            shootTimer = 0;
+        }
+        else if(equipped == Weapon.LAZER)
+        {
+            FireLazer();
+        }
+    }
+
+    private void Shoot_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        if(equipped == Weapon.LAZER)
+        {
+            lazer.GetComponent<Lazer>().DeSpawn();
+        }
     }
 
     private void ToggleEngines_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -163,7 +192,7 @@ public class PlayerShip : MonoBehaviour
     {
         aimingViaGamepad = false;
     }
-
+  
     void Controls()
     {
         //Forward Movement
@@ -213,14 +242,21 @@ public class PlayerShip : MonoBehaviour
         //Shooting
         if (InputManager.shipInput.actions.Shoot.IsPressed())
         {
-            if(shootTimer > 0)
+            if(equipped == Weapon.BULLET)
             {
-                shootTimer -= Time.deltaTime;
+                if (shootTimer > 0)
+                {
+                    shootTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    FireBullet();
+                    shootTimer = fireRate;
+                }
             }
-            else
+            else if(equipped == Weapon.LAZER)
             {
-                FireBullet();
-                shootTimer = fireRate;
+                MoveLazer();
             }
         }
     }
@@ -245,7 +281,7 @@ public class PlayerShip : MonoBehaviour
                 Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    if(hit.transform.gameObject == gameObject)
+                    if(hit.transform.gameObject == b.owner)
                     {
                         b.direction = ray.direction;
                     }
@@ -259,6 +295,28 @@ public class PlayerShip : MonoBehaviour
                     b.direction = ray.direction;
                 }
             }
+        }
+    }
+
+    void FireLazer()
+    {
+        lazer = lazerPool.Spawn(Vector3.zero);
+        if(lazer != null)
+        {
+            Lazer l = lazer.GetComponent<Lazer>();
+            l.owner = gameObject;
+            Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
+            l.direction = ray.direction;
+        }
+    }
+
+    void MoveLazer()
+    {
+        if (lazer != null)
+        {
+            Lazer l = lazer.GetComponent<Lazer>();
+            Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
+            l.direction = ray.direction;
         }
     }
 

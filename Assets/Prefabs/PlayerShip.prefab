@@ -5675,7 +5675,7 @@ MeshRenderer:
   - {fileID: 2100000, guid: 17d26b364a9920e4f9ae8fc489e3b436, type: 2}
   - {fileID: 954267526019623431, guid: b4c6393dee009b7488a2230e9ff33484, type: 3}
   - {fileID: 954267526019623431, guid: b4c6393dee009b7488a2230e9ff33484, type: 3}
-  - {fileID: -1580535799172915004, guid: 0c5101443ff519545a845198d6f12cdf, type: 3}
+  - {fileID: 2100000, guid: 28f6cd2f8fb00ef4888a53971a72a132, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5851,6 +5851,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  equipped: 0
   health: {fileID: 8131623140777354630}
   camera: {fileID: 8504905812486363887}
   trails:
@@ -7137,9 +7138,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -7496,7 +7497,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 20000
+  far clip plane: 5000
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5
