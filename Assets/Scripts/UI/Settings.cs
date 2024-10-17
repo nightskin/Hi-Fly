@@ -11,6 +11,8 @@ public class Settings : MonoBehaviour
     [SerializeField] Slider[] playerBodySliders;
     [SerializeField] Slider[] playerStripeSliders;
     [SerializeField] Slider aimSlider;
+    [SerializeField] Slider musicVolume;
+    [SerializeField] Slider sfxVolume;
 
     [SerializeField] GameObject playerPreview;
     [SerializeField] Galaxy galaxyPreview;
@@ -85,4 +87,13 @@ public class Settings : MonoBehaviour
         playerPreview.GetComponent<MeshRenderer>().materials[1].color = new Color(r, g, b);
     }
 
+    public void ChangeBGMVolume()
+    {
+
+    }
+
+    public void ChangeSFXVolume()
+    {
+        
+    }
 }

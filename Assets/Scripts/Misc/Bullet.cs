@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-
+    AudioSource sfx;
+    [SerializeField] AudioClip shootSound;
+    [SerializeField] AudioClip hitSound;
     public float range = 2;
     public GameObject owner = null;
     public int damage = 10;
@@ -20,6 +22,9 @@ public class Bullet : MonoBehaviour
 
     void OnEnable()
     {
+        sfx = GetComponent<AudioSource>();
+        sfx.clip = shootSound;
+        sfx.Play();
         homingTarget = null;
         direction = Vector3.zero;
         GetComponent<TrailRenderer>().Clear();
@@ -80,6 +85,8 @@ public class Bullet : MonoBehaviour
                 else if (hit.transform.tag == "Enemy")
                 {
                     HealthSystem health = hit.transform.GetComponent<HealthSystem>();
+                    sfx.clip = hitSound;
+                    sfx.Play();
                     if (health)
                     {
                         health.TakeDamage(damage);
@@ -98,6 +105,8 @@ public class Bullet : MonoBehaviour
                         }
                         else
                         {
+                            sfx.clip = hitSound;
+                            sfx.Play();
                             HealthSystem health = hit.transform.GetComponent<HealthSystem>();
                             if (health)
                             {
@@ -119,6 +128,7 @@ public class Bullet : MonoBehaviour
                         DeSpawn();
                     }
                 }
+
             }
         }
     }

@@ -159,6 +159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4671b1cbeeea7bf49b2d3f899a8394dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootSound: {fileID: 8300000, guid: cea60a9edf8d0cb44978ac5dba39bc31, type: 3}
+  hitSound: {fileID: 8300000, guid: 673b1d10e04d4da4b8cfc53eb2a28282, type: 3}
   range: 5
   owner: {fileID: 0}
   damage: 10
@@ -176,7 +178,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: cea60a9edf8d0cb44978ac5dba39bc31, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

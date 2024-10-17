@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public GameObject gamePauseMenu;
 
     public static PlayerShip playerShip;
-    public GameObject[] playerUiElementsToHide;
+    public GameObject[] playerUIToHideOnPause;
 
     public static string seed = "Dota2 < League Of Legends";
     public static bool gameOver = false;
@@ -66,9 +66,9 @@ public class GameManager : MonoBehaviour
                 if (!gameOverActive)
                 {
                     Cursor.lockState = CursorLockMode.None;
-                    for(int i = 0; i < playerUiElementsToHide.Length; i++) 
+                    for(int i = 0; i < playerUIToHideOnPause.Length; i++) 
                     {
-                        playerUiElementsToHide[i].SetActive(false);
+                        playerUIToHideOnPause[i].SetActive(false);
                     }
                     gameOverMenu.SetActive(true);
                     eventSystem.SetSelectedGameObject(gameOverMenu.transform.GetChild(1).gameObject);
@@ -87,12 +87,20 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0;
+        foreach(GameObject playerUI in playerUIToHideOnPause)
+        {
+            playerUI.SetActive(false);
+        }
         gamePauseMenu.SetActive(true);
     }
 
     public void Resume()
     {
         Time.timeScale = 1;
+        foreach (GameObject playerUI in playerUIToHideOnPause)
+        {
+            playerUI.SetActive(true);
+        }
         gamePauseMenu.SetActive(false);
     }
 
@@ -100,6 +108,7 @@ public class GameManager : MonoBehaviour
     {
         gameOver = false;
         StartCoroutine(LevelLoader.instance.LoadLevel(SceneManager.GetActiveScene().buildIndex));
+        Time.timeScale = 1;
     }
 
     public void MainMenu()

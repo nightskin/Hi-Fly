@@ -11,4 +11,10 @@ public class InputManager : MonoBehaviour
         shipInput = new PlayerShipInput();
         shipInput.Enable();
     }
+
+    void OnDisable()
+    {
+        shipInput.Disable();
+    }
+
 }

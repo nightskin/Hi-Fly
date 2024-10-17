@@ -76,9 +76,7 @@ public class PlayerShip : MonoBehaviour
         InputManager.shipInput.actions.Boost.canceled += Boost_canceled;
 
     }
-
-
-
+    
     void FixedUpdate()
     {
         Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
@@ -320,7 +318,7 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
-    public void SetTrails(bool active)
+    void SetTrails(bool active)
     {
         foreach (TrailRenderer trail in trails)
         {

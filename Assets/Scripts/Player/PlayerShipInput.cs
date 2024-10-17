@@ -134,6 +134,15 @@ public partial class @PlayerShipInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleWeapons"",
+                    ""type"": ""Value"",
+                    ""id"": ""90e992f2-4282-409f-85bc-bb2268a4650a"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -400,6 +409,105 @@ public partial class @PlayerShipInput: IInputActionCollection2, IDisposable
                     ""action"": ""MouseDelta"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""QEKeys"",
+                    ""id"": ""a07d4cb8-a771-40fe-bf15-7447f372acd4"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleWeapons"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""cc622357-695e-45d7-96aa-229c84586f0b"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleWeapons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""c2cf06f5-7852-4d42-8df1-8f22d6559eb9"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleWeapons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""ScrollWheel"",
+                    ""id"": ""34401e97-1716-41c4-89ba-8de67838097b"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleWeapons"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""546bc9df-16c8-4394-bcbf-55e3ae4e0a9b"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleWeapons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""fa9eafe1-f7b6-4c8a-acda-ada238eb8c2e"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleWeapons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Dpad"",
+                    ""id"": ""f21389be-ad11-48b8-acf4-e63cfcc3b1b0"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleWeapons"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""29617cbe-46c6-44a4-9213-f140697b3920"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleWeapons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""9f1c931e-a0e3-4a0b-8956-52ee143a7e1f"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleWeapons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -420,6 +528,7 @@ public partial class @PlayerShipInput: IInputActionCollection2, IDisposable
         m_actions_ChangeView = m_actions.FindAction("ChangeView", throwIfNotFound: true);
         m_actions_Pause = m_actions.FindAction("Pause", throwIfNotFound: true);
         m_actions_UnPause = m_actions.FindAction("UnPause", throwIfNotFound: true);
+        m_actions_ToggleWeapons = m_actions.FindAction("ToggleWeapons", throwIfNotFound: true);
     }
 
     ~@PlayerShipInput()
@@ -498,6 +607,7 @@ public partial class @PlayerShipInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_actions_ChangeView;
     private readonly InputAction m_actions_Pause;
     private readonly InputAction m_actions_UnPause;
+    private readonly InputAction m_actions_ToggleWeapons;
     public struct ActionsActions
     {
         private @PlayerShipInput m_Wrapper;
@@ -514,6 +624,7 @@ public partial class @PlayerShipInput: IInputActionCollection2, IDisposable
         public InputAction @ChangeView => m_Wrapper.m_actions_ChangeView;
         public InputAction @Pause => m_Wrapper.m_actions_Pause;
         public InputAction @UnPause => m_Wrapper.m_actions_UnPause;
+        public InputAction @ToggleWeapons => m_Wrapper.m_actions_ToggleWeapons;
         public InputActionMap Get() { return m_Wrapper.m_actions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -559,6 +670,9 @@ public partial class @PlayerShipInput: IInputActionCollection2, IDisposable
             @UnPause.started += instance.OnUnPause;
             @UnPause.performed += instance.OnUnPause;
             @UnPause.canceled += instance.OnUnPause;
+            @ToggleWeapons.started += instance.OnToggleWeapons;
+            @ToggleWeapons.performed += instance.OnToggleWeapons;
+            @ToggleWeapons.canceled += instance.OnToggleWeapons;
         }
 
         private void UnregisterCallbacks(IActionsActions instance)
@@ -599,6 +713,9 @@ public partial class @PlayerShipInput: IInputActionCollection2, IDisposable
             @UnPause.started -= instance.OnUnPause;
             @UnPause.performed -= instance.OnUnPause;
             @UnPause.canceled -= instance.OnUnPause;
+            @ToggleWeapons.started -= instance.OnToggleWeapons;
+            @ToggleWeapons.performed -= instance.OnToggleWeapons;
+            @ToggleWeapons.canceled -= instance.OnToggleWeapons;
         }
 
         public void RemoveCallbacks(IActionsActions instance)
@@ -630,5 +747,6 @@ public partial class @PlayerShipInput: IInputActionCollection2, IDisposable
         void OnChangeView(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnUnPause(InputAction.CallbackContext context);
+        void OnToggleWeapons(InputAction.CallbackContext context);
     }
 }
