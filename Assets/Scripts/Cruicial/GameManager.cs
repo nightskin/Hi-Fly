@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     public static bool gameOver = false;
     public static EventSystem eventSystem;
     public static SceneNodeManager sceneNodeManager;
-    public static AudioSource bgm;
 
     float gameOverTimer = 1;
     bool gameOverActive = false;
@@ -24,7 +23,7 @@ public class GameManager : MonoBehaviour
         playerShip = GameObject.FindWithTag("Player").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();
-        bgm = GetComponent<AudioSource>();
+        
 
         InputManager.shipInput.actions.Pause.performed += Pause_performed;
         InputManager.shipInput.actions.UnPause.performed += UnPause_performed;

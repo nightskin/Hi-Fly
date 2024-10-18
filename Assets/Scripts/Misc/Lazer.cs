@@ -11,7 +11,7 @@ public class Lazer : MonoBehaviour
     float colorChangeTimer = 0;
 
     public GameObject owner = null;
-    public float damage = 10;
+    public float damage = 5;
     public Vector3 direction;
 
     public float damageInterval = 0.1f;
@@ -70,7 +70,7 @@ public class Lazer : MonoBehaviour
                     HealthSystem health = hit.transform.GetComponent<HealthSystem>();
                     if (health)
                     {
-                        health.TakeDamage(damage * Time.deltaTime);
+                        health.TakeDamage(damage);
                     }
                 }
                 else if (hit.transform.tag == "Player")
@@ -81,7 +81,7 @@ public class Lazer : MonoBehaviour
                         HealthSystem health = hit.transform.GetComponent<HealthSystem>();
                         if (health)
                         {
-                            health.TakeDamage(damage * Time.deltaTime);
+                            health.TakeDamage(damage);
                             if (health.IsDead())
                             {
                                 explosionPool.Spawn(hit.transform.position);

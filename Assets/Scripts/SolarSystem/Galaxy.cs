@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Galaxy : MonoBehaviour
 {
+
     public static Noise noise;
     public float quadrantSize = 2000;
     public Vector2Int numberOfQuadrants = new Vector2Int(10,10);
@@ -19,10 +21,15 @@ public class Galaxy : MonoBehaviour
         noise = new Noise(GameManager.seed.GetHashCode());
         Random.InitState(GameManager.seed.GetHashCode());
 
-        ReGenerate();
+        Generate();
     }
 
-    public void Generate()
+    void FixedUpdate()
+    {
+        DrawVisible();
+    }
+
+    void Generate()
     {
         for (int x = 0; x < numberOfQuadrants.x; x++)
         {
@@ -76,16 +83,20 @@ public class Galaxy : MonoBehaviour
         }
     }
 
-    public void ReGenerate()
+    void DrawVisible()
     {
-        noise = new Noise(GameManager.seed.GetHashCode());
-        Random.InitState(GameManager.seed.GetHashCode());
-
-        for (int  t = 0; t < transform.childCount; t++)
+        foreach (var quadrant in quadrants) 
         {
-            Destroy(transform.GetChild(t).gameObject);
+            Vector3 camDirection = Camera.main.transform.forward;
+            Vector3 toQuadrant = (quadrant.transform.position - Camera.main.transform.position).normalized;
+            if(Vector3.Dot(camDirection, toQuadrant) < 0 || Vector3.Distance(Camera.main.transform.position, quadrant.transform.position) > Camera.main.farClipPlane)
+            {
+                quadrant.gameObject.SetActive(false);
+            }
+            else
+            {
+                quadrant.gameObject.SetActive(true);
+            }
         }
-
-        Generate();
     }
 }

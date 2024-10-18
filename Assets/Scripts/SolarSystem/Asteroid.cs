@@ -35,45 +35,6 @@ public class Asteroid : MonoBehaviour
 
     }
     
-
-    public void RemoveBlock(RaycastHit hit, Vector3 direction)
-    {
-        Vector3 localPos = hit.point - transform.position;
-        float distanceToTile = tileSize;
-        Vector3 positionToCheck = localPos + (direction.normalized * distanceToTile);
-        float OldMin = -(tiles + 1) / 2 * tileSize;
-        float OldMax = (tiles + 1) / 2 * tileSize;
-
-        int x = Mathf.FloorToInt(Util.ConvertRange(OldMin, OldMax, 0, tiles+1, positionToCheck.x));
-        int y = Mathf.FloorToInt(Util.ConvertRange(OldMin, OldMax, 0, tiles+1, positionToCheck.y));
-        int z = Mathf.FloorToInt(Util.ConvertRange(OldMin, OldMax, 0, tiles+1, positionToCheck.z));
-
-
-        if (map[x, y, z].active)
-        {
-            map[x, y, z].active = false;
-        }
-        else
-        {
-            Debug.Log("Position " + new Vector3Int(x, y, z) + " Already == false");
-            return;
-        }
-
-        if (BlocksGone())
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            verts.Clear();
-            tris.Clear();
-            uvs.Clear();
-            buffer = 0;
-            MarchingCubes();
-            UpdateMesh();
-        }
-    }
-    
     public async void RemoveBlock(RaycastHit hit)
     {
         Vector3 targetPosition = hit.point - transform.position;
@@ -107,7 +68,7 @@ public class Asteroid : MonoBehaviour
         {
             if (BlocksGone())
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
             else
             {

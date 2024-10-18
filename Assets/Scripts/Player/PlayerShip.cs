@@ -143,7 +143,7 @@ public class PlayerShip : MonoBehaviour
 
     private void Shoot_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(equipped == Weapon.LAZER)
+        if(lazer)
         {
             lazer.GetComponent<Lazer>().DeSpawn();
         }
@@ -169,8 +169,15 @@ public class PlayerShip : MonoBehaviour
 
     private void ToggleWeapons_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (equipped == Weapon.BULLET) equipped = Weapon.LAZER;
-        else if (equipped == Weapon.LAZER) equipped = Weapon.BULLET;
+        if (equipped == Weapon.BULLET) 
+        { 
+            equipped = Weapon.LAZER; 
+        }
+        else if (equipped == Weapon.LAZER)
+        {
+            if(lazer)lazer.GetComponent<Lazer>().DeSpawn();
+            equipped = Weapon.BULLET;
+        }
     }
 
     private void BarrelRoll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -312,7 +319,15 @@ public class PlayerShip : MonoBehaviour
             Lazer l = lazer.GetComponent<Lazer>();
             l.owner = gameObject;
             Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
-            l.direction = ray.direction;
+            if (Physics.Raycast(ray, out RaycastHit hit, camera.GetComponent<Camera>().farClipPlane, lockOnLayer))
+            {
+                l.direction = (hit.point - (transform.position + transform.forward)).normalized;
+            }
+            else
+            {
+                l.direction = ray.direction;
+            }
+
         }
     }
 
@@ -322,7 +337,14 @@ public class PlayerShip : MonoBehaviour
         {
             Lazer l = lazer.GetComponent<Lazer>();
             Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
-            l.direction = ray.direction;
+            if (Physics.Raycast(ray, out RaycastHit hit, camera.GetComponent<Camera>().farClipPlane, lockOnLayer))
+            {
+                l.direction = (hit.point - (transform.position + transform.forward)).normalized;
+            }
+            else
+            {
+                l.direction = ray.direction;
+            }
         }
     }
 

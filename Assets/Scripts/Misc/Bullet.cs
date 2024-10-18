@@ -115,7 +115,7 @@ public class Bullet : MonoBehaviour
                         if (player.evading)
                         {
                             owner = rayhit.transform.gameObject;
-                            direction *= -1;
+                            direction = Vector3.Reflect(direction, rayhit.normal);
                         }
                         else
                         {
