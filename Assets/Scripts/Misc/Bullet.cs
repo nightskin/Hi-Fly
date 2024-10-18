@@ -14,6 +14,7 @@ public class Bullet : MonoBehaviour
 
     ObjectPool explosionPool;
     Vector3 prevPosition;
+    bool hit;
 
     void Start()
     {
@@ -22,6 +23,7 @@ public class Bullet : MonoBehaviour
 
     void OnEnable()
     {
+        hit = false;
         sfx = GetComponent<AudioSource>();
         sfx.clip = shootSound;
         sfx.Play();
@@ -46,11 +48,20 @@ public class Bullet : MonoBehaviour
             transform.position += direction * speed * Time.deltaTime;
         }
 
-        //Exactly what is looks like
-        CheckCollisions();
+        //If bullet has not hit something check collisions
+        if(!hit)
+        {
+            CheckCollisions();
+        }
+        else
+        {
+            if(!sfx.isPlaying)
+            {
+                DeSpawn();
+            }
+        }
 
         //Destroy Bullet After A Certain Time has Past
-
         if (range > 0)
         {
             range -= Time.deltaTime;
@@ -59,73 +70,70 @@ public class Bullet : MonoBehaviour
         {
             DeSpawn();
         }
+
+
+
     }
     
     void CheckCollisions()
     {
-        if (Physics.Linecast(prevPosition, transform.position, out RaycastHit hit))
+        if (Physics.Linecast(prevPosition, transform.position, out RaycastHit rayhit))
         {
-            if (hit.transform.gameObject != owner)
+            if (rayhit.transform.gameObject != owner)
             {
-                if (hit.transform.tag == "Asteroid")
+                if (rayhit.transform.tag == "Asteroid")
                 {
-                    Asteroid asteroid = hit.transform.GetComponent<Asteroid>();
-                    explosionPool.Spawn(hit.point);
+                    Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
+                    explosionPool.Spawn(rayhit.point);
                     if (asteroid)
                     {
-                        asteroid.RemoveBlock(hit);
+                        asteroid.RemoveBlock(rayhit);
                     }
                     DeSpawn();
                 }
-                else if (hit.transform.tag == "Planet")
+                else if (rayhit.transform.tag == "Planet")
                 {
-                    explosionPool.Spawn(hit.point);
+                    explosionPool.Spawn(rayhit.point);
                     DeSpawn();
                 }
-                else if (hit.transform.tag == "Enemy")
+                else if (rayhit.transform.tag == "Enemy")
                 {
-                    HealthSystem health = hit.transform.GetComponent<HealthSystem>();
-                    sfx.clip = hitSound;
-                    sfx.Play();
+                    HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
                     if (health)
                     {
                         health.TakeDamage(damage);
                     }
-                    DeSpawn();
+                    hit = true;
+                    sfx.clip = hitSound;
+                    sfx.Play();
                 }
-                else if (hit.transform.tag == "Player")
+                else if (rayhit.transform.tag == "Player")
                 {
-                    PlayerShip player = hit.transform.GetComponent<PlayerShip>();
+                    PlayerShip player = rayhit.transform.GetComponent<PlayerShip>();
                     if(player)
                     {
                         if (player.evading)
                         {
-                            owner = hit.transform.gameObject;
+                            owner = rayhit.transform.gameObject;
                             direction *= -1;
                         }
                         else
                         {
-                            sfx.clip = hitSound;
-                            sfx.Play();
-                            HealthSystem health = hit.transform.GetComponent<HealthSystem>();
+                            HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
                             if (health)
                             {
                                 health.TakeDamage(damage);
                                 if (health.IsDead())
                                 {
-                                    explosionPool.Spawn(hit.transform.position);
-                                    hit.transform.gameObject.SetActive(false);
+                                    explosionPool.Spawn(rayhit.transform.position);
+                                    rayhit.transform.gameObject.SetActive(false);
                                     GameManager.gameOver = true;
                                 }
                             }
-
-                            DeSpawn();
+                            sfx.clip = hitSound;
+                            sfx.Play();
+                            hit = true;
                         }
-                    }
-                    else
-                    {
-                        Debug.Log("Player Script Not Found");
-                        DeSpawn();
                     }
                 }
 

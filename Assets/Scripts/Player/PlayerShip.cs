@@ -74,9 +74,11 @@ public class PlayerShip : MonoBehaviour
         InputManager.shipInput.actions.ToggleEngines.performed += ToggleEngines_performed;
         InputManager.shipInput.actions.Boost.performed += Boost_performed;
         InputManager.shipInput.actions.Boost.canceled += Boost_canceled;
-
+        InputManager.shipInput.actions.ToggleWeapons.performed += ToggleWeapons_performed;
     }
-    
+
+
+
     void FixedUpdate()
     {
         Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
@@ -163,6 +165,12 @@ public class PlayerShip : MonoBehaviour
             }
         }
 
+    }
+
+    private void ToggleWeapons_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        if (equipped == Weapon.BULLET) equipped = Weapon.LAZER;
+        else if (equipped == Weapon.LAZER) equipped = Weapon.BULLET;
     }
 
     private void BarrelRoll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
