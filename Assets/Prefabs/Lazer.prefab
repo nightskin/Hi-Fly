@@ -169,4 +169,4 @@ MonoBehaviour:
   owner: {fileID: 0}
   damage: 5
   direction: {x: 0, y: 0, z: 0}
-  damageInterval: 0.025
+  damageInterval: 0.1

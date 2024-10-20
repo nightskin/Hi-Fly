@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void OnDisable()
+    void OnDestroy()
     {
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;

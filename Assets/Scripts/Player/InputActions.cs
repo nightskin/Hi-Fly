@@ -28,7 +28,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             ""id"": ""35e2ce81-abc1-40e7-8494-d2885a82ab2e"",
             ""actions"": [
                 {
-                    ""name"": ""Move"",
+                    ""name"": ""Steer"",
                     ""type"": ""PassThrough"",
                     ""id"": ""6a2b733b-cde5-43e9-ad8c-6c72cb2e2c3b"",
                     ""expectedControlType"": ""Vector2"",
@@ -46,18 +46,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SwitchToMouse"",
+                    ""name"": ""Mouse_Position"",
                     ""type"": ""PassThrough"",
-                    ""id"": ""610c9195-df95-4ddf-9d04-3f27132add90"",
+                    ""id"": ""a2f9f9c2-308e-43af-a853-3c060d206453"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Mouse_Aim"",
+                    ""name"": ""MouseDelta"",
                     ""type"": ""PassThrough"",
-                    ""id"": ""a2f9f9c2-308e-43af-a853-3c060d206453"",
+                    ""id"": ""b91e070d-0af6-455a-963b-2a9010539993"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -76,6 +76,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""name"": ""PrimaryFire"",
                     ""type"": ""Button"",
                     ""id"": ""e7079d14-1be9-4c0b-8f9f-85c1f3919d30"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondaryFire"",
+                    ""type"": ""Button"",
+                    ""id"": ""21567a28-43fe-43ad-80cb-0f8f7a373dcf"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -112,7 +121,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""name"": ""ChangeView"",
                     ""type"": ""Button"",
                     ""id"": ""341b2690-fe3d-410a-9843-9c57c5fc626f"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -121,7 +130,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""8ac1d64a-71ea-4789-bd8c-75e639f547d4"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -130,15 +139,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""name"": ""UnPause"",
                     ""type"": ""Button"",
                     ""id"": ""37580a20-93f1-4046-a6f0-ba8beedd9e69"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""SecondaryFire"",
-                    ""type"": ""Button"",
-                    ""id"": ""21567a28-43fe-43ad-80cb-0f8f7a373dcf"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -153,7 +153,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Steer"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -164,7 +164,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Steer"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -175,7 +175,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Steer"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -186,7 +186,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Steer"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -197,7 +197,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Steer"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -208,7 +208,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Steer"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -238,6 +238,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""a6731805-7c99-4143-9852-35866efa5e7e"",
                     ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""25c203d4-9921-485e-a022-610281ffaa13"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -406,18 +417,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Mouse_Aim"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""83ce0d54-f0ca-4142-a271-a554d51a19f6"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SwitchToMouse"",
+                    ""action"": ""Mouse_Position"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -442,6 +442,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""SecondaryFire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""af436b44-ac6e-460b-83cc-3b5b31200667"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseDelta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -450,19 +461,19 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_Steer = m_Player.FindAction("Steer", throwIfNotFound: true);
         m_Player_Gamepad_Aim = m_Player.FindAction("Gamepad_Aim", throwIfNotFound: true);
-        m_Player_SwitchToMouse = m_Player.FindAction("SwitchToMouse", throwIfNotFound: true);
-        m_Player_Mouse_Aim = m_Player.FindAction("Mouse_Aim", throwIfNotFound: true);
+        m_Player_Mouse_Position = m_Player.FindAction("Mouse_Position", throwIfNotFound: true);
+        m_Player_MouseDelta = m_Player.FindAction("MouseDelta", throwIfNotFound: true);
         m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
         m_Player_PrimaryFire = m_Player.FindAction("PrimaryFire", throwIfNotFound: true);
+        m_Player_SecondaryFire = m_Player.FindAction("SecondaryFire", throwIfNotFound: true);
         m_Player_ToggleEngines = m_Player.FindAction("ToggleEngines", throwIfNotFound: true);
         m_Player_BarrelRoll = m_Player.FindAction("BarrelRoll", throwIfNotFound: true);
         m_Player_CenterCrosshair = m_Player.FindAction("CenterCrosshair", throwIfNotFound: true);
         m_Player_ChangeView = m_Player.FindAction("ChangeView", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_UnPause = m_Player.FindAction("UnPause", throwIfNotFound: true);
-        m_Player_SecondaryFire = m_Player.FindAction("SecondaryFire", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -529,36 +540,36 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_Steer;
     private readonly InputAction m_Player_Gamepad_Aim;
-    private readonly InputAction m_Player_SwitchToMouse;
-    private readonly InputAction m_Player_Mouse_Aim;
+    private readonly InputAction m_Player_Mouse_Position;
+    private readonly InputAction m_Player_MouseDelta;
     private readonly InputAction m_Player_Boost;
     private readonly InputAction m_Player_PrimaryFire;
+    private readonly InputAction m_Player_SecondaryFire;
     private readonly InputAction m_Player_ToggleEngines;
     private readonly InputAction m_Player_BarrelRoll;
     private readonly InputAction m_Player_CenterCrosshair;
     private readonly InputAction m_Player_ChangeView;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_UnPause;
-    private readonly InputAction m_Player_SecondaryFire;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
         public PlayerActions(@InputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_Player_Move;
+        public InputAction @Steer => m_Wrapper.m_Player_Steer;
         public InputAction @Gamepad_Aim => m_Wrapper.m_Player_Gamepad_Aim;
-        public InputAction @SwitchToMouse => m_Wrapper.m_Player_SwitchToMouse;
-        public InputAction @Mouse_Aim => m_Wrapper.m_Player_Mouse_Aim;
+        public InputAction @Mouse_Position => m_Wrapper.m_Player_Mouse_Position;
+        public InputAction @MouseDelta => m_Wrapper.m_Player_MouseDelta;
         public InputAction @Boost => m_Wrapper.m_Player_Boost;
         public InputAction @PrimaryFire => m_Wrapper.m_Player_PrimaryFire;
+        public InputAction @SecondaryFire => m_Wrapper.m_Player_SecondaryFire;
         public InputAction @ToggleEngines => m_Wrapper.m_Player_ToggleEngines;
         public InputAction @BarrelRoll => m_Wrapper.m_Player_BarrelRoll;
         public InputAction @CenterCrosshair => m_Wrapper.m_Player_CenterCrosshair;
         public InputAction @ChangeView => m_Wrapper.m_Player_ChangeView;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @UnPause => m_Wrapper.m_Player_UnPause;
-        public InputAction @SecondaryFire => m_Wrapper.m_Player_SecondaryFire;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -568,24 +579,27 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-            @Move.started += instance.OnMove;
-            @Move.performed += instance.OnMove;
-            @Move.canceled += instance.OnMove;
+            @Steer.started += instance.OnSteer;
+            @Steer.performed += instance.OnSteer;
+            @Steer.canceled += instance.OnSteer;
             @Gamepad_Aim.started += instance.OnGamepad_Aim;
             @Gamepad_Aim.performed += instance.OnGamepad_Aim;
             @Gamepad_Aim.canceled += instance.OnGamepad_Aim;
-            @SwitchToMouse.started += instance.OnSwitchToMouse;
-            @SwitchToMouse.performed += instance.OnSwitchToMouse;
-            @SwitchToMouse.canceled += instance.OnSwitchToMouse;
-            @Mouse_Aim.started += instance.OnMouse_Aim;
-            @Mouse_Aim.performed += instance.OnMouse_Aim;
-            @Mouse_Aim.canceled += instance.OnMouse_Aim;
+            @Mouse_Position.started += instance.OnMouse_Position;
+            @Mouse_Position.performed += instance.OnMouse_Position;
+            @Mouse_Position.canceled += instance.OnMouse_Position;
+            @MouseDelta.started += instance.OnMouseDelta;
+            @MouseDelta.performed += instance.OnMouseDelta;
+            @MouseDelta.canceled += instance.OnMouseDelta;
             @Boost.started += instance.OnBoost;
             @Boost.performed += instance.OnBoost;
             @Boost.canceled += instance.OnBoost;
             @PrimaryFire.started += instance.OnPrimaryFire;
             @PrimaryFire.performed += instance.OnPrimaryFire;
             @PrimaryFire.canceled += instance.OnPrimaryFire;
+            @SecondaryFire.started += instance.OnSecondaryFire;
+            @SecondaryFire.performed += instance.OnSecondaryFire;
+            @SecondaryFire.canceled += instance.OnSecondaryFire;
             @ToggleEngines.started += instance.OnToggleEngines;
             @ToggleEngines.performed += instance.OnToggleEngines;
             @ToggleEngines.canceled += instance.OnToggleEngines;
@@ -604,31 +618,31 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @UnPause.started += instance.OnUnPause;
             @UnPause.performed += instance.OnUnPause;
             @UnPause.canceled += instance.OnUnPause;
-            @SecondaryFire.started += instance.OnSecondaryFire;
-            @SecondaryFire.performed += instance.OnSecondaryFire;
-            @SecondaryFire.canceled += instance.OnSecondaryFire;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
         {
-            @Move.started -= instance.OnMove;
-            @Move.performed -= instance.OnMove;
-            @Move.canceled -= instance.OnMove;
+            @Steer.started -= instance.OnSteer;
+            @Steer.performed -= instance.OnSteer;
+            @Steer.canceled -= instance.OnSteer;
             @Gamepad_Aim.started -= instance.OnGamepad_Aim;
             @Gamepad_Aim.performed -= instance.OnGamepad_Aim;
             @Gamepad_Aim.canceled -= instance.OnGamepad_Aim;
-            @SwitchToMouse.started -= instance.OnSwitchToMouse;
-            @SwitchToMouse.performed -= instance.OnSwitchToMouse;
-            @SwitchToMouse.canceled -= instance.OnSwitchToMouse;
-            @Mouse_Aim.started -= instance.OnMouse_Aim;
-            @Mouse_Aim.performed -= instance.OnMouse_Aim;
-            @Mouse_Aim.canceled -= instance.OnMouse_Aim;
+            @Mouse_Position.started -= instance.OnMouse_Position;
+            @Mouse_Position.performed -= instance.OnMouse_Position;
+            @Mouse_Position.canceled -= instance.OnMouse_Position;
+            @MouseDelta.started -= instance.OnMouseDelta;
+            @MouseDelta.performed -= instance.OnMouseDelta;
+            @MouseDelta.canceled -= instance.OnMouseDelta;
             @Boost.started -= instance.OnBoost;
             @Boost.performed -= instance.OnBoost;
             @Boost.canceled -= instance.OnBoost;
             @PrimaryFire.started -= instance.OnPrimaryFire;
             @PrimaryFire.performed -= instance.OnPrimaryFire;
             @PrimaryFire.canceled -= instance.OnPrimaryFire;
+            @SecondaryFire.started -= instance.OnSecondaryFire;
+            @SecondaryFire.performed -= instance.OnSecondaryFire;
+            @SecondaryFire.canceled -= instance.OnSecondaryFire;
             @ToggleEngines.started -= instance.OnToggleEngines;
             @ToggleEngines.performed -= instance.OnToggleEngines;
             @ToggleEngines.canceled -= instance.OnToggleEngines;
@@ -647,9 +661,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @UnPause.started -= instance.OnUnPause;
             @UnPause.performed -= instance.OnUnPause;
             @UnPause.canceled -= instance.OnUnPause;
-            @SecondaryFire.started -= instance.OnSecondaryFire;
-            @SecondaryFire.performed -= instance.OnSecondaryFire;
-            @SecondaryFire.canceled -= instance.OnSecondaryFire;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -669,18 +680,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     public PlayerActions @Player => new PlayerActions(this);
     public interface IPlayerActions
     {
-        void OnMove(InputAction.CallbackContext context);
+        void OnSteer(InputAction.CallbackContext context);
         void OnGamepad_Aim(InputAction.CallbackContext context);
-        void OnSwitchToMouse(InputAction.CallbackContext context);
-        void OnMouse_Aim(InputAction.CallbackContext context);
+        void OnMouse_Position(InputAction.CallbackContext context);
+        void OnMouseDelta(InputAction.CallbackContext context);
         void OnBoost(InputAction.CallbackContext context);
         void OnPrimaryFire(InputAction.CallbackContext context);
+        void OnSecondaryFire(InputAction.CallbackContext context);
         void OnToggleEngines(InputAction.CallbackContext context);
         void OnBarrelRoll(InputAction.CallbackContext context);
         void OnCenterCrosshair(InputAction.CallbackContext context);
         void OnChangeView(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnUnPause(InputAction.CallbackContext context);
-        void OnSecondaryFire(InputAction.CallbackContext context);
     }
 }

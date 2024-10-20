@@ -74,7 +74,7 @@ public class Galaxy : MonoBehaviour
                     {
                         if (enemySpawner)
                         {
-                            Instantiate(enemySpawner, quadrantPos, Quaternion.identity, transform);
+                            quadrants.Add(Instantiate(enemySpawner, quadrantPos, Quaternion.identity, transform));
                         }
                     }
                 }
@@ -89,13 +89,13 @@ public class Galaxy : MonoBehaviour
         {
             Vector3 camDirection = Camera.main.transform.forward;
             Vector3 toQuadrant = (quadrant.transform.position - Camera.main.transform.position).normalized;
-            if(Vector3.Dot(camDirection, toQuadrant) < 0 || Vector3.Distance(Camera.main.transform.position, quadrant.transform.position) > Camera.main.farClipPlane)
+            if(Vector3.Distance(Camera.main.transform.position, quadrant.transform.position) <= Camera.main.farClipPlane + quadrantSize)
             {
-                quadrant.gameObject.SetActive(false);
+                quadrant.gameObject.SetActive(true);
             }
             else
             {
-                quadrant.gameObject.SetActive(true);
+                quadrant.gameObject.SetActive(false);
             }
         }
     }

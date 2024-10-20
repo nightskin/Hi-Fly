@@ -1,5 +1,3 @@
-using Unity.VisualScripting;
-using UnityEditor.TerrainTools;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +10,7 @@ public class PlayerShip : MonoBehaviour
         MACHINE_GUN,
         CHARGE_BOMB,
     }
-    public PowerUp powerUp;
+    public static PowerUp powerUp;
 
     public HealthSystem health;
 
@@ -72,7 +70,7 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.PrimaryFire.performed += PrimaryFire_performed;
         InputManager.input.Player.BarrelRoll.performed += BarrelRoll_performed;
         InputManager.input.Player.Gamepad_Aim.performed += Gamepad_Aim_performed;
-        InputManager.input.Player.Mouse_Aim.performed += Mouse_Aim_performed;
+        InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
         InputManager.input.Player.ToggleEngines.performed += ToggleEngines_performed;
         InputManager.input.Player.Boost.performed += Boost_performed;
@@ -107,7 +105,7 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.PrimaryFire.performed -= PrimaryFire_performed;
         InputManager.input.Player.BarrelRoll.performed -= BarrelRoll_performed;
         InputManager.input.Player.Gamepad_Aim.performed -= Gamepad_Aim_performed;
-        InputManager.input.Player.Mouse_Aim.performed -= Mouse_Aim_performed;
+        InputManager.input.Player.Mouse_Position.performed -= Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed -= CenterCrosshair_performed;
         InputManager.input.Player.ToggleEngines.performed -= ToggleEngines_performed;
         InputManager.input.Player.Boost.performed -= Boost_performed;
@@ -231,14 +229,14 @@ public class PlayerShip : MonoBehaviour
         }
         else
         {
-            zRot = InputManager.input.Player.Move.ReadValue<Vector2>().x * -35;
+            zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
             Quaternion targetRot = Quaternion.Euler(camera.transform.localEulerAngles.x, camera.transform.localEulerAngles.y, zRot);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
         }
 
 
         //Aiming
-        if(aimingViaGamepad) 
+        if (aimingViaGamepad)
         {
             reticlePosition += InputManager.input.Player.Gamepad_Aim.ReadValue<Vector2>() * aimSpeed * Time.deltaTime;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));

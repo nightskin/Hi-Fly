@@ -28,7 +28,7 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         if(player.health.IsAlive())
         {
-            cameraRot += InputManager.input.Player.Move.ReadValue<Vector2>() * rotationSpeed * Time.deltaTime;
+            cameraRot += InputManager.input.Player.Steer.ReadValue<Vector2>() * rotationSpeed * Time.deltaTime;
             cameraRot.y = Mathf.Clamp(cameraRot.y, -90, 90);
             Vector3 finalRot = new Vector3(cameraRot.y, cameraRot.x, 0);
             Vector3 camPos = player.transform.position + new Vector3(cameraOffset.x, cameraOffset.y, 0) - transform.forward * cameraDistance;

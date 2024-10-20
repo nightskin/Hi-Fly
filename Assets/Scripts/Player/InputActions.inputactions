@@ -6,7 +6,7 @@
             "id": "35e2ce81-abc1-40e7-8494-d2885a82ab2e",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "Steer",
                     "type": "PassThrough",
                     "id": "6a2b733b-cde5-43e9-ad8c-6c72cb2e2c3b",
                     "expectedControlType": "Vector2",
@@ -24,18 +24,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SwitchToMouse",
+                    "name": "Mouse_Position",
                     "type": "PassThrough",
-                    "id": "610c9195-df95-4ddf-9d04-3f27132add90",
+                    "id": "a2f9f9c2-308e-43af-a853-3c060d206453",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Mouse_Aim",
+                    "name": "MouseDelta",
                     "type": "PassThrough",
-                    "id": "a2f9f9c2-308e-43af-a853-3c060d206453",
+                    "id": "b91e070d-0af6-455a-963b-2a9010539993",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -54,6 +54,15 @@
                     "name": "PrimaryFire",
                     "type": "Button",
                     "id": "e7079d14-1be9-4c0b-8f9f-85c1f3919d30",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondaryFire",
+                    "type": "Button",
+                    "id": "21567a28-43fe-43ad-80cb-0f8f7a373dcf",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -90,7 +99,7 @@
                     "name": "ChangeView",
                     "type": "Button",
                     "id": "341b2690-fe3d-410a-9843-9c57c5fc626f",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -99,7 +108,7 @@
                     "name": "Pause",
                     "type": "Button",
                     "id": "8ac1d64a-71ea-4789-bd8c-75e639f547d4",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -108,15 +117,6 @@
                     "name": "UnPause",
                     "type": "Button",
                     "id": "37580a20-93f1-4046-a6f0-ba8beedd9e69",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SecondaryFire",
-                    "type": "Button",
-                    "id": "21567a28-43fe-43ad-80cb-0f8f7a373dcf",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -131,7 +131,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Steer",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -142,7 +142,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Steer",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -153,7 +153,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Steer",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -164,7 +164,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Steer",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -175,7 +175,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Steer",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -186,7 +186,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Steer",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -216,6 +216,17 @@
                     "name": "",
                     "id": "a6731805-7c99-4143-9852-35866efa5e7e",
                     "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "25c203d4-9921-485e-a022-610281ffaa13",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -384,18 +395,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Mouse_Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "83ce0d54-f0ca-4142-a271-a554d51a19f6",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SwitchToMouse",
+                    "action": "Mouse_Position",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -418,6 +418,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "SecondaryFire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "af436b44-ac6e-460b-83cc-3b5b31200667",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseDelta",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
