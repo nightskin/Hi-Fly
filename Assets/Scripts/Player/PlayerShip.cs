@@ -5,12 +5,14 @@ using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
 {
-    public enum Weapon
+    public enum PowerUp
     {
-        BULLET,
-        LAZER
+        NONE,
+        LAZER,
+        MACHINE_GUN,
+        CHARGE_BOMB,
     }
-    public Weapon equipped;
+    public PowerUp powerUp;
 
     public HealthSystem health;
 
@@ -31,6 +33,7 @@ public class PlayerShip : MonoBehaviour
 
     [SerializeField] Image reticle;
     [SerializeField] LayerMask lockOnLayer;
+    [SerializeField] float aimSpeed = 1000;
     bool aimingViaGamepad = false;
     Vector2 reticlePosition;
     RaycastHit lockOn;
@@ -43,6 +46,7 @@ public class PlayerShip : MonoBehaviour
     float shootTimer = 0;
 
     public bool evading = false;
+    bool strafeMode = false;
     int rollDirection = -1;
     float rollDuration = 1.5f;
     float rollSpeed = 2000;
@@ -65,20 +69,18 @@ public class PlayerShip : MonoBehaviour
         targetSpeed = baseSpeed;
 
 
-        InputManager.shipInput.actions.Shoot.performed += Shoot_performed;
-        InputManager.shipInput.actions.Shoot.canceled += Shoot_canceled;
-        InputManager.shipInput.actions.BarrelRoll.performed += BarrelRoll_performed;
-        InputManager.shipInput.actions.Gamepad_Aim.performed += Gamepad_Aim_performed;
-        InputManager.shipInput.actions.Mouse_Aim.performed += Mouse_Aim_performed;
-        InputManager.shipInput.actions.CenterCrosshair.performed += CenterCrosshair_performed;
-        InputManager.shipInput.actions.ToggleEngines.performed += ToggleEngines_performed;
-        InputManager.shipInput.actions.Boost.performed += Boost_performed;
-        InputManager.shipInput.actions.Boost.canceled += Boost_canceled;
-        InputManager.shipInput.actions.ToggleWeapons.performed += ToggleWeapons_performed;
+        InputManager.input.Player.PrimaryFire.performed += PrimaryFire_performed;
+        InputManager.input.Player.BarrelRoll.performed += BarrelRoll_performed;
+        InputManager.input.Player.Gamepad_Aim.performed += Gamepad_Aim_performed;
+        InputManager.input.Player.Mouse_Aim.performed += Mouse_Aim_performed;
+        InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
+        InputManager.input.Player.ToggleEngines.performed += ToggleEngines_performed;
+        InputManager.input.Player.Boost.performed += Boost_performed;
+        InputManager.input.Player.Boost.canceled += Boost_canceled;
+        InputManager.input.Player.SecondaryFire.performed += SecondaryFire_performed;
+        InputManager.input.Player.SecondaryFire.canceled += SecondaryFire_canceled;
     }
-
-
-
+    
     void FixedUpdate()
     {
         Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
@@ -100,13 +102,18 @@ public class PlayerShip : MonoBehaviour
         }
     }
     
-    void OnDisable()
+    void OnDestroy()
     {
-        InputManager.shipInput.actions.BarrelRoll.performed -= BarrelRoll_performed;
-        InputManager.shipInput.actions.CenterCrosshair.performed -= CenterCrosshair_performed;
-        InputManager.shipInput.actions.ToggleEngines.performed -= ToggleEngines_performed;
-        InputManager.shipInput.actions.Boost.performed -= Boost_performed;
-        InputManager.shipInput.actions.Boost.canceled -= Boost_canceled;
+        InputManager.input.Player.PrimaryFire.performed -= PrimaryFire_performed;
+        InputManager.input.Player.BarrelRoll.performed -= BarrelRoll_performed;
+        InputManager.input.Player.Gamepad_Aim.performed -= Gamepad_Aim_performed;
+        InputManager.input.Player.Mouse_Aim.performed -= Mouse_Aim_performed;
+        InputManager.input.Player.CenterCrosshair.performed -= CenterCrosshair_performed;
+        InputManager.input.Player.ToggleEngines.performed -= ToggleEngines_performed;
+        InputManager.input.Player.Boost.performed -= Boost_performed;
+        InputManager.input.Player.Boost.canceled -= Boost_canceled;
+        InputManager.input.Player.SecondaryFire.performed -= SecondaryFire_performed;
+        InputManager.input.Player.SecondaryFire.canceled -= SecondaryFire_canceled;
     }
     
     private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -129,19 +136,24 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
-    private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void PrimaryFire_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(equipped == Weapon.BULLET)
-        {
-            shootTimer = 0;
-        }
-        else if(equipped == Weapon.LAZER)
+        FireBullet();
+    }
+
+    private void SecondaryFire_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        if(powerUp == PowerUp.LAZER)
         {
             FireLazer();
         }
+        else if(powerUp == PowerUp.MACHINE_GUN)
+        {
+            shootTimer = 0;
+        }
     }
 
-    private void Shoot_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void SecondaryFire_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if(lazer)
         {
@@ -151,38 +163,27 @@ public class PlayerShip : MonoBehaviour
 
     private void ToggleEngines_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(!InputManager.shipInput.actions.Boost.IsPressed())
+        if(!InputManager.input.Player.Boost.IsPressed())
         {
             if (targetSpeed > 0)
             {
                 targetSpeed = 0;
                 SetTrails(false);
+                strafeMode = true;
             }
             else
             {
+                strafeMode = false;
                 targetSpeed = baseSpeed;
                 SetTrails(true);
             }
         }
 
     }
-
-    private void ToggleWeapons_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if (equipped == Weapon.BULLET) 
-        { 
-            equipped = Weapon.LAZER; 
-        }
-        else if (equipped == Weapon.LAZER)
-        {
-            if(lazer)lazer.GetComponent<Lazer>().DeSpawn();
-            equipped = Weapon.BULLET;
-        }
-    }
-
+    
     private void BarrelRoll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(!evading)
+        if(!evading && !strafeMode)
         {
             rollDirection *= -1;
             rollTimer = rollDuration;
@@ -230,7 +231,7 @@ public class PlayerShip : MonoBehaviour
         }
         else
         {
-            zRot = InputManager.shipInput.actions.Move.ReadValue<Vector2>().x * -35;
+            zRot = InputManager.input.Player.Move.ReadValue<Vector2>().x * -35;
             Quaternion targetRot = Quaternion.Euler(camera.transform.localEulerAngles.x, camera.transform.localEulerAngles.y, zRot);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
         }
@@ -239,7 +240,7 @@ public class PlayerShip : MonoBehaviour
         //Aiming
         if(aimingViaGamepad) 
         {
-            reticlePosition += InputManager.shipInput.actions.Gamepad_Aim.ReadValue<Vector2>() * Settings.aimSense * Time.deltaTime;
+            reticlePosition += InputManager.input.Player.Gamepad_Aim.ReadValue<Vector2>() * aimSpeed * Time.deltaTime;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;
@@ -253,9 +254,17 @@ public class PlayerShip : MonoBehaviour
         }
 
         //Shooting
-        if (InputManager.shipInput.actions.Shoot.IsPressed())
+        if (InputManager.input.Player.PrimaryFire.IsPressed())
         {
-            if(equipped == Weapon.BULLET)
+
+        }
+        else if(InputManager.input.Player.SecondaryFire.IsPressed()) 
+        {
+            if(powerUp == PowerUp.LAZER)
+            {
+                MoveLazer();
+            }
+            else if(powerUp == PowerUp.MACHINE_GUN)
             {
                 if (shootTimer > 0)
                 {
@@ -266,10 +275,6 @@ public class PlayerShip : MonoBehaviour
                     FireBullet();
                     shootTimer = fireRate;
                 }
-            }
-            else if(equipped == Weapon.LAZER)
-            {
-                MoveLazer();
             }
         }
     }

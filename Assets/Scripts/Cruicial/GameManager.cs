@@ -25,8 +25,8 @@ public class GameManager : MonoBehaviour
         sceneNodeManager = GetComponent<SceneNodeManager>();
         
 
-        InputManager.shipInput.actions.Pause.performed += Pause_performed;
-        InputManager.shipInput.actions.UnPause.performed += UnPause_performed;
+        InputManager.input.Player.Pause.performed += Pause_performed;
+        InputManager.input.Player.UnPause.performed += UnPause_performed;
     }
 
     private void UnPause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
                     {
                         playerUIToHideOnPause[i].SetActive(false);
                     }
+                    playerShip.GetComponent<MeshRenderer>().enabled = false;
                     gameOverMenu.SetActive(true);
                     eventSystem.SetSelectedGameObject(gameOverMenu.transform.GetChild(1).gameObject);
                     gameOverActive = true;
@@ -79,8 +80,8 @@ public class GameManager : MonoBehaviour
 
     void OnDisable()
     {
-        InputManager.shipInput.actions.Pause.performed -= Pause_performed;
-        InputManager.shipInput.actions.UnPause.performed -= UnPause_performed;
+        InputManager.input.Player.Pause.performed -= Pause_performed;
+        InputManager.input.Player.UnPause.performed -= UnPause_performed;
     }
 
     public void Pause()

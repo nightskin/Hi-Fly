@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    AudioSource sfx;
+
     [SerializeField] AudioClip shootSound;
     [SerializeField] AudioClip hitSound;
     public float range = 2;
@@ -12,25 +12,28 @@ public class Bullet : MonoBehaviour
     public float speed = 1000;
     public Vector3 direction;
 
+    AudioSource sfx;
+    TrailRenderer trail;
     ObjectPool explosionPool;
     Vector3 prevPosition;
     bool hit;
 
-    void Start()
+    void Awake()
     {
         explosionPool = GameObject.Find("ExplosionPool").GetComponent<ObjectPool>();
+        sfx = GetComponent<AudioSource>();
+        trail = GetComponent<TrailRenderer>();
     }
 
     void OnEnable()
     {
         hit = false;
-        sfx = GetComponent<AudioSource>();
         sfx.clip = shootSound;
         sfx.Play();
         homingTarget = null;
         direction = Vector3.zero;
-        GetComponent<TrailRenderer>().Clear();
-        GetComponent<TrailRenderer>().emitting = true;
+        trail.Clear();
+        trail.emitting = true;
         prevPosition = transform.position;
         range = 2;
     }
@@ -55,6 +58,7 @@ public class Bullet : MonoBehaviour
         }
         else
         {
+            trail.emitting = false;
             if(!sfx.isPlaying)
             {
                 DeSpawn();
@@ -143,7 +147,7 @@ public class Bullet : MonoBehaviour
 
     void DeSpawn()
     {
-        GetComponent<TrailRenderer>().emitting = false;
+        trail.emitting = false;
         gameObject.SetActive(false);
     }
 }
