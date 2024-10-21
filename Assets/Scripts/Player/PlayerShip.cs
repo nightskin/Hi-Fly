@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
 {
+
     public enum PowerUp
     {
         NONE,
@@ -10,7 +11,7 @@ public class PlayerShip : MonoBehaviour
         MACHINE_GUN,
         CHARGE_BOMB,
     }
-    public static PowerUp powerUp;
+    public PowerUp powerUp;
 
     public HealthSystem health;
 
@@ -18,6 +19,7 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] TrailRenderer[] trails;
     Color thrustColor = Color.cyan;
     CharacterController controller;
+    Transform bulletSpawn;
 
 
     [SerializeField] float turnSpeed = 5;
@@ -54,6 +56,7 @@ public class PlayerShip : MonoBehaviour
     {
         GetComponent<MeshRenderer>().materials[0].color = Settings.playerBodyColor;
         GetComponent<MeshRenderer>().materials[1].color = Settings.playerStripeColor;
+        bulletSpawn = transform.Find("BulletSpawn");
 
 
         health = GetComponent<HealthSystem>();
@@ -280,8 +283,7 @@ public class PlayerShip : MonoBehaviour
     void FireBullet()
     {
         //Initialize Bullet
-        Vector3 bulletSpawn = transform.position + transform.forward;
-        GameObject obj = bulletPool.Spawn(bulletSpawn);
+        GameObject obj = bulletPool.Spawn(bulletSpawn.position);
         if(obj != null) 
         {
             Bullet b = obj.GetComponent<Bullet>();
@@ -303,7 +305,7 @@ public class PlayerShip : MonoBehaviour
                     }
                     else
                     {
-                        b.direction = (hit.point - bulletSpawn).normalized;
+                        b.direction = (hit.point - bulletSpawn.position).normalized;
                     }
                 }
                 else

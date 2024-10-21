@@ -8,14 +8,12 @@ using UnityEngine;
 [RequireComponent(typeof (MeshCollider))]
 public class Asteroid : MonoBehaviour
 {
-
     Voxel[,,] map = null;
 
     public float radius;
     public int tiles = 10;
     public float tileSize = 10;
-
-
+    
     Mesh mesh;
     List<Vector3> verts = new List<Vector3>();
     List<Vector2> uvs = new List<Vector2>();
@@ -68,7 +66,7 @@ public class Asteroid : MonoBehaviour
         {
             if (BlocksGone())
             {
-                gameObject.SetActive(false);
+                Destroy(gameObject);
             }
             else
             {
@@ -97,9 +95,8 @@ public class Asteroid : MonoBehaviour
                     map[x, y, z].x = x;
                     map[x, y, z].y = y;
                     map[x, y, z].z = z;
-
+        
                     map[x, y, z].position = new Vector3(x - tiles / 2, y - tiles / 2, z - tiles / 2) * tileSize;
-
                     float distanceFromCenter = Vector3.Distance(transform.position, transform.position + map[x,y,z].position);
                     if(distanceFromCenter > radius)
                     {
@@ -109,9 +106,11 @@ public class Asteroid : MonoBehaviour
                     {
                         map[x,y,z].active = true;
                     }
+
                 }
             }
         }
+
     }
     
     void MarchingCubes()

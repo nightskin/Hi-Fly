@@ -5638,6 +5638,7 @@ Transform:
   m_LocalScale: {x: 3, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8436338386794596101}
   - {fileID: 6615905817508830575}
   - {fileID: 6615905816226276915}
   - {fileID: 6615905817581332610}
@@ -5673,8 +5674,8 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: f1e6e0782b9c58e4c8b86710361c7c18, type: 2}
   - {fileID: 2100000, guid: 17d26b364a9920e4f9ae8fc489e3b436, type: 2}
-  - {fileID: 954267526019623431, guid: b4c6393dee009b7488a2230e9ff33484, type: 3}
-  - {fileID: 954267526019623431, guid: b4c6393dee009b7488a2230e9ff33484, type: 3}
+  - {fileID: 2100000, guid: bdb62bb2fb94a8a488708b385eb656b5, type: 2}
+  - {fileID: 2100000, guid: bdb62bb2fb94a8a488708b385eb656b5, type: 2}
   - {fileID: 2100000, guid: 28f6cd2f8fb00ef4888a53971a72a132, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -6618,6 +6619,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7734649205264901842
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8436338386794596101}
+  m_Layer: 3
+  m_Name: BulletSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8436338386794596101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7734649205264901842}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6654862522394362605}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8131623139629098542
 GameObject:
   m_ObjectHideFlags: 0
@@ -6791,7 +6823,7 @@ GameObject:
   - component: {fileID: 1069085151}
   m_Layer: 3
   m_Name: PlayerShip
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

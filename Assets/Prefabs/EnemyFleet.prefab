@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7682631823238818698}
   - component: {fileID: 7682631823238818701}
   m_Layer: 0
-  m_Name: EnemySpawner
+  m_Name: EnemyFleet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7682631823238818699}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7682631823238818701
 MonoBehaviour:
@@ -47,6 +47,6 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 1268243056916477701, guid: 7730e9c7f3d1e1e438c7c6c1b4eb907b, type: 3}
   maxEnemies: 10
-  minEnemies: 3
+  minEnemies: 5
   spawnRadius: 500
   enemies: []
