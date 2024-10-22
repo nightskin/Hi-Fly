@@ -54,6 +54,7 @@ public class PlayerShip : MonoBehaviour
 
     void Start()
     {
+        Cursor.visible = false;
         GetComponent<MeshRenderer>().materials[0].color = Settings.playerBodyColor;
         GetComponent<MeshRenderer>().materials[1].color = Settings.playerStripeColor;
         bulletSpawn = transform.Find("BulletSpawn");
@@ -116,7 +117,8 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.SecondaryFire.performed -= SecondaryFire_performed;
         InputManager.input.Player.SecondaryFire.canceled -= SecondaryFire_canceled;
     }
-    
+
+
     private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if(targetSpeed > 0)

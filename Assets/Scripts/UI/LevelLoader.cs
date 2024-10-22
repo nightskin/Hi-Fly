@@ -20,26 +20,26 @@ public class LevelLoader : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Start()
     {
         animator = GetComponent<Animator>();
         DontDestroyOnLoad(gameObject);
     }
 
-    public IEnumerator LoadLevel(string name, float duration = 1)
+    public IEnumerator LoadLevel(string name)
     {
         animator.SetTrigger("start");
 
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(1);
 
         SceneManager.LoadScene(name);
     }
 
-    public IEnumerator LoadLevel(int index, float duration = 1) 
+    public IEnumerator LoadLevel(int index) 
     {
         animator.SetTrigger("start");
 
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(1);
 
         SceneManager.LoadScene(index);
     }

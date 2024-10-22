@@ -5861,7 +5861,7 @@ MonoBehaviour:
   - {fileID: 6615905817581332609}
   turnSpeed: 5
   baseSpeed: 50
-  boostSpeed: 150
+  boostSpeed: 200
   acceleration: 10
   reticle: {fileID: 6819837170954737498}
   lockOnLayer:

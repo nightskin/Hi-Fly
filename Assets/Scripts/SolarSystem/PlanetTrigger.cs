@@ -17,7 +17,9 @@ public class PlanetTrigger : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            Debug.Log("Open Planet Menu");
+            HubWorld.planetId = transform.parent.name;
+            Debug.Log(HubWorld.planetId);
+            HubWorld.OpenPlanetMenu();
         }
     }
 }

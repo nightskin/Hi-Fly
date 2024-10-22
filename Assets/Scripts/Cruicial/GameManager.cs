@@ -86,16 +86,19 @@ public class GameManager : MonoBehaviour
 
     public void Pause()
     {
+        Cursor.visible = true;
         Time.timeScale = 0;
         foreach(GameObject playerUI in playerUIToHideOnPause)
         {
             playerUI.SetActive(false);
         }
+        eventSystem.SetSelectedGameObject(gamePauseMenu.transform.GetChild(1).gameObject);
         gamePauseMenu.SetActive(true);
     }
 
     public void Resume()
     {
+        Cursor.visible = false;
         Time.timeScale = 1;
         foreach (GameObject playerUI in playerUIToHideOnPause)
         {
@@ -106,6 +109,7 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
+        Cursor.visible = false;
         gameOver = false;
         StartCoroutine(LevelLoader.instance.LoadLevel(SceneManager.GetActiveScene().buildIndex));
         Time.timeScale = 1;
@@ -113,6 +117,7 @@ public class GameManager : MonoBehaviour
 
     public void MainMenu()
     {
+        Cursor.visible = true;
         Time.timeScale = 1;
         gameOver = false;
         StartCoroutine(LevelLoader.instance.LoadLevel("Title"));

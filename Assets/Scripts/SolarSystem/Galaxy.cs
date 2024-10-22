@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class Galaxy : MonoBehaviour
@@ -14,7 +13,6 @@ public class Galaxy : MonoBehaviour
     [SerializeField] GameObject enemyBase;
     [SerializeField] GameObject enemySpawner;
     [SerializeField][Min(1)] int maxPlanets = 8;
-    [SerializeField] bool drawAll = false;
 
     List<GameObject> quadrants = new List<GameObject>();
     int numberOfPlanets = 0;
@@ -29,11 +27,7 @@ public class Galaxy : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(!drawAll)
-        {
-            DrawVisible();
-        }
-
+        DrawVisible();
     }
 
     void Generate()
@@ -60,9 +54,9 @@ public class Galaxy : MonoBehaviour
                         {
                             //Make Planet
                             GameObject p = Instantiate(planet, quadrantPos, Quaternion.identity, transform);
+                            numberOfPlanets++;
                             p.name = numberOfPlanets.ToString();
                             quadrants.Add(p);
-                            numberOfPlanets++;
                         }
                     }
                     else if (quadrantType == 1)
@@ -99,7 +93,7 @@ public class Galaxy : MonoBehaviour
         {
             Vector3 camDirection = Camera.main.transform.forward;
             Vector3 toQuadrant = (quadrant.transform.position - Camera.main.transform.position).normalized;
-            if(Vector3.Distance(Camera.main.transform.position, quadrant.transform.position) <= Camera.main.farClipPlane + quadrantSize)
+            if(Vector3.Distance(Camera.main.transform.position, quadrant.transform.position) < Camera.main.farClipPlane + quadrantSize)
             {
                 quadrant.gameObject.SetActive(true);
             }
