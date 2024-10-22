@@ -161,7 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootSound: {fileID: 8300000, guid: cea60a9edf8d0cb44978ac5dba39bc31, type: 3}
   hitSound: {fileID: 8300000, guid: 673b1d10e04d4da4b8cfc53eb2a28282, type: 3}
-  range: 5
+  lifetime: 6
   owner: {fileID: 0}
   damage: 10
   homingTarget: {fileID: 0}

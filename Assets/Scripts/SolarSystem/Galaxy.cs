@@ -13,8 +13,11 @@ public class Galaxy : MonoBehaviour
     [SerializeField] GameObject asteroidField;
     [SerializeField] GameObject enemyBase;
     [SerializeField] GameObject enemySpawner;
+    [SerializeField][Min(1)] int maxPlanets = 8;
+    [SerializeField] bool drawAll = false;
 
     List<GameObject> quadrants = new List<GameObject>();
+    int numberOfPlanets = 0;
 
     void Start()
     {
@@ -26,14 +29,18 @@ public class Galaxy : MonoBehaviour
 
     void FixedUpdate()
     {
-        DrawVisible();
+        if(!drawAll)
+        {
+            DrawVisible();
+        }
+
     }
 
     void Generate()
     {
-        for (int x = 0; x < numberOfQuadrants.x; x++)
+        for (int x = -numberOfQuadrants.x/2; x <= numberOfQuadrants.x/2; x++)
         {
-            for (int z = 0; z < numberOfQuadrants.y; z++)
+            for (int z = -numberOfQuadrants.y/2; z <= numberOfQuadrants.y/2; z++)
             {
                 if (x != 0 || z != 0)
                 {
@@ -45,14 +52,17 @@ public class Galaxy : MonoBehaviour
                     // quadrant type == 4 means nothing
 
                     float y = noise.Evaluate(new Vector3(x, 0, z));
-                    Vector3 quadrantPos = new Vector3(x - numberOfQuadrants.x / 2, y, z - numberOfQuadrants.y / 2) * quadrantSize;
+                    Vector3 quadrantPos = new Vector3(x, y, z) * quadrantSize;
 
-                    if (quadrantType == 0)
+                    if (quadrantType == 0 && numberOfPlanets < maxPlanets)
                     {
                         if (planet)
                         {
                             //Make Planet
-                            quadrants.Add(Instantiate(planet, quadrantPos, Quaternion.identity, transform));
+                            GameObject p = Instantiate(planet, quadrantPos, Quaternion.identity, transform);
+                            p.name = numberOfPlanets.ToString();
+                            quadrants.Add(p);
+                            numberOfPlanets++;
                         }
                     }
                     else if (quadrantType == 1)

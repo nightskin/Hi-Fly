@@ -2,10 +2,9 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-
     [SerializeField] AudioClip shootSound;
     [SerializeField] AudioClip hitSound;
-    public float range = 2;
+    public float lifetime = 5;
     public GameObject owner = null;
     public int damage = 10;
     public Transform homingTarget = null;
@@ -35,7 +34,7 @@ public class Bullet : MonoBehaviour
         trail.Clear();
         trail.emitting = true;
         prevPosition = transform.position;
-        range = 2;
+        lifetime = 2;
     }
 
     void Update()
@@ -66,9 +65,9 @@ public class Bullet : MonoBehaviour
         }
 
         //Destroy Bullet After A Certain Time has Past
-        if (range > 0)
+        if (lifetime > 0)
         {
-            range -= Time.deltaTime;
+            lifetime -= Time.deltaTime;
         }
         else
         {

@@ -1,6 +1,3 @@
-
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Voxel 
@@ -32,8 +29,6 @@ public class Voxel
         return state;
     }
     
-
-
     public static Vector3 GetMidPoint(Voxel point1, Voxel point2)
     {
         return (point1.position + point2.position) / 2;

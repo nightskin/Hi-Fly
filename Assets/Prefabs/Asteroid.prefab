@@ -27,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8545969406572668274}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8545969406572668281
 MeshFilter:
@@ -93,9 +93,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8545969406572668274}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
@@ -111,9 +119,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 157dde9dac1cd964f81d24b5fab9ba60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rockMeshes:
-  - {fileID: -3983063591393173388, guid: 3bac0213e43135f44abc1129a0fbee76, type: 3}
-  - {fileID: 5244915625381210605, guid: 081c80af61aa2bc4ea007db111f50578, type: 3}
-  - {fileID: 4013275331872712965, guid: 8b8dbaa987888b84f8d4018cdc862e9b, type: 3}
-  tiles: {x: 10, y: 10, z: 10}
+  radius: 0
+  tiles: 10
   tileSize: 10
