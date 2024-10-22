@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     public static string seed = "Dota2 < League Of Legends";
     public static bool gameOver = false;
+    public static bool gamePaused = false;
     public static EventSystem eventSystem;
     public static SceneNodeManager sceneNodeManager;
 
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour
     {
         if(!gameOver)
         {
-            if (gamePauseMenu.activeSelf)
+            if (gamePaused)
             {
                 Resume();
             }
@@ -93,7 +94,8 @@ public class GameManager : MonoBehaviour
             playerUI.SetActive(false);
         }
         eventSystem.SetSelectedGameObject(gamePauseMenu.transform.GetChild(1).gameObject);
-        gamePauseMenu.SetActive(true);
+        gamePaused = true;
+        gamePauseMenu.SetActive(gamePaused);
     }
 
     public void Resume()
@@ -104,13 +106,15 @@ public class GameManager : MonoBehaviour
         {
             playerUI.SetActive(true);
         }
-        gamePauseMenu.SetActive(false);
+        gamePaused = false;
+        gamePauseMenu.SetActive(gamePaused);
     }
 
     public void Restart()
     {
         Cursor.visible = false;
         gameOver = false;
+        gamePaused = false;
         StartCoroutine(LevelLoader.instance.LoadLevel(SceneManager.GetActiveScene().buildIndex));
         Time.timeScale = 1;
     }
@@ -120,6 +124,7 @@ public class GameManager : MonoBehaviour
         Cursor.visible = true;
         Time.timeScale = 1;
         gameOver = false;
+        gamePaused = false;
         StartCoroutine(LevelLoader.instance.LoadLevel("Title"));
     }
 

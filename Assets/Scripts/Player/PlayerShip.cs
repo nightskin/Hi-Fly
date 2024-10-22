@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
 {
-
     public enum PowerUp
     {
         NONE,
@@ -131,7 +130,7 @@ public class PlayerShip : MonoBehaviour
 
     private void Boost_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(targetSpeed > 0)
+        if(targetSpeed > 0 && !GameManager.gamePaused && !GameManager.gameOver)
         {
             camera.boostEffect.Play();
             thrustColor = Color.red;
@@ -166,7 +165,7 @@ public class PlayerShip : MonoBehaviour
 
     private void ToggleEngines_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(!InputManager.input.Player.Boost.IsPressed())
+        if(!InputManager.input.Player.Boost.IsPressed() && !GameManager.gamePaused && !GameManager.gameOver)
         {
             if (targetSpeed > 0)
             {
@@ -284,63 +283,71 @@ public class PlayerShip : MonoBehaviour
     
     void FireBullet()
     {
-        //Initialize Bullet
-        GameObject obj = bulletPool.Spawn(bulletSpawn.position);
-        if(obj != null) 
+        if(!GameManager.gameOver && !GameManager.gamePaused)
         {
-            Bullet b = obj.GetComponent<Bullet>();
-            //Set Needed Variables
-            b.owner = gameObject;
+            //Initialize Bullet
+            GameObject obj = bulletPool.Spawn(bulletSpawn.position);
+            if (obj != null)
+            {
+                Bullet b = obj.GetComponent<Bullet>();
+                //Set Needed Variables
+                b.owner = gameObject;
 
-            if (reticle.color == Color.red)
-            {
-                b.homingTarget = lockOn.collider.transform;
-            }
-            else
-            {
-                Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
-                if (Physics.Raycast(ray, out RaycastHit hit))
+                if (reticle.color == Color.red)
                 {
-                    if(hit.transform.gameObject == b.owner)
-                    {
-                        b.direction = ray.direction;
-                    }
-                    else
-                    {
-                        b.direction = (hit.point - bulletSpawn.position).normalized;
-                    }
+                    b.homingTarget = lockOn.collider.transform;
                 }
                 else
                 {
-                    b.direction = ray.direction;
+                    Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
+                    if (Physics.Raycast(ray, out RaycastHit hit))
+                    {
+                        if (hit.transform.gameObject == b.owner)
+                        {
+                            b.direction = ray.direction;
+                        }
+                        else
+                        {
+                            b.direction = (hit.point - bulletSpawn.position).normalized;
+                        }
+                    }
+                    else
+                    {
+                        b.direction = ray.direction;
+                    }
                 }
             }
         }
+
     }
 
     void FireLazer()
     {
-        lazer = lazerPool.Spawn(Vector3.zero);
-        if(lazer != null)
+        if (!GameManager.gameOver && !GameManager.gamePaused)
         {
-            Lazer l = lazer.GetComponent<Lazer>();
-            l.owner = gameObject;
-            Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
-            if (Physics.Raycast(ray, out RaycastHit hit, camera.GetComponent<Camera>().farClipPlane, lockOnLayer))
+            lazer = lazerPool.Spawn(Vector3.zero);
+            if (lazer != null)
             {
-                l.direction = (hit.point - (transform.position + transform.forward)).normalized;
-            }
-            else
-            {
-                l.direction = ray.direction;
-            }
+                Lazer l = lazer.GetComponent<Lazer>();
+                l.owner = gameObject;
+                Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
+                if (Physics.Raycast(ray, out RaycastHit hit, camera.GetComponent<Camera>().farClipPlane, lockOnLayer))
+                {
+                    l.direction = (hit.point - (transform.position + transform.forward)).normalized;
+                }
+                else
+                {
+                    l.direction = ray.direction;
+                }
 
+            }
         }
+
     }
 
     void MoveLazer()
     {
-        if (lazer != null)
+        if (lazer != null && !GameManager.gamePaused && !GameManager.gameOver)
         {
             Lazer l = lazer.GetComponent<Lazer>();
             Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
