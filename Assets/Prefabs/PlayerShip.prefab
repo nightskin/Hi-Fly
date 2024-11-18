@@ -5852,6 +5852,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pointOfView: 0
   powerUp: 1
   health: {fileID: 8131623140777354630}
   camera: {fileID: 8504905812486363887}
@@ -7494,7 +7495,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 3, z: -10}
-  m_LocalScale: {x: 3, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1814296040985746743}
@@ -7616,11 +7617,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 100
-  cameraDistance: 13
+  cameraDistance: 10
   cameraOffset: {x: 0, y: 3}
   boostEffect: {fileID: 1814296040985746741}
   lerpSpeed: 10
-  player: {fileID: 0}
+  player: {fileID: 303286065443942689}
 --- !u!1 &8659897189068200085
 GameObject:
   m_ObjectHideFlags: 0
