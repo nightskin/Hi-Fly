@@ -10,7 +10,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField][Min(2)] float lerpSpeed = 10;
     [SerializeField] PlayerShip player;
 
-    Vector2 cameraRot;
+    Vector2 cameraRot = Vector2.zero;
     float zRot = 0;
 
     void Start()
@@ -29,11 +29,6 @@ public class PlayerCamera : MonoBehaviour
             }
         }
 
-    }
-
-    void OnEnable()
-    {
-        cameraRot = Vector2.zero;
     }
 
     void Update()

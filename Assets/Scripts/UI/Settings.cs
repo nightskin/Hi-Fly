@@ -34,7 +34,7 @@ public class Settings : MonoBehaviour
 
     public void ExitSettings()
     {
-        StartCoroutine(LevelLoader.instance.LoadLevel("Menu"));
+        StartCoroutine(SceneLoader.instance.LoadLevel("Menu"));
     }
 
     public void BackToGeneralSettings()

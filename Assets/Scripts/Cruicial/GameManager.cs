@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
         gameOver = false;
         gamePaused = false;
-        StartCoroutine(LevelLoader.instance.LoadLevel(SceneManager.GetActiveScene().buildIndex));
+        StartCoroutine(SceneLoader.instance.LoadLevel(SceneManager.GetActiveScene().buildIndex));
         Time.timeScale = 1;
     }
 
@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         gameOver = false;
         gamePaused = false;
-        StartCoroutine(LevelLoader.instance.LoadLevel("Title"));
+        StartCoroutine(SceneLoader.instance.LoadLevel("Title"));
     }
 
     public void QuitGame()

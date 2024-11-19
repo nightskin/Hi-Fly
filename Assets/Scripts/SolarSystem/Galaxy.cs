@@ -11,7 +11,6 @@ public class Galaxy : MonoBehaviour
     [SerializeField] GameObject planet;
     [SerializeField] GameObject asteroidField;
     [SerializeField] GameObject enemyBase;
-    [SerializeField] GameObject enemySpawner;
     [SerializeField][Min(1)] int maxPlanets = 8;
 
     List<GameObject> quadrants = new List<GameObject>();
@@ -25,11 +24,6 @@ public class Galaxy : MonoBehaviour
         Generate();
     }
 
-    void FixedUpdate()
-    {
-        DrawVisible();
-    }
-
     void Generate()
     {
         for (int x = -numberOfQuadrants.x/2; x <= numberOfQuadrants.x/2; x++)
@@ -38,12 +32,11 @@ public class Galaxy : MonoBehaviour
             {
                 if (x != 0 || z != 0)
                 {
-                    int quadrantType = Mathf.RoundToInt(Random.value * 4);
+                    int quadrantType = Mathf.RoundToInt(Random.value * 3);
                     // quadrant type == 0 means Planet
                     // quadrant type == 1 means Asteroid Field
                     // quadrant type == 2 means enemy base
-                    // qaudrant type == 3 means enemies
-                    // quadrant type == 4 means nothing
+                    // quadrant type == 3
 
                     float y = noise.Evaluate(new Vector3(x, 0, z));
                     Vector3 quadrantPos = new Vector3(x, y, z) * quadrantSize;
@@ -76,10 +69,12 @@ public class Galaxy : MonoBehaviour
                     }
                     else if (quadrantType == 3)
                     {
-                        if (enemySpawner)
-                        {
-                            quadrants.Add(Instantiate(enemySpawner, quadrantPos, Quaternion.identity, transform));
-                        }
+                        //if (enemySpawner)
+                        //{
+                        //    var fleet = Instantiate(enemySpawner, quadrantPos, Quaternion.identity, transform);
+                        //    fleet.name = "EnemyFleet";
+                        //    quadrants.Add(fleet);
+                        //}
                     }
                 }
 
@@ -91,16 +86,20 @@ public class Galaxy : MonoBehaviour
     {
         foreach (var quadrant in quadrants) 
         {
-            Vector3 camDirection = Camera.main.transform.forward;
-            Vector3 toQuadrant = (quadrant.transform.position - Camera.main.transform.position).normalized;
-            if(Vector3.Distance(Camera.main.transform.position, quadrant.transform.position) < Camera.main.farClipPlane + quadrantSize)
+            if(quadrant.name == "EnemyFleet")
             {
-                quadrant.gameObject.SetActive(true);
+                Vector3 camDirection = Camera.main.transform.forward;
+                Vector3 toQuadrant = (quadrant.transform.position - Camera.main.transform.position).normalized;
+                if (Vector3.Dot(camDirection, toQuadrant) > 0)
+                {
+                    quadrant.gameObject.SetActive(true);
+                }
+                else
+                {
+                    quadrant.gameObject.SetActive(false);
+                }
             }
-            else
-            {
-                quadrant.gameObject.SetActive(false);
-            }
+
         }
     }
 }

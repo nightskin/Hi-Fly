@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HubWorld : MonoBehaviour
 {
-    public static string planetId = string.Empty;
+    public static string levelId = string.Empty;
     public static GameObject planetMenu;
     void Start()
     {
@@ -19,7 +19,7 @@ public class HubWorld : MonoBehaviour
     public void Yes()
     {
         Time.timeScale = 1;
-        StartCoroutine(LevelLoader.instance.LoadLevel(planetId.ToString()));
+        StartCoroutine(SceneLoader.instance.LoadLevel("Level"));
         planetMenu.SetActive(false);
     }
 

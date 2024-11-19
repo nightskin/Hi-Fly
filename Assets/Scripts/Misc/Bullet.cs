@@ -73,9 +73,6 @@ public class Bullet : MonoBehaviour
         {
             DeSpawn();
         }
-
-
-
     }
     
     void CheckCollisions()
@@ -118,7 +115,7 @@ public class Bullet : MonoBehaviour
                         if (player.evading)
                         {
                             owner = rayhit.transform.gameObject;
-                            direction = Vector3.Reflect(direction, rayhit.normal);
+                            direction = -direction;
                         }
                         else
                         {

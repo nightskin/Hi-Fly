@@ -20,7 +20,6 @@ public class EnemyShip : MonoBehaviour
     float shootTimer = 0;
 
 
-
     void OnEnable()
     {
         target = GameObject.FindGameObjectWithTag("Player");
@@ -60,12 +59,15 @@ public class EnemyShip : MonoBehaviour
         if(other.tag == "Player")
         {
             PlayerShip player = other.GetComponent<PlayerShip>();
-            player.health.TakeDamage(attackPower);
-            if(player.health.IsDead())
+            if(!player.evading)
             {
-                GameManager.gameOver = true;
+                player.health.TakeDamage(attackPower);
+                if (player.health.IsDead())
+                {
+                    GameManager.gameOver = true;
+                }
+                health.TakeDamage(health.GetMaxHealth());
             }
-            health.TakeDamage(health.GetMaxHealth());
         }
         if(other.tag == "Astroid" || other.tag == "Planet")
         {
@@ -79,8 +81,7 @@ public class EnemyShip : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
     }
-
-
+    
     void Fight()
     {
         
@@ -91,15 +92,11 @@ public class EnemyShip : MonoBehaviour
         shootTimer -= Time.deltaTime;
         if (shootTimer <= 0)
         {
-            if (Physics.SphereCast(transform.position, aimSkill ,transform.forward, out RaycastHit hit))
+            if (Physics.SphereCast(transform.position, aimSkill , transform.forward, out RaycastHit hit))
             {
                 if(hit.transform.gameObject == target)
                 {
-                    var b = GameObject.Find("BulletPool").GetComponent<ObjectPool>().Spawn(transform.position + transform.forward);
-                    b.GetComponent<Bullet>().direction = GetDirectionTowardsTarget();
-                    b.GetComponent<Bullet>().owner = gameObject;
-                    b.GetComponent<Bullet>().damage = attackPower;
-                    shootTimer = fireRate;
+                    Shoot((target.transform.position - (transform.position + transform.forward)).normalized);
                 }
             }
 
@@ -107,6 +104,14 @@ public class EnemyShip : MonoBehaviour
 
     }
 
+    void Shoot(Vector3 direction)
+    {
+        var b = GameObject.Find("BulletPool").GetComponent<ObjectPool>().Spawn(transform.position + transform.forward);
+        b.GetComponent<Bullet>().direction = direction;
+        b.GetComponent<Bullet>().owner = gameObject;
+        b.GetComponent<Bullet>().damage = attackPower;
+        shootTimer = fireRate;
+    }
 
     Vector3 SteerTowardsTarget()
     {
