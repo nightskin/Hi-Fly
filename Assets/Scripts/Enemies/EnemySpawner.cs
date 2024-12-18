@@ -9,7 +9,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] int minEnemies = 3;
     [SerializeField] float spawnRadius = 500;
 
-    public List<GameObject> enemies = new List<GameObject>();
+    public List<GameObject> enemyShips = new List<GameObject>();
 
     void Start()
     {
@@ -21,7 +21,7 @@ public class EnemySpawner : MonoBehaviour
                 int i = Random.Range(0, enemyPrefabs.Length);
                 Vector3 pos = transform.position + Random.insideUnitSphere * spawnRadius;
                 var enemy = Instantiate(enemyPrefabs[i], pos, Util.RandomRotation(), transform);
-                enemies.Add(enemy);
+                enemyShips.Add(enemy);
             }
             else
             {
@@ -30,10 +30,10 @@ public class EnemySpawner : MonoBehaviour
         }
 
     }
-    
+
     public void ReSpawn(Vector3 pos)
     {
-        foreach(GameObject enemy in  enemies) 
+        foreach(GameObject enemy in  enemyShips) 
         {
             if(!enemy.activeSelf)
             {

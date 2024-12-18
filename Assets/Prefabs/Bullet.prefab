@@ -135,7 +135,7 @@ TrailRenderer:
       m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 10
+    numCornerVertices: 5
     numCapVertices: 5
     alignment: 0
     textureMode: 0

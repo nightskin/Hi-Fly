@@ -127,8 +127,7 @@ public class Planet : MonoBehaviour
             colors.Add(landColor);
         }
     }
-
-
+    
     float Evaluate(Vector3 point)
     {
         float noiseValue = 0;

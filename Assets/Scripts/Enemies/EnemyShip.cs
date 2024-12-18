@@ -16,7 +16,6 @@ public class EnemyShip : MonoBehaviour
     [SerializeField] float moveSpeed = 75;
 
     Vector3 direction;
-    float turnTimer = 0;
     float shootTimer = 0;
 
 
@@ -84,7 +83,6 @@ public class EnemyShip : MonoBehaviour
     
     void Fight()
     {
-        
         direction = SteerTowardsTarget() + Seperation(avoidRadius);
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
@@ -96,7 +94,7 @@ public class EnemyShip : MonoBehaviour
             {
                 if(hit.transform.gameObject == target)
                 {
-                    Shoot((target.transform.position - (transform.position + transform.forward)).normalized);
+                    Shoot();
                 }
             }
 
@@ -104,13 +102,13 @@ public class EnemyShip : MonoBehaviour
 
     }
 
-    void Shoot(Vector3 direction)
+    void Shoot()
     {
         var b = GameObject.Find("BulletPool").GetComponent<ObjectPool>().Spawn(transform.position + transform.forward);
         b.GetComponent<Bullet>().direction = direction;
         b.GetComponent<Bullet>().owner = gameObject;
         b.GetComponent<Bullet>().damage = attackPower;
-        shootTimer = fireRate;
+        shootTimer = Random.Range(0.1f, fireRate);
     }
 
     Vector3 SteerTowardsTarget()

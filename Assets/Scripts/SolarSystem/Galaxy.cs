@@ -11,6 +11,7 @@ public class Galaxy : MonoBehaviour
     [SerializeField] GameObject planet;
     [SerializeField] GameObject asteroidField;
     [SerializeField] GameObject enemyBase;
+    [SerializeField] GameObject enemySpawner;
     [SerializeField][Min(1)] int maxPlanets = 8;
 
     List<GameObject> quadrants = new List<GameObject>();
@@ -32,11 +33,12 @@ public class Galaxy : MonoBehaviour
             {
                 if (x != 0 || z != 0)
                 {
-                    int quadrantType = Mathf.RoundToInt(Random.value * 3);
+                    int quadrantType = Mathf.RoundToInt(Random.value * 4);
                     // quadrant type == 0 means Planet
                     // quadrant type == 1 means Asteroid Field
                     // quadrant type == 2 means enemy base
-                    // quadrant type == 3
+                    // quadrant type == 3 means enemy fleet
+                    // quadrant type == 4 means nothing
 
                     float y = noise.Evaluate(new Vector3(x, 0, z));
                     Vector3 quadrantPos = new Vector3(x, y, z) * quadrantSize;
@@ -69,12 +71,12 @@ public class Galaxy : MonoBehaviour
                     }
                     else if (quadrantType == 3)
                     {
-                        //if (enemySpawner)
-                        //{
-                        //    var fleet = Instantiate(enemySpawner, quadrantPos, Quaternion.identity, transform);
-                        //    fleet.name = "EnemyFleet";
-                        //    quadrants.Add(fleet);
-                        //}
+                        if (enemySpawner)
+                        {
+                            var fleet = Instantiate(enemySpawner, quadrantPos, Quaternion.identity, transform);
+                            fleet.name = "EnemyFleet";
+                            quadrants.Add(fleet);
+                        }
                     }
                 }
 
