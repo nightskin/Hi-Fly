@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -1048180488164767668}
   m_Layer: 0
   m_Name: Bullet
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,6 +52,9 @@ TrailRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -178,6 +181,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: cea60a9edf8d0cb44978ac5dba39bc31, type: 3}
+  m_Resource: {fileID: 8300000, guid: cea60a9edf8d0cb44978ac5dba39bc31, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

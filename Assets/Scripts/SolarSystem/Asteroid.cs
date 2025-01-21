@@ -143,16 +143,16 @@ public class Asteroid : MonoBehaviour
                 for (int z = tiles; z > 0; z--)
                 {
                     Voxel[] points = new Voxel[]
-                        {
-                            voxels[x,y,z-1],
-                            voxels[x-1,y,z-1],
-                            voxels[x-1,y,z],
-                            voxels[x,y,z],
-                            voxels[x,y-1,z-1],
-                            voxels[x-1,y-1,z-1],
-                            voxels[x-1,y-1,z],
-                            voxels[x,y-1,z],
-                        };
+                    {
+                        voxels[x,y,z-1],
+                        voxels[x-1,y,z-1],
+                        voxels[x-1,y,z],
+                        voxels[x,y,z],
+                        voxels[x,y-1,z-1],
+                        voxels[x-1,y-1,z-1],
+                        voxels[x-1,y-1,z],
+                        voxels[x,y-1,z],
+                    };
 
                     int cubeIndex = Voxel.GetState(points);
 
