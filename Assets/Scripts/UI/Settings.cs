@@ -15,8 +15,6 @@ public class Settings : MonoBehaviour
     [SerializeField] Slider sfxVolume;
 
     [SerializeField] GameObject playerPreview;
-    [SerializeField] Galaxy galaxyPreview;
-
     [SerializeField] EventSystem eventSystem;
 
     static SceneNodeManager sceneNodeManager;
@@ -34,6 +32,7 @@ public class Settings : MonoBehaviour
 
     public void ExitSettings()
     {
+        eventSystem.gameObject.SetActive(false);
         StartCoroutine(SceneLoader.instance.LoadLevel("Menu"));
     }
 

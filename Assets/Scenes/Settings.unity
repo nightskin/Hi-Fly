@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -42,8 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -680,7 +677,7 @@ MonoBehaviour:
   musicVolume: {fileID: 874318850}
   sfxVolume: {fileID: 1818383102}
   playerPreview: {fileID: 919132148614446684}
-  galaxyPreview: {fileID: 231072357}
+  galaxyPreview: {fileID: 0}
   eventSystem: {fileID: 1346135378}
 --- !u!114 &187135461
 MonoBehaviour:
@@ -814,58 +811,6 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &231072355
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 231072356}
-  - component: {fileID: 231072357}
-  m_Layer: 0
-  m_Name: Galaxy
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &231072356
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 231072355}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &231072357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 231072355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cb2743e39fcaa24c839c179664c2a07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  quadrantSize: 2000
-  numberOfQuadrants: {x: 10, y: 10}
-  planet: {fileID: 1280286012736500307, guid: f665682510eb24d4a8153ad52aa80bce, type: 3}
-  asteroidField: {fileID: 1396936832559809867, guid: a890b511b5049fb4c8a57cce1032f14c,
-    type: 3}
-  enemyBase: {fileID: 0}
-  enemySpawner: {fileID: 7682631823238818699, guid: 7f22fe340ccf21f4ea9bb33752f41a88,
-    type: 3}
 --- !u!1 &233314321
 GameObject:
   m_ObjectHideFlags: 0
@@ -2758,9 +2703,8 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 662873517}
   m_Enabled: 1
-  serializedVersion: 10
+  serializedVersion: 11
   m_Type: 1
-  m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -2810,8 +2754,12 @@ Light:
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
 --- !u!4 &662873520
 Transform:
   m_ObjectHideFlags: 0
@@ -6217,7 +6165,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Control
+  m_Text: Controls
 --- !u!222 &1772255373
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7531,6 +7479,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -7574,7 +7525,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 2103170909}
   - {fileID: 187135456}
-  - {fileID: 231072356}
   - {fileID: 662873520}
   - {fileID: 1346135379}
   - {fileID: 470549470}
