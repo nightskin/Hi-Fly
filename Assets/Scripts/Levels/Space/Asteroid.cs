@@ -6,19 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent (typeof(MeshRenderer))]
 [RequireComponent(typeof (MeshCollider))]
-public class Destructible : MonoBehaviour
+public class Asteroid : MonoBehaviour
 {
     Voxel[,,] voxels = null;
 
-    float radius;
-    int height;
-
-    public enum AssetType
-    {
-        Asteroid,
-        Building,
-    }
-    public AssetType assetType;
+    [HideInInspector] public float radius;
 
     public int voxelsPerRow = 10;
     public float voxelSpacing = 10;
@@ -41,9 +33,9 @@ public class Destructible : MonoBehaviour
 
     }
     
-    public async void RemoveBlock(RaycastHit hit)
+    public async void RemoveBlock(Vector3 hit)
     {
-        Vector3 targetPosition = hit.point - transform.position;
+        Vector3 targetPosition = transform.InverseTransformPoint(hit);
         Voxel closestVoxel = voxels[0,0,0];
 
         var result = await Task.Run(() => 
@@ -64,7 +56,6 @@ public class Destructible : MonoBehaviour
                     }
                 }
             }
-
             voxels[closestVoxel.index.x, closestVoxel.index.y, closestVoxel.index.z].value = -1;
 
             return true;
@@ -88,89 +79,40 @@ public class Destructible : MonoBehaviour
             }
         }
     }
-
+    
     void CreateVoxelData()
     {
         voxels = new Voxel[voxelsPerRow + 1, voxelsPerRow + 1, voxelsPerRow + 1];
-
-        if (assetType == AssetType.Asteroid)
+        radius = Random.Range(voxelsPerRow * voxelSpacing / 4, voxelsPerRow * voxelSpacing / 2);
+        for (int x = 0; x < voxelsPerRow + 1; x++)
         {
-            radius = Random.Range(voxelsPerRow * voxelSpacing / 4, voxelsPerRow * voxelSpacing / 2);
-            Plane[] planes =  
+            for (int y = 0; y < voxelsPerRow + 1; y++)
             {
-            new Plane(new Vector3(-1, Random.Range(-1,1), Random.Range(-1,1)), new Vector3(radius - voxelSpacing, 0, 0)),
-            new Plane(new Vector3(1, Random.Range(-1,1), Random.Range(-1,1)), new Vector3(-radius + voxelSpacing, 0, 0)),
-
-            new Plane(new Vector3(Random.Range(-1,1), Random.Range(-1,1), 1), new Vector3(0, 0, -radius + voxelSpacing)),
-            new Plane(new Vector3(Random.Range(-1,1), Random.Range(-1,1), -1), new Vector3(0, 0, radius - voxelSpacing)),
-            };
-            for (int x = 0; x < voxelsPerRow + 1; x++)
-            {
-                for (int y = 0; y < voxelsPerRow + 1; y++)
+                for (int z = 0; z < voxelsPerRow + 1; z++)
                 {
-                    for (int z = 0; z < voxelsPerRow + 1; z++)
-                    {
-                        voxels[x, y, z] = new Voxel();
-                        voxels[x, y, z].index = new Vector3Int(x, y, z);
-                        voxels[x, y, z].position = new Vector3(x - voxelsPerRow / 2, y - voxelsPerRow / 2, z - voxelsPerRow / 2) * voxelSpacing;
+                    voxels[x, y, z] = new Voxel();
+                    voxels[x, y, z].index = new Vector3Int(x, y, z);
+                    voxels[x, y, z].position = new Vector3(x, y, z) * voxelSpacing;
 
-                        float distanceFromCenter = Vector3.Distance(transform.position, transform.position + voxels[x, y, z].position);
-                        if (distanceFromCenter > radius)
-                        {
-                            voxels[x, y, z].value = -1;
-                        }
-                        else
-                        {
-                            voxels[x, y, z].value = EvaluatePoint(voxels[x, y, z].position, planes);
-                        }
+                    float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + voxels[x, y, z].position);
+                    if (distanceFromCenter > radius)
+                    {
+                        voxels[x, y, z].value = -1;
                     }
-                }
-            }
-        }
-        else if (assetType == AssetType.Building)
-        {
-            height = Random.Range(voxelsPerRow / 2, voxelsPerRow);
-            for (int x = 0; x < voxelsPerRow + 1; x++)
-            {
-                for (int y = 0; y < voxelsPerRow + 1; y++)
-                {
-                    for (int z = 0; z < voxelsPerRow + 1; z++)
+                    else
                     {
-                        voxels[x, y, z] = new Voxel();
-                        voxels[x, y, z].index = new Vector3Int(x, y, z);
-                        voxels[x, y, z].position = new Vector3(x, y, z) * voxelSpacing;
-
-                        if (x == 0 || x == voxelsPerRow || z == 0 || z == voxelsPerRow || y > height)
-                        {
-                            voxels[x,y,z].value = -1;
-                        }
-                        else
-                        {
-                            voxels[x, y, z].value = 1;
-                        }
+                        voxels[x, y, z].value = 1;
                     }
                 }
             }
         }
     }
     
-    float EvaluatePoint(Vector3 point, Plane[] planes)
-    {
-        foreach (Plane plane in planes)
-        {
-            if (plane.GetDistanceToPoint(point) <= 0)
-            {
-                return -1;
-            }
-        }
-        return 1;
-    }
-
     void CreateMeshData()
     {
-        for(int x = voxelsPerRow; x > 0; x--)
+        for (int x = voxelsPerRow; x > 0; x--)
         {
-            for(int y = voxelsPerRow; y > 0; y--)
+            for (int y = voxelsPerRow; y > 0; y--)
             {
                 for (int z = voxelsPerRow; z > 0; z--)
                 {
@@ -197,7 +139,7 @@ public class Destructible : MonoBehaviour
                             int a = MarchingCubesTables.edgeConnections[edgeIndex][0];
                             int b = MarchingCubesTables.edgeConnections[edgeIndex][1];
 
-                            
+
                             Vector3 vertexPos = Voxel.GetMidPoint(points[a], points[b]);
 
 

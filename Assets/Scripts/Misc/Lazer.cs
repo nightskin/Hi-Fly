@@ -54,11 +54,11 @@ public class Lazer : MonoBehaviour
             {
                 if (hit.transform.tag == "Destructible")
                 {
-                    Destructible asteroid = hit.transform.GetComponent<Destructible>();
+                    Asteroid asteroid = hit.transform.GetComponent<Asteroid>();
                     explosionPool.Spawn(hit.point);
                     if (asteroid)
                     {
-                        asteroid.RemoveBlock(hit);
+                        asteroid.RemoveBlock(hit.point);
                     }
                 }
                 else if (hit.transform.tag == "Planet")

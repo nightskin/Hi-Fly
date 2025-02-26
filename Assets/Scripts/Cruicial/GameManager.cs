@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static PlayerShip playerShip;
     public GameObject[] playerUIToHideOnPause;
 
+    public static Noise noise;
     public static string seed = "Dota2 < LOL";
     public static float isoLevel = 0;
     public static bool gameOver = false;
@@ -22,6 +23,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Random.InitState(seed.GetHashCode());
+        noise = new Noise(seed.GetHashCode());
+
         playerShip = GameObject.FindWithTag("Player").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();

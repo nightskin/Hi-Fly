@@ -136,7 +136,7 @@ public class Planet : MonoBehaviour
 
         for (int l = 0; l < 5; l++)
         {
-            float v = Galaxy.noise.Evaluate(point * frequency + transform.position);
+            float v = GameManager.noise.Evaluate(point * frequency + transform.position);
             noiseValue += (v + 1) * 0.5f * amplitude;
             frequency *= roughness;
             amplitude *= persistance;

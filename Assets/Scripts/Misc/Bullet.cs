@@ -83,11 +83,11 @@ public class Bullet : MonoBehaviour
             {
                 if (rayhit.transform.tag == "Destructible")
                 {
-                    Destructible destructible = rayhit.transform.GetComponent<Destructible>();
+                    Asteroid destructible = rayhit.transform.GetComponent<Asteroid>();
                     explosionPool.Spawn(rayhit.point);
                     if (destructible)
                     {
-                        destructible.RemoveBlock(rayhit);
+                        destructible.RemoveBlock(rayhit.point);
                     }
                     DeSpawn();
                 }
