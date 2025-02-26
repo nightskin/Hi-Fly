@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] playerUIToHideOnPause;
 
     public static string seed = "Dota2 < LOL";
+    public static float isoLevel = 0;
     public static bool gameOver = false;
     public static bool gamePaused = false;
     public static EventSystem eventSystem;

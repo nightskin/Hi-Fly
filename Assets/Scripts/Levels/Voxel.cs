@@ -1,36 +1,35 @@
 using UnityEngine;
 
-public class Voxel 
+public struct Voxel 
 {
-    public Color color = new Color();
-    public bool active = false;
-    public float value = 0;
-    public Vector3 position = Vector3.zero;
-    public int x = 0;
-    public int y = 0;
-    public int z = 0;
-
-    public Voxel()
-    {
-
-    }
-
-    public static int GetState(Voxel[] points)
+    public Color color;
+    public float value;
+    public Vector3 position;
+    public Vector3Int index;
+    
+    public static int GetState(Voxel[] voxels)
     {
         int state = 0;
-        if (points[0].active) state |= 1;
-        if (points[1].active) state |= 2;
-        if (points[2].active) state |= 4;
-        if (points[3].active) state |= 8;
-        if (points[4].active) state |= 16;
-        if (points[5].active) state |= 32;
-        if (points[6].active) state |= 64;
-        if (points[7].active) state |= 128;
+        if (voxels[0].value >= GameManager.isoLevel) state |= 1;
+        if (voxels[1].value >= GameManager.isoLevel) state |= 2;
+        if (voxels[2].value >= GameManager.isoLevel) state |= 4;
+        if (voxels[3].value >= GameManager.isoLevel) state |= 8;
+        if (voxels[4].value >= GameManager.isoLevel) state |= 16;
+        if (voxels[5].value >= GameManager.isoLevel) state |= 32;
+        if (voxels[6].value >= GameManager.isoLevel) state |= 64;
+        if (voxels[7].value >= GameManager.isoLevel) state |= 128;
         return state;
     }
-    
-    public static Vector3 GetMidPoint(Voxel point1, Voxel point2)
+
+    public static Vector3 GetMidPoint(Voxel v1, Voxel v2)
     {
-        return (point1.position + point2.position) / 2;
+        return (v1.position + v2.position) / 2;
     }
+
+    public static Vector3 LerpPoint(Voxel v1, Voxel v2, float isoLevel)
+    {
+        float t = (isoLevel - v1.value) / (v2.value - v1.value);
+        return Vector3.Lerp(v1.position, v2.position, t);
+    }
+
 }

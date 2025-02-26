@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 8545969406572668281}
   - component: {fileID: 8545969406572668286}
   - component: {fileID: 8545969406572668287}
-  - component: {fileID: 8545969406572668284}
+  - component: {fileID: 3240417911109919151}
   m_Layer: 0
   m_Name: Asteroid
-  m_TagString: Asteroid
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 126
@@ -110,7 +110,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &8545969406572668284
+--- !u!114 &3240417911109919151
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,9 +119,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8545969406572668274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 157dde9dac1cd964f81d24b5fab9ba60, type: 3}
+  m_Script: {fileID: 11500000, guid: f24ef4c4476edf44d8e9d4f11eeb6b8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0
-  tiles: 10
-  tileSize: 10
+  assetType: 0
+  voxelsPerRow: 10
+  voxelSpacing: 10

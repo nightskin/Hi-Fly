@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class TitleScreen : MonoBehaviour
 {
-
     void Update()
     {
         if(Input.anyKeyDown)
@@ -10,5 +9,4 @@ public class TitleScreen : MonoBehaviour
             StartCoroutine(SceneLoader.instance.LoadLevel("Menu"));
         }
     }
-
 }

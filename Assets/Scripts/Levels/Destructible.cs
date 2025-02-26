@@ -6,13 +6,22 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent (typeof(MeshRenderer))]
 [RequireComponent(typeof (MeshCollider))]
-public class Asteroid : MonoBehaviour
+public class Destructible : MonoBehaviour
 {
     Voxel[,,] voxels = null;
 
-    public float radius;
-    public int tiles = 10;
-    public float tileSize = 10;
+    float radius;
+    int height;
+
+    public enum AssetType
+    {
+        Asteroid,
+        Building,
+    }
+    public AssetType assetType;
+
+    public int voxelsPerRow = 10;
+    public float voxelSpacing = 10;
     
     Mesh mesh;
     List<Vector3> verts = new List<Vector3>();
@@ -22,9 +31,8 @@ public class Asteroid : MonoBehaviour
 
     void Start()
     {
-        radius = Random.Range(tiles * tileSize / 4, tiles * tileSize / 2);
         CreateVoxelData();
-        MarchingCubes();
+        CreateMeshData();
 
         mesh = new Mesh();
         mesh.MarkDynamic();
@@ -40,13 +48,13 @@ public class Asteroid : MonoBehaviour
 
         var result = await Task.Run(() => 
         {
-            for (int x = 0; x < tiles; x++)
+            for (int x = 0; x < voxelsPerRow; x++)
             {
-                for (int y = 0; y < tiles; y++)
+                for (int y = 0; y < voxelsPerRow; y++)
                 {
-                    for (int z = 0; z < tiles; z++)
+                    for (int z = 0; z < voxelsPerRow; z++)
                     {
-                        if (voxels[x, y, z].active)
+                        if (voxels[x, y, z].value > GameManager.isoLevel)
                         {
                             if (Vector3.Distance(targetPosition, closestVoxel.position) > Vector3.Distance(targetPosition, voxels[x, y, z].position))
                             {
@@ -57,7 +65,7 @@ public class Asteroid : MonoBehaviour
                 }
             }
 
-            voxels[closestVoxel.x, closestVoxel.y, closestVoxel.z].active = false;
+            voxels[closestVoxel.index.x, closestVoxel.index.y, closestVoxel.index.z].value = -1;
 
             return true;
         });
@@ -75,7 +83,7 @@ public class Asteroid : MonoBehaviour
                 tris.Clear();
                 uvs.Clear();
                 buffer = 0;
-                MarchingCubes();
+                CreateMeshData();
                 UpdateMesh();
             }
         }
@@ -83,64 +91,88 @@ public class Asteroid : MonoBehaviour
 
     void CreateVoxelData()
     {
-        voxels = new Voxel[tiles + 1, tiles + 1, tiles + 1];
+        voxels = new Voxel[voxelsPerRow + 1, voxelsPerRow + 1, voxelsPerRow + 1];
 
-        Plane[] planes =
+        if (assetType == AssetType.Asteroid)
         {
-            new Plane(new Vector3(-1, Random.Range(-1,1), Random.Range(-1,1)), new Vector3(radius - tileSize, 0, 0)),
-            new Plane(new Vector3(1, Random.Range(-1,1), Random.Range(-1,1)), new Vector3(-radius + tileSize, 0, 0)),
-
-            new Plane(new Vector3(Random.Range(-1,1), Random.Range(-1,1), 1), new Vector3(0, 0, -radius + tileSize)),
-            new Plane(new Vector3(Random.Range(-1,1), Random.Range(-1,1), -1), new Vector3(0, 0, radius - tileSize)),
-        };
-
-
-        for (int x = 0; x < tiles + 1; x++)
-        {
-            for (int y = 0; y < tiles + 1; y++)
+            radius = Random.Range(voxelsPerRow * voxelSpacing / 4, voxelsPerRow * voxelSpacing / 2);
+            Plane[] planes =  
             {
-                for (int z = 0; z < tiles + 1; z++)
+            new Plane(new Vector3(-1, Random.Range(-1,1), Random.Range(-1,1)), new Vector3(radius - voxelSpacing, 0, 0)),
+            new Plane(new Vector3(1, Random.Range(-1,1), Random.Range(-1,1)), new Vector3(-radius + voxelSpacing, 0, 0)),
+
+            new Plane(new Vector3(Random.Range(-1,1), Random.Range(-1,1), 1), new Vector3(0, 0, -radius + voxelSpacing)),
+            new Plane(new Vector3(Random.Range(-1,1), Random.Range(-1,1), -1), new Vector3(0, 0, radius - voxelSpacing)),
+            };
+            for (int x = 0; x < voxelsPerRow + 1; x++)
+            {
+                for (int y = 0; y < voxelsPerRow + 1; y++)
                 {
-                    voxels[x, y, z] = new Voxel();
-                    voxels[x, y, z].x = x;
-                    voxels[x, y, z].y = y;
-                    voxels[x, y, z].z = z;
-        
-                    voxels[x, y, z].position = new Vector3(x - tiles / 2, y - tiles / 2, z - tiles / 2) * tileSize;
-                    float distanceFromCenter = Vector3.Distance(transform.position, transform.position + voxels[x,y,z].position);
-                    
-                    if(distanceFromCenter > radius)
+                    for (int z = 0; z < voxelsPerRow + 1; z++)
                     {
-                        voxels[x, y, z].active = false;
+                        voxels[x, y, z] = new Voxel();
+                        voxels[x, y, z].index = new Vector3Int(x, y, z);
+                        voxels[x, y, z].position = new Vector3(x - voxelsPerRow / 2, y - voxelsPerRow / 2, z - voxelsPerRow / 2) * voxelSpacing;
+
+                        float distanceFromCenter = Vector3.Distance(transform.position, transform.position + voxels[x, y, z].position);
+                        if (distanceFromCenter > radius)
+                        {
+                            voxels[x, y, z].value = -1;
+                        }
+                        else
+                        {
+                            voxels[x, y, z].value = EvaluatePoint(voxels[x, y, z].position, planes);
+                        }
                     }
-                    else
+                }
+            }
+        }
+        else if (assetType == AssetType.Building)
+        {
+            height = Random.Range(voxelsPerRow / 2, voxelsPerRow);
+            for (int x = 0; x < voxelsPerRow + 1; x++)
+            {
+                for (int y = 0; y < voxelsPerRow + 1; y++)
+                {
+                    for (int z = 0; z < voxelsPerRow + 1; z++)
                     {
-                        voxels[x, y, z].active = EvaluatePoint(voxels[x, y, z].position, planes);
+                        voxels[x, y, z] = new Voxel();
+                        voxels[x, y, z].index = new Vector3Int(x, y, z);
+                        voxels[x, y, z].position = new Vector3(x, y, z) * voxelSpacing;
+
+                        if (x == 0 || x == voxelsPerRow || z == 0 || z == voxelsPerRow || y > height)
+                        {
+                            voxels[x,y,z].value = -1;
+                        }
+                        else
+                        {
+                            voxels[x, y, z].value = 1;
+                        }
                     }
                 }
             }
         }
     }
     
-    bool EvaluatePoint(Vector3 point, Plane[] planes)
+    float EvaluatePoint(Vector3 point, Plane[] planes)
     {
         foreach (Plane plane in planes)
         {
             if (plane.GetDistanceToPoint(point) <= 0)
             {
-                return false;
+                return -1;
             }
         }
-        return true;
+        return 1;
     }
 
-    void MarchingCubes()
+    void CreateMeshData()
     {
-        for(int x = tiles; x > 0; x--)
+        for(int x = voxelsPerRow; x > 0; x--)
         {
-            for(int y = tiles; y > 0; y--)
+            for(int y = voxelsPerRow; y > 0; y--)
             {
-                for (int z = tiles; z > 0; z--)
+                for (int z = voxelsPerRow; z > 0; z--)
                 {
                     Voxel[] points = new Voxel[]
                     {
@@ -221,13 +253,13 @@ public class Asteroid : MonoBehaviour
 
     bool BlocksGone()
     {
-        for (int x = 0; x < tiles; x++)
+        for (int x = 0; x < voxelsPerRow; x++)
         {
-            for (int y = 0; y < tiles; y++)
+            for (int y = 0; y < voxelsPerRow; y++)
             {
-                for (int z = 0; z < tiles; z++)
+                for (int z = 0; z < voxelsPerRow; z++)
                 {
-                    if (voxels[x, y, z].active) return false;
+                    if (voxels[x, y, z].value > GameManager.isoLevel) return false;
                 }
             }
         }
