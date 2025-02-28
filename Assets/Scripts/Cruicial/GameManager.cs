@@ -23,9 +23,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Random.InitState(seed.GetHashCode());
-        noise = new Noise(seed.GetHashCode());
-
         playerShip = GameObject.FindWithTag("Player").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();
@@ -88,6 +85,12 @@ public class GameManager : MonoBehaviour
     {
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
+    }
+
+    public static void InitRandom()
+    {
+        Random.InitState(seed.GetHashCode());
+        noise = new Noise(seed.GetHashCode());
     }
 
     public void Pause()

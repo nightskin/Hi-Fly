@@ -16,6 +16,7 @@ public class Galaxy : MonoBehaviour
 
     void Start()
     {
+        GameManager.InitRandom();
         Generate();
     }
     void Generate()

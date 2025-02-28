@@ -81,7 +81,7 @@ public class Bullet : MonoBehaviour
         {
             if (rayhit.transform.gameObject != owner)
             {
-                if (rayhit.transform.tag == "Destructible")
+                if (rayhit.transform.tag == "Asteroid")
                 {
                     Asteroid destructible = rayhit.transform.GetComponent<Asteroid>();
                     explosionPool.Spawn(rayhit.point);
@@ -136,7 +136,6 @@ public class Bullet : MonoBehaviour
                         }
                     }
                 }
-
             }
         }
     }

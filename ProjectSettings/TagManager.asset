@@ -4,11 +4,11 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Destructible
   - Planet
   - Enemy
-  - PlanetTrigger
   - Projectile
+  - Asteroid
+  - Bounds
   layers:
   - Default
   - TransparentFX

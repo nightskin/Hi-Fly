@@ -357,7 +357,14 @@ public class PlayerShip : MonoBehaviour
                         }
                         else
                         {
-                            b.direction = (hit.point - bulletSpawn.position).normalized;
+                            if(hit.transform.tag == "Bounds")
+                            {
+                                b.direction = ray.direction;
+                            }
+                            else
+                            {
+                                b.direction = (hit.point - bulletSpawn.position).normalized;
+                            }
                         }
                     }
                     else
