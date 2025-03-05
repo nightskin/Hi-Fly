@@ -37,7 +37,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Gamepad_Aim"",
+                    ""name"": ""Aim"",
                     ""type"": ""PassThrough"",
                     ""id"": ""91d72b52-0e43-450b-b9a2-51e5680adfca"",
                     ""expectedControlType"": ""Vector2"",
@@ -49,15 +49,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Mouse_Position"",
                     ""type"": ""PassThrough"",
                     ""id"": ""a2f9f9c2-308e-43af-a853-3c060d206453"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""FirstPersonAim"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""b91e070d-0af6-455a-963b-2a9010539993"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -237,7 +228,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Gamepad_Aim"",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b1974b02-9f54-4110-843c-b1366cb3df5a"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -310,7 +312,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""894b3090-3f9c-49ec-9ac0-491d1313ed47"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -463,28 +465,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""af436b44-ac6e-460b-83cc-3b5b31200667"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""FirstPersonAim"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3779a58a-b966-4d17-ab40-846bb231d776"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""FirstPersonAim"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""805d5fe3-815d-49ed-9b14-f64457e49aad"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
@@ -508,7 +488,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""9782b122-6161-4650-b14a-38b0310bc756"",
-                    ""path"": ""<Keyboard>/ctrl"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -535,9 +515,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Steer = m_Player.FindAction("Steer", throwIfNotFound: true);
-        m_Player_Gamepad_Aim = m_Player.FindAction("Gamepad_Aim", throwIfNotFound: true);
+        m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
         m_Player_Mouse_Position = m_Player.FindAction("Mouse_Position", throwIfNotFound: true);
-        m_Player_FirstPersonAim = m_Player.FindAction("FirstPersonAim", throwIfNotFound: true);
         m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
         m_Player_PrimaryFire = m_Player.FindAction("PrimaryFire", throwIfNotFound: true);
         m_Player_SecondaryFire = m_Player.FindAction("SecondaryFire", throwIfNotFound: true);
@@ -616,9 +595,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Steer;
-    private readonly InputAction m_Player_Gamepad_Aim;
+    private readonly InputAction m_Player_Aim;
     private readonly InputAction m_Player_Mouse_Position;
-    private readonly InputAction m_Player_FirstPersonAim;
     private readonly InputAction m_Player_Boost;
     private readonly InputAction m_Player_PrimaryFire;
     private readonly InputAction m_Player_SecondaryFire;
@@ -635,9 +613,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         private @InputActions m_Wrapper;
         public PlayerActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Steer => m_Wrapper.m_Player_Steer;
-        public InputAction @Gamepad_Aim => m_Wrapper.m_Player_Gamepad_Aim;
+        public InputAction @Aim => m_Wrapper.m_Player_Aim;
         public InputAction @Mouse_Position => m_Wrapper.m_Player_Mouse_Position;
-        public InputAction @FirstPersonAim => m_Wrapper.m_Player_FirstPersonAim;
         public InputAction @Boost => m_Wrapper.m_Player_Boost;
         public InputAction @PrimaryFire => m_Wrapper.m_Player_PrimaryFire;
         public InputAction @SecondaryFire => m_Wrapper.m_Player_SecondaryFire;
@@ -661,15 +638,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Steer.started += instance.OnSteer;
             @Steer.performed += instance.OnSteer;
             @Steer.canceled += instance.OnSteer;
-            @Gamepad_Aim.started += instance.OnGamepad_Aim;
-            @Gamepad_Aim.performed += instance.OnGamepad_Aim;
-            @Gamepad_Aim.canceled += instance.OnGamepad_Aim;
+            @Aim.started += instance.OnAim;
+            @Aim.performed += instance.OnAim;
+            @Aim.canceled += instance.OnAim;
             @Mouse_Position.started += instance.OnMouse_Position;
             @Mouse_Position.performed += instance.OnMouse_Position;
             @Mouse_Position.canceled += instance.OnMouse_Position;
-            @FirstPersonAim.started += instance.OnFirstPersonAim;
-            @FirstPersonAim.performed += instance.OnFirstPersonAim;
-            @FirstPersonAim.canceled += instance.OnFirstPersonAim;
             @Boost.started += instance.OnBoost;
             @Boost.performed += instance.OnBoost;
             @Boost.canceled += instance.OnBoost;
@@ -710,15 +684,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Steer.started -= instance.OnSteer;
             @Steer.performed -= instance.OnSteer;
             @Steer.canceled -= instance.OnSteer;
-            @Gamepad_Aim.started -= instance.OnGamepad_Aim;
-            @Gamepad_Aim.performed -= instance.OnGamepad_Aim;
-            @Gamepad_Aim.canceled -= instance.OnGamepad_Aim;
+            @Aim.started -= instance.OnAim;
+            @Aim.performed -= instance.OnAim;
+            @Aim.canceled -= instance.OnAim;
             @Mouse_Position.started -= instance.OnMouse_Position;
             @Mouse_Position.performed -= instance.OnMouse_Position;
             @Mouse_Position.canceled -= instance.OnMouse_Position;
-            @FirstPersonAim.started -= instance.OnFirstPersonAim;
-            @FirstPersonAim.performed -= instance.OnFirstPersonAim;
-            @FirstPersonAim.canceled -= instance.OnFirstPersonAim;
             @Boost.started -= instance.OnBoost;
             @Boost.performed -= instance.OnBoost;
             @Boost.canceled -= instance.OnBoost;
@@ -772,9 +743,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnSteer(InputAction.CallbackContext context);
-        void OnGamepad_Aim(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
         void OnMouse_Position(InputAction.CallbackContext context);
-        void OnFirstPersonAim(InputAction.CallbackContext context);
         void OnBoost(InputAction.CallbackContext context);
         void OnPrimaryFire(InputAction.CallbackContext context);
         void OnSecondaryFire(InputAction.CallbackContext context);

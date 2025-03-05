@@ -5858,7 +5858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointOfView: 0
+  strafeMode: 0
   powerUp: 1
   health: {fileID: 8131623140777354630}
   camera: {fileID: 8504905812486363887}
@@ -5875,7 +5875,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   aimSpeed: 1000
-  fireRate: 0.2
+  fireRate: 0.1
   evading: 0
 --- !u!1 &6508015524747324939
 GameObject:

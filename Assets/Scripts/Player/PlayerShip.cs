@@ -3,13 +3,7 @@ using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
 {
-    public enum ViewPoint
-    {
-        THIRD_PERSON,
-        FIRST_PERSON
-    }
-    public ViewPoint pointOfView;
-
+    public bool strafeMode = false;
     public enum PowerUp
     {
         NONE,
@@ -78,7 +72,7 @@ public class PlayerShip : MonoBehaviour
 
         InputManager.input.Player.PrimaryFire.performed += PrimaryFire_performed;
         InputManager.input.Player.BarrelRoll.performed += BarrelRoll_performed;
-        InputManager.input.Player.Gamepad_Aim.performed += Gamepad_Aim_performed;
+        InputManager.input.Player.Aim.performed += Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
         InputManager.input.Player.ToggleEngines.performed += ToggleEngines_performed;
@@ -87,11 +81,9 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.SecondaryFire.performed += SecondaryFire_performed;
         InputManager.input.Player.SecondaryFire.canceled += SecondaryFire_canceled;
 
-        if (pointOfView == ViewPoint.FIRST_PERSON)
+        if (strafeMode)
         {
             SetTrails(false);
-            bulletSpawn.localPosition = Vector3.down;
-            GetComponent<MeshRenderer>().enabled = false;
             reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
             reticle.rectTransform.position = reticlePosition;
         }
@@ -115,13 +107,13 @@ public class PlayerShip : MonoBehaviour
     {
         if(health.IsAlive())
         {
-            if(pointOfView == ViewPoint.THIRD_PERSON)
+            if(!strafeMode)
             {
-                ThirdPersonControls();
+                NormalMode();
             }
-            else if(pointOfView == ViewPoint.FIRST_PERSON)
+            else
             {
-                FirstPersonControls();
+                StrafeMode();
             }
         }
     }
@@ -130,7 +122,7 @@ public class PlayerShip : MonoBehaviour
     {
         InputManager.input.Player.PrimaryFire.performed -= PrimaryFire_performed;
         InputManager.input.Player.BarrelRoll.performed -= BarrelRoll_performed;
-        InputManager.input.Player.Gamepad_Aim.performed -= Gamepad_Aim_performed;
+        InputManager.input.Player.Aim.performed -= Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed -= Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed -= CenterCrosshair_performed;
         InputManager.input.Player.ToggleEngines.performed -= ToggleEngines_performed;
@@ -139,11 +131,10 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.SecondaryFire.performed -= SecondaryFire_performed;
         InputManager.input.Player.SecondaryFire.canceled -= SecondaryFire_canceled;
     }
-
-
+    
     private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(pointOfView == ViewPoint.THIRD_PERSON)
+        if(!strafeMode)
         {
             if (targetSpeed > 0)
             {
@@ -156,7 +147,7 @@ public class PlayerShip : MonoBehaviour
 
     private void Boost_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(pointOfView == ViewPoint.THIRD_PERSON)
+        if(!strafeMode)
         {
             if (targetSpeed > 0 && !GameManager.gamePaused && !GameManager.gameOver)
             {
@@ -195,29 +186,30 @@ public class PlayerShip : MonoBehaviour
 
     private void ToggleEngines_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(pointOfView == ViewPoint.THIRD_PERSON)
+        if (!GameManager.gamePaused && !GameManager.gameOver)
         {
-            if (!InputManager.input.Player.Boost.IsPressed() && !GameManager.gamePaused && !GameManager.gameOver)
+            if (targetSpeed > 0)
             {
-                if (targetSpeed > 0)
-                {
-                    targetSpeed = 0;
-                    SetTrails(false);
-                }
-                else
-                {
-                    targetSpeed = baseSpeed;
-                    SetTrails(true);
-                }
+                camera.boostEffect.Stop();
+                thrustColor = Color.cyan;
+                targetSpeed = 0;
+                SetTrails(false);
+                strafeMode = true;
+                reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
+                reticle.rectTransform.position = reticlePosition;
+            }
+            else
+            {
+                targetSpeed = baseSpeed;
+                SetTrails(true);
+                strafeMode = false;
             }
         }
-
-
     }
     
     private void BarrelRoll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (pointOfView == ViewPoint.THIRD_PERSON)
+        if (!strafeMode)
         {
             if (!evading)
             {
@@ -245,7 +237,7 @@ public class PlayerShip : MonoBehaviour
         aimingViaGamepad = false;
     }
   
-    void ThirdPersonControls()
+    void NormalMode()
     {
         //Forward Movement
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
@@ -278,7 +270,7 @@ public class PlayerShip : MonoBehaviour
         //Aiming
         if (aimingViaGamepad)
         {
-            reticlePosition += InputManager.input.Player.Gamepad_Aim.ReadValue<Vector2>() * aimSpeed * Time.deltaTime;
+            reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * aimSpeed * Time.deltaTime;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;
@@ -313,8 +305,9 @@ public class PlayerShip : MonoBehaviour
         }
     }
     
-    void FirstPersonControls()
+    void StrafeMode()
     {
+        //Movement
         Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
         Vector3 moveDirection = camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x;
 
@@ -327,7 +320,33 @@ public class PlayerShip : MonoBehaviour
             moveDirection -= camera.transform.up;
         }
 
-        controller.Move(moveDirection * boostSpeed * Time.deltaTime);
+        controller.Move(moveDirection * baseSpeed * Time.deltaTime);
+
+        //Steering
+        zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
+        Quaternion targetRot = Quaternion.Euler(camera.transform.localEulerAngles.x, camera.transform.localEulerAngles.y, zRot);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
+        
+        //Shooting lazer
+        if (InputManager.input.Player.SecondaryFire.IsPressed())
+        {
+            if (powerUp == PowerUp.LAZER)
+            {
+                MoveLazer();
+            }
+            else if (powerUp == PowerUp.MACHINE_GUN)
+            {
+                if (shootTimer > 0)
+                {
+                    shootTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    FireBullet();
+                    shootTimer = fireRate;
+                }
+            }
+        }
     }
 
     void FireBullet()
@@ -395,7 +414,6 @@ public class PlayerShip : MonoBehaviour
                 {
                     l.direction = ray.direction;
                 }
-
             }
         }
 
