@@ -52,7 +52,7 @@ public class Lazer : MonoBehaviour
         {
             if(hit.transform.gameObject != owner)
             {
-                if (hit.transform.tag == "Destructible")
+                if (hit.transform.tag == "Asteroid")
                 {
                     Asteroid asteroid = hit.transform.GetComponent<Asteroid>();
                     explosionPool.Spawn(hit.point);
