@@ -12,7 +12,7 @@ public class Asteroid : MonoBehaviour
 
     [HideInInspector] public float radius;
 
-    public int voxelsPerRow = 10;
+    public int voxelResolution = 10;
     public float voxelSpacing = 10;
     
     Mesh mesh;
@@ -40,11 +40,11 @@ public class Asteroid : MonoBehaviour
 
         var result = await Task.Run(() => 
         {
-            for (int x = 0; x < voxelsPerRow; x++)
+            for (int x = 0; x < voxelResolution; x++)
             {
-                for (int y = 0; y < voxelsPerRow; y++)
+                for (int y = 0; y < voxelResolution; y++)
                 {
-                    for (int z = 0; z < voxelsPerRow; z++)
+                    for (int z = 0; z < voxelResolution; z++)
                     {
                         if (voxels[x, y, z].value > GameManager.isoLevel)
                         {
@@ -82,13 +82,13 @@ public class Asteroid : MonoBehaviour
     
     void CreateVoxelData()
     {
-        voxels = new Voxel[voxelsPerRow + 1, voxelsPerRow + 1, voxelsPerRow + 1];
-        radius = Random.Range(voxelsPerRow * voxelSpacing / 4, voxelsPerRow * voxelSpacing / 2);
-        for (int x = 0; x < voxelsPerRow + 1; x++)
+        voxels = new Voxel[voxelResolution + 1, voxelResolution + 1, voxelResolution + 1];
+        radius = Random.Range(voxelResolution * voxelSpacing / 4, voxelResolution * voxelSpacing / 2);
+        for (int x = 0; x < voxelResolution + 1; x++)
         {
-            for (int y = 0; y < voxelsPerRow + 1; y++)
+            for (int y = 0; y < voxelResolution + 1; y++)
             {
-                for (int z = 0; z < voxelsPerRow + 1; z++)
+                for (int z = 0; z < voxelResolution + 1; z++)
                 {
                     voxels[x, y, z] = new Voxel();
                     voxels[x, y, z].index = new Vector3Int(x, y, z);
@@ -110,11 +110,11 @@ public class Asteroid : MonoBehaviour
     
     void CreateMeshData()
     {
-        for (int x = voxelsPerRow; x > 0; x--)
+        for (int x = voxelResolution; x > 0; x--)
         {
-            for (int y = voxelsPerRow; y > 0; y--)
+            for (int y = voxelResolution; y > 0; y--)
             {
-                for (int z = voxelsPerRow; z > 0; z--)
+                for (int z = voxelResolution; z > 0; z--)
                 {
                     Voxel[] points = new Voxel[]
                     {
@@ -128,7 +128,7 @@ public class Asteroid : MonoBehaviour
                         voxels[x,y-1,z],
                     };
 
-                    int cubeIndex = Voxel.GetState(points);
+                    int cubeIndex = Voxel.GetStateCube(points);
 
 
                     int[] triangulation = MarchingCubesTables.triTable[cubeIndex];
@@ -195,11 +195,11 @@ public class Asteroid : MonoBehaviour
 
     bool BlocksGone()
     {
-        for (int x = 0; x < voxelsPerRow; x++)
+        for (int x = 0; x < voxelResolution; x++)
         {
-            for (int y = 0; y < voxelsPerRow; y++)
+            for (int y = 0; y < voxelResolution; y++)
             {
-                for (int z = 0; z < voxelsPerRow; z++)
+                for (int z = 0; z < voxelResolution; z++)
                 {
                     if (voxels[x, y, z].value > GameManager.isoLevel) return false;
                 }

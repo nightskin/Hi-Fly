@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefabs:
   - {fileID: 1268243056916477701, guid: 7730e9c7f3d1e1e438c7c6c1b4eb907b, type: 3}
-  maxEnemies: 25
-  minEnemies: 25
+  maxEnemies: 5
+  minEnemies: 10
   spawnRadius: 500
   enemyShips: []

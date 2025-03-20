@@ -7,7 +7,7 @@ public struct Voxel
     public Vector3 position;
     public Vector3Int index;
     
-    public static int GetState(Voxel[] voxels)
+    public static int GetStateCube(Voxel[] voxels)
     {
         int state = 0;
         if (voxels[0].value >= GameManager.isoLevel) state |= 1;
@@ -20,7 +20,7 @@ public struct Voxel
         if (voxels[7].value >= GameManager.isoLevel) state |= 128;
         return state;
     }
-
+    
     public static Vector3 GetMidPoint(Voxel v1, Voxel v2)
     {
         return (v1.position + v2.position) / 2;

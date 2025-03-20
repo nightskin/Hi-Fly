@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        playerShip = GameObject.FindWithTag("Player").GetComponent<PlayerShip>();
+        playerShip = transform.Find("Mesh").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();
         
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
                     {
                         playerUIToHideOnPause[i].SetActive(false);
                     }
-                    playerShip.GetComponent<MeshRenderer>().enabled = false;
+                    playerShip.gameObject.SetActive(false);
                     gameOverMenu.SetActive(true);
                     eventSystem.SetSelectedGameObject(gameOverMenu.transform.GetChild(1).gameObject);
                     gameOverActive = true;

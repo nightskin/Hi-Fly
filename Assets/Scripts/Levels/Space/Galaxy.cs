@@ -6,10 +6,11 @@ public class Galaxy : MonoBehaviour
     public float quadrantSize = 2000;
     public Vector2Int numberOfQuadrants = new Vector2Int(10,10);
 
-    [SerializeField] GameObject planet;
+    [SerializeField] GameObject planetPrefab;
+    [SerializeField] GameObject enemyBasePrefab;
     [SerializeField] GameObject asteroidField;
     [SerializeField] GameObject enemySpawner;
-    [SerializeField][Min(1)] int maxPlanets = 8;
+    int maxPlanets = 1;
 
     List<GameObject> quadrants = new List<GameObject>();
     int numberOfPlanets = 0;
@@ -19,6 +20,7 @@ public class Galaxy : MonoBehaviour
         GameManager.InitRandom();
         Generate();
     }
+
     void Generate()
     {
         for (int x = -numberOfQuadrants.x/2; x <= numberOfQuadrants.x/2; x++)
@@ -28,23 +30,46 @@ public class Galaxy : MonoBehaviour
                 if (x != 0 || z != 0)
                 {
                     int quadrantType = Mathf.RoundToInt(Random.value * 4);
-                    // quadrant type == 0 means Planet
+                    // quadrant type == 0 means Planet Or Enemy Base
                     // quadrant type == 1 means Asteroid Field
-                    // quadrant type == 2 means enemy fleet
-                    // quadrant type == 3 means nothing
+                    // quadrant type == 2 means Enemy fleet
+                    // quadrant type == 3 means Nothing
 
                     float y = GameManager.noise.Evaluate(new Vector3(x, 0, z));
                     Vector3 quadrantPos = new Vector3(x, y, z) * quadrantSize;
 
-                    if (quadrantType == 0 && numberOfPlanets < maxPlanets)
+                    if (quadrantType == 0)
                     {
-                        if (planet)
+                        if (numberOfPlanets < maxPlanets)
                         {
-                            //Make Planet
-                            GameObject p = Instantiate(planet, quadrantPos, Quaternion.identity, transform);
-                            numberOfPlanets++;
-                            p.name = numberOfPlanets.ToString();
-                            quadrants.Add(p);
+                            if(planetPrefab)
+                            {
+                                //Make Planet
+                                GameObject p = Instantiate(planetPrefab, quadrantPos, Quaternion.identity, transform);
+                                if (numberOfPlanets == 0)
+                                {
+                                    p.GetComponent<Planet>().random = false;
+                                }
+                                else
+                                {
+                                    p.GetComponent<Planet>().random = true;
+                                }
+
+                                numberOfPlanets++;
+                                p.name = numberOfPlanets.ToString();
+                                quadrants.Add(p);
+                            }
+                        }
+                        else
+                        {
+                            if(enemyBasePrefab)
+                            {
+                                // Make Enemy Base
+                                GameObject b = Instantiate(enemyBasePrefab, quadrantPos, Quaternion.identity, transform);
+                                numberOfPlanets++;
+                                b.name = numberOfPlanets.ToString();
+                                quadrants.Add(b);
+                            }
                         }
                     }
                     else if (quadrantType == 1)

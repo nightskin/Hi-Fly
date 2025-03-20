@@ -9,6 +9,7 @@ TagManager:
   - Projectile
   - Asteroid
   - Bounds
+  - Water
   layers:
   - Default
   - TransparentFX

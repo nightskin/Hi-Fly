@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +16,9 @@ public class Planet : MonoBehaviour
     public Color waterColor;
     [SerializeField] int resolution = 200;
 
+    public bool random = true;
     public float radius;
+
     [SerializeField] float minRadius = 30;
     [SerializeField] float maxRadius = 50;
     [SerializeField] float baseRoughness = 1;
@@ -60,9 +61,13 @@ public class Planet : MonoBehaviour
 
     void Start()
     {
-        radius = Random.Range(minRadius, maxRadius);
-        landColor = Util.RandomColor();
-        waterColor = Util.RandomColor();
+        if(random)
+        {
+            radius = Random.Range(minRadius, maxRadius);
+            landColor = Util.RandomColor();
+            waterColor = Util.RandomColor();
+        }
+
 
         Transform water = transform.Find("Water");   
         if(water)
@@ -80,7 +85,6 @@ public class Planet : MonoBehaviour
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         GetComponent<MeshFilter>().mesh = mesh;
         Generate();
-
         UpdateMesh();
     }
     

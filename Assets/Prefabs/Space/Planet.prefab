@@ -123,10 +123,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e89089d428b7f49852b972886f8f64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  landColor: {r: 0, g: 0, b: 0, a: 0}
-  waterColor: {r: 0, g: 0, b: 0, a: 0}
+  landColor: {r: 0, g: 0.5, b: 0, a: 1}
+  waterColor: {r: 0, g: 0.5, b: 1, a: 1}
   resolution: 30
-  radius: 897.01794
+  random: 0
+  radius: 300
   minRadius: 250
   maxRadius: 500
   baseRoughness: 1
