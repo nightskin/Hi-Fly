@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
 {
-    public bool strafeMode = false;
     public enum PowerUp
     {
         NONE,
@@ -81,12 +80,6 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.SecondaryFire.performed += SecondaryFire_performed;
         InputManager.input.Player.SecondaryFire.canceled += SecondaryFire_canceled;
 
-        if (strafeMode)
-        {
-            SetTrails(false);
-            reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
-            reticle.rectTransform.position = reticlePosition;
-        }
 
     }
     
@@ -107,14 +100,15 @@ public class PlayerShip : MonoBehaviour
     {
         if(health.IsAlive())
         {
-            if(!strafeMode)
-            {
-                NormalMode();
-            }
-            else
-            {
-                StrafeMode();
-            }
+            NormalMode();
+            //if(!strafeMode)
+            //{
+            //    NormalMode();
+            //}
+            //else
+            //{
+            //    StrafeMode();
+            //}
         }
     }
     
@@ -134,27 +128,21 @@ public class PlayerShip : MonoBehaviour
     
     private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(!strafeMode)
+        if (targetSpeed > 0)
         {
-            if (targetSpeed > 0)
-            {
-                camera.boostEffect.Stop();
-                thrustColor = Color.cyan;
-                targetSpeed = baseSpeed;
-            }
+            camera.boostEffect.Stop();
+            thrustColor = Color.cyan;
+            targetSpeed = baseSpeed;
         }
     }
 
     private void Boost_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(!strafeMode)
+        if (targetSpeed > 0 && !GameManager.gamePaused && !GameManager.gameOver)
         {
-            if (targetSpeed > 0 && !GameManager.gamePaused && !GameManager.gameOver)
-            {
-                camera.boostEffect.Play();
-                thrustColor = Color.red;
-                targetSpeed = boostSpeed;
-            }
+            camera.boostEffect.Play();
+            thrustColor = Color.red;
+            targetSpeed = boostSpeed;
         }
 
     }
@@ -194,7 +182,6 @@ public class PlayerShip : MonoBehaviour
                 thrustColor = Color.cyan;
                 targetSpeed = 0;
                 SetTrails(false);
-                strafeMode = true;
                 reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
                 reticle.rectTransform.position = reticlePosition;
             }
@@ -202,23 +189,18 @@ public class PlayerShip : MonoBehaviour
             {
                 targetSpeed = baseSpeed;
                 SetTrails(true);
-                strafeMode = false;
             }
         }
     }
     
     private void BarrelRoll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (!strafeMode)
+        if (!evading)
         {
-            if (!evading)
-            {
-                rollDirection *= -1;
-                rollTimer = rollDuration;
-                evading = true;
-            }
+            rollDirection *= -1;
+            rollTimer = rollDuration;
+            evading = true;
         }
-
     }
 
     private void CenterCrosshair_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)

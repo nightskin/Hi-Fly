@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField][Min(2)] float lerpSpeed = 10;
     [SerializeField] PlayerShip player;
 
-    Vector2 cameraRot = Vector2.zero;
+    [SerializeField] Vector3 cameraRot = Vector3.zero;
 
     void Start()
     {
@@ -29,24 +30,32 @@ public class PlayerCamera : MonoBehaviour
 
     void LookAround()
     {
-        if (player.strafeMode)
+        Vector2 steerInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
+        cameraRot += new Vector3(steerInput.y, steerInput.x) * rotationSpeed * Time.deltaTime;
+
+        cameraRot.x = ConstrainAngle(cameraRot.x);
+
+        if (cameraRot.x < -90 || cameraRot.x > 90)
         {
-            Vector2 look = InputManager.input.Player.Aim.ReadValue<Vector2>();
-            cameraRot += new Vector2(look.x, -look.y) * rotationSpeed * Time.deltaTime;
+            cameraRot.z = 180;
         }
         else
         {
-            cameraRot += InputManager.input.Player.Steer.ReadValue<Vector2>() * rotationSpeed * Time.deltaTime;
+            cameraRot.z = 0;
         }
-        
-        cameraRot.y = Mathf.Clamp(cameraRot.y, -90, 90);
 
-        Vector3 camRot = new Vector3(cameraRot.y, cameraRot.x, 0);
         Vector3 camPos = player.transform.position + new Vector3(cameraOffset.x, cameraOffset.y, 0) - transform.forward * cameraDistance;
         
         transform.position = Vector3.Lerp(transform.position, camPos, lerpSpeed * Time.deltaTime);
-        transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(camRot), lerpSpeed * Time.deltaTime);
+        transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(cameraRot), lerpSpeed * Time.deltaTime);
 
+
+    }
+
+    float ConstrainAngle(float v)
+    {
+        v -= 360 * Mathf.Floor((v + 180.0f) * (1.0f / 360.0f));
+        return v;
     }
 
 }
