@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -32,17 +31,8 @@ public class PlayerCamera : MonoBehaviour
     {
         Vector2 steerInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
         cameraRot += new Vector3(steerInput.y, steerInput.x) * rotationSpeed * Time.deltaTime;
-
         cameraRot.x = ConstrainAngle(cameraRot.x);
-
-        if (cameraRot.x < -90 || cameraRot.x > 90)
-        {
-            cameraRot.z = 180;
-        }
-        else
-        {
-            cameraRot.z = 0;
-        }
+        cameraRot.y = ConstrainAngle(cameraRot.y);
 
         Vector3 camPos = player.transform.position + new Vector3(cameraOffset.x, cameraOffset.y, 0) - transform.forward * cameraDistance;
         
