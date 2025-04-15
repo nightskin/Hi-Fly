@@ -178,7 +178,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -285,14 +285,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cb2743e39fcaa24c839c179664c2a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quadrantSize: 1000
+  quadrantSize: 500
   numberOfQuadrants: {x: 10, y: 10}
-  planetPrefab: {fileID: 1280286012736500307, guid: f665682510eb24d4a8153ad52aa80bce,
-    type: 3}
+  planetPrefabs:
+  - {fileID: 1280286012736500307, guid: f665682510eb24d4a8153ad52aa80bce, type: 3}
+  - {fileID: 1743980462404598863, guid: 129efbb0e7226e34b8a6d9ae2b7985a6, type: 3}
   enemyBasePrefab: {fileID: 0}
-  asteroidField: {fileID: 1396936832559809867, guid: a890b511b5049fb4c8a57cce1032f14c,
+  asteroidFieldPrefab: {fileID: 1396936832559809867, guid: a890b511b5049fb4c8a57cce1032f14c,
     type: 3}
-  enemySpawner: {fileID: 7682631823238818699, guid: 7f22fe340ccf21f4ea9bb33752f41a88,
+  enemyFleatPrefab: {fileID: 7682631823238818699, guid: 7f22fe340ccf21f4ea9bb33752f41a88,
     type: 3}
 --- !u!1 &491813966
 GameObject:

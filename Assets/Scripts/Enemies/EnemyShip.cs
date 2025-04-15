@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyShip : MonoBehaviour
 {
+
     GameObject target;
     [SerializeField] HealthSystem health;
 
@@ -11,13 +12,16 @@ public class EnemyShip : MonoBehaviour
     [SerializeField] float avoidRadius = 10;
     [SerializeField] int attackPower = 10;
     [SerializeField] float turnSpeed = 10;
-    [SerializeField] float turnFrequncy = 2;
+
     [SerializeField] float fireRate = 1;
     [SerializeField] float moveSpeed = 75;
 
     Vector3 direction;
     float shootTimer = 0;
 
+
+    float turnFrequncy = 2.5f;
+    float turnTimer = 0;
 
     void OnEnable()
     {
@@ -37,7 +41,14 @@ public class EnemyShip : MonoBehaviour
             {
                 if (Vector3.Distance(transform.position, target.transform.position) <= perceptionRadius || health.HasBeenHitOnce())
                 {
-                    Fight();
+                    if(GameManager.difficulty == GameManager.Difficulty.HARD)
+                    {
+                        Fight_Boid();
+                    }
+                    else
+                    {
+                        Fight_TimeBased();
+                    }
                 }
                 else
                 {
@@ -81,7 +92,7 @@ public class EnemyShip : MonoBehaviour
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
     }
     
-    void Fight()
+    void Fight_Boid()
     {
         direction = SteerTowardsTarget() + Seperation(avoidRadius);
         transform.rotation = Quaternion.LookRotation(direction);
@@ -100,6 +111,35 @@ public class EnemyShip : MonoBehaviour
 
         }
 
+    }
+
+    void Fight_TimeBased()
+    {
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), turnSpeed * Time.deltaTime);
+        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+
+        if (turnTimer < 0)
+        {
+            turnTimer = Random.Range(0, turnFrequncy);
+            direction = GetDirectionTowardsTarget();
+        }
+        else
+        {
+            turnTimer -= Time.deltaTime;
+        }
+
+        shootTimer -= Time.deltaTime;
+        if (shootTimer <= 0)
+        {
+            if (Physics.SphereCast(transform.position, aimSkill, transform.forward, out RaycastHit hit))
+            {
+                if (hit.transform.gameObject == target)
+                {
+                    Shoot();
+                }
+            }
+
+        }
     }
 
     void Shoot()

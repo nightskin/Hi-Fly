@@ -5858,7 +5858,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strafeMode: 0
   powerUp: 1
   health: {fileID: 8131623140777354630}
   camera: {fileID: 8504905812486363887}
@@ -7550,7 +7549,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 10000
+  far clip plane: 5000
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5
@@ -7639,6 +7638,7 @@ MonoBehaviour:
   boostEffect: {fileID: 1814296040985746741}
   lerpSpeed: 10
   player: {fileID: 303286065443942689}
+  cameraRot: {x: 0, y: 0, z: 0}
 --- !u!1 &8659897189068200085
 GameObject:
   m_ObjectHideFlags: 0

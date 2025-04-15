@@ -4,14 +4,22 @@ using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
+    public enum Difficulty
+    {
+        EASY,
+        NORMAL,
+        HARD
+    }
+    public static Difficulty difficulty = Difficulty.NORMAL;
+
     public GameObject gameOverMenu;
     public GameObject gamePauseMenu;
 
     public static PlayerShip playerShip;
     public GameObject[] playerUIToHideOnPause;
 
-    public static Noise noise;
     public static string seed = "Dota2 < LOL";
+    public static Noise noise = new Noise(seed.GetHashCode());
     public static float isoLevel = 0;
     public static bool gameOver = false;
     public static bool gamePaused = false;

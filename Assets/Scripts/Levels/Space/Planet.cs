@@ -4,23 +4,23 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
-public class Planet : MonoBehaviour
+public class ProceduralPlanet : MonoBehaviour
 {
-    Mesh mesh;
-    List<Vector3> vertices = new List<Vector3>();
-    List<Color> colors = new List<Color>();
-    List<int> triangles = new List<int>();
-    int buffer = 0;
+    [SerializeField] Mesh mesh;
+    [SerializeField] List<Vector3> vertices = new List<Vector3>();
+    [SerializeField] List<Vector2> uvs = new List<Vector2>();
+    [SerializeField] List<Color> colors = new List<Color>();
+    [SerializeField] List<int> triangles = new List<int>();
+    [SerializeField] int buffer = 0;
 
-    public Color landColor;
-    public Color waterColor;
+    [SerializeField] bool generateColors = true;
+    [SerializeField] Gradient landGradient;
+    [SerializeField][Min(1)] float gradientMult = 10;
+    [SerializeField] Color waterColor;
     [SerializeField] int resolution = 200;
 
-    public bool random = true;
-    public float radius;
-
-    [SerializeField] float minRadius = 30;
-    [SerializeField] float maxRadius = 50;
+    [SerializeField] float radius = 300;
+    [SerializeField] float waterLevel = 100;
     [SerializeField] float baseRoughness = 1;
     [SerializeField] float roughness = 2;
     [SerializeField] float strength = 1;
@@ -36,6 +36,7 @@ public class Planet : MonoBehaviour
             for (int z = 0; z <= resolution; z++)
             {
                 vertices.Add(rotation * new Vector3(x - resolution / 2, -resolution / 2, z - resolution / 2) * size);
+                uvs.Add(new Vector2(x,z) / resolution);
             }
         }
 
@@ -59,33 +60,28 @@ public class Planet : MonoBehaviour
         buffer += (resolution + 1) * (resolution + 1);
     }
 
+    void OnDrawGizmos()
+    {
+        if(mesh)
+        {
+            Gizmos.DrawMesh(mesh);
+        }       
+    }
+
     void Start()
     {
-        if(random)
+        if (buffer == 0 || vertices.Count == 0 || triangles.Count == 0) 
         {
-            radius = Random.Range(minRadius, maxRadius);
-            landColor = Util.RandomColor();
-            waterColor = Util.RandomColor();
+            Generate();
         }
-
-
-        Transform water = transform.Find("Water");   
-        if(water)
+        else
         {
-            water.localScale = Vector3.one * (radius * 2 + (layers * 10));
-            water.GetComponent<MeshRenderer>().material.SetColor("_WaterColor", waterColor);
+            mesh = new Mesh();
+            GetComponent<MeshFilter>().mesh = mesh;
+            UpdateMesh();
         }
         
-        vertices.Clear();
-        triangles.Clear();
-        colors.Clear();
-        buffer = 0;
-
-        mesh = new Mesh();
-        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        GetComponent<MeshFilter>().mesh = mesh;
-        Generate();
-        UpdateMesh();
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
     
     void DrawCube()
@@ -107,8 +103,24 @@ public class Planet : MonoBehaviour
 
     }
 
-    void Generate()
+    public void Generate()
     {
+        Transform water = transform.Find("Water");
+        if (water)
+        {
+            water.localScale = Vector3.one * waterLevel * 2;
+            water.GetComponent<MeshRenderer>().sharedMaterial.SetColor("_WaterColor", waterColor);
+        }
+
+        vertices.Clear();
+        uvs.Clear();
+        triangles.Clear();
+        colors.Clear();
+        buffer = 0;
+
+        mesh = new Mesh();
+        GetComponent<MeshFilter>().mesh = mesh;
+
         DrawCube();
         for (int v = 0; v < vertices.Count; v++)
         {
@@ -128,8 +140,10 @@ public class Planet : MonoBehaviour
                 elevation += Evaluate(vertices[v]) * mask;
             }
             vertices[v] *= radius * (1 + elevation);
-            colors.Add(landColor);
+            float t = elevation * gradientMult;
+            if(generateColors) colors.Add(landGradient.Evaluate(t));
         }
+        UpdateMesh();
     }
     
     float Evaluate(Vector3 point)
@@ -155,9 +169,17 @@ public class Planet : MonoBehaviour
         mesh.Clear();
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
-        mesh.colors = colors.ToArray();
+
+        if(generateColors)
+        {
+            mesh.colors = colors.ToArray();
+        }
+        else
+        {
+            mesh.uv = uvs.ToArray();
+        }
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
-        GetComponent<MeshCollider>().sharedMesh = mesh;
+
     }
 }
