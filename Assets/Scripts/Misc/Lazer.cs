@@ -58,7 +58,7 @@ public class Lazer : MonoBehaviour
                     explosionPool.Spawn(hit.point);
                     if (asteroid)
                     {
-                        asteroid.RemoveBlock(hit.point);
+                        asteroid.RemoveBlock(hit,direction);
                     }
                 }
                 else if (hit.transform.tag == "Planet")

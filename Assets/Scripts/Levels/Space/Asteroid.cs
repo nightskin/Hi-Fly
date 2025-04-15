@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -8,8 +9,10 @@ using UnityEngine;
 [RequireComponent(typeof (MeshCollider))]
 public class Asteroid : MonoBehaviour
 {
-    Voxel[,,] voxels = null;
+    Voxel[,,] voxels3D = null;
+    Voxel[] voxels = null;
 
+    public bool useOneDArray = false;
     [HideInInspector] public float radius;
 
     public int voxelResolution = 10;
@@ -20,6 +23,25 @@ public class Asteroid : MonoBehaviour
     List<Vector2> uvs = new List<Vector2>();
     List<int> tris = new List<int>();
     int buffer = 0;
+
+    int ToVoxelIndex(Vector3 position)
+    {
+        return ((int)(position.x / voxelSpacing)) + ((int)(position.y / voxelSpacing)  * voxelResolution) + ((int)(position.z / voxelSpacing) * voxelResolution * voxelResolution);
+    }
+
+    Vector3 ToPosition(int i)
+    {
+        int x  = i % voxelResolution;
+        int y = i / voxelResolution % voxelResolution;
+        int z = i / voxelResolution / voxelResolution % voxelResolution;
+        return new Vector3(x,y,z) * voxelSpacing;
+    }
+
+    void OnDrawGizmos()
+    {
+        Vector3 center = transform.TransformPoint(Vector3.one * (voxelSpacing * voxelResolution / 2));
+        Gizmos.DrawSphere(center, 1);
+    }
 
     void Start()
     {
@@ -32,11 +54,12 @@ public class Asteroid : MonoBehaviour
         UpdateMesh();
 
     }
-    
+
+
     public async void RemoveBlock(Vector3 hit)
     {
         Vector3 targetPosition = transform.InverseTransformPoint(hit);
-        Voxel closestVoxel = voxels[0,0,0];
+        Voxel closestVoxel = voxels3D[0,0,0];
 
         var result = await Task.Run(() => 
         {
@@ -46,17 +69,17 @@ public class Asteroid : MonoBehaviour
                 {
                     for (int z = 0; z < voxelResolution; z++)
                     {
-                        if (voxels[x, y, z].value > GameManager.isoLevel)
+                        if (voxels3D[x, y, z].value > GameManager.isoLevel)
                         {
-                            if (Vector3.Distance(targetPosition, closestVoxel.position) > Vector3.Distance(targetPosition, voxels[x, y, z].position))
+                            if (Vector3.Distance(targetPosition, closestVoxel.position) > Vector3.Distance(targetPosition, voxels3D[x, y, z].position))
                             {
-                                closestVoxel = voxels[x, y, z];
+                                closestVoxel = voxels3D[x, y, z];
                             }
                         }
                     }
                 }
             }
-            voxels[closestVoxel.index.x, closestVoxel.index.y, closestVoxel.index.z].value = -1;
+            voxels3D[closestVoxel.index3D.x, closestVoxel.index3D.y, closestVoxel.index3D.z].value = -1;
 
             return true;
         });
@@ -80,28 +103,76 @@ public class Asteroid : MonoBehaviour
         }
     }
     
+    public void RemoveBlock(RaycastHit hit, Vector3 direction)
+    {
+        Vector3 localPos = transform.InverseTransformPoint(hit.point) + (direction.normalized * voxelSpacing / 2);
+        localPos.x = Mathf.Round(localPos.x / voxelSpacing) * voxelSpacing;
+        localPos.y = Mathf.Round(localPos.y / voxelSpacing) * voxelSpacing;
+        localPos.z = Mathf.Round(localPos.z / voxelSpacing) * voxelSpacing;
+        int i = ToVoxelIndex(localPos);
+        voxels[i].value = -1;
+        if (BlocksGone())
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+
+            verts.Clear();
+            tris.Clear();
+            uvs.Clear();
+            buffer = 0;
+            CreateMeshData();
+            UpdateMesh();
+        }
+    }
+
     void CreateVoxelData()
     {
-        voxels = new Voxel[voxelResolution + 1, voxelResolution + 1, voxelResolution + 1];
-        radius = Random.Range(voxelResolution * voxelSpacing / 4, voxelResolution * voxelSpacing / 2);
-        for (int x = 0; x < voxelResolution + 1; x++)
-        {
-            for (int y = 0; y < voxelResolution + 1; y++)
-            {
-                for (int z = 0; z < voxelResolution + 1; z++)
-                {
-                    voxels[x, y, z] = new Voxel();
-                    voxels[x, y, z].index = new Vector3Int(x, y, z);
-                    voxels[x, y, z].position = new Vector3(x, y, z) * voxelSpacing;
+        radius = Random.Range(voxelSpacing * (voxelResolution - 1) / 4, voxelSpacing * (voxelResolution - 1) / 2);
 
-                    float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + voxels[x, y, z].position);
-                    if (distanceFromCenter > radius)
+        if(useOneDArray)
+        {
+            voxels = new Voxel[(int)Mathf.Pow(voxelResolution, 3)];
+            for(int i = 0; i < voxels.Length; i++)
+            {
+                voxels[i] = new Voxel();
+                voxels[i].index = i;
+                voxels[i].position = ToPosition(i);
+                float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + voxels[i].position);
+                if (distanceFromCenter > radius)
+                {
+                    voxels[i].value = -1;
+                }
+                else
+                {
+                    voxels[i].value = 1;
+                }
+
+            }
+        }
+        else
+        {
+            voxels3D = new Voxel[voxelResolution, voxelResolution, voxelResolution];
+            for (int x = 0; x < voxelResolution; x++)
+            {
+                for (int y = 0; y < voxelResolution; y++)
+                {
+                    for (int z = 0; z < voxelResolution; z++)
                     {
-                        voxels[x, y, z].value = -1;
-                    }
-                    else
-                    {
-                        voxels[x, y, z].value = 1;
+                        voxels3D[x, y, z] = new Voxel();
+                        voxels3D[x, y, z].index3D = new Vector3Int(x, y, z);
+                        voxels3D[x, y, z].position = new Vector3(x, y, z) * voxelSpacing;
+
+                        float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + voxels3D[x, y, z].position);
+                        if (distanceFromCenter > radius)
+                        {
+                            voxels3D[x, y, z].value = -1;
+                        }
+                        else
+                        {
+                            voxels3D[x, y, z].value = 1;
+                        }
                     }
                 }
             }
@@ -110,54 +181,97 @@ public class Asteroid : MonoBehaviour
     
     void CreateMeshData()
     {
-        for (int x = voxelResolution; x > 0; x--)
+        if(useOneDArray)
         {
-            for (int y = voxelResolution; y > 0; y--)
+            for(int i = voxels.Length; i > 0; i--)
             {
-                for (int z = voxelResolution; z > 0; z--)
+                Vector3 position = ToPosition(i);
+
+                Voxel[] points = new Voxel[]
                 {
-                    Voxel[] points = new Voxel[]
+                    voxels[ToVoxelIndex(position + new Vector3(0,0,-1))],
+                    voxels[ToVoxelIndex(position +  new Vector3(-1, 0, -1))],
+                    voxels[ToVoxelIndex(position +  new Vector3(-1, 0, 0))],
+                    voxels[ToVoxelIndex(position)],
+                    voxels[ToVoxelIndex(position + new Vector3(0, -1, -1))],
+                    voxels[ToVoxelIndex(position + new Vector3(-1,-1,-1))],
+                    voxels[ToVoxelIndex(position + new Vector3(-1,-1, 0))],
+                    voxels[ToVoxelIndex(position + new Vector3(0, -1, 0))]
+                };
+
+
+                int cubeIndex = Voxel.GetStateCube(points);
+                int[] triangulation = MarchingCubesTables.triTable[cubeIndex];
+                foreach (int edgeIndex in triangulation)
+                {
+                    if (edgeIndex > -1)
                     {
-                        voxels[x,y,z-1],
-                        voxels[x-1,y,z-1],
-                        voxels[x-1,y,z],
-                        voxels[x,y,z],
-                        voxels[x,y-1,z-1],
-                        voxels[x-1,y-1,z-1],
-                        voxels[x-1,y-1,z],
-                        voxels[x,y-1,z],
-                    };
-
-                    int cubeIndex = Voxel.GetStateCube(points);
-
-
-                    int[] triangulation = MarchingCubesTables.triTable[cubeIndex];
-                    foreach (int edgeIndex in triangulation)
-                    {
-                        if (edgeIndex > -1)
-                        {
-                            int a = MarchingCubesTables.edgeConnections[edgeIndex][0];
-                            int b = MarchingCubesTables.edgeConnections[edgeIndex][1];
-
-
-                            Vector3 vertexPos = Voxel.GetMidPoint(points[a], points[b]);
-
-
-
-
-                            verts.Add(vertexPos);
-                            tris.Add(buffer);
-                            buffer++;
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        int a = MarchingCubesTables.edgeConnections[edgeIndex][0];
+                        int b = MarchingCubesTables.edgeConnections[edgeIndex][1];
+                        Vector3 vertexPos = Voxel.GetMidPoint(points[a], points[b]);
+                        verts.Add(vertexPos);
+                        tris.Add(buffer);
+                        buffer++;
                     }
-
+                    else
+                    {
+                        break;
+                    }
                 }
             }
         }
+        else
+        {
+            for (int x = voxelResolution - 1; x > 0; x--)
+            {
+                for (int y = voxelResolution - 1; y > 0; y--)
+                {
+                    for (int z = voxelResolution - 1; z > 0; z--)
+                    {
+                        Voxel[] points = new Voxel[]
+                        {
+                        voxels3D[x,y,z-1],
+                        voxels3D[x-1,y,z-1],
+                        voxels3D[x-1,y,z],
+                        voxels3D[x,y,z],
+                        voxels3D[x,y-1,z-1],
+                        voxels3D[x-1,y-1,z-1],
+                        voxels3D[x-1,y-1,z],
+                        voxels3D[x,y-1,z],
+                        };
+
+                        int cubeIndex = Voxel.GetStateCube(points);
+
+
+                        int[] triangulation = MarchingCubesTables.triTable[cubeIndex];
+                        foreach (int edgeIndex in triangulation)
+                        {
+                            if (edgeIndex > -1)
+                            {
+                                int a = MarchingCubesTables.edgeConnections[edgeIndex][0];
+                                int b = MarchingCubesTables.edgeConnections[edgeIndex][1];
+
+
+                                Vector3 vertexPos = Voxel.GetMidPoint(points[a], points[b]);
+
+
+
+
+                                verts.Add(vertexPos);
+                                tris.Add(buffer);
+                                buffer++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        
     }
 
     Vector2[] GetUVs(Vector3 a, Vector3 b, Vector3 c)
@@ -195,16 +309,27 @@ public class Asteroid : MonoBehaviour
 
     bool BlocksGone()
     {
-        for (int x = 0; x < voxelResolution; x++)
+        if(useOneDArray)
         {
-            for (int y = 0; y < voxelResolution; y++)
+            for(int i  = 0; i < voxelResolution * voxelResolution * voxelResolution; i++)
             {
-                for (int z = 0; z < voxelResolution; z++)
+                if (voxels[i].value > GameManager.isoLevel) return false;
+            }
+        }
+        else
+        {
+            for (int x = 0; x < voxelResolution; x++)
+            {
+                for (int y = 0; y < voxelResolution; y++)
                 {
-                    if (voxels[x, y, z].value > GameManager.isoLevel) return false;
+                    for (int z = 0; z < voxelResolution; z++)
+                    {
+                        if (voxels3D[x, y, z].value > GameManager.isoLevel) return false;
+                    }
                 }
             }
         }
+        
         return true;
     }
 

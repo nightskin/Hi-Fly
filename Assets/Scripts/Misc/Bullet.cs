@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -83,11 +84,11 @@ public class Bullet : MonoBehaviour
             {
                 if (rayhit.transform.tag == "Asteroid")
                 {
-                    Asteroid destructible = rayhit.transform.GetComponent<Asteroid>();
+                    Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     explosionPool.Spawn(rayhit.point);
-                    if (destructible)
+                    if (asteroid)
                     {
-                        destructible.RemoveBlock(rayhit.point);
+                        asteroid.RemoveBlock(rayhit, direction);
                     }
                     DeSpawn();
                 }

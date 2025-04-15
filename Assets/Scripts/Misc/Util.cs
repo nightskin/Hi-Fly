@@ -3,6 +3,8 @@ using UnityEngine;
 
 public static class Util
 {
+    
+
     public static Vector3 RandomVector3()
     {
         float x = Random.Range(float.MinValue, float.MaxValue);

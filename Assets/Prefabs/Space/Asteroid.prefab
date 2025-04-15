@@ -122,6 +122,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 934fba810d33d28438b228a9793aeeaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useOneDArray: 1
+  minRadius: 10
+  maxRadius: 50
   radius: 0
   voxelResolution: 10
   voxelSpacing: 10

@@ -47,4 +47,4 @@ MonoBehaviour:
   asteroidPrefab: {fileID: 8545969406572668274, guid: 8a3142cb4d4c3254d81191e124ca8d6f,
     type: 3}
   fieldDensity: 10
-  radius: 250
+  radius: 500

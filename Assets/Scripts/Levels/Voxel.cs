@@ -5,7 +5,8 @@ public struct Voxel
     public Color color;
     public float value;
     public Vector3 position;
-    public Vector3Int index;
+    public Vector3Int index3D;
+    public int index;
     
     public static int GetStateCube(Voxel[] voxels)
     {
