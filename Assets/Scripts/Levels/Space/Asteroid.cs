@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 
 
@@ -12,11 +11,12 @@ public class Asteroid : MonoBehaviour
     Voxel[,,] voxels3D = null;
     Voxel[] voxels = null;
 
-    public bool useOneDArray = false;
-    [HideInInspector] public float radius;
+    Vector3 hit_Debug = -Vector3.one;
 
+    [HideInInspector] public float radius;
+    public bool useOneDArray = false;
     public int voxelResolution = 10;
-    public float voxelSpacing = 10;
+    public float voxelSize = 10;
     
     Mesh mesh;
     List<Vector3> verts = new List<Vector3>();
@@ -26,7 +26,7 @@ public class Asteroid : MonoBehaviour
 
     int ToVoxelIndex(Vector3 position)
     {
-        return ((int)(position.x / voxelSpacing)) + ((int)(position.y / voxelSpacing)  * voxelResolution) + ((int)(position.z / voxelSpacing) * voxelResolution * voxelResolution);
+        return ((int)(position.x / voxelSize)) + ((int)(position.y / voxelSize)  * voxelResolution) + ((int)(position.z / voxelSize) * voxelResolution * voxelResolution);
     }
 
     Vector3 ToPosition(int i)
@@ -34,14 +34,9 @@ public class Asteroid : MonoBehaviour
         int x  = i % voxelResolution;
         int y = i / voxelResolution % voxelResolution;
         int z = i / voxelResolution / voxelResolution % voxelResolution;
-        return new Vector3(x,y,z) * voxelSpacing;
+        return new Vector3(x,y,z) * voxelSize;
     }
 
-    void OnDrawGizmos()
-    {
-        Vector3 center = transform.TransformPoint(Vector3.one * (voxelSpacing * voxelResolution / 2));
-        Gizmos.DrawSphere(center, 1);
-    }
 
     void Start()
     {
@@ -55,6 +50,14 @@ public class Asteroid : MonoBehaviour
 
     }
 
+    void OnDrawGizmos()
+    {
+        if(hit_Debug != -Vector3.one)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawCube(transform.TransformPoint(hit_Debug), Vector3.one * voxelSize);
+        }
+    }
 
     public async void RemoveBlock(Vector3 hit)
     {
@@ -103,14 +106,37 @@ public class Asteroid : MonoBehaviour
         }
     }
     
-    public void RemoveBlock(RaycastHit hit, Vector3 direction)
+    public void RemoveBlock(RaycastHit hit)
     {
-        Vector3 localPos = transform.InverseTransformPoint(hit.point) + (direction.normalized * voxelSpacing / 2);
-        localPos.x = Mathf.Round(localPos.x / voxelSpacing) * voxelSpacing;
-        localPos.y = Mathf.Round(localPos.y / voxelSpacing) * voxelSpacing;
-        localPos.z = Mathf.Round(localPos.z / voxelSpacing) * voxelSpacing;
-        int i = ToVoxelIndex(localPos);
-        voxels[i].value = -1;
+        Vector3 pos = transform.InverseTransformPoint(hit.point);
+        pos.x = Mathf.Round(pos.x / voxelSize) * voxelSize;
+        pos.y = Mathf.Round(pos.y / voxelSize) * voxelSize;
+        pos.z = Mathf.Round(pos.z / voxelSize) * voxelSize;
+        int i = ToVoxelIndex(pos);
+
+        if(voxels[i].value == -1)
+        {
+            pos = transform.InverseTransformPoint(hit.point - (hit.normal * voxelSize / 2));
+            pos.x = Mathf.Round(pos.x / voxelSize) * voxelSize;
+            pos.y = Mathf.Round(pos.y / voxelSize) * voxelSize;
+            pos.z = Mathf.Round(pos.z / voxelSize) * voxelSize; 
+            i = ToVoxelIndex(pos);
+            if(voxels[i].value == -1)
+            {
+                hit_Debug = ToPosition(i);
+            }
+            else
+            {
+                voxels[i].value = -1;
+            }
+        }
+        else
+        {
+            voxels[i].value = -1;
+        }
+
+        
+        
         if (BlocksGone())
         {
             Destroy(gameObject);
@@ -129,7 +155,7 @@ public class Asteroid : MonoBehaviour
 
     void CreateVoxelData()
     {
-        radius = Random.Range(voxelSpacing * (voxelResolution - 1) / 4, voxelSpacing * (voxelResolution - 1) / 2);
+        radius = Random.Range(voxelSize * (voxelResolution - 1) / 4, voxelSize * (voxelResolution - 1) / 2);
 
         if(useOneDArray)
         {
@@ -162,7 +188,7 @@ public class Asteroid : MonoBehaviour
                     {
                         voxels3D[x, y, z] = new Voxel();
                         voxels3D[x, y, z].index3D = new Vector3Int(x, y, z);
-                        voxels3D[x, y, z].position = new Vector3(x, y, z) * voxelSpacing;
+                        voxels3D[x, y, z].position = new Vector3(x, y, z) * voxelSize;
 
                         float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + voxels3D[x, y, z].position);
                         if (distanceFromCenter > radius)

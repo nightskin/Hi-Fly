@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class Terrain : MonoBehaviour
+public class ProceduralTerrain : MonoBehaviour
 {
     Mesh mesh;
     List<Vector3> vertices = new List<Vector3>();

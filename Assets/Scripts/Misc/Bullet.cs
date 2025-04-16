@@ -88,7 +88,7 @@ public class Bullet : MonoBehaviour
                     explosionPool.Spawn(rayhit.point);
                     if (asteroid)
                     {
-                        asteroid.RemoveBlock(rayhit, direction);
+                        asteroid.RemoveBlock(rayhit);
                     }
                     DeSpawn();
                 }
