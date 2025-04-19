@@ -29,8 +29,8 @@ public class EnemyShip : MonoBehaviour
         health = GetComponent<HealthSystem>();
         health.Heal(health.GetMaxHealth());
         //Set colors
-        GetComponent<MeshRenderer>().materials[0].color = Util.RandomColor();
-        GetComponent<MeshRenderer>().materials[2].color = Util.RandomColor();
+        GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", Util.RandomColor()); 
+        GetComponent<MeshRenderer>().materials[2].SetColor("_MainColor", Util.RandomColor()); 
     }
 
     void Update()

@@ -4,6 +4,15 @@ using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
+    public enum PlayerMode
+    {
+        STANDARD_MODE,
+        ON_RAILS_MODE,
+        STRAFE_MODE,
+    }
+    public static PlayerMode playerMode;
+    [SerializeField] PlayerMode startPlayerMode;
+
     public enum Difficulty
     {
         EASY,
@@ -17,9 +26,6 @@ public class GameManager : MonoBehaviour
 
     public static PlayerShip playerShip;
     public GameObject[] playerUIToHideOnPause;
-
-    public static string seed = "Dota2 < LOL";
-    public static Noise noise = new Noise(seed.GetHashCode());
     public static float isoLevel = 0;
     public static bool gameOver = false;
     public static bool gamePaused = false;
@@ -31,6 +37,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        playerMode = startPlayerMode;
         playerShip = transform.Find("Mesh").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();
@@ -93,12 +100,6 @@ public class GameManager : MonoBehaviour
     {
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
-    }
-
-    public static void InitRandom()
-    {
-        Random.InitState(seed.GetHashCode());
-        noise = new Noise(seed.GetHashCode());
     }
 
     public void Pause()

@@ -134,24 +134,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Ascend"",
-                    ""type"": ""Button"",
-                    ""id"": ""6594bec0-c225-4860-987a-cf43f6d5703a"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Descend"",
-                    ""type"": ""Button"",
-                    ""id"": ""f6281ce6-8a34-44cf-88cb-665d67ea68fb"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -312,7 +294,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""894b3090-3f9c-49ec-9ac0-491d1313ed47"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -462,50 +444,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""SecondaryFire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""805d5fe3-815d-49ed-9b14-f64457e49aad"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Ascend"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4256cfad-9882-4b44-85b8-7b944752386d"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Ascend"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""9782b122-6161-4650-b14a-38b0310bc756"",
-                    ""path"": ""<Keyboard>/shift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Descend"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7c1bf763-c518-4323-aea8-30c492a16c3e"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Descend"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -526,8 +464,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_ChangeView = m_Player.FindAction("ChangeView", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_UnPause = m_Player.FindAction("UnPause", throwIfNotFound: true);
-        m_Player_Ascend = m_Player.FindAction("Ascend", throwIfNotFound: true);
-        m_Player_Descend = m_Player.FindAction("Descend", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -606,8 +542,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ChangeView;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_UnPause;
-    private readonly InputAction m_Player_Ascend;
-    private readonly InputAction m_Player_Descend;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -624,8 +558,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @ChangeView => m_Wrapper.m_Player_ChangeView;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @UnPause => m_Wrapper.m_Player_UnPause;
-        public InputAction @Ascend => m_Wrapper.m_Player_Ascend;
-        public InputAction @Descend => m_Wrapper.m_Player_Descend;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -671,12 +603,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @UnPause.started += instance.OnUnPause;
             @UnPause.performed += instance.OnUnPause;
             @UnPause.canceled += instance.OnUnPause;
-            @Ascend.started += instance.OnAscend;
-            @Ascend.performed += instance.OnAscend;
-            @Ascend.canceled += instance.OnAscend;
-            @Descend.started += instance.OnDescend;
-            @Descend.performed += instance.OnDescend;
-            @Descend.canceled += instance.OnDescend;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -717,12 +643,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @UnPause.started -= instance.OnUnPause;
             @UnPause.performed -= instance.OnUnPause;
             @UnPause.canceled -= instance.OnUnPause;
-            @Ascend.started -= instance.OnAscend;
-            @Ascend.performed -= instance.OnAscend;
-            @Ascend.canceled -= instance.OnAscend;
-            @Descend.started -= instance.OnDescend;
-            @Descend.performed -= instance.OnDescend;
-            @Descend.canceled -= instance.OnDescend;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -754,7 +674,5 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnChangeView(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnUnPause(InputAction.CallbackContext context);
-        void OnAscend(InputAction.CallbackContext context);
-        void OnDescend(InputAction.CallbackContext context);
     }
 }

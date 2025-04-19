@@ -10,6 +10,7 @@ TagManager:
   - Asteroid
   - Bounds
   - Water
+  - LevelTrigger
   layers:
   - Default
   - TransparentFX

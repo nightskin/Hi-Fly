@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Galaxy : MonoBehaviour
 {
+    public string seed = "Dota2 < LOL";
+    public Noise noise;
     public float quadrantSize = 2000;
     public Vector2Int numberOfQuadrants = new Vector2Int(10,10);
 
@@ -14,9 +16,11 @@ public class Galaxy : MonoBehaviour
     List<GameObject> quadrants = new List<GameObject>();
     int numberOfPlanets = 0;
 
+
     void Start()
     {
-        GameManager.InitRandom();
+        Random.InitState(seed.GetHashCode());
+        noise = new Noise(seed.GetHashCode());
         Generate();
     }
 
@@ -35,7 +39,7 @@ public class Galaxy : MonoBehaviour
                     // quadrant type == 3 means Enemy Base
                     // quadrant type == 4 means nothing 
 
-                    float y = GameManager.noise.Evaluate(new Vector3(x, 0, z));
+                    float y = noise.Evaluate(new Vector3(x, 0, z));
                     Vector3 quadrantPos = new Vector3(x, y, z) * quadrantSize;
 
                     if (quadrantType == 0)
