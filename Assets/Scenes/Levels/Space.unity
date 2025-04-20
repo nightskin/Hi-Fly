@@ -285,6 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cb2743e39fcaa24c839c179664c2a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  seed: Dota2 < LOL
   quadrantSize: 500
   numberOfQuadrants: {x: 10, y: 10}
   planetPrefabs:
@@ -611,7 +612,7 @@ PrefabInstance:
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -2500
       objectReference: {fileID: 0}
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}
@@ -621,7 +622,7 @@ PrefabInstance:
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -400
       objectReference: {fileID: 0}
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}

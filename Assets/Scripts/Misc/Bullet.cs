@@ -17,9 +17,11 @@ public class Bullet : MonoBehaviour
     ObjectPool explosionPool;
     Vector3 prevPosition;
     bool hit;
+    float life = 0;
 
     void Awake()
     {
+        life = lifetime;
         explosionPool = GameObject.Find("ExplosionPool").GetComponent<ObjectPool>();
         sfx = GetComponent<AudioSource>();
         trail = GetComponent<TrailRenderer>();
@@ -35,7 +37,7 @@ public class Bullet : MonoBehaviour
         trail.Clear();
         trail.emitting = true;
         prevPosition = transform.position;
-        lifetime = 2;
+        life = lifetime;
     }
 
     void Update()
@@ -66,9 +68,9 @@ public class Bullet : MonoBehaviour
         }
 
         //Destroy Bullet After A Certain Time has Past
-        if (lifetime > 0)
+        if (life > 0)
         {
-            lifetime -= Time.deltaTime;
+            life -= Time.deltaTime;
         }
         else
         {

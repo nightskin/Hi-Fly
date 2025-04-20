@@ -25,11 +25,13 @@ public class TerrainGenerator : MonoBehaviour
     public float noiseScale = 0.01f;
     public Vector3 noiseOffset = Vector3.zero;
 
+    public Gradient landColors;
 
     Noise noise;
     [SerializeField] Mesh mesh;
     [SerializeField] List<Vector3> vertices = new List<Vector3>();
     [SerializeField] List<Vector2> uvs = new List<Vector2>();
+    [SerializeField] List<Color> colors = new List<Color>();
     [SerializeField] List<int> triangles = new List<int>();
     [SerializeField] int buffer = 0;
 
@@ -50,6 +52,7 @@ public class TerrainGenerator : MonoBehaviour
     public void Generate()
     {
         vertices.Clear();
+        colors.Clear();
         uvs.Clear();
         triangles.Clear();
         buffer = 0;
@@ -75,17 +78,19 @@ public class TerrainGenerator : MonoBehaviour
                 {
                     vertices[i] = new Vector3(vertices[i].x, y * minHeight, vertices[i].z);
                 }
+                colors.Add(landColors.Evaluate(Util.ConvertRange(-1, 1, 0, 1, y)));
             }
             else if(type == TerrainType.ISLANDS)
             {
                 if(y > 0)
                 {
-                    vertices[i] = new Vector3(vertices[i].x, maxHeight, vertices[i].z);
+                    vertices[i] = new Vector3(vertices[i].x, minHeight, vertices[i].z);
                 }
                 else
                 {
                     vertices[i] = new Vector3(vertices[i].x, y * minHeight, vertices[i].z);
                 }
+                colors.Add(landColors.Evaluate(Util.ConvertRange(-1, 1, 0, 1, y)));
             }
         }
         UpdateMesh();
@@ -142,6 +147,7 @@ public class TerrainGenerator : MonoBehaviour
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
+        mesh.colors = colors.ToArray();
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
     }

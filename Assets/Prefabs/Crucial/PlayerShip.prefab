@@ -5858,7 +5858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerUp: 1
+  powerUp: 0
   health: {fileID: 8131623140777354630}
   camera: {fileID: 8504905812486363887}
   trails:

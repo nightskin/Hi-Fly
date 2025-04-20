@@ -170,6 +170,6 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 2, a: 1}
   - {r: 1, g: 0, b: 2, a: 1}
   owner: {fileID: 0}
-  damage: 10
+  damage: 30
   direction: {x: 0, y: 0, z: 0}
   damageInterval: 0.1

@@ -41,7 +41,7 @@ public class Galaxy : MonoBehaviour
 
                     float y = noise.Evaluate(new Vector3(x, 0, z));
                     Vector3 quadrantPos = new Vector3(x, y, z) * quadrantSize;
-
+                    
                     if (quadrantType == 0)
                     {
                         if (planetPrefabs.Length > 0)
@@ -51,7 +51,7 @@ public class Galaxy : MonoBehaviour
                             {
                                 GameObject p = Instantiate(planetPrefabs[numberOfPlanets], quadrantPos, Quaternion.identity, transform);
                                 numberOfPlanets++;
-                                p.name = numberOfPlanets.ToString();
+                                p.name = new Vector3(x, 0, z).ToString();
                                 quadrants.Add(p);
                             }
                         }
@@ -60,7 +60,10 @@ public class Galaxy : MonoBehaviour
                     {
                         if (asteroidFieldPrefab)
                         {
-                            quadrants.Add(Instantiate(asteroidFieldPrefab, quadrantPos, Quaternion.identity, transform));
+                            var q = Instantiate(asteroidFieldPrefab, quadrantPos, Quaternion.identity, transform);
+                            q.name = new Vector3(x, 0 , z).ToString();
+                            quadrants.Add(q);
+
                         }
                     }
                     else if (quadrantType == 2)
@@ -76,7 +79,9 @@ public class Galaxy : MonoBehaviour
                     {
                         if (enemyBasePrefab)
                         {
-                            quadrants.Add(Instantiate(enemyBasePrefab, quadrantPos, Quaternion.identity, transform));
+                            var q = Instantiate(enemyBasePrefab, quadrantPos, Quaternion.identity, transform);
+                            q.name = new Vector3(x, 0, z).ToString();
+                            quadrants.Add(q);
                         }
                     }
                 }
