@@ -162,6 +162,7 @@ MonoBehaviour:
   turnSpeed: 10
   fireRate: 3
   moveSpeed: 50
+  turnFrequncy: 3
 --- !u!114 &7978833964992945737
 MonoBehaviour:
   m_ObjectHideFlags: 0

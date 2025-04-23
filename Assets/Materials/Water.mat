@@ -53,7 +53,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Alpha: 1
-    - _Density: 100
+    - _Density: 50
     - _FlowSpeed: 1
     - _QueueControl: 0
     - _QueueOffset: 0

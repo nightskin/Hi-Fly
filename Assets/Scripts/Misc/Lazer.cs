@@ -27,22 +27,25 @@ public class Lazer : MonoBehaviour
 
     void Update()
     {
-        Vector3 origin = owner.transform.position + owner.transform.forward;
-        renderer.SetPosition(0, origin);
-        renderer.SetPosition(1, origin + (direction * Camera.main.farClipPlane));
-
-        colorChangeTimer -= Time.deltaTime;
-        if (colorChangeTimer <= 0)
+        if(!GameManager.gamePaused)
         {
-            ChangeColor();
-            colorChangeTimer = colorChangeInterval;
-        }
+            Vector3 origin = owner.transform.position + owner.transform.forward;
+            renderer.SetPosition(0, origin);
+            renderer.SetPosition(1, origin + (direction * Camera.main.farClipPlane));
 
-        damageTimer -= Time.deltaTime;
-        if(damageTimer <= 0)
-        {
-            CheckCollisions();
-            damageTimer = damageInterval;
+            colorChangeTimer -= Time.deltaTime;
+            if (colorChangeTimer <= 0)
+            {
+                ChangeColor();
+                colorChangeTimer = colorChangeInterval;
+            }
+
+            damageTimer -= Time.deltaTime;
+            if(damageTimer <= 0)
+            {
+                CheckCollisions();
+                damageTimer = damageInterval;
+            }
         }
     }
 

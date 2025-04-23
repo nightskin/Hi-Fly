@@ -109,15 +109,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ChangeView"",
-                    ""type"": ""Button"",
-                    ""id"": ""341b2690-fe3d-410a-9843-9c57c5fc626f"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""8ac1d64a-71ea-4789-bd8c-75e639f547d4"",
@@ -130,6 +121,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""name"": ""UnPause"",
                     ""type"": ""Button"",
                     ""id"": ""37580a20-93f1-4046-a6f0-ba8beedd9e69"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AutoPilot"",
+                    ""type"": ""Button"",
+                    ""id"": ""04e87bad-8eb9-4881-979a-490a4f8999b9"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -359,28 +359,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d9adf605-e1e8-4ef8-9bd1-3a2b51417c7c"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ChangeView"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f117af86-9565-44e3-9067-17504f0e1744"",
-                    ""path"": ""<Gamepad>/dpad/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ChangeView"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""aa57f9cb-32c2-494a-9956-a92e0230927b"",
                     ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
@@ -444,6 +422,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""SecondaryFire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bb16ef2b-6f5c-4abc-b117-7abbb199ef26"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AutoPilot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba912a35-5f46-43a9-89f2-baf76bf6db6e"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AutoPilot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -461,9 +461,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_ToggleEngines = m_Player.FindAction("ToggleEngines", throwIfNotFound: true);
         m_Player_BarrelRoll = m_Player.FindAction("BarrelRoll", throwIfNotFound: true);
         m_Player_CenterCrosshair = m_Player.FindAction("CenterCrosshair", throwIfNotFound: true);
-        m_Player_ChangeView = m_Player.FindAction("ChangeView", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_UnPause = m_Player.FindAction("UnPause", throwIfNotFound: true);
+        m_Player_AutoPilot = m_Player.FindAction("AutoPilot", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -539,9 +539,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ToggleEngines;
     private readonly InputAction m_Player_BarrelRoll;
     private readonly InputAction m_Player_CenterCrosshair;
-    private readonly InputAction m_Player_ChangeView;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_UnPause;
+    private readonly InputAction m_Player_AutoPilot;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -555,9 +555,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @ToggleEngines => m_Wrapper.m_Player_ToggleEngines;
         public InputAction @BarrelRoll => m_Wrapper.m_Player_BarrelRoll;
         public InputAction @CenterCrosshair => m_Wrapper.m_Player_CenterCrosshair;
-        public InputAction @ChangeView => m_Wrapper.m_Player_ChangeView;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @UnPause => m_Wrapper.m_Player_UnPause;
+        public InputAction @AutoPilot => m_Wrapper.m_Player_AutoPilot;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -594,15 +594,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @CenterCrosshair.started += instance.OnCenterCrosshair;
             @CenterCrosshair.performed += instance.OnCenterCrosshair;
             @CenterCrosshair.canceled += instance.OnCenterCrosshair;
-            @ChangeView.started += instance.OnChangeView;
-            @ChangeView.performed += instance.OnChangeView;
-            @ChangeView.canceled += instance.OnChangeView;
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
             @UnPause.started += instance.OnUnPause;
             @UnPause.performed += instance.OnUnPause;
             @UnPause.canceled += instance.OnUnPause;
+            @AutoPilot.started += instance.OnAutoPilot;
+            @AutoPilot.performed += instance.OnAutoPilot;
+            @AutoPilot.canceled += instance.OnAutoPilot;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -634,15 +634,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @CenterCrosshair.started -= instance.OnCenterCrosshair;
             @CenterCrosshair.performed -= instance.OnCenterCrosshair;
             @CenterCrosshair.canceled -= instance.OnCenterCrosshair;
-            @ChangeView.started -= instance.OnChangeView;
-            @ChangeView.performed -= instance.OnChangeView;
-            @ChangeView.canceled -= instance.OnChangeView;
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
             @UnPause.started -= instance.OnUnPause;
             @UnPause.performed -= instance.OnUnPause;
             @UnPause.canceled -= instance.OnUnPause;
+            @AutoPilot.started -= instance.OnAutoPilot;
+            @AutoPilot.performed -= instance.OnAutoPilot;
+            @AutoPilot.canceled -= instance.OnAutoPilot;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -671,8 +671,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnToggleEngines(InputAction.CallbackContext context);
         void OnBarrelRoll(InputAction.CallbackContext context);
         void OnCenterCrosshair(InputAction.CallbackContext context);
-        void OnChangeView(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnUnPause(InputAction.CallbackContext context);
+        void OnAutoPilot(InputAction.CallbackContext context);
     }
 }

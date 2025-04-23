@@ -42,39 +42,42 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        //Basic Movement
-        prevPosition = transform.position;
-        if (homingTarget)
+        if(!GameManager.gamePaused)
         {
-            transform.position = Vector3.MoveTowards(transform.position, homingTarget.position, speed * Time.deltaTime);
-        }
-        else
-        {
-            transform.position += direction * speed * Time.deltaTime;
-        }
+            //Basic Movement
+            prevPosition = transform.position;
+            if (homingTarget)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, homingTarget.position, speed * Time.deltaTime);
+            }
+            else
+            {
+                transform.position += direction * speed * Time.deltaTime;
+            }
 
-        //If bullet has not hit something check collisions
-        if(!hit)
-        {
-            CheckCollisions();
-        }
-        else
-        {
-            trail.emitting = false;
-            if(!sfx.isPlaying)
+            //If bullet has not hit something check collisions
+            if(!hit)
+            {
+                CheckCollisions();
+            }
+            else
+            {
+                trail.emitting = false;
+                if(!sfx.isPlaying)
+                {
+                    DeSpawn();
+                }
+            }
+
+            //Destroy Bullet After A Certain Time has Past
+            if (life > 0)
+            {
+                life -= Time.deltaTime;
+            }
+            else
             {
                 DeSpawn();
             }
-        }
-
-        //Destroy Bullet After A Certain Time has Past
-        if (life > 0)
-        {
-            life -= Time.deltaTime;
-        }
-        else
-        {
-            DeSpawn();
         }
     }
     

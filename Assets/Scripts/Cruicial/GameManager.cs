@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,6 +26,8 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverMenu;
     public GameObject gamePauseMenu;
 
+    public GameObject[] miniMap;
+
     public static PlayerShip playerShip;
     public GameObject[] playerUIToHideOnPause;
     public static float isoLevel = 0;
@@ -38,13 +42,27 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerMode = startPlayerMode;
-        playerShip = transform.Find("Mesh").GetComponent<PlayerShip>();
+        playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();
         
+        if(SceneManager.GetActiveScene().name == "Hub")
+        {
+            foreach(GameObject obj in miniMap)
+            {
+                obj.SetActive(true);
+            }
+        }
 
         InputManager.input.Player.Pause.performed += Pause_performed;
         InputManager.input.Player.UnPause.performed += UnPause_performed;
+        InputManager.input.Player.AutoPilot.performed += AutoPilot_performed;
+    }
+
+    private void AutoPilot_performed(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        miniMap[0].GetComponent<RectTransform>().sizeDelta = new Vector2(700, 309);
+
     }
 
     private void UnPause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -89,7 +107,7 @@ public class GameManager : MonoBehaviour
                     }
                     playerShip.gameObject.SetActive(false);
                     gameOverMenu.SetActive(true);
-                    eventSystem.SetSelectedGameObject(gameOverMenu.transform.GetChild(1).gameObject);
+                    eventSystem.SetSelectedGameObject(gameOverMenu.transform.GetChild(0).transform.GetChild(1).gameObject);
                     gameOverActive = true;
                 }   
             }
@@ -100,17 +118,17 @@ public class GameManager : MonoBehaviour
     {
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
+        InputManager.input.Player.AutoPilot.performed -= AutoPilot_performed;
     }
 
     public void Pause()
     {
         Cursor.visible = true;
-        Time.timeScale = 0;
         foreach(GameObject playerUI in playerUIToHideOnPause)
         {
             playerUI.SetActive(false);
         }
-        eventSystem.SetSelectedGameObject(gamePauseMenu.transform.GetChild(1).gameObject);
+        eventSystem.SetSelectedGameObject(gamePauseMenu.transform.GetChild(0).transform.GetChild(1).gameObject);
         gamePaused = true;
         gamePauseMenu.SetActive(gamePaused);
     }
@@ -118,7 +136,6 @@ public class GameManager : MonoBehaviour
     public void Resume()
     {
         Cursor.visible = false;
-        Time.timeScale = 1;
         foreach (GameObject playerUI in playerUIToHideOnPause)
         {
             playerUI.SetActive(true);
@@ -139,7 +156,6 @@ public class GameManager : MonoBehaviour
     public void MainMenu()
     {
         Cursor.visible = true;
-        Time.timeScale = 1;
         gameOver = false;
         gamePaused = false;
         StartCoroutine(SceneLoader.instance.LoadLevel("Title"));

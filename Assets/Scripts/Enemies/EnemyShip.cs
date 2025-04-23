@@ -20,7 +20,7 @@ public class EnemyShip : MonoBehaviour
     float shootTimer = 0;
 
 
-    float turnFrequncy = 2.5f;
+    [SerializeField] float turnFrequncy = 3.0f;
     float turnTimer = 0;
 
     void OnEnable()
@@ -35,7 +35,7 @@ public class EnemyShip : MonoBehaviour
 
     void Update()
     {
-        if (target)
+        if (target && !GameManager.gamePaused)
         {
             if (health.IsAlive())
             {

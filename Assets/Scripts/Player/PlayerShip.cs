@@ -98,7 +98,7 @@ public class PlayerShip : MonoBehaviour
 
     void Update()
     {
-        if(health.IsAlive())
+        if(health.IsAlive() && !GameManager.gamePaused)
         {
             if(GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE)
             {

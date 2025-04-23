@@ -72,7 +72,7 @@ public class Settings : MonoBehaviour
         float b = playerBodySliders[2].value;
 
         playerBodyColor = new Color(r, g, b);
-        playerPreview.GetComponent<MeshRenderer>().materials[0].color = new Color(r, g, b);
+        playerPreview.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", new Color(r,g,b));
     }
 
     public void ChangeStripeColor()
@@ -83,12 +83,12 @@ public class Settings : MonoBehaviour
         float b = playerStripeSliders[2].value;
 
         playerStripeColor = new Color(r, g, b);
-        playerPreview.GetComponent<MeshRenderer>().materials[1].color = new Color(r, g, b);
+        playerPreview.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", new Color(r,g,b));
     }
 
     public void ChangeBGMVolume()
     {
-
+        
     }
 
     public void ChangeSFXVolume()

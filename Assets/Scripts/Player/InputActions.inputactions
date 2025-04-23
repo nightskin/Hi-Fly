@@ -87,15 +87,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ChangeView",
-                    "type": "Button",
-                    "id": "341b2690-fe3d-410a-9843-9c57c5fc626f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Pause",
                     "type": "Button",
                     "id": "8ac1d64a-71ea-4789-bd8c-75e639f547d4",
@@ -108,6 +99,15 @@
                     "name": "UnPause",
                     "type": "Button",
                     "id": "37580a20-93f1-4046-a6f0-ba8beedd9e69",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AutoPilot",
+                    "type": "Button",
+                    "id": "04e87bad-8eb9-4881-979a-490a4f8999b9",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -337,28 +337,6 @@
                 },
                 {
                     "name": "",
-                    "id": "d9adf605-e1e8-4ef8-9bd1-3a2b51417c7c",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ChangeView",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f117af86-9565-44e3-9067-17504f0e1744",
-                    "path": "<Gamepad>/dpad/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ChangeView",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "aa57f9cb-32c2-494a-9956-a92e0230927b",
                     "path": "<Gamepad>/start",
                     "interactions": "",
@@ -420,6 +398,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "SecondaryFire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bb16ef2b-6f5c-4abc-b117-7abbb199ef26",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AutoPilot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba912a35-5f46-43a9-89f2-baf76bf6db6e",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AutoPilot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

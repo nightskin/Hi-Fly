@@ -21,7 +21,7 @@ public class PlayerCamera : MonoBehaviour
 
     void Update()
     {
-        if(player.health.IsAlive())
+        if(player.health.IsAlive() && !GameManager.gamePaused)
         {
             CameraMovement();
         }
