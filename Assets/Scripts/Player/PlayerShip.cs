@@ -32,7 +32,6 @@ public class PlayerShip : MonoBehaviour
 
     [SerializeField] Image reticle;
     [SerializeField] LayerMask lockOnLayer;
-    [SerializeField] float aimSpeed = 1000;
     bool aimingViaGamepad = false;
     Vector2 reticlePosition;
     RaycastHit lockOn;
@@ -53,8 +52,8 @@ public class PlayerShip : MonoBehaviour
     void Start()
     {
         Cursor.visible = false;
-        GetComponent<MeshRenderer>().materials[0].color = Settings.playerBodyColor;
-        GetComponent<MeshRenderer>().materials[1].color = Settings.playerStripeColor;
+        GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor",GameManager.playerBodyColor);
+        GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor",GameManager.playerStripeColor);
         bulletSpawn = transform.Find("BulletSpawn");
 
 
@@ -267,7 +266,7 @@ public class PlayerShip : MonoBehaviour
         //Aiming
         if (aimingViaGamepad)
         {
-            reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * aimSpeed * Time.deltaTime;
+            reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * GameManager.aimSensitivy * Time.deltaTime;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;

@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
         STRAFE_MODE,
     }
     public static PlayerMode playerMode;
+    
     [SerializeField] PlayerMode startPlayerMode;
 
     public enum Difficulty
@@ -22,6 +23,13 @@ public class GameManager : MonoBehaviour
         HARD
     }
     public static Difficulty difficulty = Difficulty.NORMAL;
+
+    public static Color playerBodyColor = Color.red;
+    public static Color playerStripeColor = new Color(1, 1, 0);
+    public static float aimSensitivy = 1000;
+
+    public static bool invertLookY = false;
+    public static bool invertSteerY = true;
 
     public GameObject gameOverMenu;
     public GameObject gamePauseMenu;

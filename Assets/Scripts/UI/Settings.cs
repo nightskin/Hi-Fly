@@ -4,15 +4,17 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-    public static Color playerBodyColor = Color.red;
-    public static Color playerStripeColor = new Color(1, 1, 0);
-    public static float aimSense = 1000;
 
     [SerializeField] Slider[] playerBodySliders;
     [SerializeField] Slider[] playerStripeSliders;
     [SerializeField] Slider aimSlider;
+    [SerializeField] Text aimText;
+
     [SerializeField] Slider musicVolume;
     [SerializeField] Slider sfxVolume;
+
+    [SerializeField] Toggle invertSteerY;
+    [SerializeField] Toggle invertLookY;
 
     [SerializeField] GameObject playerPreview;
     [SerializeField] EventSystem eventSystem;
@@ -23,11 +25,25 @@ public class Settings : MonoBehaviour
     void Start()
     {
         sceneNodeManager = GetComponent<SceneNodeManager>();
+        aimSlider.value = GameManager.aimSensitivy;
+        playerBodySliders[0].value = GameManager.playerBodyColor.r;
+        playerBodySliders[1].value = GameManager.playerBodyColor.g;
+        playerBodySliders[2].value = GameManager.playerBodyColor.b;
+        playerPreview.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameManager.playerBodyColor);
+        playerStripeSliders[0].value = GameManager.playerStripeColor.r;
+        playerStripeSliders[1].value = GameManager.playerStripeColor.g;
+        playerStripeSliders[2].value = GameManager.playerStripeColor.b;
+        playerPreview.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameManager.playerStripeColor);
+
+        invertLookY.isOn = GameManager.invertLookY;
+        invertSteerY.isOn = GameManager.invertSteerY;
+
     }
 
     public void ChangeAimSense()
     {
-        aimSense = aimSlider.value;
+        GameManager.aimSensitivy = aimSlider.value;
+        aimText.text = GameManager.aimSensitivy.ToString();
     }
 
     public void ExitSettings()
@@ -57,10 +73,17 @@ public class Settings : MonoBehaviour
         eventSystem.SetSelectedGameObject(obj);
     }
     
-    public void OpenPlayerSettings()
+    public void OpenExtraSettings()
     {
-        sceneNodeManager.SetActiveSceneNode("PlayerSettings");
-        GameObject obj = sceneNodeManager.GetSceneNode("PlayerSettings").transform.Find("PlayerBodyRed").gameObject;
+        sceneNodeManager.SetActiveSceneNode("ExtraSettings");
+        GameObject obj = sceneNodeManager.GetSceneNode("ExtraSettings").transform.Find("PlayerBodyRed").gameObject;
+        eventSystem.SetSelectedGameObject(obj);
+    }
+
+    public void OpenGraphicSettings()
+    {
+        sceneNodeManager.SetActiveSceneNode("GraphicSettings");
+        GameObject obj = sceneNodeManager.GetSceneNode("GraphicSettings").transform.GetChild(0).gameObject;
         eventSystem.SetSelectedGameObject(obj);
     }
 
@@ -71,7 +94,7 @@ public class Settings : MonoBehaviour
         float g = playerBodySliders[1].value;
         float b = playerBodySliders[2].value;
 
-        playerBodyColor = new Color(r, g, b);
+        GameManager.playerBodyColor = new Color(r, g, b);
         playerPreview.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", new Color(r,g,b));
     }
 
@@ -82,8 +105,14 @@ public class Settings : MonoBehaviour
         float g = playerStripeSliders[1].value;
         float b = playerStripeSliders[2].value;
 
-        playerStripeColor = new Color(r, g, b);
+        GameManager.playerStripeColor = new Color(r, g, b);
         playerPreview.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", new Color(r,g,b));
+    }
+
+    public void ChangeInvertLookSettings()
+    {
+        GameManager.invertLookY = invertLookY.isOn;
+        GameManager.invertSteerY = invertSteerY.isOn;
     }
 
     public void ChangeBGMVolume()

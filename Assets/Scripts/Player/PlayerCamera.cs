@@ -31,8 +31,9 @@ public class PlayerCamera : MonoBehaviour
     {
         if(GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE)
         {
-            Vector2 steerInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
-            cameraRot += new Vector3(steerInput.y, steerInput.x) * rotationSpeed * Time.deltaTime;
+            Vector2 steerInput= InputManager.input.Player.Steer.ReadValue<Vector2>();
+            if(GameManager.invertSteerY) cameraRot += new Vector3(steerInput.y, steerInput.x) * rotationSpeed * Time.deltaTime;
+            else cameraRot += new Vector3(-steerInput.y, steerInput.x) * rotationSpeed * Time.deltaTime;
             cameraRot.x = Mathf.Clamp(cameraRot.x, -90, 90);
 
             Vector3 camPos = player.transform.position + new Vector3(cameraOffset.x, cameraOffset.y, 0) - transform.forward * cameraDistance;
@@ -42,8 +43,9 @@ public class PlayerCamera : MonoBehaviour
         }
         else if(GameManager.playerMode == GameManager.PlayerMode.STRAFE_MODE)
         {
-            Vector2 steerInput = InputManager.input.Player.Aim.ReadValue<Vector2>();
-            cameraRot += new Vector3(-steerInput.y, steerInput.x) * rotationSpeed * Time.deltaTime;
+            Vector2 lookInput = InputManager.input.Player.Aim.ReadValue<Vector2>();
+            if(GameManager.invertLookY) cameraRot += new Vector3(lookInput.y, lookInput.x) * rotationSpeed * Time.deltaTime;
+            else cameraRot += new Vector3(-lookInput.y, lookInput.x) * rotationSpeed * Time.deltaTime;
             cameraRot.x = Mathf.Clamp(cameraRot.x, -90, 90);
 
             Vector3 camPos = player.transform.position + new Vector3(cameraOffset.x, cameraOffset.y, 0) - transform.forward * cameraDistance;
