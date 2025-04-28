@@ -1,17 +1,19 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerCamera : MonoBehaviour
 {
     public float rotationSpeed = 100;
     public float cameraDistance = 10;
-    public Vector2 cameraOffset;
     public ParticleSystem boostEffect;
 
     [SerializeField][Min(2)] float lerpSpeed = 10;
+    [SerializeField] Vector3 defaultOffset = new Vector3(0, 3, 0);
+    public Transform onRailsOffset;
     [SerializeField] PlayerShip player;
 
-    [SerializeField] Vector3 cameraRot = Vector3.zero;
-
+    public Vector3 cameraRot = Vector3.zero;
+    int currentPathIndex = 0;
 
     void Start()
     {
@@ -36,7 +38,7 @@ public class PlayerCamera : MonoBehaviour
             else cameraRot += new Vector3(-steerInput.y, steerInput.x) * rotationSpeed * Time.deltaTime;
             cameraRot.x = Mathf.Clamp(cameraRot.x, -90, 90);
 
-            Vector3 camPos = player.transform.position + new Vector3(cameraOffset.x, cameraOffset.y, 0) - transform.forward * cameraDistance;
+            Vector3 camPos = (player.transform.position + defaultOffset) - (transform.forward * cameraDistance);
             transform.position = Vector3.Lerp(transform.position, camPos, lerpSpeed * Time.deltaTime);
             transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(cameraRot), lerpSpeed * Time.deltaTime);
 
@@ -48,13 +50,34 @@ public class PlayerCamera : MonoBehaviour
             else cameraRot += new Vector3(-lookInput.y, lookInput.x) * rotationSpeed * Time.deltaTime;
             cameraRot.x = Mathf.Clamp(cameraRot.x, -90, 90);
 
-            Vector3 camPos = player.transform.position + new Vector3(cameraOffset.x, cameraOffset.y, 0) - transform.forward * cameraDistance;
+            Vector3 camPos = (player.transform.position + defaultOffset) - transform.forward * cameraDistance;
             transform.position = Vector3.Lerp(transform.position, camPos, lerpSpeed * Time.deltaTime);
             transform.localRotation = Quaternion.Euler(cameraRot);
         }
         else if(GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
         {
-            
+            onRailsOffset.position = Vector3.MoveTowards(onRailsOffset.position, GameManager.playerPath[currentPathIndex], player.speed * Time.deltaTime);
+            onRailsOffset.rotation = Quaternion.LookRotation((GameManager.playerPath[currentPathIndex] - onRailsOffset.position).normalized);
+
+            transform.position = Vector3.Lerp(transform.position, (onRailsOffset.position + defaultOffset) - (transform.forward * cameraDistance), lerpSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, onRailsOffset.rotation, lerpSpeed * Time.deltaTime);
+
+
+            if (Vector3.Distance(onRailsOffset.position, GameManager.playerPath[currentPathIndex]) < 15.0f)
+            {
+                if (currentPathIndex < GameManager.playerPath.Count - 1)
+                {
+                    currentPathIndex++;
+                }
+                else
+                {
+                    cameraRot = new Vector3(player.transform.localEulerAngles.x, player.transform.localEulerAngles.y, 0);
+                    GameManager.playerMode = GameManager.PlayerMode.STANDARD_MODE;
+                    Debug.Log(GameManager.playerMode.ToString());
+                }
+            }
+
+
         }
     }
 

@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-
     [SerializeField] Slider[] playerBodySliders;
     [SerializeField] Slider[] playerStripeSliders;
     [SerializeField] Slider aimSlider;
@@ -17,6 +16,7 @@ public class Settings : MonoBehaviour
     [SerializeField] Toggle invertLookY;
 
     [SerializeField] GameObject playerPreview;
+    [SerializeField] Button difficultyBtn;
     [SerializeField] EventSystem eventSystem;
 
     static SceneNodeManager sceneNodeManager;
@@ -26,6 +26,7 @@ public class Settings : MonoBehaviour
     {
         sceneNodeManager = GetComponent<SceneNodeManager>();
         aimSlider.value = GameManager.aimSensitivy;
+        difficultyBtn.transform.GetChild(0).GetComponent<Text>().text = GameManager.difficulty.ToString();
         playerBodySliders[0].value = GameManager.playerBodyColor.r;
         playerBodySliders[1].value = GameManager.playerBodyColor.g;
         playerBodySliders[2].value = GameManager.playerBodyColor.b;
@@ -38,6 +39,29 @@ public class Settings : MonoBehaviour
         invertLookY.isOn = GameManager.invertLookY;
         invertSteerY.isOn = GameManager.invertSteerY;
 
+    }
+
+    public void ToggleDifficulty()
+    {
+        if(GameManager.difficulty == GameManager.Difficulty.EASY)
+        {
+            GameManager.difficulty = GameManager.Difficulty.NORMAL;
+        }
+        else if(GameManager.difficulty == GameManager.Difficulty.NORMAL)
+        {
+            GameManager.difficulty = GameManager.Difficulty.HARD;
+        }
+        else if(GameManager.difficulty == GameManager.Difficulty.HARD)
+        {
+            if(GameManager.gameBeaten) GameManager.difficulty = GameManager.Difficulty.PTSD;
+            else GameManager.difficulty = GameManager.Difficulty.EASY;
+        }
+        else if(GameManager.difficulty == GameManager.Difficulty.PTSD)
+        {
+            GameManager.difficulty = GameManager.Difficulty.EASY;
+        }
+        
+        difficultyBtn.transform.GetChild(0).GetComponent<Text>().text = GameManager.difficulty.ToString();
     }
 
     public void ChangeAimSense()
@@ -63,6 +87,13 @@ public class Settings : MonoBehaviour
     {
         sceneNodeManager.SetActiveSceneNode("SoundSettings");
         GameObject obj = sceneNodeManager.GetSceneNode("SoundSettings").transform.Find("MusicVolume").gameObject;
+        eventSystem.SetSelectedGameObject(obj);
+    }
+
+    public void OpenGameSettings()
+    {
+        sceneNodeManager.SetActiveSceneNode("GameSettings");
+        GameObject obj = sceneNodeManager.GetSceneNode("GameSettings").transform.GetChild(2).gameObject;
         eventSystem.SetSelectedGameObject(obj);
     }
 

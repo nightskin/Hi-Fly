@@ -47,10 +47,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefabs:
   - {fileID: 1268243056916477701, guid: 7730e9c7f3d1e1e438c7c6c1b4eb907b, type: 3}
-  maxEnemies: 5
-  minEnemies: 10
+  maxEnemies: 10
+  minEnemies: 5
   spawnRadius: 500
-  spawnAtStart: 0
+  spawnAtStart: 1
+  skipPatrol: 0
   enemyShips: []
 --- !u!135 &2355711189741096969
 SphereCollider:

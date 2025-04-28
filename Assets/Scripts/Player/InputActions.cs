@@ -127,7 +127,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""AutoPilot"",
+                    ""name"": ""ToggleMiniMap"",
                     ""type"": ""Button"",
                     ""id"": ""04e87bad-8eb9-4881-979a-490a4f8999b9"",
                     ""expectedControlType"": """",
@@ -426,11 +426,11 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""bb16ef2b-6f5c-4abc-b117-7abbb199ef26"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<Gamepad>/select"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""AutoPilot"",
+                    ""action"": ""ToggleMiniMap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -441,7 +441,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""AutoPilot"",
+                    ""action"": ""ToggleMiniMap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -463,7 +463,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_CenterCrosshair = m_Player.FindAction("CenterCrosshair", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_UnPause = m_Player.FindAction("UnPause", throwIfNotFound: true);
-        m_Player_AutoPilot = m_Player.FindAction("AutoPilot", throwIfNotFound: true);
+        m_Player_ToggleMiniMap = m_Player.FindAction("ToggleMiniMap", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -541,7 +541,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CenterCrosshair;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_UnPause;
-    private readonly InputAction m_Player_AutoPilot;
+    private readonly InputAction m_Player_ToggleMiniMap;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -557,7 +557,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @CenterCrosshair => m_Wrapper.m_Player_CenterCrosshair;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @UnPause => m_Wrapper.m_Player_UnPause;
-        public InputAction @AutoPilot => m_Wrapper.m_Player_AutoPilot;
+        public InputAction @ToggleMiniMap => m_Wrapper.m_Player_ToggleMiniMap;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -600,9 +600,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @UnPause.started += instance.OnUnPause;
             @UnPause.performed += instance.OnUnPause;
             @UnPause.canceled += instance.OnUnPause;
-            @AutoPilot.started += instance.OnAutoPilot;
-            @AutoPilot.performed += instance.OnAutoPilot;
-            @AutoPilot.canceled += instance.OnAutoPilot;
+            @ToggleMiniMap.started += instance.OnToggleMiniMap;
+            @ToggleMiniMap.performed += instance.OnToggleMiniMap;
+            @ToggleMiniMap.canceled += instance.OnToggleMiniMap;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -640,9 +640,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @UnPause.started -= instance.OnUnPause;
             @UnPause.performed -= instance.OnUnPause;
             @UnPause.canceled -= instance.OnUnPause;
-            @AutoPilot.started -= instance.OnAutoPilot;
-            @AutoPilot.performed -= instance.OnAutoPilot;
-            @AutoPilot.canceled -= instance.OnAutoPilot;
+            @ToggleMiniMap.started -= instance.OnToggleMiniMap;
+            @ToggleMiniMap.performed -= instance.OnToggleMiniMap;
+            @ToggleMiniMap.canceled -= instance.OnToggleMiniMap;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -673,6 +673,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnCenterCrosshair(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnUnPause(InputAction.CallbackContext context);
-        void OnAutoPilot(InputAction.CallbackContext context);
+        void OnToggleMiniMap(InputAction.CallbackContext context);
     }
 }

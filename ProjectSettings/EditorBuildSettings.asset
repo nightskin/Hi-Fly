@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Scenes/PlayGame.unity
     guid: 5be305991c28ce541ae3da370751e90d
   - enabled: 1
-    path: Assets/Scenes/Intro.unity
+    path: Assets/Scenes/Levels/Intro.unity
     guid: dafca98d502dedd41ac1612091ff4a1a
   - enabled: 1
     path: Assets/Scenes/Levels/1.unity

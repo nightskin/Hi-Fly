@@ -105,7 +105,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "AutoPilot",
+                    "name": "ToggleMiniMap",
                     "type": "Button",
                     "id": "04e87bad-8eb9-4881-979a-490a4f8999b9",
                     "expectedControlType": "",
@@ -404,11 +404,11 @@
                 {
                     "name": "",
                     "id": "bb16ef2b-6f5c-4abc-b117-7abbb199ef26",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/select",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "AutoPilot",
+                    "action": "ToggleMiniMap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -419,7 +419,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "AutoPilot",
+                    "action": "ToggleMiniMap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

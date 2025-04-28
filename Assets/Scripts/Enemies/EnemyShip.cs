@@ -4,6 +4,9 @@ public class EnemyShip : MonoBehaviour
 {
 
     GameObject target;
+
+    public bool attackMode;
+
     [SerializeField] HealthSystem health;
 
     [SerializeField] float aimSkill = 10;
@@ -25,7 +28,19 @@ public class EnemyShip : MonoBehaviour
 
     void OnEnable()
     {
-        target = GameObject.FindGameObjectWithTag("Player");
+        if(GameManager.difficulty == GameManager.Difficulty.EASY)
+        {
+            turnFrequncy = 3.0f;
+        }
+        else if(GameManager.difficulty == GameManager.Difficulty.NORMAL)
+        {
+            turnFrequncy = 2.0f;
+        }
+        else if(GameManager.difficulty == GameManager.Difficulty.HARD)
+        {
+            turnFrequncy = 1.0f;
+        }
+        target = GameManager.playerShip.gameObject;
         health = GetComponent<HealthSystem>();
         health.Heal(health.GetMaxHealth());
         //Set colors
@@ -39,9 +54,9 @@ public class EnemyShip : MonoBehaviour
         {
             if (health.IsAlive())
             {
-                if (Vector3.Distance(transform.position, target.transform.position) <= perceptionRadius || health.HasBeenHitOnce())
+                if (Vector3.Distance(transform.position, target.transform.position) <= perceptionRadius || health.HasBeenHitOnce() || attackMode)
                 {
-                    if(GameManager.difficulty == GameManager.Difficulty.HARD)
+                    if(GameManager.difficulty == GameManager.Difficulty.PTSD)
                     {
                         Fight_Boid();
                     }
@@ -53,6 +68,7 @@ public class EnemyShip : MonoBehaviour
                 else
                 {
                     Patrol();
+                    
                 }
             }
             else
@@ -79,7 +95,7 @@ public class EnemyShip : MonoBehaviour
                 health.TakeDamage(health.GetMaxHealth());
             }
         }
-        if(other.tag == "Astroid" || other.tag == "Planet")
+        if(other.tag == "Asteroid" || other.tag == "Planet")
         {
             health.TakeDamage(health.GetMaxHealth());
         }
@@ -94,7 +110,7 @@ public class EnemyShip : MonoBehaviour
     
     void Fight_Boid()
     {
-        direction = SteerTowardsTarget() + Seperation(avoidRadius);
+        direction = SteerTowardsTarget();
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
@@ -115,7 +131,7 @@ public class EnemyShip : MonoBehaviour
 
     void Fight_TimeBased()
     {
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), turnSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), 10 * Time.deltaTime);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
         if (turnTimer < 0)

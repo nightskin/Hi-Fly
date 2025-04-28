@@ -1,4 +1,3 @@
-using Unity.Mathematics;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -48,7 +47,7 @@ public class Bullet : MonoBehaviour
             prevPosition = transform.position;
             if (homingTarget)
             {
-                transform.position = Vector3.MoveTowards(transform.position, homingTarget.position, speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.deltaTime);
             }
             else
             {
@@ -95,12 +94,10 @@ public class Bullet : MonoBehaviour
                     {
                         asteroid.RemoveBlock(rayhit);
                     }
-                    DeSpawn();
                 }
                 else if (rayhit.transform.tag == "Planet")
                 {
                     explosionPool.Spawn(rayhit.point);
-                    DeSpawn();
                 }
                 else if (rayhit.transform.tag == "Enemy")
                 {

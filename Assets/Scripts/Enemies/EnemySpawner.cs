@@ -9,6 +9,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float spawnRadius = 500;
 
     public bool spawnAtStart = false;
+    public bool skipPatrol = false;
 
     public List<GameObject> enemyShips = new List<GameObject>();
 
@@ -30,6 +31,7 @@ public class EnemySpawner : MonoBehaviour
                     int i = Random.Range(0, enemyPrefabs.Length);
                     Vector3 pos = transform.position + Random.insideUnitSphere * spawnRadius;
                     var enemy = Instantiate(enemyPrefabs[i], pos, Util.RandomRotation(), transform);
+                    enemy.GetComponent<EnemyShip>().attackMode = skipPatrol;
                     enemyShips.Add(enemy);
                 }
                 else
@@ -75,5 +77,12 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    
+    public bool AllEnemiesDefeated()
+    {
+        for(int e = 0; e < enemyShips.Count; e++)
+        {
+            if(enemyShips[e].activeSelf) return false;
+        }
+        return true;
+    }    
 }

@@ -14,6 +14,7 @@ public class PlayerShip : MonoBehaviour
 
     public HealthSystem health;
 
+    [SerializeField] Transform body;
     [SerializeField] PlayerCamera camera;
     [SerializeField] TrailRenderer[] trails;
     Color thrustColor = Color.cyan;
@@ -27,7 +28,7 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] float acceleration = 10;
 
     float targetSpeed;
-    float speed;
+    public float speed;
     float zRot;
 
     [SerializeField] Image reticle;
@@ -49,12 +50,15 @@ public class PlayerShip : MonoBehaviour
     float rollSpeed = 2000;
     float rollTimer;
 
+    Vector3 onRailsOffset = Vector3.zero;
+
     void Start()
     {
         Cursor.visible = false;
         GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor",GameManager.playerBodyColor);
         GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor",GameManager.playerStripeColor);
         bulletSpawn = transform.Find("BulletSpawn");
+        body = transform.parent;
 
 
         health = GetComponent<HealthSystem>();
@@ -127,7 +131,8 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.SecondaryFire.performed -= SecondaryFire_performed;
         InputManager.input.Player.SecondaryFire.canceled -= SecondaryFire_canceled;
     }
-    
+
+
     private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
@@ -279,7 +284,7 @@ public class PlayerShip : MonoBehaviour
             reticle.rectTransform.position = reticlePosition;
         }
 
-        //Shooting lazer
+        //PowerUps
         if(InputManager.input.Player.SecondaryFire.IsPressed()) 
         {
             if(powerUp == PowerUp.LAZER)
@@ -337,7 +342,83 @@ public class PlayerShip : MonoBehaviour
 
     void OnRailsMode()
     {
-        
+        if(GameManager.playerPath.Count > 0)
+        {
+            Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
+            Vector3 moveDirection = (camera.onRailsOffset.right * moveInput.x + camera.onRailsOffset.up * moveInput.y).normalized;
+            onRailsOffset += moveDirection * speed * Time.deltaTime;
+            
+
+            speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
+            Vector3 pos = Camera.main.WorldToViewportPoint((camera.onRailsOffset.position + onRailsOffset));
+            pos.x = Mathf.Clamp01(pos.x);
+            pos.y = Mathf.Clamp01(pos.y);
+            transform.position = Camera.main.ViewportToWorldPoint(pos);
+
+            //Steering
+            if (evading)
+            {
+                zRot += rollDirection * rollSpeed * Time.deltaTime;
+                Quaternion targetRot = Quaternion.Euler(camera.onRailsOffset.transform.localEulerAngles.x, camera.onRailsOffset.transform.localEulerAngles.y, zRot);
+                transform.rotation = targetRot;
+                if (rollTimer > 0)
+                {
+                    rollTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    evading = false;
+                }
+            }
+            else
+            {
+                zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
+                Quaternion targetRot = Quaternion.Euler(camera.onRailsOffset.transform.localEulerAngles.x, camera.onRailsOffset.transform.localEulerAngles.y, zRot);
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
+            }
+
+            //Aiming
+            if (aimingViaGamepad)
+            {
+                reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * GameManager.aimSensitivy * Time.deltaTime;
+                reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
+                reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
+                reticle.rectTransform.position = reticlePosition;
+            }
+            else
+            {
+                reticlePosition = Input.mousePosition;
+                reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
+                reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
+                reticle.rectTransform.position = reticlePosition;
+            }
+
+            //PowerUps
+            if (InputManager.input.Player.SecondaryFire.IsPressed())
+            {
+                if (powerUp == PowerUp.LAZER)
+                {
+                    MoveLazer();
+                }
+                else if (powerUp == PowerUp.MACHINE_GUN)
+                {
+                    if (shootTimer > 0)
+                    {
+                        shootTimer -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        FireBullet();
+                        shootTimer = fireRate;
+                    }
+                }
+            }
+
+        }
+        else
+        {
+            GameManager.playerMode = GameManager.PlayerMode.STANDARD_MODE;
+        }
     }
 
     void FireBullet()

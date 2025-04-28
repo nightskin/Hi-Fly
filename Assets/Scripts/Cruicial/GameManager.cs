@@ -1,11 +1,19 @@
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using System;
 
 public class GameManager : MonoBehaviour
 {
+    public enum Difficulty
+    {
+        EASY,
+        NORMAL,
+        HARD,
+        PTSD,
+    }
+    public static Difficulty difficulty = Difficulty.NORMAL;
+
     public enum PlayerMode
     {
         STANDARD_MODE,
@@ -13,16 +21,7 @@ public class GameManager : MonoBehaviour
         STRAFE_MODE,
     }
     public static PlayerMode playerMode;
-    
     [SerializeField] PlayerMode startPlayerMode;
-
-    public enum Difficulty
-    {
-        EASY,
-        NORMAL,
-        HARD
-    }
-    public static Difficulty difficulty = Difficulty.NORMAL;
 
     public static Color playerBodyColor = Color.red;
     public static Color playerStripeColor = new Color(1, 1, 0);
@@ -33,19 +32,25 @@ public class GameManager : MonoBehaviour
 
     public GameObject gameOverMenu;
     public GameObject gamePauseMenu;
-
-    public GameObject[] miniMap;
+    public GameObject miniMap;
+    public Camera miniMapCamera;
 
     public static PlayerShip playerShip;
     public GameObject[] playerUIToHideOnPause;
     public static float isoLevel = 0;
+
     public static bool gameOver = false;
     public static bool gamePaused = false;
+    public static bool gameBeaten = false;
+    
+
     public static EventSystem eventSystem;
     public static SceneNodeManager sceneNodeManager;
 
     float gameOverTimer = 1;
     bool gameOverActive = false;
+
+    public static List<Vector3> playerPath = new List<Vector3>();
 
     void Start()
     {
@@ -53,29 +58,41 @@ public class GameManager : MonoBehaviour
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();
-        
+
         if(SceneManager.GetActiveScene().name == "Hub")
         {
-            foreach(GameObject obj in miniMap)
-            {
-                obj.SetActive(true);
-            }
+            miniMapCamera.gameObject.SetActive(true);
+        }
+        else
+        {
+            miniMapCamera.gameObject.SetActive(false);
         }
 
         InputManager.input.Player.Pause.performed += Pause_performed;
         InputManager.input.Player.UnPause.performed += UnPause_performed;
-        InputManager.input.Player.AutoPilot.performed += AutoPilot_performed;
+        InputManager.input.Player.ToggleMiniMap.performed += ToggleMiniMap_performed;
     }
 
-    private void AutoPilot_performed(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void ToggleMiniMap_performed(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        miniMap[0].GetComponent<RectTransform>().sizeDelta = new Vector2(700, 309);
+        if(SceneManager.GetActiveScene().name == "Hub")
+        {
+            if(!miniMap.activeSelf)
+            {
+                
+                miniMap.SetActive(true);
+            }
+            else
+            {
 
+                miniMap.SetActive(false);
+            }
+        }
     }
 
     private void UnPause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(gamePauseMenu.activeSelf)
+        if(gamePaused)
         {
             Resume();
         }
@@ -126,11 +143,12 @@ public class GameManager : MonoBehaviour
     {
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
-        InputManager.input.Player.AutoPilot.performed -= AutoPilot_performed;
+        InputManager.input.Player.ToggleMiniMap.performed -= ToggleMiniMap_performed;
     }
 
     public void Pause()
     {
+        Time.timeScale = 0;
         Cursor.visible = true;
         foreach(GameObject playerUI in playerUIToHideOnPause)
         {
@@ -143,6 +161,7 @@ public class GameManager : MonoBehaviour
 
     public void Resume()
     {
+        Time.timeScale = 1;
         Cursor.visible = false;
         foreach (GameObject playerUI in playerUIToHideOnPause)
         {
@@ -163,6 +182,7 @@ public class GameManager : MonoBehaviour
 
     public void MainMenu()
     {
+        Time.timeScale = 1;
         Cursor.visible = true;
         gameOver = false;
         gamePaused = false;
