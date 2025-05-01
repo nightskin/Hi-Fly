@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Splines;
 using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
@@ -13,15 +14,13 @@ public class PlayerShip : MonoBehaviour
     public PowerUp powerUp;
 
     public HealthSystem health;
-
-    [SerializeField] Transform body;
     [SerializeField] PlayerCamera camera;
     [SerializeField] TrailRenderer[] trails;
     Color thrustColor = Color.cyan;
+
     CharacterController controller;
     Transform bulletSpawn;
-
-
+    
     [SerializeField] float turnSpeed = 5;
     [SerializeField] float baseSpeed = 10;
     [SerializeField] float boostSpeed = 50;
@@ -50,7 +49,9 @@ public class PlayerShip : MonoBehaviour
     float rollSpeed = 2000;
     float rollTimer;
 
-    Vector3 onRailsOffset = Vector3.zero;
+    //For On Rails Controls
+    float distanceAlongPath = 0f;
+    [SerializeField] Vector3 pathOffset = Vector3.zero;
 
     void Start()
     {
@@ -58,7 +59,6 @@ public class PlayerShip : MonoBehaviour
         GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor",GameManager.playerBodyColor);
         GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor",GameManager.playerStripeColor);
         bulletSpawn = transform.Find("BulletSpawn");
-        body = transform.parent;
 
 
         health = GetComponent<HealthSystem>();
@@ -132,6 +132,13 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.SecondaryFire.canceled -= SecondaryFire_canceled;
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.layer == 8)
+        {
+            GetComponent<HealthSystem>().TakeDamage(10);
+        }
+    }
 
     private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
@@ -311,6 +318,7 @@ public class PlayerShip : MonoBehaviour
         //Movement
         Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
         Vector3 moveDirection = (camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x).normalized;
+
         controller.Move(moveDirection * baseSpeed * Time.deltaTime);
 
         //Steering
@@ -342,24 +350,40 @@ public class PlayerShip : MonoBehaviour
 
     void OnRailsMode()
     {
-        if(GameManager.playerPath.Count > 0)
+        if (GameManager.onRailsPath)
         {
-            Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
-            Vector3 moveDirection = (camera.onRailsOffset.right * moveInput.x + camera.onRailsOffset.up * moveInput.y).normalized;
-            onRailsOffset += moveDirection * speed * Time.deltaTime;
-            
-
+            // Rail Movement
+            trails[0].endColor = Color.Lerp(trails[0].endColor, thrustColor, 5 * Time.deltaTime);
             speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
-            Vector3 pos = Camera.main.WorldToViewportPoint((camera.onRailsOffset.position + onRailsOffset));
-            pos.x = Mathf.Clamp01(pos.x);
-            pos.y = Mathf.Clamp01(pos.y);
-            transform.position = Camera.main.ViewportToWorldPoint(pos);
+
+            distanceAlongPath += speed * Time.deltaTime / GameManager.onRailsPathLength;
+            camera.followTarget.position = GameManager.onRailsPath.EvaluatePosition(distanceAlongPath);
+
+            if (distanceAlongPath > 1)
+            {
+                GameManager.playerMode = GameManager.PlayerMode.STANDARD_MODE;
+            }
+
+            Vector3 nextPosition = GameManager.onRailsPath.EvaluatePosition(distanceAlongPath + 0.05f);
+            Vector3 direction = nextPosition - camera.followTarget.position;
+            camera.followTarget.rotation = Quaternion.LookRotation(direction);
+
+            // Rail Offset
+            Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
+            Vector3 moveDirection = (camera.followTarget.right * moveInput.x + camera.followTarget.up * moveInput.y).normalized;
+            pathOffset += moveDirection * baseSpeed * Time.deltaTime;
+
+            Vector3 viewPortPos = Camera.main.WorldToViewportPoint(camera.followTarget.position + pathOffset);
+            viewPortPos.x = Mathf.Clamp01(viewPortPos.x);
+            viewPortPos.y = Mathf.Clamp01(viewPortPos.y);
+            transform.position = Camera.main.ViewportToWorldPoint(viewPortPos);
+
 
             //Steering
             if (evading)
             {
                 zRot += rollDirection * rollSpeed * Time.deltaTime;
-                Quaternion targetRot = Quaternion.Euler(camera.onRailsOffset.transform.localEulerAngles.x, camera.onRailsOffset.transform.localEulerAngles.y, zRot);
+                Quaternion targetRot = Quaternion.Euler(camera.followTarget.localEulerAngles.x, camera.followTarget.localEulerAngles.y, zRot);
                 transform.rotation = targetRot;
                 if (rollTimer > 0)
                 {
@@ -373,9 +397,10 @@ public class PlayerShip : MonoBehaviour
             else
             {
                 zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
-                Quaternion targetRot = Quaternion.Euler(camera.onRailsOffset.transform.localEulerAngles.x, camera.onRailsOffset.transform.localEulerAngles.y, zRot);
+                Quaternion targetRot = Quaternion.Euler(camera.followTarget.localEulerAngles.x, camera.followTarget.localEulerAngles.y, zRot);
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
             }
+
 
             //Aiming
             if (aimingViaGamepad)
@@ -413,11 +438,6 @@ public class PlayerShip : MonoBehaviour
                     }
                 }
             }
-
-        }
-        else
-        {
-            GameManager.playerMode = GameManager.PlayerMode.STANDARD_MODE;
         }
     }
 

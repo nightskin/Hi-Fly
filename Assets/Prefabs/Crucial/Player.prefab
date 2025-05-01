@@ -5056,7 +5056,7 @@ GameObject:
   m_Component:
   - component: {fileID: 436392920321828641}
   m_Layer: 3
-  m_Name: OnRailsOffset
+  m_Name: FollowTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5070,8 +5070,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2295159762667606400}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5992,8 +5992,10 @@ GameObject:
   - component: {fileID: 7779134521708858696}
   - component: {fileID: 5481442494551931266}
   - component: {fileID: 8131623140777354625}
+  - component: {fileID: 6932323581209396350}
+  - component: {fileID: 2692108105168207850}
+  - component: {fileID: 5263265270207870802}
   - component: {fileID: 8131623140777354630}
-  - component: {fileID: 5872480459892388688}
   - component: {fileID: 303286065443942689}
   m_Layer: 3
   m_Name: PlayerShip
@@ -6135,7 +6137,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -6175,6 +6177,79 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &6932323581209396350
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6273798608279050327}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.0123477, y: 0.7749239, z: 3.2279482}
+  m_Center: {x: 0.00067192316, y: -0.15167856, z: 0.693516}
+--- !u!54 &2692108105168207850
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6273798608279050327}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!143 &5263265270207870802
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6273798608279050327}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 0.4715668
+  m_Radius: 0.1
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: -0.25, z: 0}
 --- !u!114 &8131623140777354630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6195,31 +6270,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
---- !u!143 &5872480459892388688
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6273798608279050327}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 0.5
-  m_Radius: 1
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &303286065443942689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6232,9 +6282,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerUp: 1
+  powerUp: 0
   health: {fileID: 8131623140777354630}
-  body: {fileID: 0}
   camera: {fileID: 8504905812486363887}
   trails:
   - {fileID: 6615905817508830574}
@@ -6251,6 +6300,7 @@ MonoBehaviour:
     m_Bits: 64
   fireRate: 0.1
   evading: 0
+  pathOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &6508015524747324939
 GameObject:
   m_ObjectHideFlags: 0
@@ -7340,7 +7390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: deb74df8c80f9b94da8a574314a54830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPlayerMode: 1
+  startPlayerMode: 2
   gameOverMenu: {fileID: 8131623140616228715}
   gamePauseMenu: {fileID: 8131623139629098542}
   miniMap: {fileID: 2694136530651715055}
@@ -8088,13 +8138,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 100
-  cameraDistance: 10
+  distance: 10
   boostEffect: {fileID: 1814296040985746741}
   lerpSpeed: 10
-  defaultOffset: {x: 0, y: 3, z: 0}
-  onRailsOffset: {fileID: 436392920321828641}
+  offset: {x: 0, y: 3, z: 0}
   player: {fileID: 303286065443942689}
-  cameraRot: {x: 0, y: 0, z: 0}
+  followTarget: {fileID: 436392920321828641}
 --- !u!1 &8659897189068200085
 GameObject:
   m_ObjectHideFlags: 0

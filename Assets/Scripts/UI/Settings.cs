@@ -53,11 +53,6 @@ public class Settings : MonoBehaviour
         }
         else if(GameManager.difficulty == GameManager.Difficulty.HARD)
         {
-            if(GameManager.gameBeaten) GameManager.difficulty = GameManager.Difficulty.PTSD;
-            else GameManager.difficulty = GameManager.Difficulty.EASY;
-        }
-        else if(GameManager.difficulty == GameManager.Difficulty.PTSD)
-        {
             GameManager.difficulty = GameManager.Difficulty.EASY;
         }
         

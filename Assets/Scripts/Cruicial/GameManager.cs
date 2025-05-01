@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.Splines;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,15 +11,14 @@ public class GameManager : MonoBehaviour
         EASY,
         NORMAL,
         HARD,
-        PTSD,
     }
     public static Difficulty difficulty = Difficulty.NORMAL;
 
     public enum PlayerMode
     {
         STANDARD_MODE,
-        ON_RAILS_MODE,
         STRAFE_MODE,
+        ON_RAILS_MODE
     }
     public static PlayerMode playerMode;
     [SerializeField] PlayerMode startPlayerMode;
@@ -50,10 +50,14 @@ public class GameManager : MonoBehaviour
     float gameOverTimer = 1;
     bool gameOverActive = false;
 
-    public static List<Vector3> playerPath = new List<Vector3>();
-
+    public static SplineContainer onRailsPath;
+    public static float onRailsPathLength;
+    
     void Start()
     {
+        onRailsPath = GameObject.Find("Path0").GetComponent<SplineContainer>();
+        if(onRailsPath) onRailsPathLength = onRailsPath.CalculateLength();
+
         playerMode = startPlayerMode;
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
@@ -62,10 +66,12 @@ public class GameManager : MonoBehaviour
         if(SceneManager.GetActiveScene().name == "Hub")
         {
             miniMapCamera.gameObject.SetActive(true);
+            miniMap.SetActive(true);
         }
         else
         {
             miniMapCamera.gameObject.SetActive(false);
+            miniMap.SetActive(false);
         }
 
         InputManager.input.Player.Pause.performed += Pause_performed;
@@ -79,12 +85,12 @@ public class GameManager : MonoBehaviour
         {
             if(!miniMap.activeSelf)
             {
-                
+                miniMapCamera.gameObject.SetActive(true);
                 miniMap.SetActive(true);
             }
             else
             {
-
+                miniMapCamera.gameObject.SetActive(false);
                 miniMap.SetActive(false);
             }
         }

@@ -27,25 +27,10 @@ public class Galaxy : MonoBehaviour
     bool encounterInProgress = false;
     [SerializeField] bool enableEncounters;
 
-    [SerializeField] List<Vector3> path = new List<Vector3>();
-    [SerializeField] float pointSize = 50;
-    [SerializeField] Color pointColor = new Color(1, 0.5f, 0);
-
-    void OnDrawGizmos()
-    {
-        if(path.Count > 0) 
-        {
-            foreach(var point in path) 
-            {
-                Gizmos.color = pointColor;
-                Gizmos.DrawSphere(point, pointSize);
-            }
-        }    
-    }
+    
 
     void Start()
     {
-        GameManager.playerPath = path;
         secondsBeforeEncounter = Random.Range(minEncounterTime, maxEncounterTime);
         player = GameObject.FindWithTag("Player").transform;
 

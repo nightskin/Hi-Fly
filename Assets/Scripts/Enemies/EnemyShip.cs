@@ -30,13 +30,9 @@ public class EnemyShip : MonoBehaviour
     {
         if(GameManager.difficulty == GameManager.Difficulty.EASY)
         {
-            turnFrequncy = 3.0f;
-        }
-        else if(GameManager.difficulty == GameManager.Difficulty.NORMAL)
-        {
             turnFrequncy = 2.0f;
         }
-        else if(GameManager.difficulty == GameManager.Difficulty.HARD)
+        else if(GameManager.difficulty == GameManager.Difficulty.NORMAL)
         {
             turnFrequncy = 1.0f;
         }
@@ -47,7 +43,7 @@ public class EnemyShip : MonoBehaviour
         GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", Util.RandomColor()); 
         GetComponent<MeshRenderer>().materials[2].SetColor("_MainColor", Util.RandomColor()); 
     }
-
+    
     void Update()
     {
         if (target && !GameManager.gamePaused)
@@ -56,7 +52,7 @@ public class EnemyShip : MonoBehaviour
             {
                 if (Vector3.Distance(transform.position, target.transform.position) <= perceptionRadius || health.HasBeenHitOnce() || attackMode)
                 {
-                    if(GameManager.difficulty == GameManager.Difficulty.PTSD)
+                    if(GameManager.difficulty == GameManager.Difficulty.HARD)
                     {
                         Fight_Boid();
                     }
@@ -136,7 +132,7 @@ public class EnemyShip : MonoBehaviour
 
         if (turnTimer < 0)
         {
-            turnTimer = Random.Range(0, turnFrequncy);
+            turnTimer = Random.Range(0.25f, turnFrequncy);
             direction = GetDirectionTowardsTarget();
         }
         else
@@ -161,7 +157,7 @@ public class EnemyShip : MonoBehaviour
     void Shoot()
     {
         var b = GameObject.Find("BulletPool").GetComponent<ObjectPool>().Spawn(transform.position + transform.forward);
-        b.GetComponent<Bullet>().direction = direction;
+        b.GetComponent<Bullet>().direction = (target.transform.position - transform.position).normalized;
         b.GetComponent<Bullet>().owner = gameObject;
         b.GetComponent<Bullet>().damage = attackPower;
         shootTimer = Random.Range(0.1f, fireRate);

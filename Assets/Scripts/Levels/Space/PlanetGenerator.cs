@@ -64,10 +64,10 @@ public class PlanetGenerator : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if(mesh)
-        {
-            Gizmos.DrawMesh(mesh);
-        }       
+        //if(mesh)
+        //{
+            //Gizmos.DrawMesh(mesh);
+        //}       
     }
 
     void Start()
