@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Splines;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -8,7 +7,7 @@ public class PlayerCamera : MonoBehaviour
     public ParticleSystem boostEffect;
 
     [SerializeField][Min(2)] float lerpSpeed = 10;
-    [SerializeField] Vector3 offset = new Vector3(0, 3, 0);
+    public Vector3 offset = new Vector3(0, 3, 0);
 
     [SerializeField] PlayerShip player;
 

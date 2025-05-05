@@ -26,9 +26,7 @@ public class Galaxy : MonoBehaviour
     [SerializeField] float secondsBeforeEncounter;
     bool encounterInProgress = false;
     [SerializeField] bool enableEncounters;
-
     
-
     void Start()
     {
         secondsBeforeEncounter = Random.Range(minEncounterTime, maxEncounterTime);

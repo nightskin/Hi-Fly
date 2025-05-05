@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Splines;
 using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
@@ -138,6 +137,10 @@ public class PlayerShip : MonoBehaviour
         {
             GetComponent<HealthSystem>().TakeDamage(10);
         }
+        if(other.tag == "Bounds")
+        {
+            Teleport(transform.position * -1);
+        }
     }
 
     private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -245,6 +248,14 @@ public class PlayerShip : MonoBehaviour
         aimingViaGamepad = false;
     }
   
+    public void Teleport(Vector3 position)
+    {
+        controller.enabled = false;
+        transform.position = position;
+        camera.transform.position = (position + camera.offset) - (camera.transform.forward * camera.distance);
+        controller.enabled = true;
+    }
+
     void StandardMode()
     {
         //Forward Movement
@@ -352,6 +363,8 @@ public class PlayerShip : MonoBehaviour
     {
         if (GameManager.onRailsPath)
         {
+            transform.parent = camera.followTarget;
+
             // Rail Movement
             trails[0].endColor = Color.Lerp(trails[0].endColor, thrustColor, 5 * Time.deltaTime);
             speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
@@ -361,6 +374,7 @@ public class PlayerShip : MonoBehaviour
 
             if (distanceAlongPath > 1)
             {
+                transform.parent = transform.root;
                 GameManager.playerMode = GameManager.PlayerMode.STANDARD_MODE;
             }
 
@@ -370,13 +384,23 @@ public class PlayerShip : MonoBehaviour
 
             // Rail Offset
             Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
-            Vector3 moveDirection = (camera.followTarget.right * moveInput.x + camera.followTarget.up * moveInput.y).normalized;
+            Vector3 moveDirection = new Vector3(moveInput.x, moveInput.y, 0);
             pathOffset += moveDirection * baseSpeed * Time.deltaTime;
+            
 
-            Vector3 viewPortPos = Camera.main.WorldToViewportPoint(camera.followTarget.position + pathOffset);
-            viewPortPos.x = Mathf.Clamp01(viewPortPos.x);
-            viewPortPos.y = Mathf.Clamp01(viewPortPos.y);
-            transform.position = Camera.main.ViewportToWorldPoint(viewPortPos);
+            if(targetSpeed == baseSpeed)
+            {
+                pathOffset.x = Mathf.Clamp(pathOffset.x, -10, 10);
+                pathOffset.y = Mathf.Clamp(pathOffset.y, -3, 10);
+            }
+            else if(targetSpeed == boostSpeed)
+            {
+                pathOffset.x = Mathf.Clamp(pathOffset.x, -20, 20);
+                pathOffset.y = Mathf.Clamp(pathOffset.y, -5, 15);
+            }
+
+
+            transform.localPosition = pathOffset;
 
 
             //Steering
@@ -438,6 +462,11 @@ public class PlayerShip : MonoBehaviour
                     }
                 }
             }
+        }
+        else
+        {
+            GameManager.playerMode = GameManager.PlayerMode.STANDARD_MODE;
+            transform.parent = transform.root;
         }
     }
 

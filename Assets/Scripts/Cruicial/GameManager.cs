@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.Splines;
@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     public GameObject miniMap;
     public Camera miniMapCamera;
 
+
     public static PlayerShip playerShip;
     public GameObject[] playerUIToHideOnPause;
     public static float isoLevel = 0;
@@ -52,23 +53,30 @@ public class GameManager : MonoBehaviour
 
     public static SplineContainer onRailsPath;
     public static float onRailsPathLength;
+
+    [SerializeField] Text scoreText;
+    public static int score = 0;
     
+    void Awake()
+    {
+
+        GameObject path = GameObject.Find("Path0");
+        if (path)
+        {
+            onRailsPath = path.GetComponent<SplineContainer>();
+            onRailsPathLength = onRailsPath.CalculateLength();
+        }
+    }
+
     void Start()
     {
-        onRailsPath = GameObject.Find("Path0").GetComponent<SplineContainer>();
-        if(onRailsPath) onRailsPathLength = onRailsPath.CalculateLength();
-
+        scoreText.text = score.ToString();
         playerMode = startPlayerMode;
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();
 
-        if(SceneManager.GetActiveScene().name == "Hub")
-        {
-            miniMapCamera.gameObject.SetActive(true);
-            miniMap.SetActive(true);
-        }
-        else
+        if(SceneManager.GetActiveScene().name != "Hub")
         {
             miniMapCamera.gameObject.SetActive(false);
             miniMap.SetActive(false);
@@ -150,6 +158,18 @@ public class GameManager : MonoBehaviour
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
         InputManager.input.Player.ToggleMiniMap.performed -= ToggleMiniMap_performed;
+    }
+
+    public void AddScore(int amount)
+    {
+        score += amount;
+        scoreText.text = score.ToString();
+    }
+
+    public void SubractScore(int amount) 
+    {
+        score -= amount;
+        scoreText.text = score.ToString();
     }
 
     public void Pause()
