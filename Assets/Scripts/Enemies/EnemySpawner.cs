@@ -8,6 +8,8 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] int minEnemies = 3;
     [SerializeField] float spawnRadius = 500;
 
+    [SerializeField] bool showDebug = false;
+
     public bool spawnAtStart = false;
     public bool skipPatrol = false;
 
@@ -15,8 +17,11 @@ public class EnemySpawner : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(transform.position, spawnRadius);
+        if(showDebug)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(transform.position, spawnRadius);
+        }
     }
 
     void Start()

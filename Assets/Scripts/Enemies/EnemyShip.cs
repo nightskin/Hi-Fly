@@ -77,7 +77,7 @@ public class EnemyShip : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
         {

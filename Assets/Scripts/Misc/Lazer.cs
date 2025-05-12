@@ -5,16 +5,17 @@ using UnityEngine;
 public class Lazer : MonoBehaviour
 {
     [ColorUsage(true, true)][SerializeField] Color[] colors;
-    LineRenderer renderer;
+    [HideInInspector] public LineRenderer renderer;
     int colorIndex = 0;
     float colorChangeInterval = 0.05f;
     float colorChangeTimer = 0;
 
-    public GameObject owner = null;
+    [HideInInspector] public GameObject owner = null;
     public float damage = 5;
-    public Vector3 direction;
+    [HideInInspector] public Vector3 direction;
+    [HideInInspector] public Vector3 origin;
 
-    public float damageInterval = 0.1f;
+    public float collisionInterval = 0.1f;
     float damageTimer = 0;
     ObjectPool explosionPool;
 
@@ -29,7 +30,7 @@ public class Lazer : MonoBehaviour
     {
         if(!GameManager.gamePaused)
         {
-            Vector3 origin = owner.transform.position + owner.transform.forward;
+            origin = owner.transform.position + owner.transform.forward;
             renderer.SetPosition(0, origin);
             renderer.SetPosition(1, origin + (direction * Camera.main.farClipPlane));
 
@@ -44,14 +45,14 @@ public class Lazer : MonoBehaviour
             if(damageTimer <= 0)
             {
                 CheckCollisions();
-                damageTimer = damageInterval;
+                damageTimer = collisionInterval;
             }
         }
     }
 
     void CheckCollisions()
     {
-        if(Physics.Linecast(renderer.GetPosition(0), renderer.GetPosition(1), out RaycastHit hit))
+        if(Physics.SphereCast(renderer.GetPosition(0), renderer.startWidth, direction, out RaycastHit hit, Camera.main.farClipPlane))
         {
             if(hit.transform.gameObject != owner)
             {

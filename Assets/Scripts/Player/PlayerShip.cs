@@ -39,7 +39,7 @@ public class PlayerShip : MonoBehaviour
     ObjectPool bulletPool;
     ObjectPool lazerPool;
 
-    GameObject lazer = null;
+    Lazer lazer = null;
     float shootTimer = 0;
     
     public bool evading = false;
@@ -87,8 +87,8 @@ public class PlayerShip : MonoBehaviour
     
     void FixedUpdate()
     {
-        Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
-        if (Physics.SphereCast(ray, 4, out lockOn, camera.GetComponent<Camera>().farClipPlane, lockOnLayer))
+        Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
+        if (Physics.SphereCast(ray, 4, out lockOn, Camera.main.farClipPlane, lockOnLayer))
         {
             reticle.color = Color.red;
         }
@@ -521,20 +521,21 @@ public class PlayerShip : MonoBehaviour
     {
         if (!GameManager.gameOver && !GameManager.gamePaused)
         {
-            lazer = lazerPool.Spawn(Vector3.zero);
+            lazer = lazerPool.Spawn(Vector3.zero).GetComponent<Lazer>();
             if (lazer != null)
             {
-                Lazer l = lazer.GetComponent<Lazer>();
-                l.owner = gameObject;
-                Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
-                if (Physics.Raycast(ray, out RaycastHit hit, camera.GetComponent<Camera>().farClipPlane, lockOnLayer))
+                lazer.owner = gameObject;
+
+                Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
+                if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))
                 {
-                    l.direction = (hit.point - (transform.position + transform.forward)).normalized;
+                    lazer.direction = (hit.point - lazer.origin).normalized;
                 }
                 else
                 {
-                    l.direction = ray.direction;
+                    lazer.direction = ray.direction;
                 }
+
             }
         }
 
@@ -544,15 +545,14 @@ public class PlayerShip : MonoBehaviour
     {
         if (lazer != null && !GameManager.gamePaused && !GameManager.gameOver)
         {
-            Lazer l = lazer.GetComponent<Lazer>();
-            Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
-            if (Physics.Raycast(ray, out RaycastHit hit, camera.GetComponent<Camera>().farClipPlane, lockOnLayer))
+            Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
+            if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))
             {
-                l.direction = (hit.point - (transform.position + transform.forward)).normalized;
+                lazer.direction = (hit.point - lazer.origin).normalized;
             }
             else
             {
-                l.direction = ray.direction;
+                lazer.direction = ray.direction;
             }
         }
     }

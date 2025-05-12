@@ -6205,10 +6205,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6273798608279050327}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -6282,7 +6282,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerUp: 0
+  inventory:
+  - item: 2
   health: {fileID: 8131623140777354630}
   camera: {fileID: 8504905812486363887}
   trails:
@@ -8064,7 +8065,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 127
+    m_Bits: 383
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
