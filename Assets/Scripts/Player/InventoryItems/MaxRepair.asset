@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MaxRepair
   m_EditorClassIdentifier: 
   item: 6
-  stock: 1
+  stock: 0
   image: {fileID: 21300000, guid: beef141ae0cae414db6eeff4b13e0335, type: 3}

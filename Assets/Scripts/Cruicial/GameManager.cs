@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
 
     //For ItemManagment
     [SerializeField] List<InventoryItem> starterInventory = new List<InventoryItem>();
-    public Image inventorySelectImage;
-    public Sprite defaultInventorySprite;
+    [SerializeField] Image inventorySelectImage;
+    [SerializeField] Text inventoryCountText;
     public static List<InventoryItem> inventory = new List<InventoryItem>();
     public static int inventoryIndex = 0;
 
@@ -78,14 +78,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        if(inventory.Count > 0)
-        {
-            inventorySelectImage.sprite = inventory[inventoryIndex].image;
-        }
-        else
-        {
-            inventorySelectImage.sprite = defaultInventorySprite;
-        }
+        UpdateInventoryUI();
 
         scoreText.text = score.ToString();
         playerMode = startPlayerMode;
@@ -131,12 +124,7 @@ public class GameManager : MonoBehaviour
                     inventoryIndex = inventory.Count - 1;
                 }
             }
-            inventorySelectImage.sprite = inventory[inventoryIndex].image;
-        }
-        else
-        {
-            inventoryIndex = 0;
-            inventorySelectImage.sprite = defaultInventorySprite;
+            UpdateInventoryUI();
         }
     }
 
@@ -224,6 +212,12 @@ public class GameManager : MonoBehaviour
     {
         score -= amount;
         scoreText.text = score.ToString();
+    }
+
+    public void UpdateInventoryUI()
+    {
+        inventorySelectImage.sprite = inventory[inventoryIndex].image;
+        inventoryCountText.text = inventory[inventoryIndex].stock.ToString();
     }
 
     public void Pause()

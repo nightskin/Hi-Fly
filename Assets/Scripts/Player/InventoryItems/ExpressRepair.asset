@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ExpressRepair
   m_EditorClassIdentifier: 
   item: 5
-  stock: 1
+  stock: 0
   image: {fileID: 21300000, guid: 2af115ea519550e42a50db4b0b31190b, type: 3}

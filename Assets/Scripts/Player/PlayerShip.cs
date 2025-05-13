@@ -177,51 +177,39 @@ public class PlayerShip : MonoBehaviour
             }
             else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.RAPID_FIRE)
             {
-                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0) shootTimer = 0;
+                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
+                {
+                    shootTimer = 0;
+                }
             }
             else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.BASIC_REPAIR_KIT)
             {
-                if (GameManager.inventory[GameManager.inventoryIndex].stock > 1)
+                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
                 {
                     GetComponent<HealthSystem>().Heal(30);
                     GameManager.inventory[GameManager.inventoryIndex].stock--;
-                }
-                else
-                {
-                    GameManager.inventory.RemoveAt(GameManager.inventoryIndex);
-                    UpdateInventory();
+                    gameManager.UpdateInventoryUI();
                 }
             }
             else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.EXPRESS_REPAIR_KIT)
             {
-                if (GameManager.inventory[GameManager.inventoryIndex].stock > 1)
+                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
                 {
                     GetComponent<HealthSystem>().Heal(50);
                     GameManager.inventory[GameManager.inventoryIndex].stock--;
-                }
-                else
-                {
-                    GameManager.inventory.RemoveAt(GameManager.inventoryIndex);
-                    UpdateInventory();
+                    gameManager.UpdateInventoryUI();
                 }
             }
             else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.MAX_REPAIR_KIT)
             {
-                if (GameManager.inventory[GameManager.inventoryIndex].stock > 1)
+                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
                 {
                     GetComponent<HealthSystem>().Heal(100);
                     GameManager.inventory[GameManager.inventoryIndex].stock--;
-                }
-                else
-                {
-                    GameManager.inventory.RemoveAt(GameManager.inventoryIndex);
-                    UpdateInventory();
+                    gameManager.UpdateInventoryUI();
                 }
             }
-        }
-        else
-        {
-            UpdateInventory();
+
         }
     }
 
@@ -230,6 +218,7 @@ public class PlayerShip : MonoBehaviour
         if (lazer)
         {
             lazer.GetComponent<Lazer>().DeSpawn();
+            lazer = null;
         }
     }
 
@@ -513,18 +502,26 @@ public class PlayerShip : MonoBehaviour
 
     }
 
-    void MoveLazer()
+    void UpdateLazer()
     {
         if (lazer != null && !GameManager.gamePaused && !GameManager.gameOver)
         {
-            Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
-            if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))
+            if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
             {
-                lazer.direction = (hit.point - lazer.origin).normalized;
+                Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
+                if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))
+                {
+                    lazer.direction = (hit.point - lazer.origin).normalized;
+                }
+                else
+                {
+                    lazer.direction = ray.direction;
+                }
             }
             else
             {
-                lazer.direction = ray.direction;
+                lazer.GetComponent<Lazer>().DeSpawn();
+                lazer = null;
             }
         }
     }
@@ -540,13 +537,9 @@ public class PlayerShip : MonoBehaviour
                 {
                     if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
                     {
-                        MoveLazer();
+                        UpdateLazer();
                         GameManager.inventory[GameManager.inventoryIndex].stock -= Time.deltaTime;
-                    }
-                    else
-                    {
-                        GameManager.inventory.RemoveAt(GameManager.inventoryIndex);
-                        UpdateInventory();
+                        gameManager.UpdateInventoryUI();
                     }
                 }
                 else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.RAPID_FIRE)
@@ -562,35 +555,14 @@ public class PlayerShip : MonoBehaviour
                             FireBullet();
                             GameManager.inventory[GameManager.inventoryIndex].stock--;
                             shootTimer = fireRate;
+                            gameManager.UpdateInventoryUI();
                         }
-                    }
-                    else
-                    {
-                        GameManager.inventory.RemoveAt(GameManager.inventoryIndex);
-                        UpdateInventory();
                     }
                 }
             }
         }
     }
-
-    void UpdateInventory()
-    {
-        if(GameManager.inventory.Count == 0)
-        {
-            GameManager.inventoryIndex = 0;
-            gameManager.inventorySelectImage.sprite = gameManager.defaultInventorySprite;
-        }
-        else
-        {
-            if (GameManager.inventoryIndex > GameManager.inventory.Count - 1)
-            {
-                GameManager.inventoryIndex = GameManager.inventory.Count - 1;
-                gameManager.inventorySelectImage.sprite = GameManager.inventory[GameManager.inventoryIndex].image;
-            }
-        }
-    }
-
+    
     void SetTrails(bool active)
     {
         foreach (TrailRenderer trail in trails)

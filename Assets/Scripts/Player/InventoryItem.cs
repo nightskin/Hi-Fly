@@ -3,17 +3,6 @@ using UnityEngine;
 [CreateAssetMenu]
 public class InventoryItem :ScriptableObject
 {
-    public InventoryItem(Item item)
-    {
-        this.item = item;
-        stock = 0;
-    }
-    public InventoryItem(Item item, float amount)
-    {
-        this.item = item;
-        stock = amount;
-    }
-
     public enum Item
     {
         NONE,
