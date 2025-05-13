@@ -51,6 +51,14 @@ public static class Util
         float z = Random.Range(-180, 180);
         return Quaternion.Euler(x, y, z);
     }
+    
+    public static Quaternion RandomRotation(Vector3 min, Vector3 max)
+    {
+        float x = Random.Range(min.x, max.x);
+        float y = Random.Range(min.y, max.y);
+        float z = Random.Range(min.z, max.z);
+        return Quaternion.Euler(x, y, z);
+    }
 
     public static Color RandomColor()
     {

@@ -19,9 +19,9 @@ public class PlanetGenerator : MonoBehaviour
     [SerializeField] Gradient landGradient;
     [SerializeField][Min(1)] float gradientMult = 10;
     [SerializeField] Color waterColor;
-    [SerializeField] int resolution = 200;
+    [SerializeField] int resolution = 50;
 
-    [SerializeField] float radius = 300;
+    [SerializeField] float radius = 100;
     [SerializeField] float waterLevel = 100;
     [SerializeField] float baseRoughness = 1;
     [SerializeField] float roughness = 2;
