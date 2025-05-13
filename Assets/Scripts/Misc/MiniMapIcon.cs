@@ -1,9 +1,17 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MiniMapIcon : MonoBehaviour
 {
     public Transform followTarget;
 
+    void Start()
+    {
+        if(SceneManager.GetActiveScene().name != "Hub")
+        {
+            gameObject.SetActive(false);
+        }
+    }
 
     void Update()
     {

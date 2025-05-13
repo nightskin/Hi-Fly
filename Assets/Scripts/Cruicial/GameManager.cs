@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEngine.Splines;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +13,13 @@ public class GameManager : MonoBehaviour
         HARD,
     }
     public static Difficulty difficulty = Difficulty.NORMAL;
+
+    //For ItemManagment
+    [SerializeField] List<InventoryItem> starterInventory = new List<InventoryItem>();
+    public Image inventorySelectImage;
+    public Sprite defaultInventorySprite;
+    public static List<InventoryItem> inventory = new List<InventoryItem>();
+    public static int inventoryIndex = 0;
 
     public enum PlayerMode
     {
@@ -51,25 +58,35 @@ public class GameManager : MonoBehaviour
     float gameOverTimer = 1;
     bool gameOverActive = false;
 
-    public static SplineContainer onRailsPath;
-    public static float onRailsPathLength;
+    public static List<Vector3> onRailsPath;
 
     [SerializeField] Text scoreText;
     public static int score = 0;
     
     void Awake()
     {
+        //For Debug Purposes
+        inventory = starterInventory;
 
-        GameObject path = GameObject.Find("Path0");
+        //Needed For OnRailsMovement
+        GameObject path = GameObject.Find("Path");
         if (path)
         {
-            onRailsPath = path.GetComponent<SplineContainer>();
-            onRailsPathLength = onRailsPath.CalculateLength();
+            //onRailsPath = path.GetComponent<>();
         }
     }
 
     void Start()
     {
+        if(inventory.Count > 0)
+        {
+            inventorySelectImage.sprite = inventory[inventoryIndex].image;
+        }
+        else
+        {
+            inventorySelectImage.sprite = defaultInventorySprite;
+        }
+
         scoreText.text = score.ToString();
         playerMode = startPlayerMode;
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
@@ -85,6 +102,42 @@ public class GameManager : MonoBehaviour
         InputManager.input.Player.Pause.performed += Pause_performed;
         InputManager.input.Player.UnPause.performed += UnPause_performed;
         InputManager.input.Player.ToggleMiniMap.performed += ToggleMiniMap_performed;
+        InputManager.input.Player.ToggleInventory.performed += ToggleInventory_performed;
+    }
+
+    private void ToggleInventory_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        if(inventory.Count > 0) 
+        {
+            if (obj.ReadValue<float>() > 0)
+            {
+                if (inventoryIndex < inventory.Count - 1)
+                {
+                    inventoryIndex++;
+                }
+                else
+                {
+                    inventoryIndex = 0;
+                }
+            }
+            else if (obj.ReadValue<float>() < 0)
+            {
+                if (inventoryIndex > 0)
+                {
+                    inventoryIndex--;
+                }
+                else
+                {
+                    inventoryIndex = inventory.Count - 1;
+                }
+            }
+            inventorySelectImage.sprite = inventory[inventoryIndex].image;
+        }
+        else
+        {
+            inventoryIndex = 0;
+            inventorySelectImage.sprite = defaultInventorySprite;
+        }
     }
 
     private void ToggleMiniMap_performed(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -158,6 +211,7 @@ public class GameManager : MonoBehaviour
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
         InputManager.input.Player.ToggleMiniMap.performed -= ToggleMiniMap_performed;
+        InputManager.input.Player.ToggleInventory.performed -= ToggleInventory_performed;
     }
 
     public void AddScore(int amount)

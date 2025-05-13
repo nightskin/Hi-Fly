@@ -98,6 +98,7 @@ public class EnemyShip : MonoBehaviour
         }
     }
 
+
     void Patrol()
     {
         direction = Cohesion(cohesionRadius) + Seperation(avoidRadius);

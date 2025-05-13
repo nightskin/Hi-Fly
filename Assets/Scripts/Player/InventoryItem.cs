@@ -1,16 +1,30 @@
 using UnityEngine;
 
-[System.Serializable]
-public struct InventoryItem
+[CreateAssetMenu]
+public class InventoryItem :ScriptableObject
 {
-    public enum ItemType
+    public InventoryItem(Item item)
+    {
+        this.item = item;
+        stock = 0;
+    }
+    public InventoryItem(Item item, float amount)
+    {
+        this.item = item;
+        stock = amount;
+    }
+
+    public enum Item
     {
         NONE,
-        REPAIR_KIT,
         LAZER,
-        MACHINE_GUN,
+        RAPID_FIRE,
+        MISSILE,
+        BASIC_REPAIR_KIT,
+        EXPRESS_REPAIR_KIT,
+        MAX_REPAIR_KIT,
     }
-    public ItemType item;
-
-
+    public Item item;
+    public float stock = 0;
+    public Sprite image;
 }

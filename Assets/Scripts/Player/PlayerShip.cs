@@ -3,14 +3,7 @@ using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
 {
-    public enum PowerUp
-    {
-        NONE,
-        LAZER,
-        MACHINE_GUN,
-        CHARGE_BOMB,
-    }
-    public PowerUp powerUp;
+    GameManager gameManager;
 
     public HealthSystem health;
     [SerializeField] PlayerCamera camera;
@@ -49,11 +42,12 @@ public class PlayerShip : MonoBehaviour
     float rollTimer;
 
     //For On Rails Controls
-    float distanceAlongPath = 0f;
-    [SerializeField] Vector3 pathOffset = Vector3.zero;
+    Vector3 pathOffset = Vector3.zero;
 
     void Start()
     {
+        gameManager = transform.root.GetComponent<GameManager>();
+
         Cursor.visible = false;
         GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor",GameManager.playerBodyColor);
         GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor",GameManager.playerStripeColor);
@@ -72,6 +66,8 @@ public class PlayerShip : MonoBehaviour
 
 
         InputManager.input.Player.PrimaryFire.performed += PrimaryFire_performed;
+        InputManager.input.Player.UseItem.performed += UseItem_performed;
+        InputManager.input.Player.UseItem.canceled += UseItem_canceled;
         InputManager.input.Player.BarrelRoll.performed += BarrelRoll_performed;
         InputManager.input.Player.Aim.performed += Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
@@ -79,10 +75,6 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.ToggleEngines.performed += ToggleEngines_performed;
         InputManager.input.Player.Boost.performed += Boost_performed;
         InputManager.input.Player.Boost.canceled += Boost_canceled;
-        InputManager.input.Player.SecondaryFire.performed += SecondaryFire_performed;
-        InputManager.input.Player.SecondaryFire.canceled += SecondaryFire_canceled;
-
-
     }
     
     void FixedUpdate()
@@ -114,12 +106,15 @@ public class PlayerShip : MonoBehaviour
             {
                 OnRailsMode();
             }
+            UpdatePowerUps();
         }
     }
     
     void OnDestroy()
     {
         InputManager.input.Player.PrimaryFire.performed -= PrimaryFire_performed;
+        InputManager.input.Player.UseItem.performed -= UseItem_performed;
+        InputManager.input.Player.UseItem.canceled -= UseItem_canceled;
         InputManager.input.Player.BarrelRoll.performed -= BarrelRoll_performed;
         InputManager.input.Player.Aim.performed -= Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed -= Mouse_Aim_performed;
@@ -127,8 +122,6 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.ToggleEngines.performed -= ToggleEngines_performed;
         InputManager.input.Player.Boost.performed -= Boost_performed;
         InputManager.input.Player.Boost.canceled -= Boost_canceled;
-        InputManager.input.Player.SecondaryFire.performed -= SecondaryFire_performed;
-        InputManager.input.Player.SecondaryFire.canceled -= SecondaryFire_canceled;
     }
 
     void OnTriggerEnter(Collider other)
@@ -171,21 +164,70 @@ public class PlayerShip : MonoBehaviour
         FireBullet();
     }
 
-    private void SecondaryFire_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void UseItem_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(powerUp == PowerUp.LAZER)
+        if(GameManager.inventory.Count > 0)
         {
-            FireLazer();
+            if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.LAZER)
+            {
+                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
+                {
+                    FireLazer();
+                }
+            }
+            else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.RAPID_FIRE)
+            {
+                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0) shootTimer = 0;
+            }
+            else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.BASIC_REPAIR_KIT)
+            {
+                if (GameManager.inventory[GameManager.inventoryIndex].stock > 1)
+                {
+                    GetComponent<HealthSystem>().Heal(30);
+                    GameManager.inventory[GameManager.inventoryIndex].stock--;
+                }
+                else
+                {
+                    GameManager.inventory.RemoveAt(GameManager.inventoryIndex);
+                    UpdateInventory();
+                }
+            }
+            else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.EXPRESS_REPAIR_KIT)
+            {
+                if (GameManager.inventory[GameManager.inventoryIndex].stock > 1)
+                {
+                    GetComponent<HealthSystem>().Heal(50);
+                    GameManager.inventory[GameManager.inventoryIndex].stock--;
+                }
+                else
+                {
+                    GameManager.inventory.RemoveAt(GameManager.inventoryIndex);
+                    UpdateInventory();
+                }
+            }
+            else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.MAX_REPAIR_KIT)
+            {
+                if (GameManager.inventory[GameManager.inventoryIndex].stock > 1)
+                {
+                    GetComponent<HealthSystem>().Heal(100);
+                    GameManager.inventory[GameManager.inventoryIndex].stock--;
+                }
+                else
+                {
+                    GameManager.inventory.RemoveAt(GameManager.inventoryIndex);
+                    UpdateInventory();
+                }
+            }
         }
-        else if(powerUp == PowerUp.MACHINE_GUN)
+        else
         {
-            shootTimer = 0;
+            UpdateInventory();
         }
     }
 
-    private void SecondaryFire_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void UseItem_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(lazer)
+        if (lazer)
         {
             lazer.GetComponent<Lazer>().DeSpawn();
         }
@@ -302,26 +344,6 @@ public class PlayerShip : MonoBehaviour
             reticle.rectTransform.position = reticlePosition;
         }
 
-        //PowerUps
-        if(InputManager.input.Player.SecondaryFire.IsPressed()) 
-        {
-            if(powerUp == PowerUp.LAZER)
-            {
-                MoveLazer();
-            }
-            else if(powerUp == PowerUp.MACHINE_GUN)
-            {
-                if (shootTimer > 0)
-                {
-                    shootTimer -= Time.deltaTime;
-                }
-                else
-                {
-                    FireBullet();
-                    shootTimer = fireRate;
-                }
-            }
-        }
     }
     
     void StrafeMode()
@@ -337,50 +359,21 @@ public class PlayerShip : MonoBehaviour
         Quaternion targetRot = Quaternion.Euler(camera.transform.localEulerAngles.x, camera.transform.localEulerAngles.y, zRot);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
         
-        //Shooting lazer
-        if (InputManager.input.Player.SecondaryFire.IsPressed())
-        {
-            if (powerUp == PowerUp.LAZER)
-            {
-                MoveLazer();
-            }
-            else if (powerUp == PowerUp.MACHINE_GUN)
-            {
-                if (shootTimer > 0)
-                {
-                    shootTimer -= Time.deltaTime;
-                }
-                else
-                {
-                    FireBullet();
-                    shootTimer = fireRate;
-                }
-            }
-        }
     }
 
     void OnRailsMode()
     {
-        if (GameManager.onRailsPath)
+        if (GameManager.onRailsPath.Count > 0)
         {
-            transform.parent = camera.followTarget;
-
-            // Rail Movement
+            //Handles Boosting
             trails[0].endColor = Color.Lerp(trails[0].endColor, thrustColor, 5 * Time.deltaTime);
             speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
 
-            distanceAlongPath += speed * Time.deltaTime / GameManager.onRailsPathLength;
-            camera.followTarget.position = GameManager.onRailsPath.EvaluatePosition(distanceAlongPath);
 
-            if (distanceAlongPath > 1)
-            {
-                transform.parent = transform.root;
-                GameManager.playerMode = GameManager.PlayerMode.STANDARD_MODE;
-            }
-
-            Vector3 nextPosition = GameManager.onRailsPath.EvaluatePosition(distanceAlongPath + 0.05f);
-            Vector3 direction = nextPosition - camera.followTarget.position;
-            camera.followTarget.rotation = Quaternion.LookRotation(direction);
+            // Rail Movement
+            transform.parent = camera.followTarget;
+            //camera.followTarget.position = Vector3.MoveTowards();
+            
 
             // Rail Offset
             Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
@@ -440,27 +433,6 @@ public class PlayerShip : MonoBehaviour
                 reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
                 reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
                 reticle.rectTransform.position = reticlePosition;
-            }
-
-            //PowerUps
-            if (InputManager.input.Player.SecondaryFire.IsPressed())
-            {
-                if (powerUp == PowerUp.LAZER)
-                {
-                    MoveLazer();
-                }
-                else if (powerUp == PowerUp.MACHINE_GUN)
-                {
-                    if (shootTimer > 0)
-                    {
-                        shootTimer -= Time.deltaTime;
-                    }
-                    else
-                    {
-                        FireBullet();
-                        shootTimer = fireRate;
-                    }
-                }
             }
         }
         else
@@ -553,6 +525,68 @@ public class PlayerShip : MonoBehaviour
             else
             {
                 lazer.direction = ray.direction;
+            }
+        }
+    }
+
+    void UpdatePowerUps()
+    {
+        //PowerUps
+        if(GameManager.inventory.Count > 0)
+        {
+            if (InputManager.input.Player.UseItem.IsPressed())
+            {
+                if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.LAZER)
+                {
+                    if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
+                    {
+                        MoveLazer();
+                        GameManager.inventory[GameManager.inventoryIndex].stock -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        GameManager.inventory.RemoveAt(GameManager.inventoryIndex);
+                        UpdateInventory();
+                    }
+                }
+                else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.RAPID_FIRE)
+                {
+                    if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
+                    {
+                        if (shootTimer > 0)
+                        {
+                            shootTimer -= Time.deltaTime;
+                        }
+                        else
+                        {
+                            FireBullet();
+                            GameManager.inventory[GameManager.inventoryIndex].stock--;
+                            shootTimer = fireRate;
+                        }
+                    }
+                    else
+                    {
+                        GameManager.inventory.RemoveAt(GameManager.inventoryIndex);
+                        UpdateInventory();
+                    }
+                }
+            }
+        }
+    }
+
+    void UpdateInventory()
+    {
+        if(GameManager.inventory.Count == 0)
+        {
+            GameManager.inventoryIndex = 0;
+            gameManager.inventorySelectImage.sprite = gameManager.defaultInventorySprite;
+        }
+        else
+        {
+            if (GameManager.inventoryIndex > GameManager.inventory.Count - 1)
+            {
+                GameManager.inventoryIndex = GameManager.inventory.Count - 1;
+                gameManager.inventorySelectImage.sprite = GameManager.inventory[GameManager.inventoryIndex].image;
             }
         }
     }

@@ -62,13 +62,6 @@ public class PlanetGenerator : MonoBehaviour
         buffer += (resolution + 1) * (resolution + 1);
     }
 
-    void OnDrawGizmos()
-    {
-        //if(mesh)
-        //{
-            //Gizmos.DrawMesh(mesh);
-        //}       
-    }
 
     void Start()
     {
@@ -85,7 +78,6 @@ public class PlanetGenerator : MonoBehaviour
         
         GetComponent<MeshCollider>().sharedMesh = mesh;
     }
-    
     void DrawCube()
     {
         //BottomFace
