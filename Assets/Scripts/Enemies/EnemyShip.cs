@@ -69,7 +69,7 @@ public class EnemyShip : MonoBehaviour
             }
             else
             {
-                GameObject.Find("ExplosionPool").GetComponent<ObjectPool>().Spawn(transform.position);
+                var explosion = GameObject.Find("ExplosionPool").GetComponent<ObjectPool>().Spawn(transform.position);
                 GameObject.Find("Player").GetComponent<GameManager>().AddScore(10);
                 gameObject.SetActive(false);
             }

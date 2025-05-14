@@ -31,6 +31,7 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] float fireRate = 0.1f;
     ObjectPool bulletPool;
     ObjectPool lazerPool;
+    ObjectPool missilePool;
 
     Lazer lazer = null;
     float shootTimer = 0;
@@ -57,6 +58,7 @@ public class PlayerShip : MonoBehaviour
         health = GetComponent<HealthSystem>();
         bulletPool = GameObject.Find("BulletPool").GetComponent<ObjectPool>();
         lazerPool = GameObject.Find("LazerPool").GetComponent<ObjectPool>();
+        missilePool = GameObject.Find("MissilePool").GetComponent<ObjectPool>();
         if (trails.Length == 0) trails = GetComponentsInChildren<TrailRenderer>();
         reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
         reticle.rectTransform.position = reticlePosition;
@@ -209,7 +211,15 @@ public class PlayerShip : MonoBehaviour
                     gameManager.UpdateInventoryUI();
                 }
             }
-
+            else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.MISSILE)
+            {
+                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
+                {
+                    FireMissile();
+                    GameManager.inventory[GameManager.inventoryIndex].stock--;
+                    gameManager.UpdateInventoryUI();
+                }
+            }
         }
     }
 
@@ -475,7 +485,52 @@ public class PlayerShip : MonoBehaviour
                 }
             }
         }
+    }
 
+    void FireMissile()
+    {
+        if (!GameManager.gameOver && !GameManager.gamePaused)
+        {
+            //Initialize Missile
+            GameObject obj = missilePool.Spawn(bulletSpawn.position);
+            if (obj != null)
+            {
+                Missile b = obj.GetComponent<Missile>();
+                //Set Needed Variables
+                b.owner = gameObject;
+
+                if (reticle.color == Color.red)
+                {
+                    b.homingTarget = lockOn.collider.transform;
+                }
+                else
+                {
+                    Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
+                    if (Physics.Raycast(ray, out RaycastHit hit))
+                    {
+                        if (hit.transform.gameObject == b.owner)
+                        {
+                            b.direction = ray.direction;
+                        }
+                        else
+                        {
+                            if (hit.transform.tag == "Bounds")
+                            {
+                                b.direction = ray.direction;
+                            }
+                            else
+                            {
+                                b.direction = (hit.point - bulletSpawn.position).normalized;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        b.direction = ray.direction;
+                    }
+                }
+            }
+        }
     }
 
     void FireLazer()
