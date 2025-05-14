@@ -94,7 +94,7 @@ public class Galaxy : MonoBehaviour
         {
             int randomIndex = Random.Range(0, quadrants.Count);
             quadrants[randomIndex].type = 1;
-            Instantiate(levelPrefabs[levelIndex], quadrants[randomIndex].position, Util.RandomRotation(Vector3.one * -45, Vector3.one * 45), transform);
+            Instantiate(levelPrefabs[levelIndex], quadrants[randomIndex].position, Quaternion.identity, transform);
             levelIndex++;
         }
 
