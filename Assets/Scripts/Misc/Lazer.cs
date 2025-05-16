@@ -52,44 +52,45 @@ public class Lazer : MonoBehaviour
 
     void CheckCollisions()
     {
-        if(Physics.SphereCast(renderer.GetPosition(0), renderer.startWidth, direction, out RaycastHit hit, Camera.main.farClipPlane))
+        if(Physics.SphereCast(renderer.GetPosition(0), renderer.startWidth, direction, out RaycastHit rayHit, Camera.main.farClipPlane))
         {
-            if(hit.transform.gameObject != owner)
+            if(rayHit.transform.gameObject != owner)
             {
-                if (hit.transform.tag == "Asteroid")
+                if (rayHit.transform.tag == "Destructible")
                 {
-                    Asteroid asteroid = hit.transform.GetComponent<Asteroid>();
-                    explosionPool.Spawn(hit.point);
+                    Asteroid asteroid = rayHit.transform.GetComponent<Asteroid>();
+                    explosionPool.Spawn(rayHit.point);
                     if (asteroid)
                     {
-                        asteroid.RemoveBlock(hit);
+                        asteroid.RemoveBlock(rayHit);
+                        return;
                     }
                 }
-                else if (hit.transform.tag == "Planet")
+                else if (rayHit.transform.tag == "Surface")
                 {
-                    explosionPool.Spawn(hit.point);
+                    explosionPool.Spawn(rayHit.point);
                 }
-                else if (hit.transform.tag == "Enemy")
+                else if (rayHit.transform.tag == "Enemy")
                 {
-                    HealthSystem health = hit.transform.GetComponent<HealthSystem>();
+                    HealthSystem health = rayHit.transform.GetComponent<HealthSystem>();
                     if (health)
                     {
                         health.TakeDamage(damage);
                     }
                 }
-                else if (hit.transform.tag == "Player")
+                else if (rayHit.transform.tag == "Player")
                 {
-                    PlayerShip player = hit.transform.GetComponent<PlayerShip>();
+                    PlayerShip player = rayHit.transform.GetComponent<PlayerShip>();
                     if (player)
                     {
-                        HealthSystem health = hit.transform.GetComponent<HealthSystem>();
+                        HealthSystem health = rayHit.transform.GetComponent<HealthSystem>();
                         if (health)
                         {
                             health.TakeDamage(damage);
                             if (health.IsDead())
                             {
-                                explosionPool.Spawn(hit.transform.position);
-                                hit.transform.gameObject.SetActive(false);
+                                explosionPool.Spawn(rayHit.transform.position);
+                                rayHit.transform.gameObject.SetActive(false);
                                 GameManager.gameOver = true;
                             }
                         }

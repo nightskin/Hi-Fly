@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Lazer
   m_EditorClassIdentifier: 
   item: 1
-  stock: 0
+  stock: 100
   image: {fileID: 21300000, guid: 7f176c16f7c81d14d83068d8b9434539, type: 3}

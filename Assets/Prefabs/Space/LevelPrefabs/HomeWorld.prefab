@@ -68,7 +68,7 @@ GameObject:
   - component: {fileID: 1280286012736500305}
   m_Layer: 0
   m_Name: HomeWorld
-  m_TagString: Planet
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647

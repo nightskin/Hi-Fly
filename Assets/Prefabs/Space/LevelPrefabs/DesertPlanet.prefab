@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1393404328852871900}
   - component: {fileID: 2664308330705147257}
   - component: {fileID: 224459828865245619}
+  - component: {fileID: 6158128685671581394}
   m_Layer: 0
   m_Name: Planet Ring
-  m_TagString: Planet
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -86,6 +87,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &6158128685671581394
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737700570714865766}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8330681463182105384, guid: 407fd22cc0ef3c0429bd0e90dae830c7, type: 3}
 --- !u!1 &1743980462404598863
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,7 +124,7 @@ GameObject:
   - component: {fileID: 4574156431024067563}
   m_Layer: 0
   m_Name: DesertPlanet
-  m_TagString: Planet
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -31625,9 +31648,10 @@ GameObject:
   - component: {fileID: 8961381035685685807}
   - component: {fileID: 2848143392690838958}
   - component: {fileID: 4880395952603646664}
+  - component: {fileID: 2332524427009176606}
   m_Layer: 0
   m_Name: Planet Ring (1)
-  m_TagString: Planet
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -31700,3 +31724,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &2332524427009176606
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7992523468771609462}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8330681463182105384, guid: 407fd22cc0ef3c0429bd0e90dae830c7, type: 3}

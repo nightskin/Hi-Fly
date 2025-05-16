@@ -86,18 +86,20 @@ public class Bullet : MonoBehaviour
         {
             if (rayhit.transform.gameObject != owner)
             {
-                if (rayhit.transform.tag == "Asteroid")
+                if (rayhit.transform.tag == "Destructible")
                 {
-                    Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     explosionPool.Spawn(rayhit.point);
+                    Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
                         asteroid.RemoveBlock(rayhit);
+                        return;
                     }
                 }
-                else if (rayhit.transform.tag == "Planet")
+                else if (rayhit.transform.tag == "Surface")
                 {
                     explosionPool.Spawn(rayhit.point);
+                    return;
                 }
                 else if (rayhit.transform.tag == "Enemy")
                 {
@@ -109,6 +111,7 @@ public class Bullet : MonoBehaviour
                     hit = true;
                     sfx.clip = hitSound;
                     sfx.Play();
+                    return;
                 }
                 else if (rayhit.transform.tag == "Player")
                 {
@@ -138,6 +141,7 @@ public class Bullet : MonoBehaviour
                             hit = true;
                         }
                     }
+                    return;
                 }
             }
         }

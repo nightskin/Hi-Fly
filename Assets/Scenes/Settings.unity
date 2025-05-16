@@ -800,6 +800,7 @@ MonoBehaviour:
   - {fileID: 1870331381}
   - {fileID: 1032005570}
   - {fileID: 408625001}
+  - {fileID: 1727933842}
 --- !u!1 &198117874
 GameObject:
   m_ObjectHideFlags: 0
@@ -7399,8 +7400,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1023602525}
   - {fileID: 309618827}
+  - {fileID: 1023602525}
   m_Father: {fileID: 187135456}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
@@ -8076,7 +8077,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1887757680
 RectTransform:
   m_ObjectHideFlags: 0

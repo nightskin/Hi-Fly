@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 4485487454369725660}
   m_Layer: 0
   m_Name: Portal
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -168,7 +168,7 @@ GameObject:
   - component: {fileID: 5822712822199667260}
   m_Layer: 8
   m_Name: PortalBase
-  m_TagString: Planet
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647

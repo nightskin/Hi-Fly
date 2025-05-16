@@ -6,13 +6,6 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MeshCollider))]
 public class TerrainGenerator : MonoBehaviour
 {
-    public enum TerrainType
-    {
-        MOUNTAINS,
-        ISLANDS,
-    }
-    public TerrainType type;
-
     public string seed = string.Empty;
     public int resolution = 100;
     public float spacing = 10;
@@ -21,9 +14,8 @@ public class TerrainGenerator : MonoBehaviour
     [Min(1.01f)] public float lacunarity = 2;
 
     [Min(1)] public float maxHeight = 10;
-    [Min(1)] public float minHeight = 10;
+    [Min(0)] public float minHeight = 10;
     public float noiseScale = 0.01f;
-    public Vector3 noiseOffset = Vector3.zero;
 
     public Gradient landColors;
 
@@ -33,7 +25,6 @@ public class TerrainGenerator : MonoBehaviour
     [SerializeField] List<Vector2> uvs = new List<Vector2>();
     [SerializeField] List<Color> colors = new List<Color>();
     [SerializeField] List<int> triangles = new List<int>();
-    [SerializeField] int buffer = 0;
 
     void Start()
     {
@@ -55,7 +46,6 @@ public class TerrainGenerator : MonoBehaviour
         colors.Clear();
         uvs.Clear();
         triangles.Clear();
-        buffer = 0;
 
         noise = new Noise(seed.GetHashCode());
         
@@ -63,46 +53,31 @@ public class TerrainGenerator : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
         
         // Create Ground
-        CreateVertexGrid(Quaternion.Euler(0, 0, 180));
+        CreateVertexGrid();
         for(int i = 0; i < vertices.Count; i++)
         {
-            float y = Evaluate(vertices[i] * noiseScale + noiseOffset);
-            
-            if(type == TerrainType.MOUNTAINS)
+            float y = Evaluate((vertices[i] * noiseScale) + (transform.position * noiseScale));
+
+            if (y > 0)
             {
-                if(y > 0)
-                {
-                    vertices[i] = new Vector3(vertices[i].x, y * maxHeight, vertices[i].z);
-                }
-                else
-                {
-                    vertices[i] = new Vector3(vertices[i].x, y * minHeight, vertices[i].z);
-                }
-                colors.Add(landColors.Evaluate(Util.ConvertRange(-1, 1, 0, 1, y)));
+                vertices[i] = new Vector3(vertices[i].x, y * maxHeight, vertices[i].z);
             }
-            else if(type == TerrainType.ISLANDS)
+            else
             {
-                if(y > 0)
-                {
-                    vertices[i] = new Vector3(vertices[i].x, minHeight, vertices[i].z);
-                }
-                else
-                {
-                    vertices[i] = new Vector3(vertices[i].x, y * minHeight, vertices[i].z);
-                }
-                colors.Add(landColors.Evaluate(Util.ConvertRange(-1, 1, 0, 1, y)));
+                vertices[i] = new Vector3(vertices[i].x, y * minHeight, vertices[i].z);
             }
+            colors.Add(landColors.Evaluate(Util.ConvertRange(-1, 1, 0, 1, y)));
         }
         UpdateMesh();
     }
 
-    void CreateVertexGrid(Quaternion rotation)
+    void CreateVertexGrid()
     {
         for (int x = 0; x <= resolution; x++)
         {
             for (int z = 0; z <= resolution; z++)
             {
-                vertices.Add(rotation * new Vector3(x - resolution / 2, 0, z - resolution / 2) * spacing);
+                vertices.Add(new Vector3(x - resolution / 2, 0, z - resolution / 2) * spacing);
                 uvs.Add(new Vector2(x,z) / resolution);
             }
         }
@@ -111,12 +86,15 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (int z = 0; z < resolution; z++)
             {
-                triangles.Insert(t + 0, v + 0 + buffer);
-                triangles.Insert(t + 1, v + resolution + 1 + buffer);
-                triangles.Insert(t + 2, v + 1 + buffer);
-                triangles.Insert(t + 3, v + 1 + buffer);
-                triangles.Insert(t + 4, v + resolution + 1 + buffer);
-                triangles.Insert(t + 5, v + resolution + 2 + buffer);
+                triangles.Insert(t + 0, v + resolution + 1);
+                triangles.Insert(t + 1, v + 0);
+
+                triangles.Insert(t + 2, v + 1);
+                triangles.Insert(t + 3, v + 1);
+
+                triangles.Insert(t + 4, v + resolution + 2);
+                triangles.Insert(t + 5, v + resolution + 1);
+
 
                 v++;
                 t += 6;
@@ -124,7 +102,6 @@ public class TerrainGenerator : MonoBehaviour
             v++;
         }
 
-        buffer += (resolution + 1) * (resolution + 1);
     }
 
     float Evaluate(Vector3 point, int layers = 3)
@@ -149,6 +126,5 @@ public class TerrainGenerator : MonoBehaviour
         mesh.uv = uvs.ToArray();
         mesh.colors = colors.ToArray();
         mesh.RecalculateNormals();
-        mesh.RecalculateTangents();
     }
 }

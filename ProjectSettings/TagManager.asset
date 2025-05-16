@@ -4,13 +4,13 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Planet
   - Enemy
   - Projectile
-  - Asteroid
   - Bounds
   - Water
   - LevelTrigger
+  - Destructible
+  - Surface
   layers:
   - Default
   - TransparentFX
