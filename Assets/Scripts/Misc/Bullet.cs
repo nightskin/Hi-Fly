@@ -88,13 +88,23 @@ public class Bullet : MonoBehaviour
             {
                 if (rayhit.transform.tag == "Destructible")
                 {
-                    explosionPool.Spawn(rayhit.point);
+
                     Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
+                        explosionPool.Spawn(rayhit.point);
                         asteroid.RemoveBlock(rayhit);
                         return;
                     }
+
+                    TerrainGenerator terrain = rayhit.transform.GetComponent<TerrainGenerator>();
+                    if(terrain)
+                    {
+                        explosionPool.Spawn(rayhit.point);
+                        terrain.Teraform(rayhit, 20);
+                        return;
+                    }
+
                 }
                 else if (rayhit.transform.tag == "Surface")
                 {

@@ -45,7 +45,6 @@ public class GameManager : MonoBehaviour
 
     public static PlayerShip playerShip;
     public GameObject[] playerUIToHideOnPause;
-    public static float isoLevel = 0;
 
     public static bool gameOver = false;
     public static bool gamePaused = false;
@@ -100,7 +99,7 @@ public class GameManager : MonoBehaviour
 
     private void ToggleInventory_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(inventory.Count > 0) 
+        if(inventory.Count > 0 && !gameOver && !gamePaused && !HubMenu.open) 
         {
             if (obj.ReadValue<float>() > 0)
             {
@@ -174,18 +173,19 @@ public class GameManager : MonoBehaviour
         {
             if (gameOverTimer > 0)
             {
+                for (int i = 0; i < playerUIToHideOnPause.Length; i++)
+                {
+                    playerUIToHideOnPause[i].SetActive(false);
+                }
+                playerShip.gameObject.SetActive(false);
                 gameOverTimer -= Time.deltaTime;
             }
             else
             {
                 if (!gameOverActive)
                 {
+                    Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.None;
-                    for(int i = 0; i < playerUIToHideOnPause.Length; i++) 
-                    {
-                        playerUIToHideOnPause[i].SetActive(false);
-                    }
-                    playerShip.gameObject.SetActive(false);
                     gameOverMenu.SetActive(true);
                     eventSystem.SetSelectedGameObject(gameOverMenu.transform.GetChild(0).transform.GetChild(1).gameObject);
                     gameOverActive = true;
@@ -201,6 +201,7 @@ public class GameManager : MonoBehaviour
         InputManager.input.Player.ToggleMiniMap.performed -= ToggleMiniMap_performed;
         InputManager.input.Player.ToggleInventory.performed -= ToggleInventory_performed;
     }
+    
 
     public void AddScore(int amount)
     {

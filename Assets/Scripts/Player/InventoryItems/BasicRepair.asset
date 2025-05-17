@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BasicRepair
   m_EditorClassIdentifier: 
   item: 4
-  stock: 0
+  stock: 20
   image: {fileID: 21300000, guid: 1e8316d050950294c87019c8485eb3d2, type: 3}

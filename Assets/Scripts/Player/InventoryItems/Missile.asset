@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Missile
   m_EditorClassIdentifier: 
   item: 3
-  stock: 0
+  stock: 100
   image: {fileID: 21300000, guid: 4110d94619f93da4db50cab500c5e803, type: 3}

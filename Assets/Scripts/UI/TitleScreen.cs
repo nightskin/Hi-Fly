@@ -1,12 +1,20 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TitleScreen : MonoBehaviour
 {
-    void Update()
+    void Start()
     {
-        if(Input.anyKeyDown)
-        {
-            StartCoroutine(SceneLoader.instance.LoadLevel("Menu"));
-        }
+        InputManager.input.Player.StartGame.performed += StartGame_performed;    
+    }
+
+    void StartGame_performed(InputAction.CallbackContext obj)
+    {
+        StartCoroutine(SceneLoader.instance.LoadLevel("Menu"));
+    }
+
+    void OnDestroy()
+    {
+        InputManager.input.Player.StartGame.performed -= StartGame_performed;
     }
 }

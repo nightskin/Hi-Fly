@@ -132,9 +132,15 @@ public class PlayerShip : MonoBehaviour
         {
             GetComponent<HealthSystem>().TakeDamage(10);
         }
+        
         if(other.tag == "Bounds")
         {
             Teleport(transform.position * -1);
+        }
+        else if(other.tag == "LevelTrigger")
+        {
+            HubMenu.levelName = other.transform.parent.name;
+            FindAnyObjectByType<HubMenu>(FindObjectsInactive.Include).OpenLevelMenu();
         }
     }
 

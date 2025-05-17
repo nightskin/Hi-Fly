@@ -11,10 +11,10 @@ public class TerrainGenerator : MonoBehaviour
     public float spacing = 10;
 
     [Range(0,1)] public float persistance = 0.5f;
-    [Min(1.01f)] public float lacunarity = 2;
+    [Min(1)] public float lacunarity = 2;
 
     [Min(1)] public float maxHeight = 10;
-    [Min(0)] public float minHeight = 10;
+    [Min(0)] public float minHeight = 0;
     public float noiseScale = 0.01f;
 
     public Gradient landColors;
@@ -67,6 +67,20 @@ public class TerrainGenerator : MonoBehaviour
                 vertices[i] = new Vector3(vertices[i].x, y * minHeight, vertices[i].z);
             }
             colors.Add(landColors.Evaluate(Util.ConvertRange(-1, 1, 0, 1, y)));
+        }
+        UpdateMesh();
+    }
+
+    public void Teraform(RaycastHit hit, float radius)
+    {
+        for(int v = 0; v < vertices.Count; v++) 
+        {
+            Vector3 worldSpace = transform.TransformPoint(vertices[v]);
+            float distance = Vector3.Distance(hit.point, worldSpace);
+            if (distance <= radius)
+            {
+                vertices[v] = new Vector3(vertices[v].x, vertices[v].y - distance, vertices[v].z);
+            }
         }
         UpdateMesh();
     }

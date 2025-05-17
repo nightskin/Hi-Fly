@@ -18,14 +18,26 @@ EditorBuildSettings:
     path: Assets/Scenes/PlayGame.unity
     guid: 5be305991c28ce541ae3da370751e90d
   - enabled: 1
-    path: Assets/Scenes/Levels/Intro.unity
+    path: Assets/Scenes/Levels/Sedna.unity
     guid: dafca98d502dedd41ac1612091ff4a1a
   - enabled: 1
-    path: Assets/Scenes/Levels/Hub.unity
+    path: Assets/Scenes/Hub.unity
     guid: 1f06923e135a29d47badc085160f53f0
   - enabled: 1
-    path: Assets/Scenes/Levels/HomeWorld.unity
+    path: Assets/Scenes/Levels/Sedna.unity
     guid: 15ff4d9fc7dcb5e4e890fea57736a1ed
+  - enabled: 1
+    path: Assets/Scenes/Levels/EnemyBase.unity
+    guid: 6a562826e6b8fba43bf0fa9d6f1156f1
+  - enabled: 1
+    path: Assets/Scenes/Levels/Set.unity
+    guid: 9f3b6d37e25a0b44097d2063a21b231b
+  - enabled: 1
+    path: Assets/Scenes/Levels/The Void.unity
+    guid: 4c062bf61cdb0ed4bb277c1058b31528
+  - enabled: 1
+    path: Assets/Scenes/Levels/Vulcan.unity
+    guid: 888ecd8876b28074eb116b217eefab46
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 9b668762642faae4a939e6046f4c3cfe,
       type: 3}
