@@ -1,34 +1,44 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
-    [SerializeField] GameObject obj;
-    [SerializeField][Min(1)] int count = 100;
-    GameObject[] pool;
+    public ObjectPoolData[] poolData;
+
 
     void Awake()
     {
-        pool = new GameObject[count];
-        for(int i = 0; i < count; i++)
+        transform.position = Vector3.zero;
+        foreach(ObjectPoolData data in poolData) 
         {
-            pool[i] = Instantiate(obj, transform);
-            pool[i].SetActive(false);
-        }
-    }   
-    
-    public GameObject Spawn(Vector3 position)
-    {
-        foreach(GameObject obj in pool) 
-        {
-            if(!obj.activeSelf)
+            GameObject poolObj = new GameObject();
+            poolObj.isStatic = true;
+            poolObj.name = data.name;
+            poolObj.transform.parent = transform;
+
+            for(int i = 0; i < data.size; i++) 
             {
-                obj.transform.position = position;
-                obj.SetActive(true);
-                return obj;
+                var obj = Instantiate(data.prefab, poolObj.transform);
+                obj.SetActive(false);
+            }
+        }        
+    }
+
+    public GameObject Spawn(string name, Vector3 position)
+    {
+        Transform pool = transform.Find(name);
+        if (pool != null) 
+        {
+            for(int i = 0; i < pool.childCount; i++) 
+            {
+                if(!pool.GetChild(i).gameObject.activeSelf)
+                {
+                    pool.GetChild(i).transform.position = position;
+                    pool.GetChild(i).gameObject.SetActive(true);
+                    return pool.GetChild(i).gameObject;
+                }
             }
         }
+        Debug.Log("Could Not Find Object Pool");
         return null;
     }
 

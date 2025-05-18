@@ -11,7 +11,7 @@ public class Missile : MonoBehaviour
     BoxCollider box;
     AudioSource sfx;
     TrailRenderer trail;
-    ObjectPool explosionPool;
+    ObjectPool objectPool;
     Vector3 prevPosition;
     bool hit;
     float life = 0;
@@ -20,7 +20,7 @@ public class Missile : MonoBehaviour
     {
         life = lifetime;
         box = GetComponent<BoxCollider>();
-        explosionPool = GameObject.Find("MissileExplosionPool").GetComponent<ObjectPool>();
+        objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
         sfx = GetComponent<AudioSource>();
         trail = transform.Find("Trail").GetComponent<TrailRenderer>();
     }
@@ -48,7 +48,7 @@ public class Missile : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.deltaTime);
                 if(Vector3.Distance(transform.position, homingTarget.position) < 1.0f)
                 {
-                    GameObject explosion = explosionPool.Spawn(transform.position);
+                    GameObject explosion = objectPool.Spawn("explosionDmg", transform.position);
                     DeSpawn();
                 }
             }
@@ -89,7 +89,7 @@ public class Missile : MonoBehaviour
         {
             if (rayhit.transform.gameObject != owner)
             {
-                GameObject explosion = explosionPool.Spawn(transform.position);
+                GameObject explosion = objectPool.Spawn("explosionDmg", transform.position);
                 DeSpawn();
             }
         }

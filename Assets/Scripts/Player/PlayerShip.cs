@@ -29,9 +29,7 @@ public class PlayerShip : MonoBehaviour
     RaycastHit lockOn;
     
     [SerializeField] float fireRate = 0.1f;
-    ObjectPool bulletPool;
-    ObjectPool lazerPool;
-    ObjectPool missilePool;
+    ObjectPool objectPool;
 
     Lazer lazer = null;
     float shootTimer = 0;
@@ -56,9 +54,7 @@ public class PlayerShip : MonoBehaviour
 
 
         health = GetComponent<HealthSystem>();
-        bulletPool = GameObject.Find("BulletPool").GetComponent<ObjectPool>();
-        lazerPool = GameObject.Find("LazerPool").GetComponent<ObjectPool>();
-        missilePool = GameObject.Find("MissilePool").GetComponent<ObjectPool>();
+        objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
         if (trails.Length == 0) trails = GetComponentsInChildren<TrailRenderer>();
         reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
         reticle.rectTransform.position = reticlePosition;
@@ -452,13 +448,13 @@ public class PlayerShip : MonoBehaviour
         if(!GameManager.gameOver && !GameManager.gamePaused)
         {
             //Initialize Bullet
-            GameObject obj = bulletPool.Spawn(bulletSpawn.position);
+            GameObject obj = objectPool.Spawn("bullet", bulletSpawn.position);
             if (obj != null)
             {
                 Bullet b = obj.GetComponent<Bullet>();
                 //Set Needed Variables
                 b.owner = gameObject;
-
+            
                 if (reticle.color == Color.red)
                 {
                     b.homingTarget = lockOn.collider.transform;
@@ -498,13 +494,13 @@ public class PlayerShip : MonoBehaviour
         if (!GameManager.gameOver && !GameManager.gamePaused)
         {
             //Initialize Missile
-            GameObject obj = missilePool.Spawn(bulletSpawn.position);
+            GameObject obj = objectPool.Spawn("missile", bulletSpawn.position);
             if (obj != null)
             {
                 Missile b = obj.GetComponent<Missile>();
                 //Set Needed Variables
                 b.owner = gameObject;
-
+            
                 if (reticle.color == Color.red)
                 {
                     b.homingTarget = lockOn.collider.transform;
@@ -543,11 +539,11 @@ public class PlayerShip : MonoBehaviour
     {
         if (!GameManager.gameOver && !GameManager.gamePaused)
         {
-            lazer = lazerPool.Spawn(Vector3.zero).GetComponent<Lazer>();
+            lazer = objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
             if (lazer != null)
             {
                 lazer.owner = gameObject;
-
+            
                 Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
                 if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))
                 {
@@ -557,7 +553,7 @@ public class PlayerShip : MonoBehaviour
                 {
                     lazer.direction = ray.direction;
                 }
-
+            
             }
         }
 

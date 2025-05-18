@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6929517734977390769
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3365826721683144292}
+  - component: {fileID: 4419068241582400892}
+  m_Layer: 0
+  m_Name: ObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &3365826721683144292
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6929517734977390769}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4419068241582400892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6929517734977390769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9815d1878dfaf8b4e8360e8457175d21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolData:
+  - name: bullet
+    prefab: {fileID: 7305079670371382638, guid: fff05f3a031d5554797e176bec74e2dc,
+      type: 3}
+    size: 100
+  - name: lazer
+    prefab: {fileID: 1705485599940711468, guid: 6d0433dce1a5bd84ea968671a6497b59,
+      type: 3}
+    size: 50
+  - name: explosion
+    prefab: {fileID: 279913065598733499, guid: f9e0b7f63787b4f45960fd1168d67997, type: 3}
+    size: 100
+  - name: explosionDmg
+    prefab: {fileID: 8871560819692549879, guid: 38d073728a7902545891c50bcbd92a77,
+      type: 3}
+    size: 100
+  - name: missile
+    prefab: {fileID: 3058321018423864868, guid: 03ae3337d91e0b94c9e99a13e77fe0ca,
+      type: 3}
+    size: 100

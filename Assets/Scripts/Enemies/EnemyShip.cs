@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyShip : MonoBehaviour
 {
-
+    ObjectPool objectPool;
     GameObject target;
 
     public bool attackMode;
@@ -25,6 +25,11 @@ public class EnemyShip : MonoBehaviour
 
     [SerializeField] float turnFrequncy = 3.0f;
     float turnTimer = 0;
+
+    void Start()
+    {
+        objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
+    }
 
     void OnEnable()
     {
@@ -69,7 +74,7 @@ public class EnemyShip : MonoBehaviour
             }
             else
             {
-                var explosion = GameObject.Find("ExplosionPool").GetComponent<ObjectPool>().Spawn(transform.position);
+                var explosion = GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("explosion", transform.position);
                 GameObject.Find("Player").GetComponent<GameManager>().AddScore(10);
                 gameObject.SetActive(false);
             }
@@ -158,7 +163,7 @@ public class EnemyShip : MonoBehaviour
 
     void Shoot()
     {
-        var b = GameObject.Find("BulletPool").GetComponent<ObjectPool>().Spawn(transform.position + transform.forward);
+        var b = objectPool.Spawn("bullet", transform.position + transform.forward);
         b.GetComponent<Bullet>().direction = (target.transform.position - transform.position).normalized;
         b.GetComponent<Bullet>().owner = gameObject;
         b.GetComponent<Bullet>().damage = attackPower;

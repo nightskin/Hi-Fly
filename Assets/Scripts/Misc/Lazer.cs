@@ -5,7 +5,7 @@ using UnityEngine;
 public class Lazer : MonoBehaviour
 {
     [ColorUsage(true, true)][SerializeField] Color[] colors;
-    [HideInInspector] public LineRenderer renderer;
+    [SerializeField] LineRenderer renderer;
     int colorIndex = 0;
     float colorChangeInterval = 0.05f;
     float colorChangeTimer = 0;
@@ -17,12 +17,11 @@ public class Lazer : MonoBehaviour
 
     public float collisionInterval = 0.1f;
     float damageTimer = 0;
-    ObjectPool explosionPool;
-
+    ObjectPool objectPool;
+    
     void OnEnable()
     {
-        renderer = GetComponent<LineRenderer>();
-        explosionPool = GameObject.Find("ExplosionPool").GetComponent<ObjectPool>();
+        objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
         renderer.sharedMaterial.color = colors[colorIndex];
     }
 
@@ -59,7 +58,7 @@ public class Lazer : MonoBehaviour
                 if (rayHit.transform.tag == "Destructible")
                 {
                     Asteroid asteroid = rayHit.transform.GetComponent<Asteroid>();
-                    explosionPool.Spawn(rayHit.point);
+                    objectPool.Spawn("explosion", rayHit.point);
                     if (asteroid)
                     {
                         asteroid.RemoveBlock(rayHit);
@@ -68,7 +67,7 @@ public class Lazer : MonoBehaviour
                 }
                 else if (rayHit.transform.tag == "Surface")
                 {
-                    explosionPool.Spawn(rayHit.point);
+                    objectPool.Spawn("explosion", rayHit.point);
                 }
                 else if (rayHit.transform.tag == "Enemy")
                 {
@@ -89,7 +88,7 @@ public class Lazer : MonoBehaviour
                             health.TakeDamage(damage);
                             if (health.IsDead())
                             {
-                                explosionPool.Spawn(rayHit.transform.position);
+                                objectPool.Spawn("explosion", rayHit.point);
                                 rayHit.transform.gameObject.SetActive(false);
                                 GameManager.gameOver = true;
                             }

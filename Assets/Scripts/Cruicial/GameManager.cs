@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
     public void UpdateInventoryUI()
     {
         inventorySelectImage.sprite = inventory[inventoryIndex].image;
-        inventoryCountText.text = inventory[inventoryIndex].stock.ToString();
+        inventoryCountText.text = Mathf.RoundToInt(inventory[inventoryIndex].stock).ToString();
     }
 
     public void Pause()

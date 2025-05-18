@@ -13,7 +13,7 @@ public class Bullet : MonoBehaviour
 
     AudioSource sfx;
     TrailRenderer trail;
-    ObjectPool explosionPool;
+    ObjectPool objectPool;
     Vector3 prevPosition;
     bool hit;
     float life = 0;
@@ -21,7 +21,7 @@ public class Bullet : MonoBehaviour
     void Awake()
     {
         life = lifetime;
-        explosionPool = GameObject.Find("ExplosionPool").GetComponent<ObjectPool>();
+        objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
         sfx = GetComponent<AudioSource>();
         trail = GetComponent<TrailRenderer>();
     }
@@ -92,7 +92,7 @@ public class Bullet : MonoBehaviour
                     Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
-                        explosionPool.Spawn(rayhit.point);
+                        objectPool.Spawn("explosion", rayhit.point);
                         asteroid.RemoveBlock(rayhit);
                         return;
                     }
@@ -100,7 +100,7 @@ public class Bullet : MonoBehaviour
                     TerrainGenerator terrain = rayhit.transform.GetComponent<TerrainGenerator>();
                     if(terrain)
                     {
-                        explosionPool.Spawn(rayhit.point);
+                        objectPool.Spawn("explosion", rayhit.point);
                         terrain.Teraform(rayhit, 20);
                         return;
                     }
@@ -108,7 +108,7 @@ public class Bullet : MonoBehaviour
                 }
                 else if (rayhit.transform.tag == "Surface")
                 {
-                    explosionPool.Spawn(rayhit.point);
+                    objectPool.Spawn("explosion", rayhit.point);
                     return;
                 }
                 else if (rayhit.transform.tag == "Enemy")
@@ -141,7 +141,7 @@ public class Bullet : MonoBehaviour
                                 health.TakeDamage(damage);
                                 if (health.IsDead())
                                 {
-                                    explosionPool.Spawn(rayhit.transform.position);
+                                    objectPool.Spawn("explosion", rayhit.point);
                                     rayhit.transform.gameObject.SetActive(false);
                                     GameManager.gameOver = true;
                                 }
