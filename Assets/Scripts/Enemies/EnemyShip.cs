@@ -97,7 +97,7 @@ public class EnemyShip : MonoBehaviour
                 health.TakeDamage(health.GetMaxHealth());
             }
         }
-        if(other.tag == "Asteroid" || other.tag == "Planet")
+        if(other.tag == "Destructible" || other.tag == "Surface")
         {
             health.TakeDamage(health.GetMaxHealth());
         }

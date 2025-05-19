@@ -123,12 +123,7 @@ public class PlayerShip : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.layer == 8)
-        {
-            GetComponent<HealthSystem>().TakeDamage(10);
-        }
-        
+    {   
         if(other.tag == "Bounds")
         {
             Teleport(transform.position * -1);

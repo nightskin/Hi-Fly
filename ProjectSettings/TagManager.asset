@@ -11,6 +11,7 @@ TagManager:
   - LevelTrigger
   - Destructible
   - Surface
+  - Planet
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - UI
   - LockOn
   - MiniMap
-  - Hazard
+  - 
   - 
   - 
   - 

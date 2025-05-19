@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7633679061300965354}
   - component: {fileID: 465676840894286673}
   - component: {fileID: 2757920808048779928}
-  - component: {fileID: 3631780813049264434}
+  - component: {fileID: 1608740405003766520}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
@@ -4990,7 +4990,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3631780813049264434
+--- !u!114 &1608740405003766520
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4999,8 +4999,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 279913065598733499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bd4586f81747d84d9fee07c69a8ebcb, type: 3}
+  m_Script: {fileID: 11500000, guid: f3d2798e33123144484c659eb3c2299f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DoesDamage: 0
-  blastRadius: 10
+  duration: 1
