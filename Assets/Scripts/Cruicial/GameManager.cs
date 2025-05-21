@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     {
         STANDARD_MODE,
         STRAFE_MODE,
-        ON_RAILS_MODE
+        ON_RAILS_MODE,
     }
     public static PlayerMode playerMode;
     [SerializeField] PlayerMode startPlayerMode;
@@ -251,7 +251,7 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
         gameOver = false;
         gamePaused = false;
-        StartCoroutine(SceneLoader.instance.LoadLevel(SceneManager.GetActiveScene().buildIndex));
+        StartCoroutine(SceneLoader.instance.Load(SceneManager.GetActiveScene().buildIndex));
         Time.timeScale = 1;
     }
 
@@ -261,7 +261,7 @@ public class GameManager : MonoBehaviour
         Cursor.visible = true;
         gameOver = false;
         gamePaused = false;
-        StartCoroutine(SceneLoader.instance.LoadLevel("Title"));
+        StartCoroutine(SceneLoader.instance.Load("Title"));
     }
 
     public void QuitGame()

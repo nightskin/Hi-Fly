@@ -85,7 +85,7 @@ public class Missile : MonoBehaviour
 
     void CheckCollisions()
     {
-        if (Physics.BoxCast(prevPosition, box.size, direction, out RaycastHit rayhit,transform.rotation,Vector3.Distance(prevPosition, transform.position)))
+        if (Physics.BoxCast(prevPosition, box.size, direction, out RaycastHit rayhit, transform.rotation, Vector3.Distance(prevPosition, transform.position)))
         {
             if (rayhit.transform.gameObject != owner)
             {

@@ -610,8 +610,8 @@ MonoBehaviour:
   levelPrefabs:
   - {fileID: 1280286012736500307, guid: f665682510eb24d4a8153ad52aa80bce, type: 3}
   - {fileID: 1743980462404598863, guid: 129efbb0e7226e34b8a6d9ae2b7985a6, type: 3}
-  - {fileID: 6609336787369708271, guid: ab5a6fa961d0bfa4e9c34f79f41e46d3, type: 3}
   - {fileID: 1510269095994624976, guid: 03f2a215b89bfef4d82d3c2e380e91e2, type: 3}
+  - {fileID: 6609336787369708271, guid: ab5a6fa961d0bfa4e9c34f79f41e46d3, type: 3}
   - {fileID: 1112714016368113507, guid: a32b683c41c1cea4b913d63c0e5fa79f, type: 3}
   asteroidFieldPrefab: {fileID: 1396936832559809867, guid: a890b511b5049fb4c8a57cce1032f14c,
     type: 3}
@@ -873,6 +873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 2043925234}
+  selectionStart: {fileID: 695074736}
 --- !u!1001 &958192644
 PrefabInstance:
   m_ObjectHideFlags: 0

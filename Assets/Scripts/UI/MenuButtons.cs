@@ -8,31 +8,31 @@ public class MenuButtons : MonoBehaviour
     public void OpenSettings()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.LoadLevel("Settings"));
+        StartCoroutine(SceneLoader.instance.Load("Settings"));
     }
     
     public void PlayGame()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.LoadLevel("PlayGame"));
+        StartCoroutine(SceneLoader.instance.Load("PlayGame"));
     }
 
     public void NewGame()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.LoadLevel("Intro"));
+        StartCoroutine(SceneLoader.instance.Load("Intro"));
     }
 
     public void Continue()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.LoadLevel("Hub"));
+        StartCoroutine(SceneLoader.instance.Load("Hub"));
     }
 
     public void BackToMenu()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.LoadLevel("Menu"));
+        StartCoroutine(SceneLoader.instance.Load("Menu"));
     }
 
     public void QuitGame()

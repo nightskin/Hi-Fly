@@ -1,19 +1,24 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class HubMenu : MonoBehaviour
 {
-    public static string levelName = string.Empty;
-    public static bool open = false;
+    public static string levelName;
+    public static bool open;
     [SerializeField] Text label;
+    [SerializeField] GameObject selectionStart;
+
+    void Start()
+    {
+        open = false;    
+    }
 
     public void OpenLevelMenu()
     {
         open = true;
         gameObject.SetActive(true);
         label.text = "Enter " + levelName + "?";
-        GameManager.eventSystem.SetSelectedGameObject(gameObject.transform.GetChild(0).GetChild(0).GetChild(0).gameObject);
+        GameManager.eventSystem.SetSelectedGameObject(selectionStart);
         Time.timeScale = 0;
     }
 
@@ -21,8 +26,8 @@ public class HubMenu : MonoBehaviour
     {
         Time.timeScale = 1;
         open = false;
-        SceneManager.LoadScene(levelName);
-        //StartCoroutine(SceneLoader.instance.LoadLevel(levelName));
+        GameManager.gamePaused = true;
+        StartCoroutine(SceneLoader.instance.Load("LevelTransitionScene"));
     }
 
     public void No()

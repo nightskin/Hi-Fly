@@ -8,7 +8,6 @@ TagManager:
   - Projectile
   - Bounds
   - Water
-  - LevelTrigger
   - Destructible
   - Surface
   - Planet

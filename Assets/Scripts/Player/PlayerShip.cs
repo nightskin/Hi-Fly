@@ -128,11 +128,6 @@ public class PlayerShip : MonoBehaviour
         {
             Teleport(transform.position * -1);
         }
-        else if(other.tag == "LevelTrigger")
-        {
-            HubMenu.levelName = other.transform.parent.name;
-            FindAnyObjectByType<HubMenu>(FindObjectsInactive.Include).OpenLevelMenu();
-        }
     }
 
     private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)

@@ -112,7 +112,7 @@ public class Bullet : MonoBehaviour
                     }
 
                     TerrainGenerator terrain = rayhit.transform.GetComponent<TerrainGenerator>();
-                    if(terrain)
+                    if (terrain)
                     {
                         objectPool.Spawn("explosion", rayhit.point);
                         terrain.Teraform(rayhit, 20);
@@ -140,7 +140,7 @@ public class Bullet : MonoBehaviour
                 else if (rayhit.transform.tag == "Player")
                 {
                     PlayerShip player = rayhit.transform.GetComponent<PlayerShip>();
-                    if(player)
+                    if (player)
                     {
                         if (player.evading)
                         {

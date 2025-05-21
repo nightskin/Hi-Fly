@@ -68,7 +68,7 @@ public class Settings : MonoBehaviour
     public void ExitSettings()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.LoadLevel("Menu"));
+        StartCoroutine(SceneLoader.instance.Load("Menu"));
     }
 
     public void BackToGeneralSettings()

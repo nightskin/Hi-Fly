@@ -10,7 +10,7 @@ public class TitleScreen : MonoBehaviour
 
     void StartGame_performed(InputAction.CallbackContext obj)
     {
-        StartCoroutine(SceneLoader.instance.LoadLevel("Menu"));
+        StartCoroutine(SceneLoader.instance.Load("Menu"));
     }
 
     void OnDestroy()

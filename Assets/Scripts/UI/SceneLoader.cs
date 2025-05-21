@@ -26,7 +26,7 @@ public class SceneLoader : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public IEnumerator LoadLevel(string name)
+    public IEnumerator Load(string name)
     {
         InputManager.input.Disable();
         animator.SetTrigger("start");
@@ -36,7 +36,7 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene(name);
     }
 
-    public IEnumerator LoadLevel(int index) 
+    public IEnumerator Load(int index) 
     {
         InputManager.input.Disable();
         animator.SetTrigger("start");
