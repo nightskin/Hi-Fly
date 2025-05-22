@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3521717491133291619}
   - component: {fileID: 7826116377964248145}
   - component: {fileID: 9183730069754306925}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: LevelTrigger
   m_TagString: LevelTrigger
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 175
+  m_Radius: 500
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7826116377964248145
 MonoBehaviour:

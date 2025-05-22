@@ -31508,7 +31508,7 @@ GameObject:
   - component: {fileID: 2521178865768946747}
   - component: {fileID: 4879974135510949421}
   - component: {fileID: 1023255128006102496}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: LevelTrigger
   m_TagString: LevelTrigger
   m_Icon: {fileID: 0}
@@ -31549,7 +31549,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 250
+  m_Radius: 500
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4879974135510949421
 Rigidbody:
