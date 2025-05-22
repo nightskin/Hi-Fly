@@ -51,7 +51,7 @@ public class Lazer : MonoBehaviour
 
     void CheckCollisions()
     {
-        if (Physics.SphereCast(renderer.GetPosition(0), renderer.startWidth, direction, out RaycastHit rayHit, Camera.main.farClipPlane))
+        if (Physics.SphereCast(origin, renderer.startWidth * renderer.widthMultiplier, direction, out RaycastHit rayHit, Camera.main.farClipPlane))
         {
             if (rayHit.transform.gameObject != owner)
             {

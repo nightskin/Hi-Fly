@@ -171,7 +171,7 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 2, a: 1}
   renderer: {fileID: 7468776964873725496}
   owner: {fileID: 0}
-  damage: 5
+  damage: 10
   direction: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}
-  collisionInterval: 0.1
+  collisionInterval: 0.05

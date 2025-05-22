@@ -405,58 +405,22 @@ MonoBehaviour:
     m_Knots:
     - Position:
         x: 0
-        y: 0
+        y: -5
         z: 0
       TangentIn:
-        x: -0
-        y: -0
-        z: -83.979164
+        x: 0
+        y: 0
+        z: -0
       TangentOut:
         x: 0
         y: 0
-        z: 83.979164
+        z: 0
       Rotation:
         value:
-          x: -0.15154435
-          y: 0.02693851
-          z: 0.11550554
-          w: 0.9813088
-    - Position:
-        x: 15
-        y: 255
-        z: 800
-      TangentIn:
-        x: 0
-        y: 0
-        z: -824.3647
-      TangentOut:
-        x: 0
-        y: 0
-        z: 115.92238
-      Rotation:
-        value:
-          x: -0.15321475
-          y: 0.6417373
-          z: 0.10462483
-          w: 0.7441453
-    - Position:
-        x: 300
-        y: 80
-        z: 370
-      TangentIn:
-        x: 0
-        y: 0
-        z: -321.20084
-      TangentOut:
-        x: 0
-        y: 0
-        z: 321.20084
-      Rotation:
-        value:
-          x: -0.044326406
-          y: 0.8461486
-          z: -0.32956472
-          w: -0.41647902
+          x: 0
+          y: 0
+          z: 0
+          w: 1
     - Position:
         x: 0
         y: 50
@@ -464,23 +428,19 @@ MonoBehaviour:
       TangentIn:
         x: 0
         y: 0
-        z: -69.166466
+        z: -258.1569
       TangentOut:
         x: 0
         y: 0
         z: 29.752312
       Rotation:
         value:
-          x: -0.09101759
-          y: -0.012169894
-          z: 0.18691653
-          w: 0.9780746
+          x: -0.18825628
+          y: 0.5967398
+          z: 0.08985719
+          w: 0.7748463
     m_MetaData:
-    - Mode: 0
-      Tension: 0.5
     - Mode: 3
-      Tension: 0.5
-    - Mode: 2
       Tension: 0.5
     - Mode: 3
       Tension: 0.5
@@ -522,7 +482,7 @@ GameObject:
   - component: {fileID: 2033789946}
   - component: {fileID: 2033789945}
   m_Layer: 0
-  m_Name: PlanetSwitcher
+  m_Name: LevelSwitcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -561,7 +521,6 @@ MonoBehaviour:
   - {fileID: 1280286012736500307, guid: f665682510eb24d4a8153ad52aa80bce, type: 3}
   - {fileID: 1743980462404598863, guid: 129efbb0e7226e34b8a6d9ae2b7985a6, type: 3}
   - {fileID: 1510269095994624976, guid: 03f2a215b89bfef4d82d3c2e380e91e2, type: 3}
-  - {fileID: 1112714016368113507, guid: a32b683c41c1cea4b913d63c0e5fa79f, type: 3}
   - {fileID: 6609336787369708271, guid: ab5a6fa961d0bfa4e9c34f79f41e46d3, type: 3}
 --- !u!114 &2033789946
 MonoBehaviour:
@@ -662,7 +621,7 @@ Transform:
   m_GameObject: {fileID: 2102014434}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -769,8 +728,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6593901805261478873}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.15154433, y: 0.026938505, z: 0.115505554, w: 0.9813089}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.043444283, y: -0.22909692, z: 0.0102356635, w: 0.9723798}
+  m_LocalPosition: {x: 0, y: -5, z: 0}
   m_LocalScale: {x: 3, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1396,8 +1355,8 @@ MonoBehaviour:
   m_PlayOnAwake: 1
   m_LoopMode: 0
   m_Method: 0
-  m_Duration: 4
-  m_MaxSpeed: 574.18134
+  m_Duration: 2.5
+  m_MaxSpeed: 230.22668
   m_EasingMode: 0
   m_AlignmentMode: 1
   m_ObjectForwardAxis: 2

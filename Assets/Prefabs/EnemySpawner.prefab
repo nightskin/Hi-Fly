@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7682631823238818698}
   - component: {fileID: 7682631823238818701}
   - component: {fileID: 2355711189741096969}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: EnemySpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,6 +50,7 @@ MonoBehaviour:
   maxEnemies: 10
   minEnemies: 5
   spawnRadius: 500
+  showDebug: 0
   spawnAtStart: 1
   skipPatrol: 0
   enemyShips: []

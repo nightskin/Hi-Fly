@@ -555,14 +555,24 @@ public class PlayerShip : MonoBehaviour
         {
             if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
             {
-                Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
-                if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))
+                if(reticle.color == Color.red)
                 {
-                    lazer.direction = (hit.point - lazer.origin).normalized;
+                    lazer.direction = (lockOn.point - lazer.origin).normalized;
                 }
                 else
                 {
-                    lazer.direction = ray.direction;
+                    Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
+                    if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane))
+                    {
+                        if (hit.transform.tag != "Player")
+                        {
+                            lazer.direction = (hit.point - lazer.origin).normalized;
+                        }
+                    }
+                    else
+                    {
+                        lazer.direction = ray.direction;
+                    }
                 }
             }
             else
