@@ -287,6 +287,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac6fe44f4f6c82f4f88136fbab1783a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  voxelResolution: 100
+  voxelSize: 10
+  isoLevel: 0
 --- !u!64 &955418165
 MeshCollider:
   m_ObjectHideFlags: 0

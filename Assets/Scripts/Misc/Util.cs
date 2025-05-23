@@ -3,6 +3,7 @@ using UnityEngine;
 
 public static class Util
 {
+    
     public static float ConstrainAngle(float v)
     {
         v -= 360 * Mathf.Floor((v + 180.0f) * (1.0f / 360.0f));

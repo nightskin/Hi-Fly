@@ -114,7 +114,6 @@ public class Asteroid : MonoBehaviour
         for (int i = voxels.Length; i > 0; i--)
         {
             Vector3 position = ToPosition(i);
-
             Voxel[] points = new Voxel[]
             {
                     voxels[ToVoxelIndex(position + new Vector3(0,0,-1))],
@@ -126,10 +125,13 @@ public class Asteroid : MonoBehaviour
                     voxels[ToVoxelIndex(position + new Vector3(-1,-1, 0))],
                     voxels[ToVoxelIndex(position + new Vector3(0, -1, 0))]
             };
-
-
+            
             int cubeIndex = Voxel.GetState(points, isoLevel);
             int[] triangulation = MarchingCubesTables.triTable[cubeIndex];
+
+            Vector3[] triVerts = new Vector3[3];
+            int triIndex = 0;
+
             foreach (int edgeIndex in triangulation)
             {
                 if (edgeIndex > -1)
@@ -139,6 +141,24 @@ public class Asteroid : MonoBehaviour
                     Vector3 vertexPos = Voxel.MidPoint(points[a], points[b]);
                     verts.Add(vertexPos);
                     tris.Add(buffer);
+                    
+                    if(triIndex == 0)
+                    {
+                        triVerts[0] = vertexPos;
+                        triIndex++;
+                    }
+                    else if(triIndex == 1)
+                    {
+                        triVerts[1] = vertexPos;
+                        triIndex++;
+                    }
+                    else if(triIndex == 2)
+                    {
+                        triVerts[2] = vertexPos;
+                        uvs.AddRange(GetUVs(triVerts[0], triVerts[1], triVerts[2]));
+                        triIndex = 0;
+                    }
+
                     buffer++;
                 }
                 else
@@ -198,11 +218,6 @@ public class Asteroid : MonoBehaviour
         mesh.Clear();
         mesh.vertices = verts.ToArray();
         mesh.triangles = tris.ToArray();
-        for (int v = 0; v < verts.Count - 2; v += 3)
-        {
-            Vector2[] uvForTri = GetUVs(verts[v], verts[v + 1], verts[v + 2]);
-            uvs.AddRange(uvForTri);
-        }
         mesh.uv = uvs.ToArray();
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
