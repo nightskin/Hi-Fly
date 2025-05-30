@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PrimaryFire",
+                    "name": "Fire",
                     "type": "Button",
                     "id": "e7079d14-1be9-4c0b-8f9f-85c1f3919d30",
                     "expectedControlType": "",
@@ -60,7 +60,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ToggleEngines",
+                    "name": "Brake",
                     "type": "Button",
                     "id": "10c9dd9b-d8e7-42e0-89f6-b5e6e1e310bd",
                     "expectedControlType": "",
@@ -130,6 +130,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "StrafeY",
+                    "type": "Value",
+                    "id": "ecedfff8-e4db-4784-9559-5449cd1abb29",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -250,7 +259,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PrimaryFire",
+                    "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -261,18 +270,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PrimaryFire",
+                    "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "0aebcca0-f105-442e-a7d9-2c5b1bc4192a",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/ctrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ToggleEngines",
+                    "action": "Brake",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -283,7 +292,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ToggleEngines",
+                    "action": "Brake",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -453,7 +462,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "DPadY",
+                    "name": "DPadX",
                     "id": "d870fbb9-0020-4583-b5dc-cf6265abc4ca",
                     "path": "1DAxis",
                     "interactions": "",
@@ -466,7 +475,7 @@
                 {
                     "name": "negative",
                     "id": "2d41757a-101a-4660-9a9a-ea05ca7ddef5",
-                    "path": "<Gamepad>/dpad/down",
+                    "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -477,7 +486,7 @@
                 {
                     "name": "positive",
                     "id": "88d55672-eb2f-49f8-8341-2f019f70625a",
-                    "path": "<Gamepad>/dpad/up",
+                    "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -726,6 +735,72 @@
                     "action": "StartGame",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Gamepad",
+                    "id": "23919e25-f1ea-4096-a707-7d8496b0864c",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StrafeY",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "1e2e8529-e846-4cf0-9012-d029061b99f5",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StrafeY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "c5445640-1b46-4836-8d88-e89fd31f0f4e",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StrafeY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Keyboard",
+                    "id": "eb19a1cb-836b-4f5c-9ffa-6db752a499e9",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StrafeY",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "25110c37-9916-43e5-8144-67c30ae749d1",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StrafeY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "58b093f4-b694-4fcf-a4e2-04e87c68d6bb",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StrafeY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

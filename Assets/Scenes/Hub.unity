@@ -612,13 +612,12 @@ MonoBehaviour:
   - {fileID: 1743980462404598863, guid: 129efbb0e7226e34b8a6d9ae2b7985a6, type: 3}
   - {fileID: 1510269095994624976, guid: 03f2a215b89bfef4d82d3c2e380e91e2, type: 3}
   - {fileID: 6609336787369708271, guid: ab5a6fa961d0bfa4e9c34f79f41e46d3, type: 3}
-  - {fileID: 1112714016368113507, guid: a32b683c41c1cea4b913d63c0e5fa79f, type: 3}
   asteroidFieldPrefab: {fileID: 1396936832559809867, guid: a890b511b5049fb4c8a57cce1032f14c,
     type: 3}
   enemyFleatPrefab: {fileID: 7682631823238818699, guid: 7f22fe340ccf21f4ea9bb33752f41a88,
     type: 3}
   minEncounterTime: 5
-  maxEncounterTime: 10
+  maxEncounterTime: 20
   enemySpawnerPrefab: {fileID: 7682631823238818699, guid: 7f22fe340ccf21f4ea9bb33752f41a88,
     type: 3}
   secondsBeforeEncounter: 0

@@ -31,8 +31,7 @@ public class Asteroid : MonoBehaviour
         int z = i / voxelResolution / voxelResolution % voxelResolution;
         return new Vector3(x,y,z) * voxelSize;
     }
-
-
+    
     void Start()
     {
         CreateVoxelData();
@@ -94,7 +93,6 @@ public class Asteroid : MonoBehaviour
         for (int i = 0; i < voxels.Length; i++)
         {
             voxels[i] = new Voxel();
-            voxels[i].index = i;
             voxels[i].position = ToPosition(i);
             float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + voxels[i].position);
             if (distanceFromCenter > radius)

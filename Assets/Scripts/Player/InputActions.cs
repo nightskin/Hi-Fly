@@ -128,7 +128,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""PrimaryFire"",
+                    ""name"": ""Fire"",
                     ""type"": ""Button"",
                     ""id"": ""e7079d14-1be9-4c0b-8f9f-85c1f3919d30"",
                     ""expectedControlType"": """",
@@ -146,7 +146,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToggleEngines"",
+                    ""name"": ""Brake"",
                     ""type"": ""Button"",
                     ""id"": ""10c9dd9b-d8e7-42e0-89f6-b5e6e1e310bd"",
                     ""expectedControlType"": """",
@@ -216,6 +216,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""StrafeY"",
+                    ""type"": ""Value"",
+                    ""id"": ""ecedfff8-e4db-4784-9559-5449cd1abb29"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -336,7 +345,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""PrimaryFire"",
+                    ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -347,18 +356,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""PrimaryFire"",
+                    ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""0aebcca0-f105-442e-a7d9-2c5b1bc4192a"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleEngines"",
+                    ""action"": ""Brake"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -369,7 +378,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleEngines"",
+                    ""action"": ""Brake"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -539,7 +548,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""DPadY"",
+                    ""name"": ""DPadX"",
                     ""id"": ""d870fbb9-0020-4583-b5dc-cf6265abc4ca"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
@@ -552,7 +561,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""2d41757a-101a-4660-9a9a-ea05ca7ddef5"",
-                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -563,7 +572,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""88d55672-eb2f-49f8-8341-2f019f70625a"",
-                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -812,6 +821,72 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""StartGame"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Gamepad"",
+                    ""id"": ""23919e25-f1ea-4096-a707-7d8496b0864c"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StrafeY"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""1e2e8529-e846-4cf0-9012-d029061b99f5"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StrafeY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""c5445640-1b46-4836-8d88-e89fd31f0f4e"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StrafeY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Keyboard"",
+                    ""id"": ""eb19a1cb-836b-4f5c-9ffa-6db752a499e9"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StrafeY"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""25110c37-9916-43e5-8144-67c30ae749d1"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StrafeY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""58b093f4-b694-4fcf-a4e2-04e87c68d6bb"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StrafeY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -824,9 +899,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
         m_Player_Mouse_Position = m_Player.FindAction("Mouse_Position", throwIfNotFound: true);
         m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
-        m_Player_PrimaryFire = m_Player.FindAction("PrimaryFire", throwIfNotFound: true);
+        m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_UseItem = m_Player.FindAction("UseItem", throwIfNotFound: true);
-        m_Player_ToggleEngines = m_Player.FindAction("ToggleEngines", throwIfNotFound: true);
+        m_Player_Brake = m_Player.FindAction("Brake", throwIfNotFound: true);
         m_Player_BarrelRoll = m_Player.FindAction("BarrelRoll", throwIfNotFound: true);
         m_Player_CenterCrosshair = m_Player.FindAction("CenterCrosshair", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
@@ -834,6 +909,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_ToggleMiniMap = m_Player.FindAction("ToggleMiniMap", throwIfNotFound: true);
         m_Player_ToggleInventory = m_Player.FindAction("ToggleInventory", throwIfNotFound: true);
         m_Player_StartGame = m_Player.FindAction("StartGame", throwIfNotFound: true);
+        m_Player_StrafeY = m_Player.FindAction("StrafeY", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -918,9 +994,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Aim;
     private readonly InputAction m_Player_Mouse_Position;
     private readonly InputAction m_Player_Boost;
-    private readonly InputAction m_Player_PrimaryFire;
+    private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_UseItem;
-    private readonly InputAction m_Player_ToggleEngines;
+    private readonly InputAction m_Player_Brake;
     private readonly InputAction m_Player_BarrelRoll;
     private readonly InputAction m_Player_CenterCrosshair;
     private readonly InputAction m_Player_Pause;
@@ -928,6 +1004,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ToggleMiniMap;
     private readonly InputAction m_Player_ToggleInventory;
     private readonly InputAction m_Player_StartGame;
+    private readonly InputAction m_Player_StrafeY;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -956,17 +1033,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Boost => m_Wrapper.m_Player_Boost;
         /// <summary>
-        /// Provides access to the underlying input action "Player/PrimaryFire".
+        /// Provides access to the underlying input action "Player/Fire".
         /// </summary>
-        public InputAction @PrimaryFire => m_Wrapper.m_Player_PrimaryFire;
+        public InputAction @Fire => m_Wrapper.m_Player_Fire;
         /// <summary>
         /// Provides access to the underlying input action "Player/UseItem".
         /// </summary>
         public InputAction @UseItem => m_Wrapper.m_Player_UseItem;
         /// <summary>
-        /// Provides access to the underlying input action "Player/ToggleEngines".
+        /// Provides access to the underlying input action "Player/Brake".
         /// </summary>
-        public InputAction @ToggleEngines => m_Wrapper.m_Player_ToggleEngines;
+        public InputAction @Brake => m_Wrapper.m_Player_Brake;
         /// <summary>
         /// Provides access to the underlying input action "Player/BarrelRoll".
         /// </summary>
@@ -995,6 +1072,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/StartGame".
         /// </summary>
         public InputAction @StartGame => m_Wrapper.m_Player_StartGame;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/StrafeY".
+        /// </summary>
+        public InputAction @StrafeY => m_Wrapper.m_Player_StrafeY;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1033,15 +1114,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Boost.started += instance.OnBoost;
             @Boost.performed += instance.OnBoost;
             @Boost.canceled += instance.OnBoost;
-            @PrimaryFire.started += instance.OnPrimaryFire;
-            @PrimaryFire.performed += instance.OnPrimaryFire;
-            @PrimaryFire.canceled += instance.OnPrimaryFire;
+            @Fire.started += instance.OnFire;
+            @Fire.performed += instance.OnFire;
+            @Fire.canceled += instance.OnFire;
             @UseItem.started += instance.OnUseItem;
             @UseItem.performed += instance.OnUseItem;
             @UseItem.canceled += instance.OnUseItem;
-            @ToggleEngines.started += instance.OnToggleEngines;
-            @ToggleEngines.performed += instance.OnToggleEngines;
-            @ToggleEngines.canceled += instance.OnToggleEngines;
+            @Brake.started += instance.OnBrake;
+            @Brake.performed += instance.OnBrake;
+            @Brake.canceled += instance.OnBrake;
             @BarrelRoll.started += instance.OnBarrelRoll;
             @BarrelRoll.performed += instance.OnBarrelRoll;
             @BarrelRoll.canceled += instance.OnBarrelRoll;
@@ -1063,6 +1144,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @StartGame.started += instance.OnStartGame;
             @StartGame.performed += instance.OnStartGame;
             @StartGame.canceled += instance.OnStartGame;
+            @StrafeY.started += instance.OnStrafeY;
+            @StrafeY.performed += instance.OnStrafeY;
+            @StrafeY.canceled += instance.OnStrafeY;
         }
 
         /// <summary>
@@ -1086,15 +1170,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Boost.started -= instance.OnBoost;
             @Boost.performed -= instance.OnBoost;
             @Boost.canceled -= instance.OnBoost;
-            @PrimaryFire.started -= instance.OnPrimaryFire;
-            @PrimaryFire.performed -= instance.OnPrimaryFire;
-            @PrimaryFire.canceled -= instance.OnPrimaryFire;
+            @Fire.started -= instance.OnFire;
+            @Fire.performed -= instance.OnFire;
+            @Fire.canceled -= instance.OnFire;
             @UseItem.started -= instance.OnUseItem;
             @UseItem.performed -= instance.OnUseItem;
             @UseItem.canceled -= instance.OnUseItem;
-            @ToggleEngines.started -= instance.OnToggleEngines;
-            @ToggleEngines.performed -= instance.OnToggleEngines;
-            @ToggleEngines.canceled -= instance.OnToggleEngines;
+            @Brake.started -= instance.OnBrake;
+            @Brake.performed -= instance.OnBrake;
+            @Brake.canceled -= instance.OnBrake;
             @BarrelRoll.started -= instance.OnBarrelRoll;
             @BarrelRoll.performed -= instance.OnBarrelRoll;
             @BarrelRoll.canceled -= instance.OnBarrelRoll;
@@ -1116,6 +1200,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @StartGame.started -= instance.OnStartGame;
             @StartGame.performed -= instance.OnStartGame;
             @StartGame.canceled -= instance.OnStartGame;
+            @StrafeY.started -= instance.OnStrafeY;
+            @StrafeY.performed -= instance.OnStrafeY;
+            @StrafeY.canceled -= instance.OnStrafeY;
         }
 
         /// <summary>
@@ -1185,12 +1272,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBoost(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "PrimaryFire" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Fire" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnPrimaryFire(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "UseItem" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -1199,12 +1286,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUseItem(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "ToggleEngines" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Brake" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnToggleEngines(InputAction.CallbackContext context);
+        void OnBrake(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "BarrelRoll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -1254,5 +1341,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnStartGame(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "StrafeY" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnStrafeY(InputAction.CallbackContext context);
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public class PlayerShip : MonoBehaviour
 {
     GameManager gameManager;
-
     public HealthSystem health;
     [SerializeField] PlayerCamera camera;
     [SerializeField] TrailRenderer[] trails;
@@ -21,7 +20,9 @@ public class PlayerShip : MonoBehaviour
     float targetSpeed;
     public float speed;
     float zRot;
+    bool modeJustChanged = false;
 
+    //For Shooting
     [SerializeField] Image reticle;
     [SerializeField] LayerMask lockOnLayer;
     bool aimingViaGamepad = false;
@@ -34,6 +35,7 @@ public class PlayerShip : MonoBehaviour
     Lazer lazer = null;
     float shootTimer = 0;
     
+    //For BarrelRolls
     public bool evading = false;
     int rollDirection = -1;
     float rollDuration = 1.5f;
@@ -63,18 +65,21 @@ public class PlayerShip : MonoBehaviour
         targetSpeed = baseSpeed;
 
 
-        InputManager.input.Player.PrimaryFire.performed += PrimaryFire_performed;
+        InputManager.input.Player.Fire.performed += PrimaryFire_performed;
         InputManager.input.Player.UseItem.performed += UseItem_performed;
         InputManager.input.Player.UseItem.canceled += UseItem_canceled;
         InputManager.input.Player.BarrelRoll.performed += BarrelRoll_performed;
         InputManager.input.Player.Aim.performed += Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
-        InputManager.input.Player.ToggleEngines.performed += ToggleEngines_performed;
+        InputManager.input.Player.Brake.performed += Brake_performed;
+        InputManager.input.Player.Brake.canceled += Brake_canceled;
         InputManager.input.Player.Boost.performed += Boost_performed;
         InputManager.input.Player.Boost.canceled += Boost_canceled;
     }
-    
+
+
+
     void FixedUpdate()
     {
         Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
@@ -92,7 +97,7 @@ public class PlayerShip : MonoBehaviour
     {
         if(health.IsAlive() && !GameManager.gamePaused)
         {
-            if(GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE)
+            if(GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE)
             {
                 StandardMode();
             }
@@ -110,14 +115,15 @@ public class PlayerShip : MonoBehaviour
     
     void OnDestroy()
     {
-        InputManager.input.Player.PrimaryFire.performed -= PrimaryFire_performed;
+        InputManager.input.Player.Fire.performed -= PrimaryFire_performed;
         InputManager.input.Player.UseItem.performed -= UseItem_performed;
         InputManager.input.Player.UseItem.canceled -= UseItem_canceled;
         InputManager.input.Player.BarrelRoll.performed -= BarrelRoll_performed;
         InputManager.input.Player.Aim.performed -= Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed -= Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed -= CenterCrosshair_performed;
-        InputManager.input.Player.ToggleEngines.performed -= ToggleEngines_performed;
+        InputManager.input.Player.Brake.performed -= Brake_performed;
+        InputManager.input.Player.Brake.canceled -= Brake_canceled;
         InputManager.input.Player.Boost.performed -= Boost_performed;
         InputManager.input.Player.Boost.canceled -= Boost_canceled;
     }
@@ -130,21 +136,25 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
-    private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if (GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
-        {
-            camera.boostEffect.Stop();
-            thrustColor = Color.cyan;
-            targetSpeed = baseSpeed;
-        }
-    }
-
     private void Boost_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (!GameManager.gamePaused && !GameManager.gameOver)
         {
-            if(GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
+            if (GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
+            {
+                camera.boostEffect.Play();
+                thrustColor = Color.red;
+                targetSpeed = boostSpeed;
+            }
+            else if (GameManager.playerMode == GameManager.PlayerMode.STRAFE_MODE)
+            {
+                GameManager.playerMode = GameManager.PlayerMode.THRUST_MODE;
+                SetTrails(true);
+                camera.boostEffect.Play();
+                thrustColor = Color.red;
+                targetSpeed = boostSpeed;
+            }
+            else if (GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE)
             {
                 camera.boostEffect.Play();
                 thrustColor = Color.red;
@@ -153,6 +163,13 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
+    private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        camera.boostEffect.Stop();
+        thrustColor = Color.cyan;
+        targetSpeed = baseSpeed;
+    }
+    
     private void PrimaryFire_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         FireBullet();
@@ -224,11 +241,11 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
-    private void ToggleEngines_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void Brake_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (!GameManager.gamePaused && !GameManager.gameOver)
         {
-            if (GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE)
+            if (GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE)
             {
                 //Set To Strafe Mode
                 GameManager.playerMode = GameManager.PlayerMode.STRAFE_MODE;
@@ -238,20 +255,19 @@ public class PlayerShip : MonoBehaviour
                 SetTrails(false);
                 reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
                 reticle.rectTransform.position = reticlePosition;
-            }
-            else if(GameManager.playerMode == GameManager.PlayerMode.STRAFE_MODE)
-            {
-                //Set To Standard Mode
-                GameManager.playerMode = GameManager.PlayerMode.STANDARD_MODE;
-                targetSpeed = baseSpeed;
-                SetTrails(true);
+                modeJustChanged = true;
             }
         }
     }
-    
+
+    private void Brake_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        modeJustChanged = false;
+    }
+
     private void BarrelRoll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
+        if(GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
         {
             if (!evading)
             {
@@ -260,11 +276,18 @@ public class PlayerShip : MonoBehaviour
                 evading = true;
             }
         }
+        else if(GameManager.playerMode == GameManager.PlayerMode.STRAFE_MODE)
+        {
+            GameManager.playerMode = GameManager.PlayerMode.THRUST_MODE;
+            SetTrails(true);
+            thrustColor = Color.cyan;
+            targetSpeed = baseSpeed;
+        }
     }
 
     private void CenterCrosshair_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
+        if(GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
         {
             reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
             reticle.rectTransform.position = reticlePosition;
@@ -341,7 +364,22 @@ public class PlayerShip : MonoBehaviour
     {
         //Movement
         Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
-        Vector3 moveDirection = (camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x).normalized;
+        Vector3 moveDirection = Vector3.zero;
+
+        if(InputManager.input.Player.StrafeY.ReadValue<float>() > 0.1f && !modeJustChanged)
+        {
+            moveDirection = (camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x + transform.up).normalized;
+        }
+        else if (InputManager.input.Player.StrafeY.ReadValue<float>() < -0.1f && !modeJustChanged)
+        {
+            moveDirection = (camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x - transform.up).normalized;
+        }
+        else
+        {
+            moveDirection = (camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x).normalized;
+        }
+
+
 
         controller.Move(moveDirection * baseSpeed * Time.deltaTime);
 
@@ -428,7 +466,7 @@ public class PlayerShip : MonoBehaviour
         }
         else
         {
-            GameManager.playerMode = GameManager.PlayerMode.STANDARD_MODE;
+            GameManager.playerMode = GameManager.PlayerMode.THRUST_MODE;
             transform.parent = transform.root;
         }
     }

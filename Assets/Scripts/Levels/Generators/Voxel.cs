@@ -5,7 +5,6 @@ public struct Voxel
     public Color color;
     public float value;
     public Vector3 position;
-    public int index;
     
 
     public static int GetState(Voxel[] voxels, float isoLevel)

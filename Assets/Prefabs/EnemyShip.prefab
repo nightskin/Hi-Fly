@@ -159,12 +159,11 @@ MonoBehaviour:
   aimSkill: 4
   perceptionRadius: 500
   cohesionRadius: 500
-  avoidRadius: 5
+  avoidRadius: 2
   attackPower: 10
   turnSpeed: 10
   fireRate: 3
   moveSpeed: 60
-  turnFrequncy: 3
 --- !u!114 &7978833964992945737
 MonoBehaviour:
   m_ObjectHideFlags: 0

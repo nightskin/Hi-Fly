@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     public enum PlayerMode
     {
-        STANDARD_MODE,
+        THRUST_MODE,
         STRAFE_MODE,
         ON_RAILS_MODE,
     }

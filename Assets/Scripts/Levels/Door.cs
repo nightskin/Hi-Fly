@@ -14,7 +14,7 @@ public class Door : MonoBehaviour
     [SerializeField] Transform rightSide;
 
     public bool locked = false;
-    public bool open = false;
+    bool open = false;
 
     
     void Update()

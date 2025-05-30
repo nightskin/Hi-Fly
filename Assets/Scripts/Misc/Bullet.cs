@@ -48,16 +48,29 @@ public class Bullet : MonoBehaviour
             if (homingTarget)
             {
                 transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.deltaTime);
-                if(Vector3.Distance(transform.position, homingTarget.position) < 1)
+                if(!hit)
                 {
-                    Collider[] hits = Physics.OverlapSphere(transform.position, 1);
-                    if (hits.Length > 0)
+                    if (Vector3.Distance(transform.position, homingTarget.position) < 1)
                     {
-                        foreach(Collider c in hits) 
+                        Collider[] hits = Physics.OverlapSphere(transform.position, 1);
+                        if (hits.Length > 0)
                         {
-                            if(c.transform == homingTarget)
+                            foreach (Collider c in hits)
                             {
-                                CheckCollisions();
+                                if (c.transform == homingTarget)
+                                {
+                                    if (c.tag == "Enemy")
+                                    {
+                                        HealthSystem health = c.GetComponent<HealthSystem>();
+                                        if (health)
+                                        {
+                                            health.TakeDamage(damage);
+                                            hit = true;
+                                            sfx.clip = hitSound;
+                                            sfx.Play();
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

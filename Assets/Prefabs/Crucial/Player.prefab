@@ -7554,7 +7554,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 79647d116ebf60e4082885ef5f3bf08e, type: 2}
   inventorySelectImage: {fileID: 3302671324208540391}
   inventoryCountText: {fileID: 8447111048240981214}
-  startPlayerMode: 0
+  startPlayerMode: 1
   gameOverMenu: {fileID: 8131623140616228715}
   gamePauseMenu: {fileID: 8131623139629098542}
   miniMap: {fileID: 2694136530651715055}
@@ -8169,7 +8169,8 @@ MonoBehaviour:
   rotationSpeed: 100
   distance: 10
   boostEffect: {fileID: 1814296040985746741}
-  lerpSpeed: 10
+  camSpeedThrust: 10
+  camSpeedStrafe: 25
   offset: {x: 0, y: 3, z: 0}
   player: {fileID: 303286065443942689}
   followTarget: {fileID: 436392920321828641}

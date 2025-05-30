@@ -23,9 +23,6 @@ public class EnemyShip : MonoBehaviour
     float shootTimer = 0;
 
 
-    [SerializeField] float turnFrequncy = 3.0f;
-    float turnTimer = 0;
-
     void Start()
     {
         objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
@@ -35,11 +32,15 @@ public class EnemyShip : MonoBehaviour
     {
         if(GameManager.difficulty == GameManager.Difficulty.EASY)
         {
-            turnFrequncy = 2.0f;
+            turnSpeed = 3;
         }
         else if(GameManager.difficulty == GameManager.Difficulty.NORMAL)
         {
-            turnFrequncy = 1.0f;
+            turnSpeed = 5;
+        }
+        else if(GameManager.difficulty == GameManager.Difficulty.HARD)
+        {
+            turnSpeed = 7;
         }
         target = GameManager.playerShip.gameObject;
         health = GetComponent<HealthSystem>();
@@ -57,19 +58,11 @@ public class EnemyShip : MonoBehaviour
             {
                 if (Vector3.Distance(transform.position, target.transform.position) <= perceptionRadius || health.HasBeenHitOnce() || attackMode)
                 {
-                    if(GameManager.difficulty == GameManager.Difficulty.HARD)
-                    {
-                        Fight_Boid();
-                    }
-                    else
-                    {
-                        Fight_TimeBased();
-                    }
+                    Fight_Boid();
                 }
                 else
                 {
                     Patrol();
-                    
                 }
             }
             else
@@ -113,14 +106,14 @@ public class EnemyShip : MonoBehaviour
     
     void Fight_Boid()
     {
-        direction = SteerTowardsTarget();
+        direction = Vector3.Lerp(transform.forward, GetDirectionTowardsTarget(), turnSpeed * Time.deltaTime).normalized;
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
         shootTimer -= Time.deltaTime;
         if (shootTimer <= 0)
         {
-            if (Physics.SphereCast(transform.position, aimSkill , transform.forward, out RaycastHit hit))
+            if (Physics.SphereCast(transform.position, aimSkill, transform.forward, out RaycastHit hit))
             {
                 if(hit.transform.gameObject == target)
                 {
@@ -129,50 +122,15 @@ public class EnemyShip : MonoBehaviour
             }
 
         }
-
     }
-
-    void Fight_TimeBased()
-    {
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), 10 * Time.deltaTime);
-        transform.position += transform.forward * moveSpeed * Time.deltaTime;
-
-        if (turnTimer < 0)
-        {
-            turnTimer = Random.Range(0.25f, turnFrequncy);
-            direction = GetDirectionTowardsTarget();
-        }
-        else
-        {
-            turnTimer -= Time.deltaTime;
-        }
-
-        shootTimer -= Time.deltaTime;
-        if (shootTimer <= 0)
-        {
-            if (Physics.SphereCast(transform.position, aimSkill, transform.forward, out RaycastHit hit))
-            {
-                if (hit.transform.gameObject == target)
-                {
-                    Shoot();
-                }
-            }
-
-        }
-    }
-
+    
     void Shoot()
     {
         var b = objectPool.Spawn("bullet", transform.position + transform.forward);
-        b.GetComponent<Bullet>().direction = (target.transform.position - transform.position).normalized;
+        b.GetComponent<Bullet>().direction = transform.forward;
         b.GetComponent<Bullet>().owner = gameObject;
         b.GetComponent<Bullet>().damage = attackPower;
         shootTimer = Random.Range(0.1f, fireRate);
-    }
-
-    Vector3 SteerTowardsTarget()
-    {
-        return Vector3.Lerp(transform.forward, GetDirectionTowardsTarget(), turnSpeed * Time.deltaTime);
     }
     
     Vector3 GetDirectionTowardsTarget()
@@ -191,7 +149,7 @@ public class EnemyShip : MonoBehaviour
                 rot += collider.transform.position;
             }
             rot /= colliders.Length;
-            return Vector3.Lerp(transform.forward, (rot - transform.position).normalized, turnSpeed * Time.deltaTime);
+            return Vector3.Lerp(transform.forward, (rot - transform.position).normalized, turnSpeed * Time.deltaTime).normalized;
         }
         return Vector3.zero;
     }
@@ -209,7 +167,7 @@ public class EnemyShip : MonoBehaviour
                 rot += pos;
             }
             rot /= colliders.Length;
-            return Vector3.Lerp(transform.forward, (transform.position - rot).normalized, turnSpeed * Time.deltaTime);
+            return Vector3.Lerp(transform.forward, (transform.position - rot).normalized, turnSpeed * Time.deltaTime).normalized;
         }
         return Vector3.zero;
     }
