@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1413906508388759578}
   - component: {fileID: 8814361764976118179}
   - component: {fileID: 5294286308346424133}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Door
-  m_TagString: Surface
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -55,7 +55,7 @@ MonoBehaviour:
   leftSide: {fileID: 7916019415482756746}
   rightSide: {fileID: 7115317254046008716}
   locked: 0
-  open: 0
+  oneWay: 0
 --- !u!65 &5294286308346424133
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -75,7 +75,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 200, y: 200, z: 400}
+  m_Size: {x: 200, y: 200, z: 100}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3582305569123947179
 GameObject:
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 5118743388871486376}
   m_Layer: 0
   m_Name: Left
-  m_TagString: Planet
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -199,7 +199,7 @@ GameObject:
   - component: {fileID: 7004490686541474342}
   m_Layer: 0
   m_Name: Right
-  m_TagString: Planet
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

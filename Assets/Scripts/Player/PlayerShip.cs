@@ -77,9 +77,7 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.Boost.performed += Boost_performed;
         InputManager.input.Player.Boost.canceled += Boost_canceled;
     }
-
-
-
+    
     void FixedUpdate()
     {
         Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
@@ -256,6 +254,10 @@ public class PlayerShip : MonoBehaviour
                 reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
                 reticle.rectTransform.position = reticlePosition;
                 modeJustChanged = true;
+            }
+            else if(GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE)
+            {
+                
             }
         }
     }

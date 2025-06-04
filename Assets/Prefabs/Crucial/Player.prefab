@@ -6049,7 +6049,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4504218499694534223
 Transform:
   m_ObjectHideFlags: 0
@@ -7554,7 +7554,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 79647d116ebf60e4082885ef5f3bf08e, type: 2}
   inventorySelectImage: {fileID: 3302671324208540391}
   inventoryCountText: {fileID: 8447111048240981214}
-  startPlayerMode: 1
+  startPlayerMode: 0
   gameOverMenu: {fileID: 8131623140616228715}
   gamePauseMenu: {fileID: 8131623139629098542}
   miniMap: {fileID: 2694136530651715055}

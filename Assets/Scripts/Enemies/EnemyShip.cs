@@ -3,13 +3,14 @@ using UnityEngine;
 public class EnemyShip : MonoBehaviour
 {
     ObjectPool objectPool;
-    GameObject target;
+    Transform target;
 
     public bool attackMode;
 
     [SerializeField] HealthSystem health;
+    [SerializeField] LayerMask targetLayer;
 
-    [SerializeField] float aimSkill = 10;
+
     [SerializeField] float perceptionRadius = 100;
     [SerializeField] float cohesionRadius = 100;
     [SerializeField] float avoidRadius = 10;
@@ -40,9 +41,9 @@ public class EnemyShip : MonoBehaviour
         }
         else if(GameManager.difficulty == GameManager.Difficulty.HARD)
         {
-            turnSpeed = 7;
+            turnSpeed = 10;
         }
-        target = GameManager.playerShip.gameObject;
+        target = GameManager.playerShip.transform;
         health = GetComponent<HealthSystem>();
         health.Heal(health.GetMaxHealth());
         //Set colors
@@ -106,19 +107,17 @@ public class EnemyShip : MonoBehaviour
     
     void Fight_Boid()
     {
-        direction = Vector3.Lerp(transform.forward, GetDirectionTowardsTarget(), turnSpeed * Time.deltaTime).normalized;
+        float targetWeight = Vector3.Distance(transform.position, target.position);
+        direction = (SteerTowardsTarget() * targetWeight) + Seperation(avoidRadius) + Cohesion(cohesionRadius);
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
         shootTimer -= Time.deltaTime;
         if (shootTimer <= 0)
         {
-            if (Physics.SphereCast(transform.position, aimSkill, transform.forward, out RaycastHit hit))
+            if (Physics.SphereCast(transform.position, 1 ,transform.forward, out RaycastHit hit, 1000, targetLayer))
             {
-                if(hit.transform.gameObject == target)
-                {
-                    Shoot();
-                }
+                Shoot();
             }
 
         }
@@ -127,7 +126,7 @@ public class EnemyShip : MonoBehaviour
     void Shoot()
     {
         var b = objectPool.Spawn("bullet", transform.position + transform.forward);
-        b.GetComponent<Bullet>().direction = transform.forward;
+        b.GetComponent<Bullet>().direction = GetDirectionTowardsTarget();
         b.GetComponent<Bullet>().owner = gameObject;
         b.GetComponent<Bullet>().damage = attackPower;
         shootTimer = Random.Range(0.1f, fireRate);
@@ -138,6 +137,11 @@ public class EnemyShip : MonoBehaviour
         return (target.transform.position - transform.position).normalized;
     }
     
+    Vector3 SteerTowardsTarget()
+    {
+        return Vector3.Lerp(transform.forward, GetDirectionTowardsTarget(), turnSpeed * Time.deltaTime).normalized;
+    }
+
     Vector3 Cohesion(float radius)
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
@@ -167,7 +171,7 @@ public class EnemyShip : MonoBehaviour
                 rot += pos;
             }
             rot /= colliders.Length;
-            return Vector3.Lerp(transform.forward, (transform.position - rot).normalized, turnSpeed * Time.deltaTime).normalized;
+            return Vector3.Lerp(transform.forward, (transform.position - rot).normalized, turnSpeed * Time.deltaTime).normalized * colliders.Length;
         }
         return Vector3.zero;
     }

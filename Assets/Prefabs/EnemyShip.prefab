@@ -156,10 +156,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackMode: 0
   health: {fileID: 7978833964992945737}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
   aimSkill: 4
   perceptionRadius: 500
   cohesionRadius: 500
-  avoidRadius: 2
+  avoidRadius: 5
   attackPower: 10
   turnSpeed: 10
   fireRate: 3

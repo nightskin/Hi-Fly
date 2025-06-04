@@ -121,22 +121,17 @@ public class Bullet : MonoBehaviour
                     {
                         objectPool.Spawn("explosion", rayhit.point);
                         asteroid.RemoveBlock(rayhit);
+                        hit = true;
                         return;
                     }
 
-                    TerrainGenerator terrain = rayhit.transform.GetComponent<TerrainGenerator>();
-                    if (terrain)
-                    {
-                        objectPool.Spawn("explosion", rayhit.point);
-                        terrain.Teraform(rayhit, 20);
-                        return;
-                    }
+
 
                 }
                 else if (rayhit.transform.tag == "Surface")
                 {
                     objectPool.Spawn("explosion", rayhit.point);
-                    return;
+                    hit = true;
                 }
                 else if (rayhit.transform.tag == "Enemy")
                 {
@@ -148,6 +143,7 @@ public class Bullet : MonoBehaviour
                     hit = true;
                     sfx.clip = hitSound;
                     sfx.Play();
+
                     return;
                 }
                 else if (rayhit.transform.tag == "Player")
@@ -173,9 +169,9 @@ public class Bullet : MonoBehaviour
                                     GameManager.gameOver = true;
                                 }
                             }
+                            hit = true;
                             sfx.clip = hitSound;
                             sfx.Play();
-                            hit = true;
                         }
                     }
                     return;

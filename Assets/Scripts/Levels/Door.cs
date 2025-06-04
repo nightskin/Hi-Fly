@@ -13,24 +13,22 @@ public class Door : MonoBehaviour
     [SerializeField] Transform leftSide;
     [SerializeField] Transform rightSide;
 
-    public bool locked = false;
+    [SerializeField] bool locked = false;
+    [SerializeField] bool oneWay = false;
     bool open = false;
 
     
     void Update()
     {
-        if(!locked)
+        if (open && !locked)
         {
-            if (open)
-            {
-                leftSide.localPosition = Vector3.Lerp(leftSide.localPosition, leftOpenPosition, speed * Time.deltaTime);
-                rightSide.localPosition = Vector3.Lerp(rightSide.localPosition, rightOpenPosition, speed * Time.deltaTime);
-            }
-            else
-            {
-                leftSide.localPosition = Vector3.Lerp(leftSide.localPosition, leftClosedPosition, speed * Time.deltaTime);
-                rightSide.localPosition = Vector3.Lerp(rightSide.localPosition, rightClosedPosition, speed * Time.deltaTime);
-            }
+            leftSide.localPosition = Vector3.Lerp(leftSide.localPosition, leftOpenPosition, speed * Time.deltaTime);
+            rightSide.localPosition = Vector3.Lerp(rightSide.localPosition, rightOpenPosition, speed * Time.deltaTime);
+        }
+        else
+        {
+            leftSide.localPosition = Vector3.Lerp(leftSide.localPosition, leftClosedPosition, speed * Time.deltaTime);
+            rightSide.localPosition = Vector3.Lerp(rightSide.localPosition, rightClosedPosition, speed * Time.deltaTime);
         }
     }
     
@@ -47,6 +45,10 @@ public class Door : MonoBehaviour
         if (other.tag == "Player")
         {
             open = false;
+            if(oneWay)
+            {
+                locked = true;
+            }
         }
     }
 

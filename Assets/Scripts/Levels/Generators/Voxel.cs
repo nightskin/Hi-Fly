@@ -10,14 +10,14 @@ public struct Voxel
     public static int GetState(Voxel[] voxels, float isoLevel)
     {
         int state = 0;
-        if (voxels[0].value >= isoLevel) state |= 1;
-        if (voxels[1].value >= isoLevel) state |= 2;
-        if (voxels[2].value >= isoLevel) state |= 4;
-        if (voxels[3].value >= isoLevel) state |= 8;
-        if (voxels[4].value >= isoLevel) state |= 16;
-        if (voxels[5].value >= isoLevel) state |= 32;
-        if (voxels[6].value >= isoLevel) state |= 64;
-        if (voxels[7].value >= isoLevel) state |= 128;
+        if (voxels[0].value > isoLevel) state |= 1;
+        if (voxels[1].value > isoLevel) state |= 2;
+        if (voxels[2].value > isoLevel) state |= 4;
+        if (voxels[3].value > isoLevel) state |= 8;
+        if (voxels[4].value > isoLevel) state |= 16;
+        if (voxels[5].value > isoLevel) state |= 32;
+        if (voxels[6].value > isoLevel) state |= 64;
+        if (voxels[7].value > isoLevel) state |= 128;
         return state;
     }
 
