@@ -20,7 +20,6 @@ public class PlayerShip : MonoBehaviour
     float targetSpeed;
     public float speed;
     float zRot;
-    bool modeJustChanged = false;
 
     //For Shooting
     [SerializeField] Image reticle;
@@ -73,7 +72,6 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
         InputManager.input.Player.Brake.performed += Brake_performed;
-        InputManager.input.Player.Brake.canceled += Brake_canceled;
         InputManager.input.Player.Boost.performed += Boost_performed;
         InputManager.input.Player.Boost.canceled += Boost_canceled;
     }
@@ -121,7 +119,6 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.Mouse_Position.performed -= Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed -= CenterCrosshair_performed;
         InputManager.input.Player.Brake.performed -= Brake_performed;
-        InputManager.input.Player.Brake.canceled -= Brake_canceled;
         InputManager.input.Player.Boost.performed -= Boost_performed;
         InputManager.input.Player.Boost.canceled -= Boost_canceled;
     }
@@ -253,18 +250,15 @@ public class PlayerShip : MonoBehaviour
                 SetTrails(false);
                 reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
                 reticle.rectTransform.position = reticlePosition;
-                modeJustChanged = true;
             }
-            else if(GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE)
+            else if(GameManager.playerMode == GameManager.PlayerMode.STRAFE_MODE)
             {
-                
+                GameManager.playerMode = GameManager.PlayerMode.THRUST_MODE;
+                thrustColor = Color.cyan;
+                targetSpeed = baseSpeed;
+                SetTrails(true);
             }
         }
-    }
-
-    private void Brake_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        modeJustChanged = false;
     }
 
     private void BarrelRoll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -368,11 +362,11 @@ public class PlayerShip : MonoBehaviour
         Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
         Vector3 moveDirection = Vector3.zero;
 
-        if(InputManager.input.Player.StrafeY.ReadValue<float>() > 0.1f && !modeJustChanged)
+        if(InputManager.input.Player.StrafeY.ReadValue<float>() > 0.1f)
         {
             moveDirection = (camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x + transform.up).normalized;
         }
-        else if (InputManager.input.Player.StrafeY.ReadValue<float>() < -0.1f && !modeJustChanged)
+        else if (InputManager.input.Player.StrafeY.ReadValue<float>() < -0.1f)
         {
             moveDirection = (camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x - transform.up).normalized;
         }

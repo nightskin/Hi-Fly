@@ -5,12 +5,16 @@ public class EnemyShip : MonoBehaviour
     ObjectPool objectPool;
     Transform target;
 
-    public bool attackMode;
+    public bool skipPatrol;
 
     [SerializeField] HealthSystem health;
     [SerializeField] LayerMask targetLayer;
 
 
+    [SerializeField][Range(0,100)] float avoidanceWeight = 1;
+    [SerializeField][Range(0,100)] float flockingWeight = 1;
+    [SerializeField][Range(0, 100)] float huntWeight = 1;
+ 
     [SerializeField] float perceptionRadius = 100;
     [SerializeField] float cohesionRadius = 100;
     [SerializeField] float avoidRadius = 10;
@@ -37,11 +41,11 @@ public class EnemyShip : MonoBehaviour
         }
         else if(GameManager.difficulty == GameManager.Difficulty.NORMAL)
         {
-            turnSpeed = 5;
+            turnSpeed = 4;
         }
         else if(GameManager.difficulty == GameManager.Difficulty.HARD)
         {
-            turnSpeed = 10;
+            turnSpeed = 5;
         }
         target = GameManager.playerShip.transform;
         health = GetComponent<HealthSystem>();
@@ -57,7 +61,7 @@ public class EnemyShip : MonoBehaviour
         {
             if (health.IsAlive())
             {
-                if (Vector3.Distance(transform.position, target.transform.position) <= perceptionRadius || health.HasBeenHitOnce() || attackMode)
+                if (Vector3.Distance(transform.position, target.transform.position) <= perceptionRadius || health.HasBeenHitOnce() || skipPatrol)
                 {
                     Fight_Boid();
                 }
@@ -68,9 +72,7 @@ public class EnemyShip : MonoBehaviour
             }
             else
             {
-                var explosion = GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("explosion", transform.position);
-                GameObject.Find("Player").GetComponent<GameManager>().AddScore(10);
-                gameObject.SetActive(false);
+                Die();
             }
         }
 
@@ -98,17 +100,24 @@ public class EnemyShip : MonoBehaviour
     }
 
 
+    void Die()
+    {
+        var explosion = GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("explosion", transform.position);
+        gameObject.SetActive(false);
+    }
+
     void Patrol()
     {
-        direction = Cohesion(cohesionRadius) + Seperation(avoidRadius);
+        direction = (Cohesion(cohesionRadius) * flockingWeight) + (Seperation(avoidRadius) * avoidanceWeight);
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
     }
     
     void Fight_Boid()
     {
-        float targetWeight = Vector3.Distance(transform.position, target.position);
-        direction = (SteerTowardsTarget() * targetWeight) + Seperation(avoidRadius) + Cohesion(cohesionRadius);
+        huntWeight = Vector3.Distance(transform.position, target.position);
+        huntWeight = Mathf.Clamp(huntWeight, 0, 100);
+        direction = (SteerTowardsTarget() * huntWeight) + (Seperation(avoidRadius) * avoidanceWeight) + (Cohesion(cohesionRadius) * flockingWeight);
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
@@ -171,7 +180,7 @@ public class EnemyShip : MonoBehaviour
                 rot += pos;
             }
             rot /= colliders.Length;
-            return Vector3.Lerp(transform.forward, (transform.position - rot).normalized, turnSpeed * Time.deltaTime).normalized * colliders.Length;
+            return Vector3.Lerp(transform.forward, (transform.position - rot).normalized, turnSpeed * Time.deltaTime).normalized;
         }
         return Vector3.zero;
     }

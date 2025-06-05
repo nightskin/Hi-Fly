@@ -121,17 +121,12 @@ public class Bullet : MonoBehaviour
                     {
                         objectPool.Spawn("explosion", rayhit.point);
                         asteroid.RemoveBlock(rayhit);
-                        hit = true;
-                        return;
                     }
-
-
 
                 }
                 else if (rayhit.transform.tag == "Surface")
                 {
                     objectPool.Spawn("explosion", rayhit.point);
-                    hit = true;
                 }
                 else if (rayhit.transform.tag == "Enemy")
                 {
@@ -140,11 +135,14 @@ public class Bullet : MonoBehaviour
                     {
                         health.TakeDamage(damage);
                     }
-                    hit = true;
+
+                    if(owner.tag == "Player")
+                    {
+                        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().AddScore(10);
+                    }
+
                     sfx.clip = hitSound;
                     sfx.Play();
-
-                    return;
                 }
                 else if (rayhit.transform.tag == "Player")
                 {
@@ -174,8 +172,8 @@ public class Bullet : MonoBehaviour
                             sfx.Play();
                         }
                     }
-                    return;
                 }
+                hit = true;
             }
         }
     }

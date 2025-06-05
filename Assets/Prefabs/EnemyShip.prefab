@@ -154,14 +154,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b13d33fb715c2bc4eb8a704eb0adfb43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackMode: 0
+  skipPatrol: 0
   health: {fileID: 7978833964992945737}
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
-  aimSkill: 4
-  perceptionRadius: 500
-  cohesionRadius: 500
+  avoidanceWeight: 50
+  flockingWeight: 20
+  huntWeight: 75
+  perceptionRadius: 100
+  cohesionRadius: 100
   avoidRadius: 5
   attackPower: 10
   turnSpeed: 10

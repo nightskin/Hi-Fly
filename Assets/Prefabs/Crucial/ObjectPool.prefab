@@ -56,10 +56,6 @@ MonoBehaviour:
   - name: explosion
     prefab: {fileID: 279913065598733499, guid: f9e0b7f63787b4f45960fd1168d67997, type: 3}
     size: 100
-  - name: explosionDmg
-    prefab: {fileID: 3374715625392260358, guid: 38d073728a7902545891c50bcbd92a77,
-      type: 3}
-    size: 100
   - name: missile
     prefab: {fileID: 3058321018423864868, guid: 03ae3337d91e0b94c9e99a13e77fe0ca,
       type: 3}
