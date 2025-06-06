@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.Splines;
 
 public class GameManager : MonoBehaviour
 {
@@ -57,7 +58,8 @@ public class GameManager : MonoBehaviour
     float gameOverTimer = 1;
     bool gameOverActive = false;
 
-    public static List<Vector3> onRailsPath;
+    public static SplineContainer splinePath;
+    public static float splinePathLength = 0;
 
     [SerializeField] Text scoreText;
     public static int score = 0;
@@ -66,17 +68,24 @@ public class GameManager : MonoBehaviour
     {
         //For Debug Purposes
         inventory = starterInventory;
-
-        //Needed For OnRailsMovement
-        GameObject path = GameObject.Find("Path");
-        if (path)
-        {
-            //onRailsPath = path.GetComponent<>();
-        }
     }
 
     void Start()
     {
+        //Needed For OnRailsMovement
+        GameObject path = GameObject.Find("Path");
+        if (path)
+        {
+            splinePath = path.GetComponent<SplineContainer>();
+            splinePathLength = splinePath.CalculateLength();
+        }
+        else
+        {
+            splinePathLength = 0;
+            playerMode = PlayerMode.THRUST_MODE;
+        }
+
+
         UpdateInventoryUI();
 
         scoreText.text = score.ToString();

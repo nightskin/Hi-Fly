@@ -43,10 +43,12 @@ public class PlayerShip : MonoBehaviour
 
     //For On Rails Controls
     Vector3 pathOffset = Vector3.zero;
+    [SerializeField] float distanceAlongPath = 0;
 
     void Start()
     {
         gameManager = transform.root.GetComponent<GameManager>();
+
 
         Cursor.visible = false;
         GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor",GameManager.playerBodyColor);
@@ -388,17 +390,19 @@ public class PlayerShip : MonoBehaviour
 
     void OnRailsMode()
     {
-        if (GameManager.onRailsPath.Count > 0)
+        if (distanceAlongPath < 1 && GameManager.splinePathLength > 0)
         {
             //Handles Boosting
             trails[0].endColor = Color.Lerp(trails[0].endColor, thrustColor, 5 * Time.deltaTime);
             speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
-
-
+            
             // Rail Movement
             transform.parent = camera.followTarget;
-            //camera.followTarget.position = Vector3.MoveTowards();
-            
+            Vector3 followTargetPosition = GameManager.splinePath.EvaluatePosition(distanceAlongPath);
+            distanceAlongPath += (speed / GameManager.splinePathLength) * Time.deltaTime;
+            camera.followTarget.position = Vector3.MoveTowards(camera.followTarget.position, followTargetPosition, speed * Time.deltaTime);
+            Quaternion followTargetRotation = Quaternion.LookRotation(followTargetPosition - camera.followTarget.position);
+            camera.followTarget.rotation = Quaternion.Lerp(camera.followTarget.rotation, followTargetRotation, 10 * Time.deltaTime);
 
             // Rail Offset
             Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
@@ -416,7 +420,6 @@ public class PlayerShip : MonoBehaviour
                 pathOffset.x = Mathf.Clamp(pathOffset.x, -20, 20);
                 pathOffset.y = Mathf.Clamp(pathOffset.y, -5, 15);
             }
-
 
             transform.localPosition = pathOffset;
 
@@ -464,6 +467,8 @@ public class PlayerShip : MonoBehaviour
         {
             GameManager.playerMode = GameManager.PlayerMode.THRUST_MODE;
             transform.parent = transform.root;
+            distanceAlongPath = 0;
+            pathOffset = Vector3.zero;
         }
     }
 
