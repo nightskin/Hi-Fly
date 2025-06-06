@@ -8,11 +8,8 @@ public class PlayerCamera : MonoBehaviour
 
     [SerializeField][Min(2)] float camSpeedThrust = 10;
     [SerializeField][Min(2)] float camSpeedStrafe = 15;
-    public Vector3 offset = new Vector3(0, 3, 0);
 
     [SerializeField] PlayerShip player;
-
-    Vector3 cameraRot = Vector3.zero;
 
     public Transform followTarget;
 
@@ -32,32 +29,23 @@ public class PlayerCamera : MonoBehaviour
 
     void CameraMovement()
     {
-        if(GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE)
+        if(GameManager.playerMode == GameManager.PlayerMode.All_RANGE_MODE)
         {
-            Vector2 steerInput= InputManager.input.Player.Steer.ReadValue<Vector2>();
-            if(GameManager.invertSteerY) cameraRot += new Vector3(steerInput.y, steerInput.x) * rotationSpeed * Time.deltaTime;
-            else cameraRot += new Vector3(-steerInput.y, steerInput.x) * rotationSpeed * Time.deltaTime;
-            cameraRot.x = Mathf.Clamp(cameraRot.x, -90, 90);
+            float x = InputManager.input.Player.Steer.ReadValue<Vector2>().x;
+            float y = InputManager.input.Player.Steer.ReadValue<Vector2>().y;
+            float z = InputManager.input.Player.SteerZ.ReadValue<float>();
 
-            Vector3 camPos = (player.transform.position + offset) - (transform.forward * distance);
+
+            Vector3 camPos = player.transform.position + (player.transform.up * 3) - (transform.forward * distance);
             transform.position = Vector3.Lerp(transform.position, camPos, camSpeedThrust * Time.deltaTime);
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(cameraRot), camSpeedThrust * Time.deltaTime);
+            transform.rotation *= Quaternion.AngleAxis(x * rotationSpeed * Time.deltaTime, Vector3.up);
+            transform.rotation *= Quaternion.AngleAxis(y * rotationSpeed * Time.deltaTime, Vector3.right);
+            transform.rotation *= Quaternion.AngleAxis(z * rotationSpeed * Time.deltaTime, Vector3.forward);
 
-        }
-        else if(GameManager.playerMode == GameManager.PlayerMode.STRAFE_MODE)
-        {
-            Vector2 lookInput = InputManager.input.Player.Aim.ReadValue<Vector2>();
-            if(GameManager.invertLookY) cameraRot += new Vector3(lookInput.y, lookInput.x) * rotationSpeed * Time.deltaTime;
-            else cameraRot += new Vector3(-lookInput.y, lookInput.x) * rotationSpeed * Time.deltaTime;
-            cameraRot.x = Mathf.Clamp(cameraRot.x, -90, 90);
-
-            Vector3 camPos = (player.transform.position + offset) - transform.forward * distance;
-            transform.position = Vector3.Lerp(transform.position, camPos, camSpeedStrafe * Time.deltaTime);
-            transform.localRotation = Quaternion.Euler(cameraRot);
         }
         else if(GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
         {
-            Vector3 camPos = (followTarget.position + offset) - (transform.forward * distance);
+            Vector3 camPos = followTarget.position + (followTarget.transform.up * 3) - (transform.forward * distance);
             transform.position = Vector3.Lerp(transform.position, camPos, camSpeedThrust * Time.deltaTime);
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(player.transform.forward), camSpeedThrust * Time.deltaTime);
         }

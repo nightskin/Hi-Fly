@@ -19,7 +19,6 @@ public class PlayerShip : MonoBehaviour
 
     float targetSpeed;
     public float speed;
-    float zRot;
 
     //For Shooting
     [SerializeField] Image reticle;
@@ -34,12 +33,6 @@ public class PlayerShip : MonoBehaviour
     Lazer lazer = null;
     float shootTimer = 0;
     
-    //For BarrelRolls
-    public bool evading = false;
-    int rollDirection = -1;
-    float rollDuration = 1.5f;
-    float rollSpeed = 2000;
-    float rollTimer;
 
     //For On Rails Controls
     Vector3 pathOffset = Vector3.zero;
@@ -67,9 +60,7 @@ public class PlayerShip : MonoBehaviour
 
 
         InputManager.input.Player.Fire.performed += PrimaryFire_performed;
-        InputManager.input.Player.UseItem.performed += UseItem_performed;
-        InputManager.input.Player.UseItem.canceled += UseItem_canceled;
-        InputManager.input.Player.BarrelRoll.performed += BarrelRoll_performed;
+        InputManager.input.Player.Fire.canceled += Fire_canceled;
         InputManager.input.Player.Aim.performed += Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
@@ -95,13 +86,9 @@ public class PlayerShip : MonoBehaviour
     {
         if(health.IsAlive() && !GameManager.gamePaused)
         {
-            if(GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE)
+            if(GameManager.playerMode == GameManager.PlayerMode.All_RANGE_MODE)
             {
                 StandardMode();
-            }
-            else if(GameManager.playerMode == GameManager.PlayerMode.STRAFE_MODE)
-            {
-                StrafeMode();
             }
             else if(GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
             {
@@ -114,9 +101,6 @@ public class PlayerShip : MonoBehaviour
     void OnDestroy()
     {
         InputManager.input.Player.Fire.performed -= PrimaryFire_performed;
-        InputManager.input.Player.UseItem.performed -= UseItem_performed;
-        InputManager.input.Player.UseItem.canceled -= UseItem_canceled;
-        InputManager.input.Player.BarrelRoll.performed -= BarrelRoll_performed;
         InputManager.input.Player.Aim.performed -= Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed -= Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed -= CenterCrosshair_performed;
@@ -137,26 +121,10 @@ public class PlayerShip : MonoBehaviour
     {
         if (!GameManager.gamePaused && !GameManager.gameOver)
         {
-            if (GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
-            {
-                camera.boostEffect.Play();
-                thrustColor = Color.red;
-                targetSpeed = boostSpeed;
-            }
-            else if (GameManager.playerMode == GameManager.PlayerMode.STRAFE_MODE)
-            {
-                GameManager.playerMode = GameManager.PlayerMode.THRUST_MODE;
-                SetTrails(true);
-                camera.boostEffect.Play();
-                thrustColor = Color.red;
-                targetSpeed = boostSpeed;
-            }
-            else if (GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE)
-            {
-                camera.boostEffect.Play();
-                thrustColor = Color.red;
-                targetSpeed = boostSpeed;
-            }
+            camera.boostEffect.Play();
+            thrustColor = Color.red;
+            targetSpeed = boostSpeed;
+            SetTrails(true);
         }
     }
 
@@ -169,67 +137,25 @@ public class PlayerShip : MonoBehaviour
     
     private void PrimaryFire_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        FireBullet();
-    }
-
-    private void UseItem_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if(GameManager.inventory.Count > 0)
+        if(GameManager.currentPowerUp == GameManager.PowerUps.NONE)
         {
-            if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.LAZER)
-            {
-                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
-                {
-                    FireLazer();
-                }
-            }
-            else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.RAPID_FIRE)
-            {
-                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
-                {
-                    shootTimer = 0;
-                }
-            }
-            else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.BASIC_REPAIR_KIT)
-            {
-                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
-                {
-                    GetComponent<HealthSystem>().Heal(30);
-                    GameManager.inventory[GameManager.inventoryIndex].stock--;
-                    gameManager.UpdateInventoryUI();
-                }
-            }
-            else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.EXPRESS_REPAIR_KIT)
-            {
-                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
-                {
-                    GetComponent<HealthSystem>().Heal(50);
-                    GameManager.inventory[GameManager.inventoryIndex].stock--;
-                    gameManager.UpdateInventoryUI();
-                }
-            }
-            else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.MAX_REPAIR_KIT)
-            {
-                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
-                {
-                    GetComponent<HealthSystem>().Heal(100);
-                    GameManager.inventory[GameManager.inventoryIndex].stock--;
-                    gameManager.UpdateInventoryUI();
-                }
-            }
-            else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.MISSILE)
-            {
-                if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
-                {
-                    FireMissile();
-                    GameManager.inventory[GameManager.inventoryIndex].stock--;
-                    gameManager.UpdateInventoryUI();
-                }
-            }
+            FireBullet();
+        }
+        else if(GameManager.currentPowerUp == GameManager.PowerUps.MISSILE)
+        {
+            FireMissile();
+        }
+        else if(GameManager.currentPowerUp == GameManager.PowerUps.RAPID_FIRE)
+        {
+            shootTimer = 0;
+        }
+        else if(GameManager.currentPowerUp == GameManager.PowerUps.POWER_BEAM)
+        {
+            FireLazer();
         }
     }
 
-    private void UseItem_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void Fire_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (lazer)
         {
@@ -237,55 +163,30 @@ public class PlayerShip : MonoBehaviour
             lazer = null;
         }
     }
-
+    
     private void Brake_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (!GameManager.gamePaused && !GameManager.gameOver)
         {
-            if (GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE)
+            if(targetSpeed > 0)
             {
-                //Set To Strafe Mode
-                GameManager.playerMode = GameManager.PlayerMode.STRAFE_MODE;
                 camera.boostEffect.Stop();
                 thrustColor = Color.cyan;
                 targetSpeed = 0;
                 SetTrails(false);
-                reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
-                reticle.rectTransform.position = reticlePosition;
             }
-            else if(GameManager.playerMode == GameManager.PlayerMode.STRAFE_MODE)
+            else
             {
-                GameManager.playerMode = GameManager.PlayerMode.THRUST_MODE;
-                thrustColor = Color.cyan;
+                camera.boostEffect.Stop();
                 targetSpeed = baseSpeed;
                 SetTrails(true);
             }
         }
     }
-
-    private void BarrelRoll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if(GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
-        {
-            if (!evading)
-            {
-                rollDirection *= -1;
-                rollTimer = rollDuration;
-                evading = true;
-            }
-        }
-        else if(GameManager.playerMode == GameManager.PlayerMode.STRAFE_MODE)
-        {
-            GameManager.playerMode = GameManager.PlayerMode.THRUST_MODE;
-            SetTrails(true);
-            thrustColor = Color.cyan;
-            targetSpeed = baseSpeed;
-        }
-    }
-
+    
     private void CenterCrosshair_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(GameManager.playerMode == GameManager.PlayerMode.THRUST_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
+        if(GameManager.playerMode == GameManager.PlayerMode.All_RANGE_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
         {
             reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
             reticle.rectTransform.position = reticlePosition;
@@ -306,7 +207,7 @@ public class PlayerShip : MonoBehaviour
     {
         controller.enabled = false;
         transform.position = position;
-        camera.transform.position = (position + camera.offset) - (camera.transform.forward * camera.distance);
+        camera.transform.position = position + (transform.up * 3) - (camera.transform.forward * camera.distance);
         controller.enabled = true;
     }
 
@@ -317,27 +218,9 @@ public class PlayerShip : MonoBehaviour
         controller.Move(transform.forward * speed * Time.deltaTime);
         trails[0].endColor = Color.Lerp(trails[0].endColor, thrustColor, 5 * Time.deltaTime);
 
-        //Steering
-        if(evading)
-        {
-            zRot += rollDirection * rollSpeed * Time.deltaTime;
-            Quaternion targetRot = Quaternion.Euler(camera.transform.localEulerAngles.x, camera.transform.localEulerAngles.y, zRot);
-            transform.rotation = targetRot;
-            if (rollTimer > 0)
-            {
-                rollTimer -= Time.deltaTime;
-            }
-            else
-            {
-                evading = false;
-            }
-        }
-        else
-        {
-            zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
-            Quaternion targetRot = Quaternion.Euler(camera.transform.localEulerAngles.x, camera.transform.localEulerAngles.y, zRot);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
-        }
+        float zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
+        Quaternion targetRot = Quaternion.Euler(camera.transform.localEulerAngles.x, camera.transform.localEulerAngles.y, camera.transform.localEulerAngles.z + zRot);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
 
 
         //Aiming
@@ -358,36 +241,6 @@ public class PlayerShip : MonoBehaviour
 
     }
     
-    void StrafeMode()
-    {
-        //Movement
-        Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
-        Vector3 moveDirection = Vector3.zero;
-
-        if(InputManager.input.Player.StrafeY.ReadValue<float>() > 0.1f)
-        {
-            moveDirection = (camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x + transform.up).normalized;
-        }
-        else if (InputManager.input.Player.StrafeY.ReadValue<float>() < -0.1f)
-        {
-            moveDirection = (camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x - transform.up).normalized;
-        }
-        else
-        {
-            moveDirection = (camera.transform.forward * moveInput.y + camera.transform.right * moveInput.x).normalized;
-        }
-
-
-
-        controller.Move(moveDirection * baseSpeed * Time.deltaTime);
-
-        //Steering
-        zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
-        Quaternion targetRot = Quaternion.Euler(camera.transform.localEulerAngles.x, camera.transform.localEulerAngles.y, zRot);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
-        
-    }
-
     void OnRailsMode()
     {
         if (distanceAlongPath < 1 && GameManager.splinePathLength > 0)
@@ -425,26 +278,9 @@ public class PlayerShip : MonoBehaviour
 
 
             //Steering
-            if (evading)
-            {
-                zRot += rollDirection * rollSpeed * Time.deltaTime;
-                Quaternion targetRot = Quaternion.Euler(camera.followTarget.localEulerAngles.x, camera.followTarget.localEulerAngles.y, zRot);
-                transform.rotation = targetRot;
-                if (rollTimer > 0)
-                {
-                    rollTimer -= Time.deltaTime;
-                }
-                else
-                {
-                    evading = false;
-                }
-            }
-            else
-            {
-                zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
-                Quaternion targetRot = Quaternion.Euler(camera.followTarget.localEulerAngles.x, camera.followTarget.localEulerAngles.y, zRot);
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
-            }
+            float zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
+            Quaternion targetRot = Quaternion.Euler(camera.followTarget.localEulerAngles.x, camera.followTarget.localEulerAngles.y, camera.followTarget.localEulerAngles.z + zRot);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
 
 
             //Aiming
@@ -465,7 +301,7 @@ public class PlayerShip : MonoBehaviour
         }
         else
         {
-            GameManager.playerMode = GameManager.PlayerMode.THRUST_MODE;
+            GameManager.playerMode = GameManager.PlayerMode.All_RANGE_MODE;
             transform.parent = transform.root;
             distanceAlongPath = 0;
             pathOffset = Vector3.zero;
@@ -592,32 +428,24 @@ public class PlayerShip : MonoBehaviour
     {
         if (lazer != null && !GameManager.gamePaused && !GameManager.gameOver)
         {
-            if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
+            if (reticle.color == Color.red)
             {
-                if(reticle.color == Color.red)
-                {
-                    lazer.direction = (lockOn.point - lazer.origin).normalized;
-                }
-                else
-                {
-                    Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
-                    if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane))
-                    {
-                        if (hit.transform.tag != "Player")
-                        {
-                            lazer.direction = (hit.point - lazer.origin).normalized;
-                        }
-                    }
-                    else
-                    {
-                        lazer.direction = ray.direction;
-                    }
-                }
+                lazer.direction = (lockOn.point - lazer.origin).normalized;
             }
             else
             {
-                lazer.GetComponent<Lazer>().DeSpawn();
-                lazer = null;
+                Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
+                if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane))
+                {
+                    if (hit.transform.tag != "Player")
+                    {
+                        lazer.direction = (hit.point - lazer.origin).normalized;
+                    }
+                }
+                else
+                {
+                    lazer.direction = ray.direction;
+                }
             }
         }
     }
@@ -625,36 +453,20 @@ public class PlayerShip : MonoBehaviour
     void UpdatePowerUps()
     {
         //PowerUps
-        if(GameManager.inventory.Count > 0)
+        if (GameManager.currentPowerUp == GameManager.PowerUps.POWER_BEAM)
         {
-            if (InputManager.input.Player.UseItem.IsPressed())
+            UpdateLazer();
+        }
+        else if (GameManager.currentPowerUp == GameManager.PowerUps.RAPID_FIRE)
+        {
+            if (shootTimer > 0)
             {
-                if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.LAZER)
-                {
-                    if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
-                    {
-                        UpdateLazer();
-                        GameManager.inventory[GameManager.inventoryIndex].stock -= Time.deltaTime;
-                        gameManager.UpdateInventoryUI();
-                    }
-                }
-                else if (GameManager.inventory[GameManager.inventoryIndex].item == InventoryItem.Item.RAPID_FIRE)
-                {
-                    if (GameManager.inventory[GameManager.inventoryIndex].stock > 0)
-                    {
-                        if (shootTimer > 0)
-                        {
-                            shootTimer -= Time.deltaTime;
-                        }
-                        else
-                        {
-                            FireBullet();
-                            GameManager.inventory[GameManager.inventoryIndex].stock--;
-                            shootTimer = fireRate;
-                            gameManager.UpdateInventoryUI();
-                        }
-                    }
-                }
+                shootTimer -= Time.deltaTime;
+            }
+            else
+            {
+                FireBullet();
+                shootTimer = fireRate;
             }
         }
     }

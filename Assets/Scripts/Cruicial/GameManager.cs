@@ -16,16 +16,19 @@ public class GameManager : MonoBehaviour
     public static Difficulty difficulty = Difficulty.NORMAL;
 
     //For ItemManagment
-    [SerializeField] List<InventoryItem> starterInventory = new List<InventoryItem>();
-    [SerializeField] Image inventorySelectImage;
-    [SerializeField] Text inventoryCountText;
-    public static List<InventoryItem> inventory = new List<InventoryItem>();
-    public static int inventoryIndex = 0;
+    public enum PowerUps
+    {
+        NONE,
+        MISSILE,
+        POWER_BEAM,
+        RAPID_FIRE,
+    }
+    public static PowerUps currentPowerUp = PowerUps.NONE;
+    [SerializeField] Image powerUpImage;
 
     public enum PlayerMode
     {
-        THRUST_MODE,
-        STRAFE_MODE,
+        All_RANGE_MODE,
         ON_RAILS_MODE,
     }
     public static PlayerMode playerMode;
@@ -34,9 +37,6 @@ public class GameManager : MonoBehaviour
     public static Color playerBodyColor = Color.red;
     public static Color playerStripeColor = new Color(1, 1, 0);
     public static float aimSensitivy = 1000;
-
-    public static bool invertLookY = false;
-    public static bool invertSteerY = true;
 
     public GameObject gameOverMenu;
     public GameObject gamePauseMenu;
@@ -64,11 +64,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] Text scoreText;
     public static int score = 0;
     
-    void Awake()
-    {
-        //For Debug Purposes
-        inventory = starterInventory;
-    }
 
     void Start()
     {
@@ -82,11 +77,8 @@ public class GameManager : MonoBehaviour
         else
         {
             splinePathLength = 0;
-            playerMode = PlayerMode.THRUST_MODE;
+            playerMode = PlayerMode.All_RANGE_MODE;
         }
-
-
-        UpdateInventoryUI();
 
         scoreText.text = score.ToString();
         playerMode = startPlayerMode;
@@ -103,37 +95,6 @@ public class GameManager : MonoBehaviour
         InputManager.input.Player.Pause.performed += Pause_performed;
         InputManager.input.Player.UnPause.performed += UnPause_performed;
         InputManager.input.Player.ToggleMiniMap.performed += ToggleMiniMap_performed;
-        InputManager.input.Player.ToggleInventory.performed += ToggleInventory_performed;
-    }
-
-    private void ToggleInventory_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if(inventory.Count > 0 && !gameOver && !gamePaused && !HubMenu.open) 
-        {
-            if (obj.ReadValue<float>() > 0)
-            {
-                if (inventoryIndex < inventory.Count - 1)
-                {
-                    inventoryIndex++;
-                }
-                else
-                {
-                    inventoryIndex = 0;
-                }
-            }
-            else if (obj.ReadValue<float>() < 0)
-            {
-                if (inventoryIndex > 0)
-                {
-                    inventoryIndex--;
-                }
-                else
-                {
-                    inventoryIndex = inventory.Count - 1;
-                }
-            }
-            UpdateInventoryUI();
-        }
     }
 
     private void ToggleMiniMap_performed(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -208,7 +169,6 @@ public class GameManager : MonoBehaviour
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
         InputManager.input.Player.ToggleMiniMap.performed -= ToggleMiniMap_performed;
-        InputManager.input.Player.ToggleInventory.performed -= ToggleInventory_performed;
     }
     
 
@@ -224,11 +184,6 @@ public class GameManager : MonoBehaviour
         scoreText.text = score.ToString();
     }
 
-    public void UpdateInventoryUI()
-    {
-        inventorySelectImage.sprite = inventory[inventoryIndex].image;
-        inventoryCountText.text = Mathf.RoundToInt(inventory[inventoryIndex].stock).ToString();
-    }
 
     public void Pause()
     {

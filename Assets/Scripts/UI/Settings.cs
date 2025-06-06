@@ -36,9 +36,6 @@ public class Settings : MonoBehaviour
         playerStripeSliders[2].value = GameManager.playerStripeColor.b;
         playerPreview.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameManager.playerStripeColor);
 
-        invertLookY.isOn = GameManager.invertLookY;
-        invertSteerY.isOn = GameManager.invertSteerY;
-
     }
 
     public void ToggleDifficulty()
@@ -137,8 +134,7 @@ public class Settings : MonoBehaviour
 
     public void ChangeInvertLookSettings()
     {
-        GameManager.invertLookY = invertLookY.isOn;
-        GameManager.invertSteerY = invertSteerY.isOn;
+        
     }
 
     public void ChangeBGMVolume()

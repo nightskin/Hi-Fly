@@ -83,15 +83,12 @@ public class EnemyShip : MonoBehaviour
         if(other.tag == "Player")
         {
             PlayerShip player = other.GetComponent<PlayerShip>();
-            if(!player.evading)
+            player.health.TakeDamage(attackPower);
+            if (player.health.IsDead())
             {
-                player.health.TakeDamage(attackPower);
-                if (player.health.IsDead())
-                {
-                    GameManager.gameOver = true;
-                }
-                health.TakeDamage(health.GetMaxHealth());
+                GameManager.gameOver = true;
             }
+            health.TakeDamage(health.GetMaxHealth());
         }
         if(other.tag == "Destructible" || other.tag == "Surface")
         {
