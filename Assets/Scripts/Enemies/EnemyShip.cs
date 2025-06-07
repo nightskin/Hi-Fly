@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class EnemyShip : MonoBehaviour
 {
+    [SerializeField] GameObject pickUpPrefab;
+
+
     ObjectPool objectPool;
     Transform target;
 
@@ -11,9 +14,9 @@ public class EnemyShip : MonoBehaviour
     [SerializeField] LayerMask targetLayer;
 
 
-    [SerializeField][Range(0,100)] float avoidanceWeight = 1;
-    [SerializeField][Range(0,100)] float flockingWeight = 1;
-    [SerializeField][Range(0, 100)] float huntWeight = 1;
+    [SerializeField][Range(0,100)] float avoidanceWeight = 50;
+    [SerializeField][Range(0,100)] float flockingWeight = 50;
+    [SerializeField] float aimSkill = 4;
  
     [SerializeField] float perceptionRadius = 100;
     [SerializeField] float cohesionRadius = 100;
@@ -37,15 +40,15 @@ public class EnemyShip : MonoBehaviour
     {
         if(GameManager.difficulty == GameManager.Difficulty.EASY)
         {
-            turnSpeed = 3;
+            turnSpeed = 5;
         }
         else if(GameManager.difficulty == GameManager.Difficulty.NORMAL)
         {
-            turnSpeed = 4;
+            turnSpeed = 10;
         }
         else if(GameManager.difficulty == GameManager.Difficulty.HARD)
         {
-            turnSpeed = 5;
+            turnSpeed = 15;
         }
         target = GameManager.playerShip.transform;
         health = GetComponent<HealthSystem>();
@@ -100,7 +103,12 @@ public class EnemyShip : MonoBehaviour
     void Die()
     {
         var explosion = GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("explosion", transform.position);
+        if (Util.RandomBool())
+        {
+            Instantiate(pickUpPrefab, transform.position, Quaternion.identity);
+        }
         gameObject.SetActive(false);
+
     }
 
     void Patrol()
@@ -112,16 +120,14 @@ public class EnemyShip : MonoBehaviour
     
     void Fight_Boid()
     {
-        huntWeight = Vector3.Distance(transform.position, target.position);
-        huntWeight = Mathf.Clamp(huntWeight, 0, 100);
-        direction = (SteerTowardsTarget() * huntWeight) + (Seperation(avoidRadius) * avoidanceWeight) + (Cohesion(cohesionRadius) * flockingWeight);
+        direction = SteerTowardsTarget();
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
         shootTimer -= Time.deltaTime;
         if (shootTimer <= 0)
         {
-            if (Physics.SphereCast(transform.position, 1 ,transform.forward, out RaycastHit hit, 1000, targetLayer))
+            if (Physics.SphereCast(transform.position, aimSkill,transform.forward, out RaycastHit hit, 1000, targetLayer))
             {
                 Shoot();
             }

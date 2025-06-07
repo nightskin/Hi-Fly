@@ -6,8 +6,7 @@ public class PlayerCamera : MonoBehaviour
     public float distance = 10;
     public ParticleSystem boostEffect;
 
-    [SerializeField][Min(2)] float camSpeedThrust = 10;
-    [SerializeField][Min(2)] float camSpeedStrafe = 15;
+    [SerializeField][Min(2)] float camSpeed = 10;
 
     [SerializeField] PlayerShip player;
 
@@ -37,7 +36,7 @@ public class PlayerCamera : MonoBehaviour
 
 
             Vector3 camPos = player.transform.position + (player.transform.up * 3) - (transform.forward * distance);
-            transform.position = Vector3.Lerp(transform.position, camPos, camSpeedThrust * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, camPos, camSpeed * Time.deltaTime);
             transform.rotation *= Quaternion.AngleAxis(x * rotationSpeed * Time.deltaTime, Vector3.up);
             transform.rotation *= Quaternion.AngleAxis(y * rotationSpeed * Time.deltaTime, Vector3.right);
             transform.rotation *= Quaternion.AngleAxis(z * rotationSpeed * Time.deltaTime, Vector3.forward);
@@ -46,8 +45,8 @@ public class PlayerCamera : MonoBehaviour
         else if(GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
         {
             Vector3 camPos = followTarget.position + (followTarget.transform.up * 3) - (transform.forward * distance);
-            transform.position = Vector3.Lerp(transform.position, camPos, camSpeedThrust * Time.deltaTime);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(player.transform.forward), camSpeedThrust * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, camPos, camSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(player.transform.forward), camSpeed * Time.deltaTime);
         }
     }
 

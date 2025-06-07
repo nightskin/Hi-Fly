@@ -12,7 +12,7 @@ public class PlayerShip : MonoBehaviour
     CharacterController controller;
     Transform bulletSpawn;
     
-    [SerializeField] float turnSpeed = 5;
+    [SerializeField][Min(1)] float turnSpeed = 5;
     [SerializeField] float baseSpeed = 10;
     [SerializeField] float boostSpeed = 50;
     [SerializeField] float acceleration = 10;
@@ -88,11 +88,11 @@ public class PlayerShip : MonoBehaviour
         {
             if(GameManager.playerMode == GameManager.PlayerMode.All_RANGE_MODE)
             {
-                StandardMode();
+                AllRangeControls();
             }
             else if(GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
             {
-                OnRailsMode();
+                OnRailsControls();
             }
             UpdatePowerUps();
         }
@@ -149,7 +149,7 @@ public class PlayerShip : MonoBehaviour
         {
             shootTimer = 0;
         }
-        else if(GameManager.currentPowerUp == GameManager.PowerUps.POWER_BEAM)
+        else if(GameManager.currentPowerUp == GameManager.PowerUps.LAZER)
         {
             FireLazer();
         }
@@ -211,7 +211,7 @@ public class PlayerShip : MonoBehaviour
         controller.enabled = true;
     }
 
-    void StandardMode()
+    void AllRangeControls()
     {
         //Forward Movement
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
@@ -241,7 +241,7 @@ public class PlayerShip : MonoBehaviour
 
     }
     
-    void OnRailsMode()
+    void OnRailsControls()
     {
         if (distanceAlongPath < 1 && GameManager.splinePathLength > 0)
         {
@@ -335,14 +335,7 @@ public class PlayerShip : MonoBehaviour
                         }
                         else
                         {
-                            if(hit.transform.tag == "Bounds")
-                            {
-                                b.direction = ray.direction;
-                            }
-                            else
-                            {
-                                b.direction = (hit.point - bulletSpawn.position).normalized;
-                            }
+                            b.direction = (hit.point - bulletSpawn.position).normalized;
                         }
                     }
                     else
@@ -381,14 +374,7 @@ public class PlayerShip : MonoBehaviour
                         }
                         else
                         {
-                            if (hit.transform.tag == "Bounds")
-                            {
-                                b.direction = ray.direction;
-                            }
-                            else
-                            {
-                                b.direction = (hit.point - bulletSpawn.position).normalized;
-                            }
+                            b.direction = (hit.point - bulletSpawn.position).normalized;
                         }
                     }
                     else
@@ -426,7 +412,7 @@ public class PlayerShip : MonoBehaviour
 
     void UpdateLazer()
     {
-        if (lazer != null && !GameManager.gamePaused && !GameManager.gameOver)
+        if (!GameManager.gamePaused && !GameManager.gameOver)
         {
             if (reticle.color == Color.red)
             {
@@ -453,21 +439,28 @@ public class PlayerShip : MonoBehaviour
     void UpdatePowerUps()
     {
         //PowerUps
-        if (GameManager.currentPowerUp == GameManager.PowerUps.POWER_BEAM)
+        if (GameManager.currentPowerUp == GameManager.PowerUps.LAZER)
         {
-            UpdateLazer();
+            if(lazer != null)
+            {
+                UpdateLazer();
+            }
         }
         else if (GameManager.currentPowerUp == GameManager.PowerUps.RAPID_FIRE)
         {
-            if (shootTimer > 0)
+            if(InputManager.input.Player.Fire.IsPressed())
             {
-                shootTimer -= Time.deltaTime;
+                if (shootTimer > 0)
+                {
+                    shootTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    FireBullet();
+                    shootTimer = fireRate;
+                }
             }
-            else
-            {
-                FireBullet();
-                shootTimer = fireRate;
-            }
+
         }
     }
     

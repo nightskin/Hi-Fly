@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Lazer : MonoBehaviour
@@ -109,7 +107,7 @@ public class Lazer : MonoBehaviour
         {
             colorIndex = 0;
         }
-        renderer.sharedMaterial.color = colors[colorIndex];
+        renderer.sharedMaterial.SetColor("_MainColor", colors[colorIndex]);
     }
 
     public void DeSpawn()

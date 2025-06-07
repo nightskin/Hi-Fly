@@ -162,16 +162,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colors:
-  - {r: 1.4980394, g: 0, b: 0, a: 1}
-  - {r: 2, g: 0.5, b: 0, a: 1}
-  - {r: 2, g: 2, b: 0, a: 1}
-  - {r: 0, g: 2, b: 0, a: 1}
-  - {r: 0, g: 2, b: 2, a: 1}
-  - {r: 0, g: 0, b: 2, a: 1}
-  - {r: 1, g: 0, b: 2, a: 1}
+  - {r: 2.9960785, g: 0, b: 0, a: 1}
+  - {r: 2.9960787, g: 0.56103045, b: 0, a: 1}
+  - {r: 2.9960785, g: 2.9960785, b: 0, a: 1}
+  - {r: 0, g: 2.9960785, b: 0, a: 1}
+  - {r: 0, g: 2.9960785, b: 2.9960785, a: 1}
+  - {r: 0, g: 0, b: 2.9960785, a: 1}
+  - {r: 1.4980392, g: 0, b: 4, a: 1}
   renderer: {fileID: 7468776964873725496}
   owner: {fileID: 0}
   damage: 10
   direction: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}
-  collisionInterval: 0.05
+  collisionInterval: 0.1

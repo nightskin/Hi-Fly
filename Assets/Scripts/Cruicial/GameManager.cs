@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
 using UnityEngine.Splines;
 
 public class GameManager : MonoBehaviour
@@ -20,7 +19,7 @@ public class GameManager : MonoBehaviour
     {
         NONE,
         MISSILE,
-        POWER_BEAM,
+        LAZER,
         RAPID_FIRE,
     }
     public static PowerUps currentPowerUp = PowerUps.NONE;
@@ -79,6 +78,9 @@ public class GameManager : MonoBehaviour
             splinePathLength = 0;
             playerMode = PlayerMode.All_RANGE_MODE;
         }
+
+        currentPowerUp = PowerUps.LAZER;
+        UpdatePowerUpUI(null);
 
         scoreText.text = score.ToString();
         playerMode = startPlayerMode;
@@ -171,6 +173,18 @@ public class GameManager : MonoBehaviour
         InputManager.input.Player.ToggleMiniMap.performed -= ToggleMiniMap_performed;
     }
     
+    public void UpdatePowerUpUI(Sprite sprite)
+    {
+        if(sprite == null)
+        {
+            powerUpImage.color = Color.clear;
+        }
+        else
+        {
+            powerUpImage.color = Color.white;
+        }
+        powerUpImage.sprite = sprite;
+    }
 
     public void AddScore(int amount)
     {

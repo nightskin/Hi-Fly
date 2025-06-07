@@ -154,14 +154,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b13d33fb715c2bc4eb8a704eb0adfb43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickUpPrefab: {fileID: 8398003246989385244, guid: b67f019871a350d459791c6409acf0d8,
+    type: 3}
   skipPatrol: 0
   health: {fileID: 7978833964992945737}
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
-  avoidanceWeight: 50
-  flockingWeight: 20
-  huntWeight: 75
+  avoidanceWeight: 100
+  flockingWeight: 50
+  aimSkill: 1
   perceptionRadius: 100
   cohesionRadius: 100
   avoidRadius: 5

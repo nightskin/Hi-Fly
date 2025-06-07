@@ -124,7 +124,7 @@ public class Missile : MonoBehaviour
         }
         if (owner.tag == "Player")
         {
-            GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().AddScore(10 * hits.Length);
+            GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().AddScore(15 * hits.Length);
         }
 
     }

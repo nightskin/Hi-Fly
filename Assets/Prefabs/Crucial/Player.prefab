@@ -5970,7 +5970,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4504218499694534223
 Transform:
   m_ObjectHideFlags: 0
@@ -6318,7 +6318,7 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 0.4715668
+  m_Height: 0.5
   m_Radius: 0.1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
@@ -6373,7 +6373,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   fireRate: 0.1
-  evading: 0
   distanceAlongPath: 0
 --- !u!1 &6508015524747324939
 GameObject:
@@ -8082,9 +8081,7 @@ MonoBehaviour:
   rotationSpeed: 100
   distance: 10
   boostEffect: {fileID: 1814296040985746741}
-  camSpeedThrust: 10
-  camSpeedStrafe: 25
-  offset: {x: 0, y: 3, z: 0}
+  camSpeed: 10
   player: {fileID: 303286065443942689}
   followTarget: {fileID: 436392920321828641}
 --- !u!1 &8580583742340117015
