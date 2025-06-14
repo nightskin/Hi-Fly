@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyShip : MonoBehaviour
 {
     [SerializeField] GameObject pickUpPrefab;
-
+    [SerializeField] EnemyDissolveEffect effect;
 
     ObjectPool objectPool;
     Transform target;
@@ -38,6 +38,7 @@ public class EnemyShip : MonoBehaviour
 
     void OnEnable()
     {
+        effect.enabled = true;
         if(GameManager.difficulty == GameManager.Difficulty.EASY)
         {
             turnSpeed = 5;
@@ -60,7 +61,7 @@ public class EnemyShip : MonoBehaviour
     
     void Update()
     {
-        if (target && !GameManager.gamePaused)
+        if (!GameManager.gamePaused)
         {
             if (health.IsAlive())
             {
@@ -125,7 +126,7 @@ public class EnemyShip : MonoBehaviour
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
         shootTimer -= Time.deltaTime;
-        if (shootTimer <= 0)
+        if (shootTimer <= 0 && !effect.enabled)
         {
             if (Physics.SphereCast(transform.position, aimSkill,transform.forward, out RaycastHit hit, 1000, targetLayer))
             {

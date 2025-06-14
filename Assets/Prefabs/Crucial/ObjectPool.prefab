@@ -60,3 +60,7 @@ MonoBehaviour:
     prefab: {fileID: 3058321018423864868, guid: 03ae3337d91e0b94c9e99a13e77fe0ca,
       type: 3}
     size: 100
+  - name: powerBombExplosion
+    prefab: {fileID: 8336328388692570255, guid: b2e9da4ade67bb34cbc154042c0bdd33,
+      type: 3}
+    size: 100

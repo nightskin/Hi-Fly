@@ -59,9 +59,6 @@ public class GameManager : MonoBehaviour
 
     public static SplineContainer splinePath;
     public static float splinePathLength = 0;
-
-    [SerializeField] Text scoreText;
-    public static int score = 0;
     
 
     void Start()
@@ -79,10 +76,9 @@ public class GameManager : MonoBehaviour
             playerMode = PlayerMode.All_RANGE_MODE;
         }
 
-        currentPowerUp = PowerUps.LAZER;
+        currentPowerUp = PowerUps.NONE;
         UpdatePowerUpUI(null);
 
-        scoreText.text = score.ToString();
         playerMode = startPlayerMode;
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
@@ -184,18 +180,6 @@ public class GameManager : MonoBehaviour
             powerUpImage.color = Color.white;
         }
         powerUpImage.sprite = sprite;
-    }
-
-    public void AddScore(int amount)
-    {
-        score += amount;
-        scoreText.text = score.ToString();
-    }
-
-    public void SubractScore(int amount) 
-    {
-        score -= amount;
-        scoreText.text = score.ToString();
     }
 
 

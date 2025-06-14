@@ -17,6 +17,9 @@
         },
         {
             "m_Id": "b281f8a6bfc240bfab23f4b4c36ddd29"
+        },
+        {
+            "m_Id": "148ba69d05334c9a99ab2055f726e844"
         }
     ],
     "m_Keywords": [],
@@ -216,8 +219,8 @@
     ],
     "m_VertexContext": {
         "m_Position": {
-            "x": 393.0000305175781,
-            "y": -51.000003814697269
+            "x": 851.9999389648438,
+            "y": -316.0000305175781
         },
         "m_Blocks": [
             {
@@ -233,8 +236,8 @@
     },
     "m_FragmentContext": {
         "m_Position": {
-            "x": 393.0000305175781,
-            "y": 149.0
+            "x": 851.9999389648438,
+            "y": -116.00006103515625
         },
         "m_Blocks": [
             {
@@ -450,6 +453,99 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.GradientShaderProperty",
+    "m_ObjectId": "148ba69d05334c9a99ab2055f726e844",
+    "m_Guid": {
+        "m_GuidSerialized": "dfd07ef4-73ec-42cf-ba36-425787674264"
+    },
+    "m_Name": "ShadingRamp",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "ShadingRamp",
+    "m_DefaultReferenceName": "_ShadingRamp",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": {
+        "serializedVersion": "2",
+        "key0": {
+            "r": 0.25,
+            "g": 0.25,
+            "b": 0.25,
+            "a": 1.0
+        },
+        "key1": {
+            "r": 0.5,
+            "g": 0.5,
+            "b": 0.5,
+            "a": 1.0
+        },
+        "key2": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 0.0
+        },
+        "key3": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 0.0
+        },
+        "key4": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 0.0
+        },
+        "key5": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 0.0
+        },
+        "key6": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 0.0
+        },
+        "key7": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 0.0
+        },
+        "ctime0": 21845,
+        "ctime1": 43690,
+        "ctime2": 65535,
+        "ctime3": 0,
+        "ctime4": 0,
+        "ctime5": 0,
+        "ctime6": 0,
+        "ctime7": 0,
+        "atime0": 0,
+        "atime1": 65535,
+        "atime2": 0,
+        "atime3": 0,
+        "atime4": 0,
+        "atime5": 0,
+        "atime6": 0,
+        "atime7": 0,
+        "m_Mode": 1,
+        "m_ColorSpace": 1,
+        "m_NumColorKeys": 3,
+        "m_NumAlphaKeys": 2
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.PositionMaterialSlot",
     "m_ObjectId": "16b7efb5b0444b6184577042d6b90ca4",
     "m_Id": 0,
@@ -485,7 +581,7 @@
     "m_ZTestMode": 4,
     "m_ZWriteControl": 0,
     "m_AlphaMode": 0,
-    "m_RenderFace": 2,
+    "m_RenderFace": 0,
     "m_AlphaClip": false,
     "m_CastShadows": false,
     "m_ReceiveShadows": true,
@@ -1591,6 +1687,9 @@
         },
         {
             "m_Id": "b281f8a6bfc240bfab23f4b4c36ddd29"
+        },
+        {
+            "m_Id": "148ba69d05334c9a99ab2055f726e844"
         }
     ]
 }

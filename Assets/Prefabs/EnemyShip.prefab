@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3277986585595077125}
   - component: {fileID: 3277986585595077124}
   - component: {fileID: 7978833964992945737}
+  - component: {fileID: -2206290432636866133}
   m_Layer: 6
   m_Name: EnemyShip
   m_TagString: Enemy
@@ -54,7 +55,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1268243056916477701}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -156,6 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pickUpPrefab: {fileID: 8398003246989385244, guid: b67f019871a350d459791c6409acf0d8,
     type: 3}
+  effect: {fileID: -2206290432636866133}
   skipPatrol: 0
   health: {fileID: 7978833964992945737}
   targetLayer:
@@ -190,6 +192,18 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
+--- !u!114 &-2206290432636866133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268243056916477701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ef8dd0bea3e54743b6b81b007eb6315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7210263141831510513
 GameObject:
   m_ObjectHideFlags: 0

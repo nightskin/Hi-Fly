@@ -136,11 +136,6 @@ public class Bullet : MonoBehaviour
                         health.TakeDamage(damage);
                     }
 
-                    if(owner.tag == "Player")
-                    {
-                        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().AddScore(10);
-                    }
-
                     sfx.clip = hitSound;
                     sfx.Play();
                 }

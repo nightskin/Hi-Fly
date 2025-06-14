@@ -37,6 +37,7 @@ public class PlayerCamera : MonoBehaviour
 
             Vector3 camPos = player.transform.position + (player.transform.up * 3) - (transform.forward * distance);
             transform.position = Vector3.Lerp(transform.position, camPos, camSpeed * Time.deltaTime);
+
             transform.rotation *= Quaternion.AngleAxis(x * rotationSpeed * Time.deltaTime, Vector3.up);
             transform.rotation *= Quaternion.AngleAxis(y * rotationSpeed * Time.deltaTime, Vector3.right);
             transform.rotation *= Quaternion.AngleAxis(z * rotationSpeed * Time.deltaTime, Vector3.forward);

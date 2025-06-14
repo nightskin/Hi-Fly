@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-    public float blastRadius = 7.0f;
-    public float damage = 30;
+    //public float blastRadius = 7.0f;
+    //public float damage = 30;
 
     public float lifetime = 5;
     public GameObject owner = null;
@@ -18,6 +18,7 @@ public class Missile : MonoBehaviour
     Vector3 prevPosition;
     bool hit;
     float life = 0;
+    
 
     void Awake()
     {
@@ -51,8 +52,7 @@ public class Missile : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.deltaTime);
                 if(Vector3.Distance(transform.position, homingTarget.position) < 1.0f)
                 {
-                    objectPool.Spawn("explosion", transform.position);
-                    CheckBlastRadius();
+                    objectPool.Spawn("powerBombExplosion", transform.position);
                     DeSpawn();
                 }
             }
@@ -93,42 +93,13 @@ public class Missile : MonoBehaviour
         {
             if (rayhit.transform.gameObject != owner)
             {
-                objectPool.Spawn("explosion", transform.position);
-                CheckBlastRadius();
+                objectPool.Spawn("powerBombExplosion", transform.position);
                 DeSpawn();
             }
         }
     }
 
-    void CheckBlastRadius()
-    {
-        Collider[] hits = Physics.OverlapSphere(transform.position, blastRadius);
-
-        foreach (Collider hit in hits)
-        {
-            if (hit.tag == "Player")
-            {
-                HealthSystem health = hit.GetComponent<HealthSystem>();
-                if (health) health.TakeDamage(damage);
-
-                if (health.IsDead())
-                {
-                    GameManager.gameOver = true;
-                }
-            }
-            else if (hit.tag == "Enemy")
-            {
-                HealthSystem health = hit.GetComponent<HealthSystem>();
-                if (health) health.TakeDamage(damage);
-            }
-        }
-        if (owner.tag == "Player")
-        {
-            GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().AddScore(15 * hits.Length);
-        }
-
-    }
-
+    
     void DeSpawn()
     {
         trail.emitting = false;

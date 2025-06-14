@@ -390,11 +390,11 @@ public class PlayerShip : MonoBehaviour
     {
         if (!GameManager.gameOver && !GameManager.gamePaused)
         {
-            lazer = objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
-            if (lazer != null)
+            if (lazer == null)
             {
+                lazer = objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
                 lazer.owner = gameObject;
-            
+
                 Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
                 if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))
                 {
@@ -404,10 +404,8 @@ public class PlayerShip : MonoBehaviour
                 {
                     lazer.direction = ray.direction;
                 }
-            
             }
         }
-
     }
 
     void UpdateLazer()
