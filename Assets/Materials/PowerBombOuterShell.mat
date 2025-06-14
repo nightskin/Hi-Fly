@@ -71,6 +71,7 @@ Material:
     - _Power: 2
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Speed: 2
     m_Colors:
     - _BackColor: {r: 4, g: 0.4, b: 0, a: 1}
     - _FrontColor: {r: 4, g: 0, b: 0, a: 1}

@@ -86,6 +86,8 @@ public class PlayerShip : MonoBehaviour
     {
         if(health.IsAlive() && !GameManager.gamePaused)
         {
+
+
             if(GameManager.playerMode == GameManager.PlayerMode.All_RANGE_MODE)
             {
                 AllRangeControls();
@@ -320,7 +322,7 @@ public class PlayerShip : MonoBehaviour
                 //Set Needed Variables
                 b.owner = gameObject;
             
-                if (reticle.color == Color.red)
+                if (lockOn.collider)
                 {
                     b.homingTarget = lockOn.collider.transform;
                 }
@@ -359,7 +361,7 @@ public class PlayerShip : MonoBehaviour
                 //Set Needed Variables
                 b.owner = gameObject;
             
-                if (reticle.color == Color.red)
+                if (lockOn.collider)
                 {
                     b.homingTarget = lockOn.collider.transform;
                 }
@@ -412,7 +414,7 @@ public class PlayerShip : MonoBehaviour
     {
         if (!GameManager.gamePaused && !GameManager.gameOver)
         {
-            if (reticle.color == Color.red)
+            if (lockOn.collider)
             {
                 lazer.direction = (lockOn.point - lazer.origin).normalized;
             }

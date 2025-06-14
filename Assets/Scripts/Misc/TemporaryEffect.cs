@@ -1,13 +1,13 @@
 using UnityEngine;
 public class TemporaryEffect : MonoBehaviour
 {
-    [SerializeField][Min(0)] float duration = 1.0f;
+    [SerializeField][Min(0)] float durationInSeconds = 1.0f;
 
     float timer;
 
     void OnEnable()
     {
-        timer = duration;
+        timer = durationInSeconds;
     }
 
     void Update()

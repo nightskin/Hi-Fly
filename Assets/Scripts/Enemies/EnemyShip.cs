@@ -106,7 +106,7 @@ public class EnemyShip : MonoBehaviour
         var explosion = GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("explosion", transform.position);
         if (Util.RandomBool())
         {
-            Instantiate(pickUpPrefab, transform.position, Quaternion.identity);
+            GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("pickup", transform.position);
         }
         gameObject.SetActive(false);
 

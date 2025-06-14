@@ -32,7 +32,7 @@ public class PickUp : MonoBehaviour
         {
             followPlayer = true;
         }
-        if(followPlayer) transform.position = Vector3.Lerp(transform.position, GameManager.playerShip.transform.position, 10 * Time.deltaTime);
+        if(followPlayer) transform.position = Vector3.Lerp(transform.position, GameManager.playerShip.transform.position, 50 * Time.deltaTime);
     }
 
     void OnTriggerEnter(Collider other)
@@ -66,7 +66,7 @@ public class PickUp : MonoBehaviour
                 GameManager.currentPowerUp = GameManager.PowerUps.RAPID_FIRE;
                 GameObject.Find("Player").GetComponent<GameManager>().UpdatePowerUpUI(renderer.sprite);
             }
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 

@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-    //public float blastRadius = 7.0f;
-    //public float damage = 30;
 
     public float lifetime = 5;
     public GameObject owner = null;

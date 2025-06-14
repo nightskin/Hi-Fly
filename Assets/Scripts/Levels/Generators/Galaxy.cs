@@ -66,7 +66,7 @@ public class Galaxy : MonoBehaviour
                 if (secondsBeforeEncounter < 0)
                 {
                     encounterInProgress = true;
-                    Vector3 position = player.transform.position + (player.transform.forward * 1000);
+                    Vector3 position = player.transform.position + (player.transform.forward * 500);
                     spawner = Instantiate(enemyFleatPrefab, position, Quaternion.identity);
                     spawner.GetComponent<EnemySpawner>().skipPatrol = true;
                     secondsBeforeEncounter = Random.Range(minEncounterTime, maxEncounterTime);
