@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 1790398099597144054}
   - component: {fileID: 1906746955157256585}
   - component: {fileID: 296739665294413389}
-  - component: {fileID: 8069063743427614270}
-  - component: {fileID: 7299860028486233287}
   - component: {fileID: -9050664091282969010}
   - component: {fileID: 6289166282623917522}
   - component: {fileID: 3261917764310468190}
@@ -92,33 +90,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8069063743427614270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8336328388692570255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d2798e33123144484c659eb3c2299f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  durationInSeconds: 3
---- !u!114 &7299860028486233287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8336328388692570255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6046fed3b97b39b4bb6920c77e58bf28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  continousDamage: 0
-  damage: 30
 --- !u!114 &-9050664091282969010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,6 +103,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxScale: 20
+  shrinkRate: 20
+  timeBeforeShrink: 1
+  damage: 30
 --- !u!135 &6289166282623917522
 SphereCollider:
   m_ObjectHideFlags: 0
