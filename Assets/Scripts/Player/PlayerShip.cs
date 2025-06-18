@@ -3,15 +3,19 @@ using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
 {
+    //Necessary Components
     GameManager gameManager;
     public HealthSystem health;
     [SerializeField] PlayerCamera camera;
     [SerializeField] TrailRenderer[] trails;
+    [SerializeField] TrailRenderer thruster;
+    [SerializeField] Transform mesh;
+    [SerializeField] Transform bulletSpawn;
+    [SerializeField] CharacterController controller;
+    
     Color thrustColor = Color.cyan;
 
-    CharacterController controller;
-    Transform bulletSpawn;
-    
+
     [SerializeField][Min(1)] float turnSpeed = 5;
     [SerializeField] float baseSpeed = 10;
     [SerializeField] float boostSpeed = 50;
@@ -32,6 +36,7 @@ public class PlayerShip : MonoBehaviour
 
     Lazer lazer = null;
     float shootTimer = 0;
+    float zRot = 0;
     
 
     //For On Rails Controls
@@ -44,12 +49,10 @@ public class PlayerShip : MonoBehaviour
 
 
         Cursor.visible = false;
-        GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor",GameManager.playerBodyColor);
-        GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor",GameManager.playerStripeColor);
-        bulletSpawn = transform.Find("BulletSpawn");
+        mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor",GameManager.playerBodyColor);
+        mesh.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor",GameManager.playerStripeColor);
 
 
-        health = GetComponent<HealthSystem>();
         objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
         if (trails.Length == 0) trails = GetComponentsInChildren<TrailRenderer>();
         reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
@@ -188,11 +191,8 @@ public class PlayerShip : MonoBehaviour
     
     private void CenterCrosshair_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(GameManager.playerMode == GameManager.PlayerMode.All_RANGE_MODE || GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
-        {
-            reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
-            reticle.rectTransform.position = reticlePosition;
-        }
+        reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
+        reticle.rectTransform.position = reticlePosition;
     }
 
     private void Gamepad_Aim_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -218,11 +218,22 @@ public class PlayerShip : MonoBehaviour
         //Forward Movement
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
         controller.Move(transform.forward * speed * Time.deltaTime);
-        trails[0].endColor = Color.Lerp(trails[0].endColor, thrustColor, 5 * Time.deltaTime);
+        thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
 
-        float zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
-        Quaternion targetRot = Quaternion.Euler(camera.transform.localEulerAngles.x, camera.transform.localEulerAngles.y, camera.transform.localEulerAngles.z + zRot);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
+
+        //steering
+        float x = InputManager.input.Player.Steer.ReadValue<Vector2>().x;
+        float y = InputManager.input.Player.Steer.ReadValue<Vector2>().y;
+        float z = InputManager.input.Player.SteerZ.ReadValue<float>();
+
+        transform.rotation *= Quaternion.AngleAxis(x * turnSpeed * Time.deltaTime, Vector3.up);
+        transform.rotation *= Quaternion.AngleAxis(y * turnSpeed * Time.deltaTime, Vector3.right);
+        transform.rotation *= Quaternion.AngleAxis(z * turnSpeed * Time.deltaTime, Vector3.forward);
+
+
+        zRot = Mathf.LerpAngle(zRot, InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35, 5 * Time.deltaTime);
+        mesh.localEulerAngles = new Vector3(0, 0, zRot);
+
 
 
         //Aiming
@@ -248,7 +259,7 @@ public class PlayerShip : MonoBehaviour
         if (distanceAlongPath < 1 && GameManager.splinePathLength > 0)
         {
             //Handles Boosting
-            trails[0].endColor = Color.Lerp(trails[0].endColor, thrustColor, 5 * Time.deltaTime);
+            thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
             speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
             
             // Rail Movement

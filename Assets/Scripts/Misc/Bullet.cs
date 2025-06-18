@@ -141,24 +141,20 @@ public class Bullet : MonoBehaviour
                 }
                 else if (rayhit.transform.tag == "Player")
                 {
-                    PlayerShip player = rayhit.transform.GetComponent<PlayerShip>();
-                    if (player)
+                    HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
+                    if (health)
                     {
-                        HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
-                        if (health)
+                        health.TakeDamage(damage);
+                        if (health.IsDead())
                         {
-                            health.TakeDamage(damage);
-                            if (health.IsDead())
-                            {
-                                objectPool.Spawn("explosion", rayhit.point);
-                                rayhit.transform.gameObject.SetActive(false);
-                                GameManager.gameOver = true;
-                            }
+                            objectPool.Spawn("explosion", rayhit.point);
+                            rayhit.transform.gameObject.SetActive(false);
+                            GameManager.gameOver = true;
                         }
-                        hit = true;
-                        sfx.clip = hitSound;
-                        sfx.Play();
                     }
+                    hit = true;
+                    sfx.clip = hitSound;
+                    sfx.Play();
                 }
                 hit = true;
             }

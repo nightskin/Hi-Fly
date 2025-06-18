@@ -6,6 +6,8 @@ using UnityEngine.Splines;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] GameObject gameOverSelectedObject;
+
     public enum Difficulty
     {
         EASY,
@@ -155,7 +157,7 @@ public class GameManager : MonoBehaviour
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.None;
                     gameOverMenu.SetActive(true);
-                    eventSystem.SetSelectedGameObject(gameOverMenu.transform.GetChild(0).transform.GetChild(1).gameObject);
+                    eventSystem.SetSelectedGameObject(gameOverSelectedObject);
                     gameOverActive = true;
                 }   
             }

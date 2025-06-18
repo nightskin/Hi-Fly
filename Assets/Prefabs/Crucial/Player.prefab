@@ -6069,11 +6069,9 @@ GameObject:
   - component: {fileID: 8131623140777354625}
   - component: {fileID: 6932323581209396350}
   - component: {fileID: 2692108105168207850}
-  - component: {fileID: 5263265270207870802}
   - component: {fileID: 8131623140777354630}
-  - component: {fileID: 303286065443942689}
   m_Layer: 3
-  m_Name: PlayerShip
+  m_Name: Mesh
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6096,7 +6094,7 @@ Transform:
   - {fileID: 6615905817508830575}
   - {fileID: 6615905816226276915}
   - {fileID: 6615905817581332610}
-  m_Father: {fileID: 8131623139732956610}
+  m_Father: {fileID: 4432583782082290802}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7779134521708858696
 MeshFilter:
@@ -6300,31 +6298,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!143 &5263265270207870802
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6273798608279050327}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 0.5
-  m_Radius: 0.1
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: -0.25, z: 0}
 --- !u!114 &8131623140777354630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6345,35 +6318,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
---- !u!114 &303286065443942689
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6273798608279050327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: {fileID: 8131623140777354630}
-  camera: {fileID: 8504905812486363887}
-  trails:
-  - {fileID: 6615905817508830574}
-  - {fileID: 6615905816226276914}
-  - {fileID: 6615905817581332609}
-  turnSpeed: 5
-  baseSpeed: 50
-  boostSpeed: 200
-  acceleration: 10
-  speed: 0
-  reticle: {fileID: 6819837170954737498}
-  lockOnLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  fireRate: 0.1
-  distanceAlongPath: 0
 --- !u!1 &6508015524747324939
 GameObject:
   m_ObjectHideFlags: 0
@@ -7213,6 +7157,98 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7375886370222945506
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4432583782082290802}
+  - component: {fileID: 3438586877348045626}
+  - component: {fileID: 9140705048856704088}
+  m_Layer: 3
+  m_Name: PlayerShip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4432583782082290802
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7375886370222945506}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6654862522394362605}
+  m_Father: {fileID: 8131623139732956610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3438586877348045626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7375886370222945506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: {fileID: 8131623140777354630}
+  camera: {fileID: 8504905812486363887}
+  trails:
+  - {fileID: 6615905817508830574}
+  - {fileID: 6615905816226276914}
+  - {fileID: 6615905817581332609}
+  thruster: {fileID: 6615905817508830574}
+  mesh: {fileID: 6654862522394362605}
+  bulletSpawn: {fileID: 8436338386794596101}
+  controller: {fileID: 9140705048856704088}
+  turnSpeed: 100
+  baseSpeed: 50
+  boostSpeed: 200
+  acceleration: 10
+  speed: 0
+  reticle: {fileID: 6819837170954737498}
+  lockOnLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  fireRate: 0.1
+  distanceAlongPath: 0
+--- !u!143 &9140705048856704088
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7375886370222945506}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 0.5
+  m_Radius: 0.4
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: -0.15, z: 0}
 --- !u!1 &7734649205264901842
 GameObject:
   m_ObjectHideFlags: 0
@@ -7434,7 +7470,7 @@ Transform:
   m_Children:
   - {fileID: 4504218499694534223}
   - {fileID: 436392920321828641}
-  - {fileID: 6654862522394362605}
+  - {fileID: 4432583782082290802}
   - {fileID: 6819837170472286716}
   - {fileID: 8504905812486363881}
   - {fileID: 133424755171469300}
@@ -7464,6 +7500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: deb74df8c80f9b94da8a574314a54830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameOverSelectedObject: {fileID: 5628535168723790810}
   powerUpImage: {fileID: 3302671324208540391}
   startPlayerMode: 0
   gameOverMenu: {fileID: 8131623140616228715}
@@ -8076,11 +8113,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f1486e85f23594fae9349d7213af31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 100
+  rotationSpeed: 5
   distance: 10
   boostEffect: {fileID: 1814296040985746741}
   camSpeed: 10
-  player: {fileID: 303286065443942689}
+  player: {fileID: 3438586877348045626}
   followTarget: {fileID: 436392920321828641}
 --- !u!1 &8659897189068200085
 GameObject:

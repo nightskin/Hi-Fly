@@ -51,7 +51,7 @@ public class EnemyShip : MonoBehaviour
         {
             turnSpeed = 15;
         }
-        target = GameManager.playerShip.transform;
+        target = GameManager.playerShip.transform.GetChild(0);
         health = GetComponent<HealthSystem>();
         health.Heal(health.GetMaxHealth());
         //Set colors
@@ -86,9 +86,9 @@ public class EnemyShip : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            PlayerShip player = other.GetComponent<PlayerShip>();
-            player.health.TakeDamage(attackPower);
-            if (player.health.IsDead())
+            HealthSystem playerHealth = other.GetComponent<HealthSystem>();
+            playerHealth.TakeDamage(10);
+            if (playerHealth.IsDead())
             {
                 GameManager.gameOver = true;
             }

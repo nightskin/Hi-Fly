@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
-    public float rotationSpeed = 100;
+    public float rotationSpeed = 10;
     public float distance = 10;
     public ParticleSystem boostEffect;
 
@@ -15,7 +15,6 @@ public class PlayerCamera : MonoBehaviour
     void Start()
     {
         if(!boostEffect) boostEffect = transform.GetChild(0).GetComponent<ParticleSystem>();
-        if(!player) player = GameObject.FindWithTag("Player").GetComponent<PlayerShip>();
     }
 
     void Update()
@@ -30,18 +29,10 @@ public class PlayerCamera : MonoBehaviour
     {
         if(GameManager.playerMode == GameManager.PlayerMode.All_RANGE_MODE)
         {
-            float x = InputManager.input.Player.Steer.ReadValue<Vector2>().x;
-            float y = InputManager.input.Player.Steer.ReadValue<Vector2>().y;
-            float z = InputManager.input.Player.SteerZ.ReadValue<float>();
-
-
+            Quaternion targetRot = Quaternion.Euler(player.transform.localEulerAngles.x, player.transform.localEulerAngles.y, player.transform.localEulerAngles.z);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
             Vector3 camPos = player.transform.position + (player.transform.up * 3) - (transform.forward * distance);
             transform.position = Vector3.Lerp(transform.position, camPos, camSpeed * Time.deltaTime);
-
-            transform.rotation *= Quaternion.AngleAxis(x * rotationSpeed * Time.deltaTime, Vector3.up);
-            transform.rotation *= Quaternion.AngleAxis(y * rotationSpeed * Time.deltaTime, Vector3.right);
-            transform.rotation *= Quaternion.AngleAxis(z * rotationSpeed * Time.deltaTime, Vector3.forward);
-
         }
         else if(GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
         {
