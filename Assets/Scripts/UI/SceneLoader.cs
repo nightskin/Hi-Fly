@@ -8,22 +8,22 @@ public class SceneLoader : MonoBehaviour
 
     Animator animator;
 
-    private void Awake()
+    void Awake()
     {
         if(instance != null && instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
 
-    private void Start()
+    void Start()
     {
         animator = GetComponent<Animator>();
-        DontDestroyOnLoad(gameObject);
     }
 
     public IEnumerator Load(string name)

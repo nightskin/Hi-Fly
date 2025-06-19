@@ -89,8 +89,6 @@ public class PlayerShip : MonoBehaviour
     {
         if(health.IsAlive() && !GameManager.gamePaused)
         {
-
-
             if(GameManager.playerMode == GameManager.PlayerMode.All_RANGE_MODE)
             {
                 AllRangeControls();
@@ -99,7 +97,12 @@ public class PlayerShip : MonoBehaviour
             {
                 OnRailsControls();
             }
-            UpdatePowerUps();
+
+            if(GameManager.currentPowerUp != GameManager.PowerUps.NONE)
+            {
+                UpdatePowerUps();
+            }
+
         }
     }
     

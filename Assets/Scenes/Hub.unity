@@ -605,6 +605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: One Piece Is Mid
+  spawnAsteroidFieldPercentage: 25
   quadrantSize: 1000
   numberOfQuadrants: {x: 10, y: 10}
   levelPrefabs:
