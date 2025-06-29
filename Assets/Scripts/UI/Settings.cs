@@ -35,7 +35,8 @@ public class Settings : MonoBehaviour
         playerStripeSliders[1].value = GameManager.playerStripeColor.g;
         playerStripeSliders[2].value = GameManager.playerStripeColor.b;
         playerPreview.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameManager.playerStripeColor);
-
+        musicVolume.value = SoundManager.audioSource.volume;
+        sfxVolume.value = SoundManager.audioSource.volume;
     }
 
     public void ToggleDifficulty()
@@ -132,18 +133,14 @@ public class Settings : MonoBehaviour
         playerPreview.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", new Color(r,g,b));
     }
 
-    public void ChangeInvertLookSettings()
-    {
-        
-    }
 
     public void ChangeBGMVolume()
     {
-        
+        SoundManager.audioSource.volume = musicVolume.value;
     }
 
     public void ChangeSFXVolume()
     {
-        
+        SoundManager.sfxVolume = sfxVolume.value;
     }
 }

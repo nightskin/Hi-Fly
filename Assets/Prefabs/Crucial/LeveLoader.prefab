@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 5399211653466123249}
   - component: {fileID: 5399211653466123248}
   - component: {fileID: 3062852614406371262}
+  - component: {fileID: 1772640565880474135}
   - component: {fileID: 3188613581258917579}
   m_Layer: 5
   m_Name: LeveLoader
@@ -227,6 +228,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79692d36edff6784bacff64a7d304998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1772640565880474135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5399211653466123262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2f72d0b3816d6540b1a858c5ac0eba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!82 &3188613581258917579
 AudioSource:
   m_ObjectHideFlags: 0
@@ -237,8 +250,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 3b5b100401e72ad47bd456abecffb160, type: 3}
-  m_Resource: {fileID: 8300000, guid: 3b5b100401e72ad47bd456abecffb160, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 19ec253009e1fda448e9e78f4b8521f0, type: 3}
+  m_Resource: {fileID: 8300000, guid: 19ec253009e1fda448e9e78f4b8521f0, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

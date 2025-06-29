@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerShip : MonoBehaviour
 {
     //Necessary Components
-    GameManager gameManager;
     public HealthSystem health;
+    [SerializeField] GameObject miniMapIcon;
     [SerializeField] PlayerCamera camera;
     [SerializeField] TrailRenderer[] trails;
     [SerializeField] TrailRenderer thruster;
@@ -14,8 +15,7 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] CharacterController controller;
     
     Color thrustColor = Color.cyan;
-
-
+    
     [SerializeField][Min(1)] float turnSpeed = 5;
     [SerializeField] float baseSpeed = 10;
     [SerializeField] float boostSpeed = 50;
@@ -45,7 +45,11 @@ public class PlayerShip : MonoBehaviour
 
     void Start()
     {
-        gameManager = transform.root.GetComponent<GameManager>();
+
+        if(SceneManager.GetActiveScene().name == "Hub")
+        {
+            miniMapIcon.SetActive(true);
+        }
 
 
         Cursor.visible = false;
@@ -334,7 +338,7 @@ public class PlayerShip : MonoBehaviour
             {
                 Bullet b = obj.GetComponent<Bullet>();
                 //Set Needed Variables
-                b.owner = gameObject;
+                b.owner = mesh.gameObject;
             
                 if (lockOn.collider)
                 {
@@ -347,6 +351,7 @@ public class PlayerShip : MonoBehaviour
                     {
                         if (hit.transform.gameObject == b.owner)
                         {
+                            Debug.Log("Hit Self");
                             b.direction = ray.direction;
                         }
                         else
@@ -373,7 +378,7 @@ public class PlayerShip : MonoBehaviour
             {
                 Missile b = obj.GetComponent<Missile>();
                 //Set Needed Variables
-                b.owner = gameObject;
+                b.owner = mesh.gameObject;
             
                 if (lockOn.collider)
                 {
@@ -409,7 +414,7 @@ public class PlayerShip : MonoBehaviour
             if (lazer == null)
             {
                 lazer = objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
-                lazer.owner = gameObject;
+                lazer.owner = mesh.gameObject;
 
                 Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
                 if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))

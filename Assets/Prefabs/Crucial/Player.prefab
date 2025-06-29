@@ -5970,7 +5970,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4504218499694534223
 Transform:
   m_ObjectHideFlags: 0
@@ -7204,6 +7204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: {fileID: 8131623140777354630}
+  miniMapIcon: {fileID: 6102146295896708876}
   camera: {fileID: 8504905812486363887}
   trails:
   - {fileID: 6615905817508830574}

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6289166282623917522}
   - component: {fileID: 3261917764310468190}
   - component: {fileID: -8750440975964290690}
+  - component: {fileID: -399836068297543144}
   m_Layer: 2
   m_Name: PowerBombExplosion
   m_TagString: Untagged
@@ -252,6 +253,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-399836068297543144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8336328388692570255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14294570097fc6e40b58192ee5df4f31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8625618606670908997
 GameObject:
   m_ObjectHideFlags: 0

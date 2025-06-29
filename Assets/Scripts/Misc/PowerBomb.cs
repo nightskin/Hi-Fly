@@ -8,6 +8,7 @@ public class PowerBomb : MonoBehaviour
     [SerializeField][Min(0)] float damage = 30;
     float timer;
 
+
     void OnEnable()
     {
         timer = 0;

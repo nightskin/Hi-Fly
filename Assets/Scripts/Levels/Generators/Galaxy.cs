@@ -17,7 +17,7 @@ public class Galaxy : MonoBehaviour
 {
     // For Procedural Generation
     public string seed = "";
-    [SerializeField][Range(0,100)] float spawnAsteroidFieldPercentage = 10;
+    [SerializeField][Min(1)] int spawnAsteroidFieldChance = 3;
 
     public Noise noise;
 
@@ -106,8 +106,8 @@ public class Galaxy : MonoBehaviour
         {
             if (quadrants[i].type == 0)
             {
-                float makeAsteroidField = Random.Range(0.0f, 100.0f);
-                if(makeAsteroidField < spawnAsteroidFieldPercentage)
+                int makeAsteroidField = Random.Range(0, spawnAsteroidFieldChance);
+                if(makeAsteroidField == 0)
                 {
                     quadrants[i].type = 2;
                     Instantiate(asteroidFieldPrefab, quadrants[i].position , Quaternion.identity, transform);

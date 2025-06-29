@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-
     public float lifetime = 5;
     public GameObject owner = null;
     public Transform homingTarget = null;

@@ -16,7 +16,8 @@ public class Lazer : MonoBehaviour
     public float collisionInterval = 0.1f;
     float damageTimer = 0;
     ObjectPool objectPool;
-    
+
+
     void OnEnable()
     {
         objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();

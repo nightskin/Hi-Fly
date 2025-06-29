@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
         ON_RAILS_MODE,
     }
     public static PlayerMode playerMode;
+    public static bool inBattle = false;
     [SerializeField] PlayerMode startPlayerMode;
 
     public static Color playerBodyColor = Color.red;
