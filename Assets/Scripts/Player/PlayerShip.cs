@@ -36,8 +36,6 @@ public class PlayerShip : MonoBehaviour
 
     Lazer lazer = null;
     float shootTimer = 0;
-    float zRot = 0;
-    
 
     //For On Rails Controls
     Vector3 pathOffset = Vector3.zero;
@@ -231,15 +229,21 @@ public class PlayerShip : MonoBehaviour
         //steering
         float x = InputManager.input.Player.Steer.ReadValue<Vector2>().x;
         float y = InputManager.input.Player.Steer.ReadValue<Vector2>().y;
-        float z = InputManager.input.Player.SteerZ.ReadValue<float>();
+
 
         transform.rotation *= Quaternion.AngleAxis(x * turnSpeed * Time.deltaTime, Vector3.up);
         transform.rotation *= Quaternion.AngleAxis(y * turnSpeed * Time.deltaTime, Vector3.right);
-        transform.rotation *= Quaternion.AngleAxis(z * turnSpeed * Time.deltaTime, Vector3.forward);
+
+        if (transform.localEulerAngles.x > 90 || transform.localEulerAngles.x < -90)
+        {
+            if (x == 0 && y == 0)
+            {
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, 5 * Time.deltaTime));
+            }
+        }
 
 
-        zRot = Mathf.LerpAngle(zRot, InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35, 5 * Time.deltaTime);
-        mesh.localEulerAngles = new Vector3(0, 0, zRot);
+        mesh.localEulerAngles = new Vector3(0, 0, x * -35);
 
 
 

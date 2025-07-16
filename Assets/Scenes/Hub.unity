@@ -605,7 +605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: One Piece Is Mid
-  spawnAsteroidFieldPercentage: 25
+  spawnAsteroidFieldChance: 3
   quadrantSize: 1000
   numberOfQuadrants: {x: 10, y: 10}
   levelPrefabs:
@@ -1488,6 +1488,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4432583782082290802, guid: f9a426b5fc9288e48bcdc4a92bb825db,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432583782082290802, guid: f9a426b5fc9288e48bcdc4a92bb825db,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432583782082290802, guid: f9a426b5fc9288e48bcdc4a92bb825db,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}
       propertyPath: m_LocalPosition.x
