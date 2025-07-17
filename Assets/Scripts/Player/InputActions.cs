@@ -101,15 +101,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SteerZ"",
-                    ""type"": ""Value"",
-                    ""id"": ""5189525b-f1f8-4d29-a091-59ed65b88754"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Aim"",
                     ""type"": ""PassThrough"",
                     ""id"": ""91d72b52-0e43-450b-b9a2-51e5680adfca"",
@@ -137,9 +128,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Fire"",
+                    ""name"": ""Fire1"",
                     ""type"": ""Button"",
                     ""id"": ""e7079d14-1be9-4c0b-8f9f-85c1f3919d30"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire2"",
+                    ""type"": ""Button"",
+                    ""id"": ""de28c832-bc36-4a08-8b58-b6f0d49c142e"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -200,13 +200,13 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""StrafeY"",
-                    ""type"": ""Value"",
-                    ""id"": ""ecedfff8-e4db-4784-9559-5449cd1abb29"",
-                    ""expectedControlType"": ""Axis"",
+                    ""name"": ""Evade"",
+                    ""type"": ""Button"",
+                    ""id"": ""612b4740-ed6d-4f6a-a198-780f26d37e54"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -327,7 +327,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fire"",
+                    ""action"": ""Fire1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -338,7 +338,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fire"",
+                    ""action"": ""Fire1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -651,169 +651,48 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Gamepad"",
-                    ""id"": ""23919e25-f1ea-4096-a707-7d8496b0864c"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""StrafeY"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""1e2e8529-e846-4cf0-9012-d029061b99f5"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""StrafeY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""c5445640-1b46-4836-8d88-e89fd31f0f4e"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""StrafeY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""Keyboard"",
-                    ""id"": ""eb19a1cb-836b-4f5c-9ffa-6db752a499e9"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""StrafeY"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""25110c37-9916-43e5-8144-67c30ae749d1"",
-                    ""path"": ""<Keyboard>/ctrl"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""StrafeY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""58b093f4-b694-4fcf-a4e2-04e87c68d6bb"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""StrafeY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""MouseWheel"",
-                    ""id"": ""55f13e24-1d78-4419-9ec5-cf42407859d0"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SteerZ"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""d33227e4-b971-45e4-9d19-188bc78c29b3"",
-                    ""path"": ""<Mouse>/scroll/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SteerZ"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""b5cca0cc-96a2-49ee-8c1c-a0017e5476dd"",
-                    ""path"": ""<Mouse>/scroll/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SteerZ"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""Keyboard"",
-                    ""id"": ""444b8be8-f91e-4468-8119-e6dea5f30d98"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SteerZ"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""13c7cfc6-f9eb-4033-83d6-27b08511f64f"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SteerZ"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""f8d0bd4c-cf29-456b-87dc-62e748b2f638"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SteerZ"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""Gamepad"",
-                    ""id"": ""6aa85b3c-f0b1-4e41-ae54-b339a4cc9bd6"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SteerZ"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""413b36a8-0dd7-460b-aad0-661dd7348a55"",
+                    ""name"": """",
+                    ""id"": ""ff665218-9f37-40db-bbd9-f29c1dba633b"",
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SteerZ"",
+                    ""action"": ""Evade"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""positive"",
-                    ""id"": ""41d02293-533b-49d0-b99c-984f4c930ed4"",
+                    ""name"": """",
+                    ""id"": ""f415af6e-68e5-481e-b519-672d91482d7a"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Evade"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ac06ad9-7bac-4673-b816-638bb6b8f2cb"",
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SteerZ"",
+                    ""action"": ""Fire2"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""60118223-c074-416b-b85d-225269f1de4e"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -823,18 +702,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Steer = m_Player.FindAction("Steer", throwIfNotFound: true);
-        m_Player_SteerZ = m_Player.FindAction("SteerZ", throwIfNotFound: true);
         m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
         m_Player_Mouse_Position = m_Player.FindAction("Mouse_Position", throwIfNotFound: true);
         m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
-        m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+        m_Player_Fire1 = m_Player.FindAction("Fire1", throwIfNotFound: true);
+        m_Player_Fire2 = m_Player.FindAction("Fire2", throwIfNotFound: true);
         m_Player_Brake = m_Player.FindAction("Brake", throwIfNotFound: true);
         m_Player_CenterCrosshair = m_Player.FindAction("CenterCrosshair", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_UnPause = m_Player.FindAction("UnPause", throwIfNotFound: true);
         m_Player_ToggleMiniMap = m_Player.FindAction("ToggleMiniMap", throwIfNotFound: true);
         m_Player_StartGame = m_Player.FindAction("StartGame", throwIfNotFound: true);
-        m_Player_StrafeY = m_Player.FindAction("StrafeY", throwIfNotFound: true);
+        m_Player_Evade = m_Player.FindAction("Evade", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -916,18 +795,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Steer;
-    private readonly InputAction m_Player_SteerZ;
     private readonly InputAction m_Player_Aim;
     private readonly InputAction m_Player_Mouse_Position;
     private readonly InputAction m_Player_Boost;
-    private readonly InputAction m_Player_Fire;
+    private readonly InputAction m_Player_Fire1;
+    private readonly InputAction m_Player_Fire2;
     private readonly InputAction m_Player_Brake;
     private readonly InputAction m_Player_CenterCrosshair;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_UnPause;
     private readonly InputAction m_Player_ToggleMiniMap;
     private readonly InputAction m_Player_StartGame;
-    private readonly InputAction m_Player_StrafeY;
+    private readonly InputAction m_Player_Evade;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -944,10 +823,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Steer => m_Wrapper.m_Player_Steer;
         /// <summary>
-        /// Provides access to the underlying input action "Player/SteerZ".
-        /// </summary>
-        public InputAction @SteerZ => m_Wrapper.m_Player_SteerZ;
-        /// <summary>
         /// Provides access to the underlying input action "Player/Aim".
         /// </summary>
         public InputAction @Aim => m_Wrapper.m_Player_Aim;
@@ -960,9 +835,13 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Boost => m_Wrapper.m_Player_Boost;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Fire".
+        /// Provides access to the underlying input action "Player/Fire1".
         /// </summary>
-        public InputAction @Fire => m_Wrapper.m_Player_Fire;
+        public InputAction @Fire1 => m_Wrapper.m_Player_Fire1;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Fire2".
+        /// </summary>
+        public InputAction @Fire2 => m_Wrapper.m_Player_Fire2;
         /// <summary>
         /// Provides access to the underlying input action "Player/Brake".
         /// </summary>
@@ -988,9 +867,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @StartGame => m_Wrapper.m_Player_StartGame;
         /// <summary>
-        /// Provides access to the underlying input action "Player/StrafeY".
+        /// Provides access to the underlying input action "Player/Evade".
         /// </summary>
-        public InputAction @StrafeY => m_Wrapper.m_Player_StrafeY;
+        public InputAction @Evade => m_Wrapper.m_Player_Evade;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1020,9 +899,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Steer.started += instance.OnSteer;
             @Steer.performed += instance.OnSteer;
             @Steer.canceled += instance.OnSteer;
-            @SteerZ.started += instance.OnSteerZ;
-            @SteerZ.performed += instance.OnSteerZ;
-            @SteerZ.canceled += instance.OnSteerZ;
             @Aim.started += instance.OnAim;
             @Aim.performed += instance.OnAim;
             @Aim.canceled += instance.OnAim;
@@ -1032,9 +908,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Boost.started += instance.OnBoost;
             @Boost.performed += instance.OnBoost;
             @Boost.canceled += instance.OnBoost;
-            @Fire.started += instance.OnFire;
-            @Fire.performed += instance.OnFire;
-            @Fire.canceled += instance.OnFire;
+            @Fire1.started += instance.OnFire1;
+            @Fire1.performed += instance.OnFire1;
+            @Fire1.canceled += instance.OnFire1;
+            @Fire2.started += instance.OnFire2;
+            @Fire2.performed += instance.OnFire2;
+            @Fire2.canceled += instance.OnFire2;
             @Brake.started += instance.OnBrake;
             @Brake.performed += instance.OnBrake;
             @Brake.canceled += instance.OnBrake;
@@ -1053,9 +932,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @StartGame.started += instance.OnStartGame;
             @StartGame.performed += instance.OnStartGame;
             @StartGame.canceled += instance.OnStartGame;
-            @StrafeY.started += instance.OnStrafeY;
-            @StrafeY.performed += instance.OnStrafeY;
-            @StrafeY.canceled += instance.OnStrafeY;
+            @Evade.started += instance.OnEvade;
+            @Evade.performed += instance.OnEvade;
+            @Evade.canceled += instance.OnEvade;
         }
 
         /// <summary>
@@ -1070,9 +949,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Steer.started -= instance.OnSteer;
             @Steer.performed -= instance.OnSteer;
             @Steer.canceled -= instance.OnSteer;
-            @SteerZ.started -= instance.OnSteerZ;
-            @SteerZ.performed -= instance.OnSteerZ;
-            @SteerZ.canceled -= instance.OnSteerZ;
             @Aim.started -= instance.OnAim;
             @Aim.performed -= instance.OnAim;
             @Aim.canceled -= instance.OnAim;
@@ -1082,9 +958,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Boost.started -= instance.OnBoost;
             @Boost.performed -= instance.OnBoost;
             @Boost.canceled -= instance.OnBoost;
-            @Fire.started -= instance.OnFire;
-            @Fire.performed -= instance.OnFire;
-            @Fire.canceled -= instance.OnFire;
+            @Fire1.started -= instance.OnFire1;
+            @Fire1.performed -= instance.OnFire1;
+            @Fire1.canceled -= instance.OnFire1;
+            @Fire2.started -= instance.OnFire2;
+            @Fire2.performed -= instance.OnFire2;
+            @Fire2.canceled -= instance.OnFire2;
             @Brake.started -= instance.OnBrake;
             @Brake.performed -= instance.OnBrake;
             @Brake.canceled -= instance.OnBrake;
@@ -1103,9 +982,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @StartGame.started -= instance.OnStartGame;
             @StartGame.performed -= instance.OnStartGame;
             @StartGame.canceled -= instance.OnStartGame;
-            @StrafeY.started -= instance.OnStrafeY;
-            @StrafeY.performed -= instance.OnStrafeY;
-            @StrafeY.canceled -= instance.OnStrafeY;
+            @Evade.started -= instance.OnEvade;
+            @Evade.performed -= instance.OnEvade;
+            @Evade.canceled -= instance.OnEvade;
         }
 
         /// <summary>
@@ -1154,13 +1033,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSteer(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "SteerZ" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSteerZ(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "Aim" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1182,12 +1054,19 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBoost(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Fire" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Fire1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnFire(InputAction.CallbackContext context);
+        void OnFire1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Fire2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFire2(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Brake" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -1231,11 +1110,11 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnStartGame(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "StrafeY" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Evade" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnStrafeY(InputAction.CallbackContext context);
+        void OnEvade(InputAction.CallbackContext context);
     }
 }

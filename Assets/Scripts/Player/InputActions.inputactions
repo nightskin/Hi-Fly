@@ -15,15 +15,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SteerZ",
-                    "type": "Value",
-                    "id": "5189525b-f1f8-4d29-a091-59ed65b88754",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Aim",
                     "type": "PassThrough",
                     "id": "91d72b52-0e43-450b-b9a2-51e5680adfca",
@@ -51,9 +42,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Fire",
+                    "name": "Fire1",
                     "type": "Button",
                     "id": "e7079d14-1be9-4c0b-8f9f-85c1f3919d30",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Fire2",
+                    "type": "Button",
+                    "id": "de28c832-bc36-4a08-8b58-b6f0d49c142e",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -114,13 +114,13 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "StrafeY",
-                    "type": "Value",
-                    "id": "ecedfff8-e4db-4784-9559-5449cd1abb29",
-                    "expectedControlType": "Axis",
+                    "name": "Evade",
+                    "type": "Button",
+                    "id": "612b4740-ed6d-4f6a-a198-780f26d37e54",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -241,7 +241,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Fire",
+                    "action": "Fire1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -252,7 +252,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Fire",
+                    "action": "Fire1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -565,169 +565,48 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Gamepad",
-                    "id": "23919e25-f1ea-4096-a707-7d8496b0864c",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "StrafeY",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "1e2e8529-e846-4cf0-9012-d029061b99f5",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "StrafeY",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "c5445640-1b46-4836-8d88-e89fd31f0f4e",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "StrafeY",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Keyboard",
-                    "id": "eb19a1cb-836b-4f5c-9ffa-6db752a499e9",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "StrafeY",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "25110c37-9916-43e5-8144-67c30ae749d1",
-                    "path": "<Keyboard>/ctrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "StrafeY",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "58b093f4-b694-4fcf-a4e2-04e87c68d6bb",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "StrafeY",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "MouseWheel",
-                    "id": "55f13e24-1d78-4419-9ec5-cf42407859d0",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SteerZ",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "d33227e4-b971-45e4-9d19-188bc78c29b3",
-                    "path": "<Mouse>/scroll/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SteerZ",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "b5cca0cc-96a2-49ee-8c1c-a0017e5476dd",
-                    "path": "<Mouse>/scroll/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SteerZ",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Keyboard",
-                    "id": "444b8be8-f91e-4468-8119-e6dea5f30d98",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SteerZ",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "13c7cfc6-f9eb-4033-83d6-27b08511f64f",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SteerZ",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "f8d0bd4c-cf29-456b-87dc-62e748b2f638",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SteerZ",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Gamepad",
-                    "id": "6aa85b3c-f0b1-4e41-ae54-b339a4cc9bd6",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SteerZ",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "413b36a8-0dd7-460b-aad0-661dd7348a55",
+                    "name": "",
+                    "id": "ff665218-9f37-40db-bbd9-f29c1dba633b",
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SteerZ",
+                    "action": "Evade",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "positive",
-                    "id": "41d02293-533b-49d0-b99c-984f4c930ed4",
+                    "name": "",
+                    "id": "f415af6e-68e5-481e-b519-672d91482d7a",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Evade",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2ac06ad9-7bac-4673-b816-638bb6b8f2cb",
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SteerZ",
+                    "action": "Fire2",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "60118223-c074-416b-b85d-225269f1de4e",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
