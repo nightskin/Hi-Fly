@@ -30,6 +30,9 @@ public class EnemyShip : MonoBehaviour
     Vector3 direction;
     float shootTimer = 0;
 
+    bool aggro;
+    float turnTimer = 0;
+    float turnFrequency;
 
     void Start()
     {
@@ -39,17 +42,21 @@ public class EnemyShip : MonoBehaviour
     void OnEnable()
     {
         effect.enabled = true;
-        if(GameManager.difficulty == GameManager.Difficulty.EASY)
+        aggro = Util.RandomBool();
+        if (GameManager.difficulty == GameManager.Difficulty.EASY)
         {
             turnSpeed = 5;
+            turnFrequency = 5;
         }
-        else if(GameManager.difficulty == GameManager.Difficulty.NORMAL)
+        else if (GameManager.difficulty == GameManager.Difficulty.NORMAL)
         {
             turnSpeed = 10;
+            turnFrequency = 2.5f;
         }
-        else if(GameManager.difficulty == GameManager.Difficulty.HARD)
+        else if (GameManager.difficulty == GameManager.Difficulty.HARD)
         {
             turnSpeed = 15;
+            turnFrequency = 1.25f;
         }
         target = GameManager.playerShip.transform.GetChild(0);
         health = GetComponent<HealthSystem>();
@@ -67,7 +74,8 @@ public class EnemyShip : MonoBehaviour
             {
                 if (Vector3.Distance(transform.position, target.transform.position) <= perceptionRadius || health.HasBeenHitOnce() || skipPatrol)
                 {
-                    Fight_Boid();
+                    if (aggro) Fight_Boid();
+                    else Fight_Time_Based();
                 }
                 else
                 {
@@ -99,7 +107,6 @@ public class EnemyShip : MonoBehaviour
             health.TakeDamage(health.GetMaxHealth());
         }
     }
-
 
     void Die()
     {
@@ -135,7 +142,33 @@ public class EnemyShip : MonoBehaviour
 
         }
     }
-    
+
+    void Fight_Time_Based()
+    {
+        if (turnTimer <= 0)
+        {
+            direction = GetDirectionTowardsTarget();
+            turnTimer = Random.Range(0.0f, turnFrequency);
+        }
+        else
+        {
+            turnTimer -= Time.deltaTime;
+        }
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), 10 * Time.deltaTime);
+        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+
+
+        shootTimer -= Time.deltaTime;
+        if (shootTimer <= 0 && !effect.enabled)
+        {
+            if (Physics.SphereCast(transform.position, aimSkill,transform.forward, out RaycastHit hit, 1000, targetLayer))
+            {
+                Shoot();
+            }
+
+        }
+    }
+
     void Shoot()
     {
         var b = objectPool.Spawn("bullet", transform.position + transform.forward);

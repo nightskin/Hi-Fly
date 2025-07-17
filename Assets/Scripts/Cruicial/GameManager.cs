@@ -79,9 +79,6 @@ public class GameManager : MonoBehaviour
             playerMode = PlayerMode.All_RANGE_MODE;
         }
 
-        currentPowerUp = PowerUps.NONE;
-        UpdatePowerUpUI(null);
-
         playerMode = startPlayerMode;
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
