@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
         LAZER,
         RAPID_FIRE,
     }
-    public static PowerUps currentPowerUp = PowerUps.NONE;
+    public static PowerUps currentPowerUp = PowerUps.MISSILE;
     [SerializeField] Image powerUpImage;
 
     public enum PlayerMode

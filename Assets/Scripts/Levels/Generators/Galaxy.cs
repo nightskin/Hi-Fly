@@ -19,7 +19,7 @@ public class Galaxy : MonoBehaviour
     public string seed = "";
     [SerializeField][Min(1)] int spawnAsteroidFieldChance = 3;
 
-    public Noise noise;
+    public static Noise noise;
 
     public float quadrantSize = 1000;
     public Vector2Int numberOfQuadrants = new Vector2Int(10,10);

@@ -101,7 +101,7 @@ public class PlanetGenerator : MonoBehaviour
     {
         if(seed == string.Empty)
         {
-            noise = transform.root.GetComponent<Galaxy>().noise;
+            noise = Galaxy.noise;
         }
         else
         {

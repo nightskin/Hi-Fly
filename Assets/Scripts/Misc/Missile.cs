@@ -91,6 +91,16 @@ public class Missile : MonoBehaviour
             if (rayhit.transform.gameObject != owner)
             {
                 objectPool.Spawn("powerBombExplosion", transform.position);
+
+                if (rayhit.transform.tag == "Destructible")
+                {
+                    Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
+                    if (asteroid)
+                    {
+                        asteroid.RemoveBlocksInRadius(rayhit, 10);
+                    }
+                }
+
                 DeSpawn();
             }
         }

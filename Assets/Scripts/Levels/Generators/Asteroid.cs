@@ -8,8 +8,10 @@ using UnityEngine;
 public class Asteroid : MonoBehaviour
 {
     Voxel[] voxels = null;
-    [SerializeField] float isoLevel = 0;
-    [HideInInspector] public float radius;
+    float isoLevel = 0;
+    float OuterRadius;
+    float innerRadius;
+
     public int voxelResolution = 10;
     public float voxelSize = 10;
     
@@ -85,23 +87,61 @@ public class Asteroid : MonoBehaviour
         }
     }
 
+    public void RemoveBlocksInRadius(RaycastHit hit, float radius)
+    {
+        Vector3 pos = transform.InverseTransformPoint(hit.point);
+        for (int i = 0; i < voxels.Length; i++)
+        {
+            if (Vector3.Distance(pos, voxels[i].position) <= radius)
+            {
+                voxels[i].value = -1;
+            }
+        }
+
+        if (BlocksGone())
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+
+            verts.Clear();
+            tris.Clear();
+            uvs.Clear();
+            buffer = 0;
+            CreateMeshData();
+            UpdateMesh();
+        }
+    }
+
+
     void CreateVoxelData()
     {
-        radius = Random.Range(voxelSize * (voxelResolution - 1) / 4, voxelSize * (voxelResolution - 1) / 2);
+        OuterRadius = Random.Range(voxelSize * (voxelResolution - 1) / 4, voxelSize * (voxelResolution - 1) / 2);
+        innerRadius = OuterRadius - Random.Range(0.0f, voxelSize);
 
         voxels = new Voxel[(int)Mathf.Pow(voxelResolution, 3)];
         for (int i = 0; i < voxels.Length; i++)
         {
             voxels[i] = new Voxel();
             voxels[i].position = ToPosition(i);
-            float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + voxels[i].position);
-            if (distanceFromCenter > radius)
+            float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * OuterRadius), transform.position + voxels[i].position);
+            if (distanceFromCenter >= OuterRadius)
             {
                 voxels[i].value = -1;
             }
             else
             {
-                voxels[i].value = 1;
+                if (distanceFromCenter >= innerRadius)
+                {
+                    voxels[i].value = Galaxy.noise.Evaluate(voxels[i].position);
+                }
+                else
+                {
+                    voxels[i].value = 1;
+                }
+
+
             }
 
         }
@@ -181,21 +221,21 @@ public class Asteroid : MonoBehaviour
         Vector2[] uvs = new Vector2[3];
         if (norm.x >= norm.z && norm.x >= norm.y) // x plane
         {
-            uvs[0] = new Vector2(a.z, a.y);
-            uvs[1] = new Vector2(b.z, b.y);
-            uvs[2] = new Vector2(c.z, c.y);
+            uvs[0] = new Vector2(a.z, a.y) / voxelSize;
+            uvs[1] = new Vector2(b.z, b.y) / voxelSize;
+            uvs[2] = new Vector2(c.z, c.y) / voxelSize;
         }
         else if (norm.z >= norm.x && norm.z >= norm.y) // z plane
         {
-            uvs[0] = new Vector2(a.x, a.y);
-            uvs[1] = new Vector2(b.x, b.y);
-            uvs[2] = new Vector2(c.x, c.y);
+            uvs[0] = new Vector2(a.x, a.y) / voxelSize;
+            uvs[1] = new Vector2(b.x, b.y) / voxelSize;
+            uvs[2] = new Vector2(c.x, c.y) / voxelSize;
         }
         else if (norm.y >= norm.x && norm.y >= norm.z) // y plane
         {
-            uvs[0] = new Vector2(a.x, a.z);
-            uvs[1] = new Vector2(b.x, b.z);
-            uvs[2] = new Vector2(c.x, c.z);
+            uvs[0] = new Vector2(a.x, a.z) / voxelSize;
+            uvs[1] = new Vector2(b.x, b.z) / voxelSize;
+            uvs[2] = new Vector2(c.x, c.z) / voxelSize;
         }
 
         return uvs;
