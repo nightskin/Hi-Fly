@@ -35,26 +35,20 @@ public class PlayerShip : MonoBehaviour
     bool aimingViaGamepad = false;
     Vector2 reticlePosition;
     RaycastHit lockOn;
-    
-    [SerializeField] float fireRate = 0.1f;
+
+    public static float fireRate = 1f;
+    public static float bulletPower = 10;
+    public static float lazerPower = 10;
+
+
     ObjectPool objectPool;
 
     Lazer lazer = null;
     float shootTimer = 0;
 
-    //For On Rails Controls
-    Vector3 pathOffset = Vector3.zero;
-    [SerializeField] float distanceAlongPath = 0;
 
     void Start()
     {
-
-        if (SceneManager.GetActiveScene().name == "Hub")
-        {
-            miniMapIcon.SetActive(true);
-        }
-
-
         Cursor.visible = false;
         mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameManager.playerBodyColor);
         mesh.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameManager.playerStripeColor);
@@ -68,10 +62,7 @@ public class PlayerShip : MonoBehaviour
         controller = GetComponent<CharacterController>();
         targetSpeed = baseSpeed;
 
-
         InputManager.input.Player.Fire1.performed += Fire1_performed;
-        InputManager.input.Player.Fire2.performed += Fire2_performed;
-        InputManager.input.Player.Fire2.canceled += Fire2_canceled;
         InputManager.input.Player.Aim.performed += Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
@@ -96,22 +87,55 @@ public class PlayerShip : MonoBehaviour
 
     void Update()
     {
-        if(health.IsAlive() && !GameManager.gamePaused)
+        if (health.IsAlive() && !GameManager.gamePaused)
         {
-            if(GameManager.playerMode == GameManager.PlayerMode.All_RANGE_MODE)
+            if (GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE)
             {
-                AllRangeControls();
+                StandardControls();
             }
-            else if(GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
+            else if (GameManager.playerMode == GameManager.PlayerMode.HOVER_MODE)
             {
-                OnRailsControls();
-            }
-
-            if(GameManager.currentPowerUp != GameManager.PowerUps.NONE)
-            {
-                UpdatePowerUps();
+                HoverControls();
             }
 
+            //Shooting
+            if (InputManager.input.Player.Fire1.IsPressed())
+                {
+                if (shootTimer > 0)
+                {
+                    shootTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    FireBullet();
+                    shootTimer = fireRate;
+                }
+                }
+            else if (InputManager.input.Player.Fire2.IsPressed())
+            {
+                if (lazer)
+                {
+                    if (lockOn.collider)
+                    {
+                        lazer.direction = (lockOn.point - lazer.origin).normalized;
+                    }
+                    else
+                    {
+                        Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
+                        if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane))
+                        {
+                            if (hit.transform.tag != "Player")
+                            {
+                                lazer.direction = (hit.point - lazer.origin).normalized;
+                            }
+                        }
+                        else
+                        {
+                            lazer.direction = ray.direction;
+                        }
+                    }                    
+                }
+            }
         }
     }
     
@@ -143,7 +167,10 @@ public class PlayerShip : MonoBehaviour
             camera.boostEffect.Play();
             thrustColor = Color.red;
             targetSpeed = boostSpeed;
-            SetTrails(true);
+            foreach (TrailRenderer trail in trails)
+            {
+                trail.emitting = true;
+            }
         }
     }
 
@@ -156,23 +183,12 @@ public class PlayerShip : MonoBehaviour
     
     private void Fire1_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        FireBullet();
+        shootTimer = 0;
     }
 
     private void Fire2_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(GameManager.currentPowerUp == GameManager.PowerUps.MISSILE)
-        {
-            FireMissile();
-        }
-        else if(GameManager.currentPowerUp == GameManager.PowerUps.RAPID_FIRE)
-        {
-            shootTimer = 0;
-        }
-        else if(GameManager.currentPowerUp == GameManager.PowerUps.LAZER)
-        {
-            FireLazer();
-        }
+        FireLazer();
     }
 
     private void Fire2_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -193,13 +209,19 @@ public class PlayerShip : MonoBehaviour
                 camera.boostEffect.Stop();
                 thrustColor = Color.cyan;
                 targetSpeed = 0;
-                SetTrails(false);
+                foreach (TrailRenderer trail in trails)
+                {
+                    trail.emitting = false;
+                }
             }
             else
             {
                 camera.boostEffect.Stop();
                 targetSpeed = baseSpeed;
-                SetTrails(true);
+                foreach (TrailRenderer trail in trails)
+                {
+                    trail.emitting = true;
+                }
             }
         }
     }
@@ -239,7 +261,7 @@ public class PlayerShip : MonoBehaviour
         controller.enabled = true;
     }
 
-    void AllRangeControls()
+    void StandardControls()
     {
         //Forward Movement
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
@@ -265,7 +287,7 @@ public class PlayerShip : MonoBehaviour
 
         if (evading)
         {
-            mesh.localEulerAngles += new Vector3(0, 0, evadeDirection * evadeSpeed* Time.deltaTime);
+            mesh.localEulerAngles += new Vector3(0, 0, evadeDirection * evadeSpeed * Time.deltaTime);
             evadeTimer += Time.deltaTime;
             if (evadeTimer > 1)
             {
@@ -276,9 +298,6 @@ public class PlayerShip : MonoBehaviour
         {
             mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, x * -35, 10 * Time.deltaTime));
         }
-
-
-
 
         //Aiming
         if (aimingViaGamepad)
@@ -295,149 +314,44 @@ public class PlayerShip : MonoBehaviour
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;
         }
-
     }
     
-    void OnRailsControls()
+    void HoverControls()
     {
-        if (distanceAlongPath < 1 && GameManager.splinePathLength > 0)
-        {
-            //Handles Boosting
-            thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
-            speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
-            
-            // Rail Movement
-            transform.parent = camera.followTarget;
-            Vector3 followTargetPosition = GameManager.splinePath.EvaluatePosition(distanceAlongPath);
-            distanceAlongPath += (speed / GameManager.splinePathLength) * Time.deltaTime;
-            camera.followTarget.position = Vector3.MoveTowards(camera.followTarget.position, followTargetPosition, speed * Time.deltaTime);
-            Quaternion followTargetRotation = Quaternion.LookRotation(followTargetPosition - camera.followTarget.position);
-            camera.followTarget.rotation = Quaternion.Lerp(camera.followTarget.rotation, followTargetRotation, 10 * Time.deltaTime);
 
-            // Rail Offset
-            Vector2 moveInput = InputManager.input.Player.Steer.ReadValue<Vector2>();
-            Vector3 moveDirection = new Vector3(moveInput.x, moveInput.y, 0);
-            pathOffset += moveDirection * baseSpeed * Time.deltaTime;
-            
-
-            if(targetSpeed == baseSpeed)
-            {
-                pathOffset.x = Mathf.Clamp(pathOffset.x, -10, 10);
-                pathOffset.y = Mathf.Clamp(pathOffset.y, -3, 10);
-            }
-            else if(targetSpeed == boostSpeed)
-            {
-                pathOffset.x = Mathf.Clamp(pathOffset.x, -20, 20);
-                pathOffset.y = Mathf.Clamp(pathOffset.y, -5, 15);
-            }
-
-            transform.localPosition = pathOffset;
-
-
-            //Steering
-            float zRot = InputManager.input.Player.Steer.ReadValue<Vector2>().x * -35;
-            Quaternion targetRot = Quaternion.Euler(camera.followTarget.localEulerAngles.x, camera.followTarget.localEulerAngles.y, camera.followTarget.localEulerAngles.z + zRot);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
-
-
-            //Aiming
-            if (aimingViaGamepad)
-            {
-                reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * GameManager.aimSensitivy * Time.deltaTime;
-                reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
-                reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
-                reticle.rectTransform.position = reticlePosition;
-            }
-            else
-            {
-                reticlePosition = Input.mousePosition;
-                reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
-                reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
-                reticle.rectTransform.position = reticlePosition;
-            }
-        }
-        else
-        {
-            GameManager.playerMode = GameManager.PlayerMode.All_RANGE_MODE;
-            transform.parent = transform.root;
-            distanceAlongPath = 0;
-            pathOffset = Vector3.zero;
-        }
     }
 
     void FireBullet()
     {
-        if(!GameManager.gameOver && !GameManager.gamePaused)
+        //Initialize Bullet
+        GameObject obj = objectPool.Spawn("bullet", bulletSpawn.position);
+        if (obj != null)
         {
-            //Initialize Bullet
-            GameObject obj = objectPool.Spawn("bullet", bulletSpawn.position);
-            if (obj != null)
+            Bullet b = obj.GetComponent<Bullet>();
+            //Set Needed Variables
+            b.owner = mesh.gameObject;
+        
+            if (lockOn.collider)
             {
-                Bullet b = obj.GetComponent<Bullet>();
-                //Set Needed Variables
-                b.owner = mesh.gameObject;
-            
-                if (lockOn.collider)
-                {
-                    b.homingTarget = lockOn.collider.transform;
-                }
-                else
-                {
-                    Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
-                    if (Physics.Raycast(ray, out RaycastHit hit))
-                    {
-                        if (hit.transform.gameObject == b.owner)
-                        {
-                            b.direction = mesh.transform.forward;
-                        }
-                        else
-                        {
-                            b.direction = (hit.point - bulletSpawn.position).normalized;
-                        }
-                    }
-                    else
-                    {
-                        b.direction = ray.direction;
-                    }
-                }
+                b.homingTarget = lockOn.collider.transform;
             }
-        }
-    }
-
-    void FireMissile()
-    {
-        if (!GameManager.gameOver && !GameManager.gamePaused)
-        {
-            //Initialize Missile
-            GameObject obj = objectPool.Spawn("missile", bulletSpawn.position);
-            if (obj != null)
+            else
             {
-                Missile b = obj.GetComponent<Missile>();
-                //Set Needed Variables
-                b.owner = mesh.gameObject;
-            
-                if (lockOn.collider)
+                Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
+                if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    b.homingTarget = lockOn.collider.transform;
-                }
-                else
-                {
-                    Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
-                    if (Physics.Raycast(ray, out RaycastHit hit))
+                    if (hit.transform.gameObject == b.owner)
                     {
-                        if (hit.transform.gameObject == b.owner)
-                        {
-                            b.direction = ray.direction;
-                        }
-                        else
-                        {
-                            b.direction = (hit.point - bulletSpawn.position).normalized;
-                        }
+                        b.direction = mesh.transform.forward;
                     }
                     else
                     {
-                        b.direction = ray.direction;
+                        b.direction = (hit.point - bulletSpawn.position).normalized;
                     }
+                }
+                else
+                {
+                    b.direction = ray.direction;
                 }
             }
         }
@@ -445,85 +359,22 @@ public class PlayerShip : MonoBehaviour
 
     void FireLazer()
     {
-        if (!GameManager.gameOver && !GameManager.gamePaused)
+        if (lazer == null)
         {
-            if (lazer == null)
-            {
-                lazer = objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
-                lazer.owner = mesh.gameObject;
+            lazer = objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
+            lazer.owner = mesh.gameObject;
+            lazer.damage = lazerPower;
 
-                Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
-                if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))
-                {
-                    lazer.direction = (hit.point - lazer.origin).normalized;
-                }
-                else
-                {
-                    lazer.direction = ray.direction;
-                }
-            }
-        }
-    }
-
-    void UpdateLazer()
-    {
-        if (!GameManager.gamePaused && !GameManager.gameOver)
-        {
-            if (lockOn.collider)
+            Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
+            if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))
             {
-                lazer.direction = (lockOn.point - lazer.origin).normalized;
+                lazer.direction = (hit.point - lazer.origin).normalized;
             }
             else
             {
-                Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
-                if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane))
-                {
-                    if (hit.transform.tag != "Player")
-                    {
-                        lazer.direction = (hit.point - lazer.origin).normalized;
-                    }
-                }
-                else
-                {
-                    lazer.direction = ray.direction;
-                }
+                lazer.direction = ray.direction;
             }
         }
     }
 
-    void UpdatePowerUps()
-    {
-        //PowerUps
-        if (GameManager.currentPowerUp == GameManager.PowerUps.LAZER)
-        {
-            if(lazer != null)
-            {
-                UpdateLazer();
-            }
-        }
-        else if (GameManager.currentPowerUp == GameManager.PowerUps.RAPID_FIRE)
-        {
-            if(InputManager.input.Player.Fire2.IsPressed())
-            {
-                if (shootTimer > 0)
-                {
-                    shootTimer -= Time.deltaTime;
-                }
-                else
-                {
-                    FireBullet();
-                    shootTimer = fireRate;
-                }
-            }
-
-        }
-    }
-    
-    void SetTrails(bool active)
-    {
-        foreach (TrailRenderer trail in trails)
-        {
-            trail.emitting = active;
-        }
-    }
 }

@@ -14,19 +14,19 @@ public class MenuButtons : MonoBehaviour
     public void PlayGame()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.Load("PlayGame"));
+        StartCoroutine(SceneLoader.instance.Load("CharacterSelect"));
     }
 
-    public void NewGame()
+    public void SelectJetFly()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.Load("Intro"));
+        StartCoroutine(SceneLoader.instance.Load("Game"));
     }
-
-    public void Continue()
+    
+    public void SelectHoverShot()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.Load("Hub"));
+        StartCoroutine(SceneLoader.instance.Load("Game"));
     }
 
     public void BackToMenu()

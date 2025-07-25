@@ -27,14 +27,14 @@ public class PlayerCamera : MonoBehaviour
 
     void CameraMovement()
     {
-        if(GameManager.playerMode == GameManager.PlayerMode.All_RANGE_MODE)
+        if(GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE)
         {
             Quaternion targetRot = Quaternion.Euler(player.transform.localEulerAngles.x, player.transform.localEulerAngles.y, player.transform.localEulerAngles.z);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
             Vector3 camPos = player.transform.position + (player.transform.up * 3) - (transform.forward * distance);
             transform.position = Vector3.Lerp(transform.position, camPos, camSpeed * Time.deltaTime);
         }
-        else if(GameManager.playerMode == GameManager.PlayerMode.ON_RAILS_MODE)
+        else if(GameManager.playerMode == GameManager.PlayerMode.HOVER_MODE)
         {
             Vector3 camPos = followTarget.position + (followTarget.transform.up * 3) - (transform.forward * distance);
             transform.position = Vector3.Lerp(transform.position, camPos, camSpeed * Time.deltaTime);

@@ -16,21 +16,12 @@ public class GameManager : MonoBehaviour
     }
     public static Difficulty difficulty = Difficulty.NORMAL;
 
-    //For ItemManagment
-    public enum PowerUps
-    {
-        NONE,
-        MISSILE,
-        LAZER,
-        RAPID_FIRE,
-    }
-    public static PowerUps currentPowerUp = PowerUps.MISSILE;
-    [SerializeField] Image powerUpImage;
+
 
     public enum PlayerMode
     {
-        All_RANGE_MODE,
-        ON_RAILS_MODE,
+        STANDARD_MODE,
+        HOVER_MODE,
     }
     public static PlayerMode playerMode;
     public static bool inBattle = false;
@@ -59,58 +50,19 @@ public class GameManager : MonoBehaviour
 
     float gameOverTimer = 1;
     bool gameOverActive = false;
-
-    public static SplineContainer splinePath;
-    public static float splinePathLength = 0;
     
 
     void Start()
     {
-        //Needed For OnRailsMovement
-        GameObject path = GameObject.Find("Path");
-        if (path)
-        {
-            splinePath = path.GetComponent<SplineContainer>();
-            splinePathLength = splinePath.CalculateLength();
-        }
-        else
-        {
-            splinePathLength = 0;
-            playerMode = PlayerMode.All_RANGE_MODE;
-        }
-
         playerMode = startPlayerMode;
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();
 
-        if(SceneManager.GetActiveScene().name != "Hub")
-        {
-            miniMapCamera.gameObject.SetActive(false);
-            miniMap.SetActive(false);
-        }
-
         InputManager.input.Player.Pause.performed += Pause_performed;
         InputManager.input.Player.UnPause.performed += UnPause_performed;
-        InputManager.input.Player.ToggleMiniMap.performed += ToggleMiniMap_performed;
     }
 
-    private void ToggleMiniMap_performed(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        if(SceneManager.GetActiveScene().name == "Hub")
-        {
-            if(!miniMap.activeSelf)
-            {
-                miniMapCamera.gameObject.SetActive(true);
-                miniMap.SetActive(true);
-            }
-            else
-            {
-                miniMapCamera.gameObject.SetActive(false);
-                miniMap.SetActive(false);
-            }
-        }
-    }
 
     private void UnPause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
@@ -166,23 +118,8 @@ public class GameManager : MonoBehaviour
     {
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
-        InputManager.input.Player.ToggleMiniMap.performed -= ToggleMiniMap_performed;
     }
     
-    public void UpdatePowerUpUI(Sprite sprite)
-    {
-        if(sprite == null)
-        {
-            powerUpImage.color = Color.clear;
-        }
-        else
-        {
-            powerUpImage.color = Color.white;
-        }
-        powerUpImage.sprite = sprite;
-    }
-
-
     public void Pause()
     {
         Time.timeScale = 0;

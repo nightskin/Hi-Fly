@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 public class PickUp : MonoBehaviour
@@ -11,9 +10,6 @@ public class PickUp : MonoBehaviour
         HEALTH_SMALL,
         HEALTH_LARGE,
         HEALTH_MAX,
-        MISSILE,
-        LAZER,
-        RAPID_FIRE,
     }
     public Type type;
     
@@ -21,7 +17,7 @@ public class PickUp : MonoBehaviour
 
     void OnEnable()
     {
-        type = (Type)Random.Range(0, 6);
+        type = (Type)Random.Range(0, 3);
         renderer.sprite = visuals[(int)type];
         followPlayer = false;
     }
@@ -50,21 +46,6 @@ public class PickUp : MonoBehaviour
             else if(type == Type.HEALTH_MAX)
             {
                 other.GetComponent<HealthSystem>().Heal(other.GetComponent<HealthSystem>().GetMaxHealth());
-            }
-            else if(type == Type.MISSILE)
-            {
-                GameManager.currentPowerUp = GameManager.PowerUps.MISSILE;
-                GameObject.Find("Player").GetComponent<GameManager>().UpdatePowerUpUI(renderer.sprite);
-            }
-            else if(type == Type.LAZER)
-            {
-                GameManager.currentPowerUp = GameManager.PowerUps.LAZER;
-                GameObject.Find("Player").GetComponent<GameManager>().UpdatePowerUpUI(renderer.sprite);
-            }
-            else if(type== Type.RAPID_FIRE)
-            {
-                GameManager.currentPowerUp = GameManager.PowerUps.RAPID_FIRE;
-                GameObject.Find("Player").GetComponent<GameManager>().UpdatePowerUpUI(renderer.sprite);
             }
             gameObject.SetActive(false);
         }

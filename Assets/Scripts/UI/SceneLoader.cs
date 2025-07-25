@@ -28,7 +28,7 @@ public class SceneLoader : MonoBehaviour
 
     public IEnumerator Load(string name)
     {
-        InputManager.input.Disable();
+        //InputManager.input.Disable();
         animator.SetTrigger("start");
 
         yield return new WaitForSeconds(1);
@@ -38,7 +38,7 @@ public class SceneLoader : MonoBehaviour
 
     public IEnumerator Load(int index) 
     {
-        InputManager.input.Disable();
+        //InputManager.input.Disable();
         animator.SetTrigger("start");
 
         yield return new WaitForSeconds(1);
