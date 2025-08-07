@@ -15,10 +15,10 @@ EditorBuildSettings:
     path: Assets/Scenes/Settings.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/CharacterSelect.unity
+    path: Assets/Scenes/LevelSelect.unity
     guid: 5be305991c28ce541ae3da370751e90d
   - enabled: 1
-    path: Assets/Scenes/Game.unity
+    path: Assets/Scenes/(1).unity
     guid: 1f06923e135a29d47badc085160f53f0
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 9b668762642faae4a939e6046f4c3cfe,

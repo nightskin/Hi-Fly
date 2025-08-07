@@ -8,8 +8,8 @@ public class PickUp : MonoBehaviour
     public enum Type
     {
         HEALTH_SMALL,
-        HEALTH_LARGE,
-        HEALTH_MAX,
+        POWER_BOMB,
+        LAZER,
     }
     public Type type;
     
@@ -39,13 +39,13 @@ public class PickUp : MonoBehaviour
             {
                 other.GetComponent<HealthSystem>().Heal(30);
             }
-            else if(type == Type.HEALTH_LARGE)
+            else if(type == Type.LAZER)
             {
-                other.GetComponent<HealthSystem>().Heal(50);
+                GameManager.currentPowerUp = GameManager.PlayerPowerUp.POWER_BEAM;
             }
-            else if(type == Type.HEALTH_MAX)
+            else if(type == Type.POWER_BOMB)
             {
-                other.GetComponent<HealthSystem>().Heal(other.GetComponent<HealthSystem>().GetMaxHealth());
+                GameManager.currentPowerUp = GameManager.PlayerPowerUp.POWER_BOMB;
             }
             gameObject.SetActive(false);
         }

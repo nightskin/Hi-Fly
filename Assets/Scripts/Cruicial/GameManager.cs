@@ -1,13 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEngine.Splines;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] GameObject gameOverSelectedObject;
-
     public enum Difficulty
     {
         EASY,
@@ -15,26 +12,22 @@ public class GameManager : MonoBehaviour
         HARD,
     }
     public static Difficulty difficulty = Difficulty.NORMAL;
-
-
-
-    public enum PlayerMode
-    {
-        STANDARD_MODE,
-        HOVER_MODE,
-    }
-    public static PlayerMode playerMode;
     public static bool inBattle = false;
-    [SerializeField] PlayerMode startPlayerMode;
 
+
+    public enum PlayerPowerUp
+    {
+        NONE,
+        POWER_BOMB,
+        POWER_BEAM,
+    }
+    public static PlayerPowerUp currentPowerUp;
     public static Color playerBodyColor = Color.red;
     public static Color playerStripeColor = new Color(1, 1, 0);
     public static float aimSensitivy = 1000;
 
     public GameObject gameOverMenu;
     public GameObject gamePauseMenu;
-    public GameObject miniMap;
-    public Camera miniMapCamera;
 
 
     public static PlayerShip playerShip;
@@ -54,7 +47,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        playerMode = startPlayerMode;
+        currentPowerUp = PlayerPowerUp.NONE;
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();

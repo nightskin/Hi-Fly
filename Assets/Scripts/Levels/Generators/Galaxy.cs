@@ -106,7 +106,7 @@ public class Galaxy : MonoBehaviour
         {
             if (quadrants[i].type == 0)
             {
-                int makeAsteroidField = Random.Range(0, spawnAsteroidFieldChance);
+                int makeAsteroidField = Random.Range(0, spawnAsteroidFieldChance + 1);
                 if(makeAsteroidField == 0)
                 {
                     quadrants[i].type = 2;

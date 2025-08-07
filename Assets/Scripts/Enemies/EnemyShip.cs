@@ -30,6 +30,7 @@ public class EnemyShip : MonoBehaviour
     Vector3 direction;
     float shootTimer = 0;
 
+    bool diedByCrashing;
     bool aggro;
     float turnTimer = 0;
     float turnFrequency;
@@ -41,6 +42,7 @@ public class EnemyShip : MonoBehaviour
 
     void OnEnable()
     {
+        diedByCrashing = false;
         effect.enabled = true;
         aggro = Util.RandomBool();
         if (GameManager.difficulty == GameManager.Difficulty.EASY)
@@ -92,7 +94,7 @@ public class EnemyShip : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player")
+        if (other.tag == "Player")
         {
             HealthSystem playerHealth = other.GetComponent<HealthSystem>();
             playerHealth.TakeDamage(10);
@@ -101,17 +103,19 @@ public class EnemyShip : MonoBehaviour
                 GameManager.gameOver = true;
             }
             health.TakeDamage(health.GetMaxHealth());
+            diedByCrashing = true;
         }
-        if(other.tag == "Destructible" || other.tag == "Surface")
+        if (other.tag == "Destructible" || other.tag == "Surface")
         {
             health.TakeDamage(health.GetMaxHealth());
+            diedByCrashing = true;
         }
     }
 
     void Die()
     {
         var explosion = GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("explosion", transform.position);
-        if (Util.RandomBool())
+        if (Util.RandomBool() && !diedByCrashing)
         {
             GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("pickup", transform.position);
         }

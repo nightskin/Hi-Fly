@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: One Piece Is Mid
-  spawnAsteroidFieldChance: 4
+  spawnAsteroidFieldChance: 3
   quadrantSize: 1000
   numberOfQuadrants: {x: 10, y: 10}
   levelPrefabs:
@@ -711,26 +711,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3302671324208540391, guid: f9a426b5fc9288e48bcdc4a92bb825db,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4432583782082290802, guid: f9a426b5fc9288e48bcdc4a92bb825db,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4432583782082290802, guid: f9a426b5fc9288e48bcdc4a92bb825db,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4432583782082290802, guid: f9a426b5fc9288e48bcdc4a92bb825db,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -806,8 +786,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1282576544}
+  - {fileID: 958192644}
   - {fileID: 203844589}
   - {fileID: 1160234427}
   - {fileID: 349310802}
-  - {fileID: 958192644}
   - {fileID: 8131623140160295966}

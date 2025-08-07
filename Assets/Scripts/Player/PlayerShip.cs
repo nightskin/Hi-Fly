@@ -6,7 +6,6 @@ public class PlayerShip : MonoBehaviour
 {
     //Necessary Components
     public HealthSystem health;
-    [SerializeField] GameObject miniMapIcon;
     [SerializeField] PlayerCamera camera;
     [SerializeField] TrailRenderer[] trails;
     [SerializeField] TrailRenderer thruster;
@@ -63,6 +62,8 @@ public class PlayerShip : MonoBehaviour
         targetSpeed = baseSpeed;
 
         InputManager.input.Player.Fire1.performed += Fire1_performed;
+        InputManager.input.Player.Fire2.performed += Fire2_performed;
+        InputManager.input.Player.Fire2.canceled += Fire2_canceled;
         InputManager.input.Player.Aim.performed += Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
@@ -89,18 +90,11 @@ public class PlayerShip : MonoBehaviour
     {
         if (health.IsAlive() && !GameManager.gamePaused)
         {
-            if (GameManager.playerMode == GameManager.PlayerMode.STANDARD_MODE)
-            {
-                StandardControls();
-            }
-            else if (GameManager.playerMode == GameManager.PlayerMode.HOVER_MODE)
-            {
-                HoverControls();
-            }
-
+            Controls();
+            
             //Shooting
             if (InputManager.input.Player.Fire1.IsPressed())
-                {
+            {
                 if (shootTimer > 0)
                 {
                     shootTimer -= Time.deltaTime;
@@ -110,7 +104,7 @@ public class PlayerShip : MonoBehaviour
                     FireBullet();
                     shootTimer = fireRate;
                 }
-                }
+            }
             else if (InputManager.input.Player.Fire2.IsPressed())
             {
                 if (lazer)
@@ -133,12 +127,12 @@ public class PlayerShip : MonoBehaviour
                         {
                             lazer.direction = ray.direction;
                         }
-                    }                    
+                    }
                 }
             }
         }
     }
-    
+
     void OnDestroy()
     {
         InputManager.input.Player.Fire1.performed -= Fire1_performed;
@@ -150,6 +144,7 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.Brake.performed -= Brake_performed;
         InputManager.input.Player.Boost.performed -= Boost_performed;
         InputManager.input.Player.Boost.canceled -= Boost_canceled;
+        InputManager.input.Player.Evade.performed -= Evade_performed;
     }
 
     void OnTriggerEnter(Collider other)
@@ -188,7 +183,14 @@ public class PlayerShip : MonoBehaviour
 
     private void Fire2_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        FireLazer();
+        if (GameManager.currentPowerUp == GameManager.PlayerPowerUp.POWER_BEAM)
+        {
+            FireLazer();
+        }
+        else if (GameManager.currentPowerUp == GameManager.PlayerPowerUp.POWER_BOMB)
+        {
+            FirePowerBomb();
+        }
     }
 
     private void Fire2_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -261,7 +263,7 @@ public class PlayerShip : MonoBehaviour
         controller.enabled = true;
     }
 
-    void StandardControls()
+    void Controls()
     {
         //Forward Movement
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
@@ -296,7 +298,7 @@ public class PlayerShip : MonoBehaviour
         }
         else
         {
-            mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, x * -35, 10 * Time.deltaTime));
+            mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, x * -45, 10 * Time.deltaTime));
         }
 
         //Aiming
@@ -314,11 +316,6 @@ public class PlayerShip : MonoBehaviour
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;
         }
-    }
-    
-    void HoverControls()
-    {
-
     }
 
     void FireBullet()
@@ -342,7 +339,7 @@ public class PlayerShip : MonoBehaviour
                 {
                     if (hit.transform.gameObject == b.owner)
                     {
-                        b.direction = mesh.transform.forward;
+                        b.direction = ray.direction;
                     }
                     else
                     {
@@ -352,6 +349,42 @@ public class PlayerShip : MonoBehaviour
                 else
                 {
                     b.direction = ray.direction;
+                }
+            }
+        }
+    }
+
+    void FirePowerBomb()
+    {
+        //Initialize Bullet
+        GameObject obj = objectPool.Spawn("missile", bulletSpawn.position);
+        if (obj != null)
+        {
+            Missile m = obj.GetComponent<Missile>();
+            //Set Needed Variables
+            m.owner = mesh.gameObject;
+        
+            if (lockOn.collider)
+            {
+                m.homingTarget = lockOn.collider.transform;
+            }
+            else
+            {
+                Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    if (hit.transform.gameObject == m.owner)
+                    {
+                        m.direction = ray.direction;
+                    }
+                    else
+                    {
+                        m.direction = (hit.point - bulletSpawn.position).normalized;
+                    }
+                }
+                else
+                {
+                    m.direction = ray.direction;
                 }
             }
         }

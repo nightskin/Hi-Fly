@@ -176,7 +176,7 @@ MonoBehaviour:
   damage: 30
   direction: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}
-  collisionInterval: 0.1
+  collisionInterval: 0.05
 --- !u!82 &983199469248207979
 AudioSource:
   m_ObjectHideFlags: 0
