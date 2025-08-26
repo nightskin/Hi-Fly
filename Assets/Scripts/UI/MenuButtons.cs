@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 public class MenuButtons : MonoBehaviour
 {
     [SerializeField] EventSystem eventSystem;
+    int selectedLevel = 0;
 
     public void OpenSettings()
     {
@@ -17,10 +18,15 @@ public class MenuButtons : MonoBehaviour
         StartCoroutine(SceneLoader.instance.Load("LevelSelect"));
     }
 
-    public void SelectLevel1()
+    public void ChangeSelectedLevel()
+    {
+
+    }
+
+    public void SelectLevel()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.Load("1"));
+        StartCoroutine(SceneLoader.instance.Load(selectedLevel.ToString()));
     }
 
     public void BackToMenu()

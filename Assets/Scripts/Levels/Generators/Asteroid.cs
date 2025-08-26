@@ -126,22 +126,13 @@ public class Asteroid : MonoBehaviour
             voxels[i] = new Voxel();
             voxels[i].position = ToPosition(i);
             float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * OuterRadius), transform.position + voxels[i].position);
-            if (distanceFromCenter >= OuterRadius)
+            if (distanceFromCenter > OuterRadius)
             {
                 voxels[i].value = -1;
             }
             else
             {
-                if (distanceFromCenter >= innerRadius)
-                {
-                    voxels[i].value = Galaxy.noise.Evaluate(voxels[i].position);
-                }
-                else
-                {
-                    voxels[i].value = 1;
-                }
-
-
+                voxels[i].value = 1;
             }
 
         }

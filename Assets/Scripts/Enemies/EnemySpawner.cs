@@ -36,7 +36,6 @@ public class EnemySpawner : MonoBehaviour
                     int i = Random.Range(0, enemyPrefabs.Length);
                     Vector3 pos = transform.position + Random.insideUnitSphere * spawnRadius;
                     var enemy = Instantiate(enemyPrefabs[i], pos, Util.RandomRotation(), transform);
-                    enemy.GetComponent<EnemyShip>().skipPatrol = skipPatrol;
                     enemyShips.Add(enemy);
                 }
                 else
@@ -59,7 +58,6 @@ public class EnemySpawner : MonoBehaviour
                     int i = Random.Range(0, enemyPrefabs.Length);
                     Vector3 pos = transform.position + Random.insideUnitSphere * spawnRadius;
                     var enemy = Instantiate(enemyPrefabs[i], pos, Util.RandomRotation(), transform);
-                    enemy.GetComponent<EnemyShip>().skipPatrol = skipPatrol;
                     enemyShips.Add(enemy);
                 }
                 else

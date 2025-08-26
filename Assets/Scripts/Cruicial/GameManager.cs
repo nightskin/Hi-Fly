@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public static Difficulty difficulty = Difficulty.NORMAL;
     public static bool inBattle = false;
 
+    public static bool isOnRails = false;
 
     public enum PlayerPowerUp
     {

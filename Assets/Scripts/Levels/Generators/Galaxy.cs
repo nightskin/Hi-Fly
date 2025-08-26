@@ -16,7 +16,7 @@ class GalaxyQuadrant
 public class Galaxy : MonoBehaviour
 {
     // For Procedural Generation
-    public string seed = "";
+    public string seed = "One Piece Is Mid";
     [SerializeField][Min(1)] int spawnAsteroidFieldChance = 3;
 
     public static Noise noise;
@@ -41,7 +41,7 @@ public class Galaxy : MonoBehaviour
     bool encounterInProgress = false;
     [SerializeField] bool enableEncounters;
     
-    void Start()
+    void Awake()
     {
         quadrants = new List<GalaxyQuadrant>();
         secondsBeforeEncounter = Random.Range(minEncounterTime, maxEncounterTime);

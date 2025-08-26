@@ -158,16 +158,12 @@ MonoBehaviour:
   pickUpPrefab: {fileID: 8398003246989385244, guid: b67f019871a350d459791c6409acf0d8,
     type: 3}
   effect: {fileID: -2206290432636866133}
-  skipPatrol: 0
   health: {fileID: 7978833964992945737}
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
-  avoidanceWeight: 100
-  flockingWeight: 50
   aimSkill: 1
-  perceptionRadius: 100
-  cohesionRadius: 100
+  cohesionRadius: 500
   avoidRadius: 5
   attackPower: 10
   turnSpeed: 10
