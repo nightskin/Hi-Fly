@@ -162,7 +162,7 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
-  aimSkill: 1
+  shootThreshold: 0.8
   cohesionRadius: 500
   avoidRadius: 5
   attackPower: 10

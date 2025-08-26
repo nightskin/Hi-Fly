@@ -173,7 +173,7 @@ MonoBehaviour:
   - {r: 1.4980392, g: 0, b: 4, a: 1}
   renderer: {fileID: 7468776964873725496}
   owner: {fileID: 0}
-  damage: 10
+  damage: 30
   direction: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}
 --- !u!82 &983199469248207979

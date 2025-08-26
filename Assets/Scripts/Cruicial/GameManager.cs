@@ -12,9 +12,15 @@ public class GameManager : MonoBehaviour
         HARD,
     }
     public static Difficulty difficulty = Difficulty.NORMAL;
-    public static bool inBattle = false;
 
-    public static bool isOnRails = false;
+    public enum PlayerMode
+    {
+        ALL_RANGE,
+        ON_RAILS,
+        TPS,
+    }
+    public static PlayerMode playerMode;
+    [SerializeField] PlayerMode startPlayerMode;
 
     public enum PlayerPowerUp
     {
@@ -48,6 +54,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        playerMode = startPlayerMode;
         currentPowerUp = PlayerPowerUp.NONE;
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();

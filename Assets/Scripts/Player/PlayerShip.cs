@@ -90,7 +90,19 @@ public class PlayerShip : MonoBehaviour
     {
         if (health.IsAlive() && !GameManager.gamePaused)
         {
-            Controls();
+            if (GameManager.playerMode == GameManager.PlayerMode.ALL_RANGE)
+            {
+                AllRangeMode();
+            }
+            else if (GameManager.playerMode == GameManager.PlayerMode.ON_RAILS)
+            {
+                OnRailsMode();
+            }
+            else if(GameManager.playerMode == GameManager.PlayerMode.TPS)
+            {
+                TPS_MODE();
+            }
+
             
             //Shooting
             if (InputManager.input.Player.Fire1.IsPressed())
@@ -159,6 +171,7 @@ public class PlayerShip : MonoBehaviour
     {
         if (!GameManager.gamePaused && !GameManager.gameOver)
         {
+            if (GameManager.playerMode == GameManager.PlayerMode.TPS) GameManager.playerMode = GameManager.PlayerMode.ALL_RANGE;
             camera.boostEffect.Play();
             thrustColor = Color.red;
             targetSpeed = boostSpeed;
@@ -206,20 +219,24 @@ public class PlayerShip : MonoBehaviour
     {
         if (!GameManager.gamePaused && !GameManager.gameOver)
         {
-            if(targetSpeed > 0)
+            if(GameManager.playerMode == GameManager.PlayerMode.ALL_RANGE)
             {
+                //Stop
+                GameManager.playerMode = GameManager.PlayerMode.TPS;
+                reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
+                reticle.rectTransform.position = reticlePosition;
                 camera.boostEffect.Stop();
                 thrustColor = Color.cyan;
-                targetSpeed = 0;
                 foreach (TrailRenderer trail in trails)
                 {
                     trail.emitting = false;
                 }
             }
-            else
+            else if(GameManager.playerMode == GameManager.PlayerMode.TPS)
             {
+                //Go
+                GameManager.playerMode = GameManager.PlayerMode.ALL_RANGE;
                 camera.boostEffect.Stop();
-                targetSpeed = baseSpeed;
                 foreach (TrailRenderer trail in trails)
                 {
                     trail.emitting = true;
@@ -246,7 +263,7 @@ public class PlayerShip : MonoBehaviour
 
     private void Evade_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (!evading)
+        if (!evading && GameManager.playerMode != GameManager.PlayerMode.TPS)
         {
             evadeTimer = 0;
             evading = true;
@@ -263,7 +280,26 @@ public class PlayerShip : MonoBehaviour
         controller.enabled = true;
     }
 
-    void Controls()
+    void OnRailsMode()
+    {
+
+    }
+
+    void TPS_MODE()
+    {
+        //Moving
+        float moveX = InputManager.input.Player.Steer.ReadValue<Vector2>().x;
+        float moveY = InputManager.input.Player.Steer.ReadValue<Vector2>().y;
+        controller.Move(((transform.forward * moveY) + (transform.right * moveX)).normalized * baseSpeed * Time.deltaTime);
+
+        //Aiming
+        float lookX = InputManager.input.Player.Aim.ReadValue<Vector2>().x;
+        float lookY = InputManager.input.Player.Aim.ReadValue<Vector2>().y;
+        transform.rotation *= Quaternion.AngleAxis(lookX * turnSpeed * Time.deltaTime, Vector3.up);
+        transform.rotation *= Quaternion.AngleAxis(-lookY * turnSpeed * Time.deltaTime, Vector3.right);
+    }
+
+    void AllRangeMode()
     {
         //Forward Movement
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
@@ -279,12 +315,10 @@ public class PlayerShip : MonoBehaviour
         transform.rotation *= Quaternion.AngleAxis(x * turnSpeed * Time.deltaTime, Vector3.up);
         transform.rotation *= Quaternion.AngleAxis(y * turnSpeed * Time.deltaTime, Vector3.right);
 
-        if (transform.localEulerAngles.x > 90 || transform.localEulerAngles.x < -90)
+        //Auto Level
+        if (x == 0 && y == 0)
         {
-            if (x == 0 && y == 0)
-            {
-                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, 5 * Time.deltaTime));
-            }
+            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, 5 * Time.deltaTime));
         }
 
         if (evading)

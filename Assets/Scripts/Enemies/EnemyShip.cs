@@ -10,10 +10,7 @@ public class EnemyShip : MonoBehaviour
 
     [SerializeField] HealthSystem health;
     [SerializeField] LayerMask targetLayer;
-
-
-    [SerializeField] float aimSkill = 4;
- 
+    [SerializeField][Range(0, 1)] float shootThreshold = 0.75f;
     [SerializeField] float cohesionRadius = 100;
     [SerializeField] float avoidRadius = 10;
     [SerializeField] int attackPower = 10;
@@ -62,8 +59,14 @@ public class EnemyShip : MonoBehaviour
         {
             if (health.IsAlive())
             {
-
-                Fight();
+                if (GameManager.playerMode == GameManager.PlayerMode.ON_RAILS)
+                {
+                    FightOnRails();
+                }
+                else
+                {
+                    Fight();
+                }
             }
             else
             {
@@ -113,7 +116,7 @@ public class EnemyShip : MonoBehaviour
         shootTimer -= Time.deltaTime;
         if (shootTimer <= 0 && !effect.enabled)
         {
-            if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) > 0.75f)
+            if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) > shootThreshold)
             {
                 Shoot();
             }
@@ -122,7 +125,25 @@ public class EnemyShip : MonoBehaviour
 
     void FightOnRails()
     {
+        if (Vector3.Dot(Camera.main.transform.forward, transform.forward) > 0)
+        {
+            direction = SteerTowardsTarget();
+            transform.rotation = Quaternion.LookRotation(direction);
+            transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
+            shootTimer -= Time.deltaTime;
+            if (shootTimer <= 0 && !effect.enabled)
+            {
+                if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) > shootThreshold)
+                {
+                    Shoot();
+                }
+            }
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     void Shoot()
