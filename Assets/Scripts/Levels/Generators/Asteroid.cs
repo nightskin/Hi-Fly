@@ -9,8 +9,7 @@ public class Asteroid : MonoBehaviour
 {
     Voxel[] voxels = null;
     float isoLevel = 0;
-    float OuterRadius;
-    float innerRadius;
+    float radius;
 
     public int voxelResolution = 10;
     public float voxelSize = 10;
@@ -117,16 +116,15 @@ public class Asteroid : MonoBehaviour
 
     void CreateVoxelData()
     {
-        OuterRadius = Random.Range(voxelSize * (voxelResolution - 1) / 4, voxelSize * (voxelResolution - 1) / 2);
-        innerRadius = OuterRadius - Random.Range(0.0f, voxelSize);
+        radius = Random.Range(voxelSize * (voxelResolution - 1) / 4, voxelSize * (voxelResolution - 1) / 2);
 
         voxels = new Voxel[(int)Mathf.Pow(voxelResolution, 3)];
         for (int i = 0; i < voxels.Length; i++)
         {
             voxels[i] = new Voxel();
             voxels[i].position = ToPosition(i);
-            float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * OuterRadius), transform.position + voxels[i].position);
-            if (distanceFromCenter > OuterRadius)
+            float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + voxels[i].position);
+            if (distanceFromCenter > radius)
             {
                 voxels[i].value = -1;
             }
@@ -184,7 +182,7 @@ public class Asteroid : MonoBehaviour
                     else if(triIndex == 2)
                     {
                         triVerts[2] = vertexPos;
-                        uvs.AddRange(GetUVs(triVerts[0], triVerts[1], triVerts[2]));
+                        uvs.AddRange(Voxel.GetUVs(triVerts[0], triVerts[1], triVerts[2], voxelSize));
                         triIndex = 0;
                     }
 
@@ -199,38 +197,6 @@ public class Asteroid : MonoBehaviour
 
     }
 
-    Vector2[] GetUVs(Vector3 a, Vector3 b, Vector3 c)
-    {
-        Vector3 s1 = b - a;
-        Vector3 s2 = c - a;
-        Vector3 norm = Vector3.Cross(s1, s2).normalized; // the normal
-
-        norm.x = Mathf.Abs(norm.x);
-        norm.y = Mathf.Abs(norm.y);
-        norm.z = Mathf.Abs(norm.z);
-
-        Vector2[] uvs = new Vector2[3];
-        if (norm.x >= norm.z && norm.x >= norm.y) // x plane
-        {
-            uvs[0] = new Vector2(a.z, a.y) / voxelSize;
-            uvs[1] = new Vector2(b.z, b.y) / voxelSize;
-            uvs[2] = new Vector2(c.z, c.y) / voxelSize;
-        }
-        else if (norm.z >= norm.x && norm.z >= norm.y) // z plane
-        {
-            uvs[0] = new Vector2(a.x, a.y) / voxelSize;
-            uvs[1] = new Vector2(b.x, b.y) / voxelSize;
-            uvs[2] = new Vector2(c.x, c.y) / voxelSize;
-        }
-        else if (norm.y >= norm.x && norm.y >= norm.z) // y plane
-        {
-            uvs[0] = new Vector2(a.x, a.z) / voxelSize;
-            uvs[1] = new Vector2(b.x, b.z) / voxelSize;
-            uvs[2] = new Vector2(c.x, c.z) / voxelSize;
-        }
-
-        return uvs;
-    }
 
     bool BlocksGone()
     {

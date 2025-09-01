@@ -6939,7 +6939,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: {fileID: 8131623140777354630}
-  miniMapIcon: {fileID: 0}
   camera: {fileID: 8504905812486363887}
   trails:
   - {fileID: 6615905817508830574}
@@ -7233,6 +7232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOverSelectedObject: {fileID: 5628535168723790810}
+  startPlayerMode: 0
   gameOverMenu: {fileID: 8131623140616228715}
   gamePauseMenu: {fileID: 8131623139629098542}
   playerUIToHideOnPause:
@@ -7758,7 +7758,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 10000
+  far clip plane: 1000
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5

@@ -114,12 +114,7 @@ public class Lazer : MonoBehaviour
             }
         }
     }
-
-    void ChangeColor()
-    {
-
-    }
-
+    
     public void DeSpawn()
     {
         gameObject.SetActive(false);

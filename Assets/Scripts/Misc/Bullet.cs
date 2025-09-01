@@ -115,18 +115,25 @@ public class Bullet : MonoBehaviour
             {
                 if (rayhit.transform.tag == "Destructible")
                 {
-
+                    objectPool.Spawn("explosion", rayhit.point);
                     Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
-                        objectPool.Spawn("explosion", rayhit.point);
                         asteroid.RemoveBlock(rayhit);
+                        hit = true;
                     }
-
+                    TerrainChunk terrain = rayhit.transform.GetComponent<TerrainChunk>();
+                    if (terrain)
+                    {
+                        terrain.TeraForm(rayhit, 0.1f);
+                        hit = true;
+                    }
+                    return;
                 }
                 else if (rayhit.transform.tag == "Surface")
                 {
                     objectPool.Spawn("explosion", rayhit.point);
+                    hit = true;
                 }
                 else if (rayhit.transform.tag == "Enemy")
                 {
@@ -138,6 +145,7 @@ public class Bullet : MonoBehaviour
 
                     sfx.clip = hitSound;
                     sfx.Play();
+                    hit = true;
                 }
                 else if (rayhit.transform.tag == "Player")
                 {
@@ -156,7 +164,7 @@ public class Bullet : MonoBehaviour
                     sfx.clip = hitSound;
                     sfx.Play();
                 }
-                hit = true;
+
             }
         }
     }

@@ -109,7 +109,7 @@ public class EnemyShip : MonoBehaviour
 
     void Fight()
     {
-        direction = SteerTowardsTarget() + Seperation(avoidRadius) + Cohesion(cohesionRadius);
+        direction = SteerTowardsTarget() + Seperation(avoidRadius);
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
@@ -163,22 +163,6 @@ public class EnemyShip : MonoBehaviour
     Vector3 SteerTowardsTarget()
     {
         return Vector3.Lerp(transform.forward, GetDirectionTowardsTarget(), turnSpeed * Time.deltaTime).normalized;
-    }
-
-    Vector3 Cohesion(float radius)
-    {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
-        Vector3 rot = new Vector3();
-        if (colliders.Length > 0)
-        {
-            foreach (Collider collider in colliders)
-            {
-                rot += collider.transform.position;
-            }
-            rot /= colliders.Length;
-            return Vector3.Lerp(transform.forward, (rot - transform.position).normalized, turnSpeed * Time.deltaTime).normalized;
-        }
-        return Vector3.zero;
     }
 
     Vector3 Seperation(float radius)

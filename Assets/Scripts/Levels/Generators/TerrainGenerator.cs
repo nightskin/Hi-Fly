@@ -1,145 +1,61 @@
 using UnityEngine;
-using System.Collections.Generic;
 
-[RequireComponent(typeof(MeshFilter))]
-[RequireComponent(typeof(MeshRenderer))]
-[RequireComponent(typeof(MeshCollider))]
 public class TerrainGenerator : MonoBehaviour
 {
-    public string seed = string.Empty;
-    public int resolution = 100;
-    public float spacing = 10;
+    public static string seed = string.Empty;
 
-    [Range(0,1)] public float persistance = 0.5f;
-    [Min(1)] public float lacunarity = 2;
+    [SerializeField] string inputSeed = string.Empty;
 
-    [Min(1)] public float maxHeight = 10;
-    [Min(0)] public float minHeight = 0;
-    public float noiseScale = 0.01f;
 
-    public Gradient landColors;
+    [SerializeField] GameObject terrainChunkPrefab;
+    [SerializeField][Min(0)] int xSize = 5;
+    [SerializeField][Min(0)] int zSize = 10;
 
-    Noise noise;
-    [SerializeField] Mesh mesh;
-    [SerializeField] List<Vector3> vertices = new List<Vector3>();
-    [SerializeField] List<Vector2> uvs = new List<Vector2>();
-    [SerializeField] List<Color> colors = new List<Color>();
-    [SerializeField] List<int> triangles = new List<int>();
+    [SerializeField][Min(1)] float spacingBetweenChunks = 90;
+
+    [HideInInspector] public bool generated = false;
 
     void Start()
     {
-        if(vertices.Count == 0)
-        {
-            Generate();
-        }
-        else
-        {
-            UpdateMesh();
-        }
-        
-        GetComponent<MeshCollider>().sharedMesh = mesh;
+        if (!generated) Generate();
     }
 
     public void Generate()
     {
-        vertices.Clear();
-        colors.Clear();
-        uvs.Clear();
-        triangles.Clear();
-
-        noise = new Noise(seed.GetHashCode());
-        
-        mesh = new Mesh();
-        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        GetComponent<MeshFilter>().mesh = mesh;
-        
-        // Create Ground
-        CreateVertexGrid();
-        for(int i = 0; i < vertices.Count; i++)
+        seed = inputSeed;
+        if (transform.childCount > 0)
         {
-            float y = Evaluate((vertices[i] * noiseScale) + (transform.position * noiseScale));
-
-            if (y > 0)
-            {
-                vertices[i] = new Vector3(vertices[i].x, y * maxHeight, vertices[i].z);
-            }
-            else
-            {
-                vertices[i] = new Vector3(vertices[i].x, y * minHeight, vertices[i].z);
-            }
-            colors.Add(landColors.Evaluate(Util.ConvertRange(-1, 1, 0, 1, y)));
+            Debug.Log("Destroy Child  Objects Before Generating");
+            return;
         }
-        UpdateMesh();
-    }
-
-    public void Teraform(RaycastHit hit, float radius)
-    {
-        for(int v = 0; v < vertices.Count; v++) 
+        if (terrainChunkPrefab)
         {
-            Vector3 worldSpace = transform.TransformPoint(vertices[v]);
-            float distance = Vector3.Distance(hit.point, worldSpace);
-            if (distance <= radius)
+            for (int x = 0; x < xSize; x++)
             {
-                vertices[v] = new Vector3(vertices[v].x, vertices[v].y - distance, vertices[v].z);
+                for (int z = 0; z < zSize; z++)
+                {
+                    GameObject chunkObject = Instantiate(terrainChunkPrefab, transform);
+                    chunkObject.transform.position = new Vector3(x - xSize / 2, 0, z - zSize / 2) * spacingBetweenChunks;
+                    TerrainChunk terrain = chunkObject.GetComponent<TerrainChunk>();
+                    if (terrain)
+                    {
+                        terrain.Generate();
+                    }
+                    else
+                    {
+                        Debug.Log("Chunk Object Does Not Have TerrainChunk.cs Script Attached");
+                        generated = false;
+                    }
+                }
             }
+            Debug.Log("Terrain Generation Successful");
+            generated = true;
         }
-        UpdateMesh();
-    }
-
-    void CreateVertexGrid()
-    {
-        for (int x = 0; x <= resolution; x++)
+        else
         {
-            for (int z = 0; z <= resolution; z++)
-            {
-                vertices.Add(new Vector3(x - resolution / 2, 0, z - resolution / 2) * spacing);
-                uvs.Add(new Vector2(x,z) / resolution);
-            }
+            Debug.Log("Set Chunk Prefab");
+            generated = false;
         }
 
-        for (int v = 0, t = 0, x = 0; x < resolution; x++)
-        {
-            for (int z = 0; z < resolution; z++)
-            {
-                triangles.Insert(t + 0, v + resolution + 1);
-                triangles.Insert(t + 1, v + 0);
-
-                triangles.Insert(t + 2, v + 1);
-                triangles.Insert(t + 3, v + 1);
-
-                triangles.Insert(t + 4, v + resolution + 2);
-                triangles.Insert(t + 5, v + resolution + 1);
-
-
-                v++;
-                t += 6;
-            }
-            v++;
-        }
-
-    }
-
-    float Evaluate(Vector3 point, int layers = 3)
-    {
-        float amplitude = 1;
-        float frequency = 1;
-        float height = 0;
-        for(int l = 0; l < layers; l++)
-        {
-            height += noise.Evaluate(point * frequency) * amplitude;
-            amplitude *= persistance;
-            frequency *= lacunarity;
-        }
-        return height;
-    }
-
-    void UpdateMesh()
-    {
-        mesh.Clear();
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-        mesh.uv = uvs.ToArray();
-        mesh.colors = colors.ToArray();
-        mesh.RecalculateNormals();
     }
 }

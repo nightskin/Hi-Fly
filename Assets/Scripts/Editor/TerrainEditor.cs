@@ -8,11 +8,11 @@ public class TerrainEditor : Editor
     {
         base.OnInspectorGUI();
 
-        TerrainGenerator island = (TerrainGenerator)target;
+        TerrainGenerator level = (TerrainGenerator)target;
 
-        if(GUILayout.Button("Generate"))
+        if (GUILayout.Button("Generate"))
         {
-            island.Generate();
+            level.Generate();
         }
 
     }

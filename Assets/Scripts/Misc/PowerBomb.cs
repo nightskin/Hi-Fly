@@ -30,17 +30,7 @@ public class PowerBomb : MonoBehaviour
 
     void OnTriggerEnter(Collider hit)
     {
-        if (hit.tag == "Player")
-        {
-            HealthSystem health = hit.GetComponent<HealthSystem>();
-            if (health) health.TakeDamage(damage);
-
-            if (health.IsDead())
-            {
-                GameManager.gameOver = true;
-            }
-        }
-        else if (hit.tag == "Enemy")
+        if (hit.tag == "Enemy")
         {
             HealthSystem health = hit.GetComponent<HealthSystem>();
             if (health) health.TakeDamage(damage);
