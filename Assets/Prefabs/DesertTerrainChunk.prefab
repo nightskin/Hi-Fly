@@ -123,9 +123,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voxelResolution: 10
-  voxelSize: 10
+  voxelSize: 20
   isoLevel: 0.5
-  noiseScale: 0.01
+  noiseScale: 0.005
   mesh: {fileID: 0}
   voxels: []
   vertices: []

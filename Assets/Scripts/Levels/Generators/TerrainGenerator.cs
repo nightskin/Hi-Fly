@@ -35,7 +35,7 @@ public class TerrainGenerator : MonoBehaviour
                 for (int z = 0; z < zSize; z++)
                 {
                     GameObject chunkObject = Instantiate(terrainChunkPrefab, transform);
-                    chunkObject.transform.position = new Vector3(x - xSize / 2, 0, z - zSize / 2) * spacingBetweenChunks;
+                    chunkObject.transform.position = new Vector3(x - (xSize / 2), 0, z - (zSize / 2)) * spacingBetweenChunks;
                     TerrainChunk terrain = chunkObject.GetComponent<TerrainChunk>();
                     if (terrain)
                     {

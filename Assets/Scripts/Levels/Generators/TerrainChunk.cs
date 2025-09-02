@@ -36,23 +36,32 @@ public class TerrainChunk : MonoBehaviour
 
     public void TeraForm(RaycastHit hit, float damage)
     {
-        Vector3 hitPoint = transform.InverseTransformPoint(hit.point);
-        int nearestIndex = 0;
+        Vector3 pos = transform.InverseTransformPoint(hit.point);
 
-        for (int i = 0; i < voxelResolution * voxelResolution * voxelResolution; i++)
+        pos.x = Mathf.Round(pos.x / voxelSize) * voxelSize;
+        pos.y = Mathf.Round(pos.y / voxelSize) * voxelSize;
+        pos.z = Mathf.Round(pos.z / voxelSize) * voxelSize;
+        int i = Voxel.PositionToIndex(pos,voxelResolution,voxelSize);
+
+        if (voxels[i].position.y == 0) return;
+        
+        //If voxel is already deactivated check the next one
+        if (voxels[i].value <= 0)
         {
-            float iDist = Vector3.Distance(hitPoint, voxels[i].position);
-            float nearestDist = Vector3.Distance(hitPoint, voxels[nearestIndex].position);
-            if (iDist < nearestDist)
-            {
-                nearestIndex = i;
-            }
+            pos = transform.InverseTransformPoint(hit.point - (hit.normal * voxelSize / 2));
+            pos.x = Mathf.Round(pos.x / voxelSize) * voxelSize;
+            pos.y = Mathf.Round(pos.y / voxelSize) * voxelSize;
+            pos.z = Mathf.Round(pos.z / voxelSize) * voxelSize;
+            i = Voxel.PositionToIndex(pos, voxelResolution, voxelSize);
+            voxels[i].value -= damage;
+        }
+        else
+        {
+            voxels[i].value -= damage;
         }
 
-        if (voxels[nearestIndex].position.y > 0)
-        {
-            voxels[nearestIndex].value -= damage;
-        }
+
+        
 
 
         vertices.Clear();
@@ -74,12 +83,8 @@ public class TerrainChunk : MonoBehaviour
 
         noise = new Noise(TerrainGenerator.seed.GetHashCode());
 
-        mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
-
         CreateVoxelData();
         CreateMeshData();
-
         UpdateMesh();
     }
 
@@ -90,7 +95,11 @@ public class TerrainChunk : MonoBehaviour
         {
             voxels[i] = new Voxel();
             voxels[i].position = Voxel.IndexToPosition(i, voxelResolution, voxelSize);
-            int y = Mathf.RoundToInt(voxels[i].position.y / voxelResolution);
+
+            int xi = Mathf.FloorToInt(voxels[i].position.x / voxelResolution);
+            int yi = Mathf.RoundToInt(voxels[i].position.y / voxelResolution);
+            int zi = Mathf.FloorToInt(voxels[i].position.z / voxelResolution);
+
             if (voxels[i].position.y == 0)
             {
                 voxels[i].value = 1;
@@ -99,14 +108,21 @@ public class TerrainChunk : MonoBehaviour
             {
                 float px = (transform.position.x + voxels[i].position.x) * noiseScale;
                 float pz = (transform.position.z + voxels[i].position.z) * noiseScale;
-                voxels[i].value = Util.ConvertRange(-1, 1, 0, 1, noise.Evaluate(new Vector3(px, 0, pz))) - Util.ConvertRange(0, voxelResolution, 0, 1, y);
+                voxels[i].value = Util.ConvertRange(-1, 1, 0, 1, noise.Evaluate(new Vector3(px, 0, pz))) - Util.ConvertRange(0, voxelResolution, 0, 1, yi);
+            }
+
+            if (voxels[i].position.x == 0 || voxels[i].position.z == 0 || voxels[i].position.x == (voxelResolution - 1) * voxelSize || voxels[i].position.z == (voxelResolution - 1) * voxelSize)
+            {
+                voxels[i].value = 0;
             }
         }
     }
 
     void CreateMeshData()
     {
-        for (int i = voxels.Length; i > 0; i--)
+        mesh = new Mesh();
+        mesh.MarkDynamic();
+        for (int i = voxelResolution * voxelResolution * voxelResolution; i > 0; i--)
         {
             Vector3 position = Voxel.IndexToPosition(i, voxelResolution, voxelSize);
             Voxel[] points = new Voxel[]
@@ -120,7 +136,7 @@ public class TerrainChunk : MonoBehaviour
                 voxels[Voxel.PositionToIndex(position + new Vector3(-1,-1, 0), voxelResolution, voxelSize)],
                 voxels[Voxel.PositionToIndex(position + new Vector3(0, -1, 0), voxelResolution, voxelSize)]
             };
-            
+
             int cubeIndex = Voxel.GetState(points, isoLevel);
             int[] triangulation = MarchingCubesTables.triTable[cubeIndex];
 
@@ -136,18 +152,18 @@ public class TerrainChunk : MonoBehaviour
                     Vector3 vertexPos = Voxel.LerpPoint(points[a], points[b], isoLevel);
                     vertices.Add(vertexPos);
                     triangles.Add(buffer);
-                    
-                    if(triIndex == 0)
+
+                    if (triIndex == 0)
                     {
                         triVerts[0] = vertexPos;
                         triIndex++;
                     }
-                    else if(triIndex == 1)
+                    else if (triIndex == 1)
                     {
                         triVerts[1] = vertexPos;
                         triIndex++;
                     }
-                    else if(triIndex == 2)
+                    else if (triIndex == 2)
                     {
                         triVerts[2] = vertexPos;
                         uvs.AddRange(Voxel.GetUVs(triVerts[0], triVerts[1], triVerts[2], voxelSize));
