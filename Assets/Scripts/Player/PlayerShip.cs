@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class PlayerShip : MonoBehaviour
 {
@@ -12,7 +11,12 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] Transform mesh;
     [SerializeField] Transform bulletSpawn;
     [SerializeField] CharacterController controller;
-    
+
+    [SerializeField] Transform OnRailsFollowTarget;
+    //[SerializeField][Min(1)] float onRailsDistanceFromCamera = 15;
+    float distanceAlongSpline = 0;
+    Vector3 offset = Vector3.one *  0.5f;
+
     Color thrustColor = Color.cyan;
     
     [SerializeField][Min(1)] float turnSpeed = 5;
@@ -71,6 +75,11 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.Boost.performed += Boost_performed;
         InputManager.input.Player.Boost.canceled += Boost_canceled;
         InputManager.input.Player.Evade.performed += Evade_performed;
+
+        if (GameManager.playerMode == GameManager.PlayerMode.ON_RAILS)
+        {
+            transform.parent = OnRailsFollowTarget;
+        }
     }
     
     void FixedUpdate()
@@ -88,6 +97,7 @@ public class PlayerShip : MonoBehaviour
 
     void Update()
     {
+        //Debug.Log(Vector3.Distance(transform.position, camera.transform.position));
         if (health.IsAlive() && !GameManager.gamePaused)
         {
             if (GameManager.playerMode == GameManager.PlayerMode.ALL_RANGE)
@@ -282,6 +292,64 @@ public class PlayerShip : MonoBehaviour
 
     void OnRailsMode()
     {
+        speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
+        thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
+
+        distanceAlongSpline += (speed * Time.deltaTime) / GameManager.path.CalculateLength();
+        Vector3 positionAlongSpline = GameManager.path.EvaluatePosition(distanceAlongSpline);
+        Vector3 nextPositionAlongSpline = GameManager.path.EvaluatePosition(distanceAlongSpline + Time.deltaTime);
+
+        Vector3 directionAlongSpline = (nextPositionAlongSpline - positionAlongSpline).normalized;
+
+        OnRailsFollowTarget.transform.position = positionAlongSpline;
+        OnRailsFollowTarget.transform.forward = directionAlongSpline;
+        transform.forward = directionAlongSpline;
+
+        Vector2 steer = InputManager.input.Player.Steer.ReadValue<Vector2>();
+        offset += new Vector3(steer.x, steer.y, 0) * Time.deltaTime;
+        offset.x = Mathf.Clamp01(offset.x);
+        offset.y = Mathf.Clamp01(offset.y);
+        offset.z = speed / 4;
+       
+
+        Vector3 offsetWorld = Camera.main.ViewportToWorldPoint(offset);
+        transform.position = offsetWorld;
+
+        //Evading
+        if (evading)
+        {
+            mesh.localEulerAngles += new Vector3(0, 0, evadeDirection * evadeSpeed * Time.deltaTime);
+            evadeTimer += Time.deltaTime;
+            if (evadeTimer > 1)
+            {
+                evading = false;
+            }
+        }
+        else
+        {
+            mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, steer.x * -45, 10 * Time.deltaTime));
+        }
+
+        //Aiming
+        if (aimingViaGamepad)
+        {
+            reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * GameManager.aimSensitivy * Time.deltaTime;
+            reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
+            reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
+            reticle.rectTransform.position = reticlePosition;
+        }
+        else
+        {
+            reticlePosition = Input.mousePosition;
+            reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
+            reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
+            reticle.rectTransform.position = reticlePosition;
+        }
+
+        if (distanceAlongSpline >= 1)
+        {
+            GameManager.playerMode = GameManager.PlayerMode.ALL_RANGE;
+        }
 
     }
 
@@ -321,6 +389,7 @@ public class PlayerShip : MonoBehaviour
             transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, 5 * Time.deltaTime));
         }
 
+        //Evasion
         if (evading)
         {
             mesh.localEulerAngles += new Vector3(0, 0, evadeDirection * evadeSpeed * Time.deltaTime);

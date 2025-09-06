@@ -2,9 +2,16 @@ using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour
 {
-    public static string seed = string.Empty;
-
     [SerializeField] string inputSeed = string.Empty;
+    [SerializeField] float inputNoiseScale = 0.01f;
+    [SerializeField] int inputChunkResolution = 10;
+    [SerializeField] float inputVoxelSize = 10;
+
+    public static Noise noise;
+    public static string seed = string.Empty;
+    public static float noiseScale;
+    public static int chunkResolution;
+    public static float voxelSize;
 
 
     [SerializeField] GameObject terrainChunkPrefab;
@@ -13,16 +20,15 @@ public class TerrainGenerator : MonoBehaviour
 
     [SerializeField][Min(1)] float spacingBetweenChunks = 90;
 
-    [HideInInspector] public bool generated = false;
-
-    void Start()
-    {
-        if (!generated) Generate();
-    }
-
     public void Generate()
     {
         seed = inputSeed;
+        noise = new Noise(seed.GetHashCode());
+        noiseScale = inputNoiseScale;
+        chunkResolution = inputChunkResolution;
+        voxelSize = inputVoxelSize;
+
+
         if (transform.childCount > 0)
         {
             Debug.Log("Destroy Child  Objects Before Generating");
@@ -30,31 +36,37 @@ public class TerrainGenerator : MonoBehaviour
         }
         if (terrainChunkPrefab)
         {
-            for (int x = 0; x < xSize; x++)
+            for (int x = 0; x <= xSize; x++)
             {
                 for (int z = 0; z < zSize; z++)
                 {
                     GameObject chunkObject = Instantiate(terrainChunkPrefab, transform);
                     chunkObject.transform.position = new Vector3(x - (xSize / 2), 0, z - (zSize / 2)) * spacingBetweenChunks;
-                    TerrainChunk terrain = chunkObject.GetComponent<TerrainChunk>();
-                    if (terrain)
+                    DestructibleTerrainChunk destructibleTerrain = chunkObject.GetComponent<DestructibleTerrainChunk>();
+                    if (destructibleTerrain)
                     {
-                        terrain.Generate();
+                        destructibleTerrain.Generate();
                     }
                     else
                     {
-                        Debug.Log("Chunk Object Does Not Have TerrainChunk.cs Script Attached");
-                        generated = false;
+                        TerrainChunk terrain = chunkObject.GetComponent<TerrainChunk>();
+                        if (terrain)
+                        {
+                            terrain.Generate();
+                        }
+                        else
+                        {
+                            Debug.Log("Prefab Does Not Have TerrainChunk.cs Or DestructibleTerrainChunk.cs Attached");
+                            return;
+                        }
                     }
                 }
             }
-            Debug.Log("Terrain Generation Successful");
-            generated = true;
         }
         else
         {
             Debug.Log("Set Chunk Prefab");
-            generated = false;
+            return;
         }
 
     }

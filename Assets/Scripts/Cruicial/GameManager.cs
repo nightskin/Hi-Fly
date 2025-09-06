@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.Splines;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,7 +21,6 @@ public class GameManager : MonoBehaviour
         TPS,
     }
     public static PlayerMode playerMode;
-    [SerializeField] PlayerMode startPlayerMode;
 
     public enum PlayerPowerUp
     {
@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
 
 
     public static PlayerShip playerShip;
+
+
+    
     public GameObject[] playerUIToHideOnPause;
 
     public static bool gameOver = false;
@@ -51,19 +54,41 @@ public class GameManager : MonoBehaviour
     float gameOverTimer = 1;
     bool gameOverActive = false;
     
+    //For OnRails Movement
+    public static SplineContainer path;
 
-    void Start()
+    void Awake()
     {
-        playerMode = startPlayerMode;
-        currentPowerUp = PlayerPowerUp.NONE;
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
         sceneNodeManager = GetComponent<SceneNodeManager>();
+        currentPowerUp = PlayerPowerUp.NONE;
 
+        GameObject pathObj = GameObject.Find("Path");
+        if (pathObj)
+        {
+            path = pathObj.GetComponent<SplineContainer>();
+            if (path)
+            {
+                playerMode = PlayerMode.ON_RAILS;
+            }
+            else
+            {
+                playerMode = PlayerMode.ALL_RANGE;
+            }
+        }
+        else
+        {
+            playerMode = PlayerMode.ALL_RANGE;
+        }
+
+    }
+
+    void Start()
+    {
         InputManager.input.Player.Pause.performed += Pause_performed;
         InputManager.input.Player.UnPause.performed += UnPause_performed;
     }
-
 
     private void UnPause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {

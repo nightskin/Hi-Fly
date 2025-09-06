@@ -122,7 +122,7 @@ public class Bullet : MonoBehaviour
                         asteroid.RemoveBlock(rayhit);
                         hit = true;
                     }
-                    TerrainChunk terrain = rayhit.transform.GetComponent<TerrainChunk>();
+                    DestructibleTerrainChunk terrain = rayhit.transform.GetComponent<DestructibleTerrainChunk>();
                     if (terrain)
                     {
                         terrain.TeraForm(rayhit, 0.1f);

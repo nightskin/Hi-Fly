@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 2954889187216168988}
   - component: {fileID: 1578083332393278897}
   - component: {fileID: 2586056358837387670}
-  - component: {fileID: 3114150382779733508}
+  - component: {fileID: 6936490189214054764}
   m_Layer: 0
   m_Name: DesertTerrainChunk
-  m_TagString: Destructible
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -110,7 +110,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &3114150382779733508
+--- !u!114 &6936490189214054764
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,17 +119,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 782806908490933821}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4c2641e60923614f8244b576684ce20, type: 3}
+  m_Script: {fileID: 11500000, guid: c437b9a617d91c748aa20b37d1c14062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  voxelResolution: 10
-  voxelSize: 20
-  isoLevel: 0.5
-  noiseScale: 0.005
-  mesh: {fileID: 0}
-  voxels: []
-  vertices: []
-  uvs: []
-  colors: []
-  triangles: 
-  buffer: 0
+  minHeight: 0
+  maxHeight: 100
+  useColors: 0
