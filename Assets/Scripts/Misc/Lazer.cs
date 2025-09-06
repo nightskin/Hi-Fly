@@ -73,11 +73,17 @@ public class Lazer : MonoBehaviour
             {
                 if (rayHit.transform.tag == "Destructible")
                 {
-                    Asteroid asteroid = rayHit.transform.GetComponent<Asteroid>();
                     objectPool.Spawn("explosion", rayHit.point);
+                    Asteroid asteroid = rayHit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
                         asteroid.RemoveBlock(rayHit);
+                        return;
+                    }
+                    DestructibleTerrainChunk terrain = rayHit.transform.GetComponent<DestructibleTerrainChunk>();
+                    if (terrain)
+                    {
+                        terrain.TeraForm(rayHit, 0.1f);
                         return;
                     }
                 }

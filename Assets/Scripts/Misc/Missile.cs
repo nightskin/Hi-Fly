@@ -99,6 +99,11 @@ public class Missile : MonoBehaviour
                     {
                         asteroid.RemoveBlocksInRadius(rayhit, 10);
                     }
+                    DestructibleTerrainChunk terrain = rayhit.transform.GetComponent<DestructibleTerrainChunk>();
+                    if (terrain)
+                    {
+                        terrain.TeraForm(rayhit, 1);
+                    }
                 }
 
                 DeSpawn();
