@@ -41,7 +41,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if(!GameManager.gamePaused)
+        if(!GameManager.Get().gamePaused)
         {
             //Basic Movement
             prevPosition = transform.position;
@@ -157,7 +157,7 @@ public class Bullet : MonoBehaviour
                         {
                             objectPool.Spawn("explosion", rayhit.point);
                             rayhit.transform.gameObject.SetActive(false);
-                            GameManager.gameOver = true;
+                            GameManager.Get().gameOver = true;
                         }
                     }
                     hit = true;

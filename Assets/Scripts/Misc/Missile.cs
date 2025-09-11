@@ -40,7 +40,7 @@ public class Missile : MonoBehaviour
     
     void Update()
     {
-        if (!GameManager.gamePaused)
+        if (!GameManager.Get().gamePaused)
         {
             //Basic Movement
             prevPosition = transform.position;

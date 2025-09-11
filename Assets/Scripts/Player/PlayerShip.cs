@@ -53,8 +53,8 @@ public class PlayerShip : MonoBehaviour
     void Start()
     {
         Cursor.visible = false;
-        mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameManager.playerBodyColor);
-        mesh.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameManager.playerStripeColor);
+        mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
+        mesh.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameSettings.playerStripeColor);
 
 
         objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
@@ -76,7 +76,7 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.Boost.canceled += Boost_canceled;
         InputManager.input.Player.Evade.performed += Evade_performed;
 
-        if (GameManager.playerMode == GameManager.PlayerMode.ON_RAILS)
+        if (GameManager.Get().playerMode == GameManager.PlayerMode.ON_RAILS)
         {
             transform.parent = OnRailsFollowTarget;
         }
@@ -98,17 +98,17 @@ public class PlayerShip : MonoBehaviour
     void Update()
     {
         //Debug.Log(Vector3.Distance(transform.position, camera.transform.position));
-        if (health.IsAlive() && !GameManager.gamePaused)
+        if (health.IsAlive() && !GameManager.Get().gamePaused)
         {
-            if (GameManager.playerMode == GameManager.PlayerMode.ALL_RANGE)
+            if (GameManager.Get().playerMode == GameManager.PlayerMode.ALL_RANGE)
             {
                 AllRangeMode();
             }
-            else if (GameManager.playerMode == GameManager.PlayerMode.ON_RAILS)
+            else if (GameManager.Get().playerMode == GameManager.PlayerMode.ON_RAILS)
             {
                 OnRailsMode();
             }
-            else if(GameManager.playerMode == GameManager.PlayerMode.TPS)
+            else if(GameManager.Get().playerMode == GameManager.PlayerMode.TPS)
             {
                 TPS_MODE();
             }
@@ -179,9 +179,9 @@ public class PlayerShip : MonoBehaviour
 
     private void Boost_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (!GameManager.gamePaused && !GameManager.gameOver)
+        if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
         {
-            if (GameManager.playerMode == GameManager.PlayerMode.TPS) GameManager.playerMode = GameManager.PlayerMode.ALL_RANGE;
+            if (GameManager.Get().playerMode == GameManager.PlayerMode.TPS) GameManager.Get().playerMode = GameManager.PlayerMode.ALL_RANGE;
             camera.boostEffect.Play();
             thrustColor = Color.red;
             targetSpeed = boostSpeed;
@@ -206,11 +206,11 @@ public class PlayerShip : MonoBehaviour
 
     private void Fire2_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (GameManager.currentPowerUp == GameManager.PlayerPowerUp.POWER_BEAM)
+        if (GameManager.Get().currentPowerUp == GameManager.PlayerPowerUp.POWER_BEAM)
         {
             FireLazer();
         }
-        else if (GameManager.currentPowerUp == GameManager.PlayerPowerUp.POWER_BOMB)
+        else if (GameManager.Get().currentPowerUp == GameManager.PlayerPowerUp.POWER_BOMB)
         {
             FirePowerBomb();
         }
@@ -227,12 +227,12 @@ public class PlayerShip : MonoBehaviour
     
     private void Brake_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (!GameManager.gamePaused && !GameManager.gameOver)
+        if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
         {
-            if(GameManager.playerMode == GameManager.PlayerMode.ALL_RANGE)
+            if(GameManager.Get().playerMode == GameManager.PlayerMode.ALL_RANGE)
             {
                 //Stop
-                GameManager.playerMode = GameManager.PlayerMode.TPS;
+                GameManager.Get().playerMode = GameManager.PlayerMode.TPS;
                 reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
                 reticle.rectTransform.position = reticlePosition;
                 camera.boostEffect.Stop();
@@ -242,10 +242,10 @@ public class PlayerShip : MonoBehaviour
                     trail.emitting = false;
                 }
             }
-            else if(GameManager.playerMode == GameManager.PlayerMode.TPS)
+            else if(GameManager.Get().playerMode == GameManager.PlayerMode.TPS)
             {
                 //Go
-                GameManager.playerMode = GameManager.PlayerMode.ALL_RANGE;
+                GameManager.Get().playerMode = GameManager.PlayerMode.ALL_RANGE;
                 camera.boostEffect.Stop();
                 foreach (TrailRenderer trail in trails)
                 {
@@ -273,7 +273,7 @@ public class PlayerShip : MonoBehaviour
 
     private void Evade_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (!evading && GameManager.playerMode != GameManager.PlayerMode.TPS)
+        if (!evading && GameManager.Get().playerMode != GameManager.PlayerMode.TPS)
         {
             evadeTimer = 0;
             evading = true;
@@ -295,9 +295,9 @@ public class PlayerShip : MonoBehaviour
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
         thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
 
-        distanceAlongSpline += (speed * Time.deltaTime) / GameManager.path.CalculateLength();
-        Vector3 positionAlongSpline = GameManager.path.EvaluatePosition(distanceAlongSpline);
-        Vector3 nextPositionAlongSpline = GameManager.path.EvaluatePosition(distanceAlongSpline + Time.deltaTime);
+        distanceAlongSpline += (speed * Time.deltaTime) / GameManager.Get().path.CalculateLength();
+        Vector3 positionAlongSpline = GameManager.Get().path.EvaluatePosition(distanceAlongSpline);
+        Vector3 nextPositionAlongSpline = GameManager.Get().path.EvaluatePosition(distanceAlongSpline + Time.deltaTime);
 
         Vector3 directionAlongSpline = (nextPositionAlongSpline - positionAlongSpline).normalized;
 
@@ -333,7 +333,7 @@ public class PlayerShip : MonoBehaviour
         //Aiming
         if (aimingViaGamepad)
         {
-            reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * GameManager.aimSensitivy * Time.deltaTime;
+            reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * GameSettings.aimSensitivy * Time.deltaTime;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;
@@ -348,7 +348,7 @@ public class PlayerShip : MonoBehaviour
 
         if (distanceAlongSpline >= 1)
         {
-            GameManager.playerMode = GameManager.PlayerMode.ALL_RANGE;
+            GameManager.Get().playerMode = GameManager.PlayerMode.ALL_RANGE;
         }
 
     }
@@ -407,7 +407,7 @@ public class PlayerShip : MonoBehaviour
         //Aiming
         if (aimingViaGamepad)
         {
-            reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * GameManager.aimSensitivy * Time.deltaTime;
+            reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * GameSettings.aimSensitivy * Time.deltaTime;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;

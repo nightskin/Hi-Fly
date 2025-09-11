@@ -18,7 +18,7 @@ public class HubMenu : MonoBehaviour
         open = true;
         gameObject.SetActive(true);
         label.text = "Enter " + levelName + "?";
-        GameManager.eventSystem.SetSelectedGameObject(selectionStart);
+        GameManager.Get().eventSystem.SetSelectedGameObject(selectionStart);
         Time.timeScale = 0;
     }
 
@@ -26,7 +26,7 @@ public class HubMenu : MonoBehaviour
     {
         Time.timeScale = 1;
         open = false;
-        GameManager.gamePaused = true;
+        GameManager.Get().gamePaused = true;
         StartCoroutine(SceneLoader.instance.Load("LevelTransitionScene"));
     }
 

@@ -51,7 +51,7 @@ public class Hazard : MonoBehaviour
 
                         if(health.IsDead())
                         {
-                            GameManager.gameOver = true;
+                            GameManager.Get().gameOver = true;
                         }
 
                     }
@@ -79,7 +79,7 @@ public class Hazard : MonoBehaviour
 
                         if (health.IsDead())
                         {
-                            GameManager.gameOver = true;
+                            GameManager.Get().gameOver = true;
                         }
                     }
                     else if (hit.tag == "Enemy")
@@ -103,7 +103,7 @@ public class Hazard : MonoBehaviour
 
                 if (health.IsDead())
                 {
-                    GameManager.gameOver = true;
+                    GameManager.Get().gameOver = true;
                 }
             }
             else if (hit.tag == "Enemy")
@@ -125,7 +125,7 @@ public class Hazard : MonoBehaviour
 
                 if (health.IsDead())
                 {
-                    GameManager.gameOver = true;
+                    GameManager.Get().gameOver = true;
                 }
             }
             else if (hit.transform.tag == "Enemy")

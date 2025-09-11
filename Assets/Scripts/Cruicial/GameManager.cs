@@ -2,66 +2,66 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.Splines;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] GameObject gameOverSelectedObject;
-    public enum Difficulty
-    {
-        EASY,
-        NORMAL,
-        HARD,
-    }
-    public static Difficulty difficulty = Difficulty.NORMAL;
-
     public enum PlayerMode
     {
         ALL_RANGE,
         ON_RAILS,
         TPS,
     }
-    public static PlayerMode playerMode;
+    [HideInInspector] public PlayerMode playerMode;
 
     public enum PlayerPowerUp
     {
         NONE,
         POWER_BOMB,
         POWER_BEAM,
+        RAPID_FIRE,
     }
-    public static PlayerPowerUp currentPowerUp;
-    public static Color playerBodyColor = Color.red;
-    public static Color playerStripeColor = new Color(1, 1, 0);
-    public static float aimSensitivy = 1000;
-
-    public GameObject gameOverMenu;
-    public GameObject gamePauseMenu;
+    [HideInInspector] public PlayerPowerUp currentPowerUp;
 
 
-    public static PlayerShip playerShip;
 
+    //Other Stuff
+    static GameManager instance;
+    [SerializeField] GameObject gameOverSelectedObject;
+    [SerializeField] GameObject gameOverMenu;
+    [SerializeField] GameObject gamePauseMenu;
+    [SerializeField] Image powerUpDisplayImage;
+    [SerializeField] Sprite[] powerUpSprites;
 
-    
+    [HideInInspector] public PlayerShip playerShip;
     public GameObject[] playerUIToHideOnPause;
 
-    public static bool gameOver = false;
-    public static bool gamePaused = false;
-    public static bool gameBeaten = false;
-    
-
-    public static EventSystem eventSystem;
-    public static SceneNodeManager sceneNodeManager;
+    [HideInInspector] public bool gameOver;
+    [HideInInspector] public bool gamePaused;
+    [HideInInspector] public bool levelBeaten;
+    [HideInInspector] public EventSystem eventSystem;
 
     float gameOverTimer = 1;
     bool gameOverActive = false;
     
     //For OnRails Movement
-    public static SplineContainer path;
+    [HideInInspector] public SplineContainer path;
+
+    public static GameManager Get()
+    {
+        return instance;
+    }
 
     void Awake()
     {
+        instance = this;
+
+        gameOver = false;
+        levelBeaten = false;
+        gamePaused = false;
+
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
-        sceneNodeManager = GetComponent<SceneNodeManager>();
         currentPowerUp = PlayerPowerUp.NONE;
 
         GameObject pathObj = GameObject.Find("Path");
@@ -145,12 +145,26 @@ public class GameManager : MonoBehaviour
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
     }
-    
+
+    public void ChangePowerUp(PlayerPowerUp powerUp)
+    {
+        currentPowerUp = powerUp;
+        powerUpDisplayImage.sprite = powerUpSprites[(int)powerUp];
+        if (powerUp == PlayerPowerUp.NONE)
+        {
+            powerUpDisplayImage.color = Color.clear;
+        }
+        else
+        {
+            powerUpDisplayImage.color = Color.white;
+        }
+    }
+
     public void Pause()
     {
         Time.timeScale = 0;
         Cursor.visible = true;
-        foreach(GameObject playerUI in playerUIToHideOnPause)
+        foreach (GameObject playerUI in playerUIToHideOnPause)
         {
             playerUI.SetActive(false);
         }

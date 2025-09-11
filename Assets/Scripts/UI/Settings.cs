@@ -25,42 +25,42 @@ public class Settings : MonoBehaviour
     void Start()
     {
         sceneNodeManager = GetComponent<SceneNodeManager>();
-        aimSlider.value = GameManager.aimSensitivy;
-        difficultyBtn.transform.GetChild(0).GetComponent<Text>().text = GameManager.difficulty.ToString();
-        playerBodySliders[0].value = GameManager.playerBodyColor.r;
-        playerBodySliders[1].value = GameManager.playerBodyColor.g;
-        playerBodySliders[2].value = GameManager.playerBodyColor.b;
-        playerPreview.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameManager.playerBodyColor);
-        playerStripeSliders[0].value = GameManager.playerStripeColor.r;
-        playerStripeSliders[1].value = GameManager.playerStripeColor.g;
-        playerStripeSliders[2].value = GameManager.playerStripeColor.b;
-        playerPreview.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameManager.playerStripeColor);
+        aimSlider.value = GameSettings.aimSensitivy;
+        difficultyBtn.transform.GetChild(0).GetComponent<Text>().text = GameSettings.difficulty.ToString();
+        playerBodySliders[0].value = GameSettings.playerBodyColor.r;
+        playerBodySliders[1].value = GameSettings.playerBodyColor.g;
+        playerBodySliders[2].value = GameSettings.playerBodyColor.b;
+        playerPreview.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
+        playerStripeSliders[0].value = GameSettings.playerStripeColor.r;
+        playerStripeSliders[1].value = GameSettings.playerStripeColor.g;
+        playerStripeSliders[2].value = GameSettings.playerStripeColor.b;
+        playerPreview.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameSettings.playerStripeColor);
         musicVolume.value = SoundManager.audioSource.volume;
         sfxVolume.value = SoundManager.audioSource.volume;
     }
 
     public void ToggleDifficulty()
     {
-        if(GameManager.difficulty == GameManager.Difficulty.EASY)
+        if(GameSettings.difficulty == GameSettings.Difficulty.EASY)
         {
-            GameManager.difficulty = GameManager.Difficulty.NORMAL;
+            GameSettings.difficulty = GameSettings.Difficulty.NORMAL;
         }
-        else if(GameManager.difficulty == GameManager.Difficulty.NORMAL)
+        else if(GameSettings.difficulty == GameSettings.Difficulty.NORMAL)
         {
-            GameManager.difficulty = GameManager.Difficulty.HARD;
+            GameSettings.difficulty = GameSettings.Difficulty.HARD;
         }
-        else if(GameManager.difficulty == GameManager.Difficulty.HARD)
+        else if(GameSettings.difficulty == GameSettings.Difficulty.HARD)
         {
-            GameManager.difficulty = GameManager.Difficulty.EASY;
+            GameSettings.difficulty = GameSettings.Difficulty.EASY;
         }
         
-        difficultyBtn.transform.GetChild(0).GetComponent<Text>().text = GameManager.difficulty.ToString();
+        difficultyBtn.transform.GetChild(0).GetComponent<Text>().text = GameSettings.difficulty.ToString();
     }
 
     public void ChangeAimSense()
     {
-        GameManager.aimSensitivy = aimSlider.value;
-        aimText.text = GameManager.aimSensitivy.ToString();
+        GameSettings.aimSensitivy = aimSlider.value;
+        aimText.text = GameSettings.aimSensitivy.ToString();
     }
 
     public void ExitSettings()
@@ -118,7 +118,7 @@ public class Settings : MonoBehaviour
         float g = playerBodySliders[1].value;
         float b = playerBodySliders[2].value;
 
-        GameManager.playerBodyColor = new Color(r, g, b);
+        GameSettings.playerBodyColor = new Color(r, g, b);
         playerPreview.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", new Color(r,g,b));
     }
 
@@ -129,7 +129,7 @@ public class Settings : MonoBehaviour
         float g = playerStripeSliders[1].value;
         float b = playerStripeSliders[2].value;
 
-        GameManager.playerStripeColor = new Color(r, g, b);
+        GameSettings.playerStripeColor = new Color(r, g, b);
         playerPreview.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", new Color(r,g,b));
     }
 

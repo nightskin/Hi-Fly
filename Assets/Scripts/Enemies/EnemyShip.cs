@@ -33,19 +33,19 @@ public class EnemyShip : MonoBehaviour
     {
         diedByCrashing = false;
         effect.enabled = true;
-        if (GameManager.difficulty == GameManager.Difficulty.EASY)
+        if (GameSettings.difficulty == GameSettings.Difficulty.EASY)
         {
             
         }
-        else if (GameManager.difficulty == GameManager.Difficulty.NORMAL)
+        else if (GameSettings.difficulty == GameSettings.Difficulty.NORMAL)
         {
             
         }
-        else if (GameManager.difficulty == GameManager.Difficulty.HARD)
+        else if (GameSettings.difficulty == GameSettings.Difficulty.HARD)
         {
             
         }
-        target = GameManager.playerShip.transform.GetChild(0);
+        target = GameManager.Get().playerShip.transform.GetChild(0);
         health = GetComponent<HealthSystem>();
         health.Heal(health.GetMaxHealth());
         //Set colors
@@ -55,11 +55,11 @@ public class EnemyShip : MonoBehaviour
     
     void Update()
     {
-        if (!GameManager.gamePaused)
+        if (!GameManager.Get().gamePaused)
         {
             if (health.IsAlive())
             {
-                if (GameManager.playerMode == GameManager.PlayerMode.ON_RAILS)
+                if (GameManager.Get().playerMode == GameManager.PlayerMode.ON_RAILS)
                 {
                     FightOnRails();
                 }
@@ -84,7 +84,7 @@ public class EnemyShip : MonoBehaviour
             playerHealth.TakeDamage(10);
             if (playerHealth.IsDead())
             {
-                GameManager.gameOver = true;
+                GameManager.Get().gameOver = true;
             }
             health.TakeDamage(health.GetMaxHealth());
             diedByCrashing = true;
@@ -125,7 +125,8 @@ public class EnemyShip : MonoBehaviour
 
     void FightOnRails()
     {
-        if (Vector3.Dot(Camera.main.transform.forward, transform.forward) > 0)
+        Vector3 heading = (transform.position - target.position).normalized;
+        if (Vector3.Dot(Camera.main.transform.forward, heading) > 0)
         {
             direction = SteerTowardsTarget();
             transform.rotation = Quaternion.LookRotation(direction);

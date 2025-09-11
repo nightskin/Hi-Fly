@@ -4,16 +4,16 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] GameObject[] enemyPrefabs;
-    [SerializeField] int maxEnemies = 10;
-    [SerializeField] int minEnemies = 3;
-    [SerializeField] float spawnRadius = 500;
+    public int maxEnemies = 10;
+    public int minEnemies = 3;
+    public float spawnRadius = 500;
 
     [SerializeField] bool showDebug = false;
 
     public bool spawnAtStart = false;
     public bool skipPatrol = false;
 
-    public List<GameObject> enemyShips = new List<GameObject>();
+    List<GameObject> enemyShips = new List<GameObject>();
 
     void OnDrawGizmos()
     {

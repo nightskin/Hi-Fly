@@ -20,9 +20,9 @@ public class PlayerCamera : MonoBehaviour
 
     void Update()
     {
-        if (player.health.IsAlive() && !GameManager.gamePaused)
+        if (player.health.IsAlive() && !GameManager.Get().gamePaused)
         {
-            if (GameManager.playerMode == GameManager.PlayerMode.ON_RAILS)
+            if (GameManager.Get().playerMode == GameManager.PlayerMode.ON_RAILS)
             {
                 FollowOnRailsTarget();
             }

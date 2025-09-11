@@ -24,7 +24,7 @@ public class Lazer : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.gamePaused)
+        if (!GameManager.Get().gamePaused)
         {
             origin = owner.transform.position + owner.transform.forward;
             renderer.SetPosition(0, origin);
@@ -112,7 +112,7 @@ public class Lazer : MonoBehaviour
                             {
                                 objectPool.Spawn("explosion", rayHit.point);
                                 rayHit.transform.gameObject.SetActive(false);
-                                GameManager.gameOver = true;
+                                GameManager.Get().gameOver = true;
                             }
                         }
                     }
