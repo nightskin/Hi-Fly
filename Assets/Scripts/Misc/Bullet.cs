@@ -164,7 +164,13 @@ public class Bullet : MonoBehaviour
                     sfx.clip = hitSound;
                     sfx.Play();
                 }
-
+                else if (rayhit.transform.tag == "PickUp")
+                {
+                    if (owner.tag == "Player")
+                    {
+                        rayhit.transform.GetComponent<PickUp>().ActivateEffect();
+                    }
+                }
             }
         }
     }

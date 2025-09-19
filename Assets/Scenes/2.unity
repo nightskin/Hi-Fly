@@ -741,13 +741,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyFleatPrefab: {fileID: 7682631823238818699, guid: 7f22fe340ccf21f4ea9bb33752f41a88,
     type: 3}
-  minEnemiesPerEncounter: 5
-  maxEnemiesPerEncounter: 10
+  minEnemiesPerEncounter: 10
+  maxEnemiesPerEncounter: 20
   minEncounterTime: 3
-  maxEncounterTime: 10
+  maxEncounterTime: 3
   spawnRadius: 500
   secondsBeforeEncounter: 0
-  enableEncounters: 1
 --- !u!1001 &8131623140160295966
 PrefabInstance:
   m_ObjectHideFlags: 0

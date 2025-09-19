@@ -11,45 +11,51 @@ public class PeriodicEnemySpawner : MonoBehaviour
 
     Transform player;
 
-    GameObject currentSpawner;
+    GameObject currentSpawner = null;
     [SerializeField] float secondsBeforeEncounter;
     bool encounterInProgress = false;
-    [SerializeField] bool enableEncounters;
 
-    void Awake()
+    void OnEnable()
     {
         secondsBeforeEncounter = Random.Range(minEncounterTime, maxEncounterTime);
         player = GameObject.FindWithTag("Player").transform;
     }
 
+    void OnDisable()
+    {
+        encounterInProgress = false;
+        if (currentSpawner)
+        {
+            Destroy(currentSpawner);
+            currentSpawner = null;
+        }
+    }
+
     void Update()
     {
-        if(enableEncounters)
+        if (encounterInProgress)
         {
-            if (encounterInProgress)
+            if (currentSpawner.GetComponent<EnemySpawner>().AllEnemiesDefeated())
             {
-                if (currentSpawner.GetComponent<EnemySpawner>().AllEnemiesDefeated())
-                {
-                    Destroy(currentSpawner);
-                    encounterInProgress = false;
-                }
+                Destroy(currentSpawner);
+                encounterInProgress = false;
             }
-            else
+        }
+        else
+        {
+            secondsBeforeEncounter -= Time.deltaTime;
+            if (secondsBeforeEncounter < 0)
             {
-                secondsBeforeEncounter -= Time.deltaTime;
-                if (secondsBeforeEncounter < 0)
-                {
-                    encounterInProgress = true;
-                    Vector3 position = player.transform.position + (player.transform.forward * spawnRadius * 2);
-                    currentSpawner = Instantiate(enemyFleatPrefab, position, Quaternion.identity);
-                    EnemySpawner spawner = currentSpawner.GetComponent<EnemySpawner>();
-                    spawner.skipPatrol = true;
-                    spawner.spawnAtStart = true;
-                    spawner.minEnemies = minEnemiesPerEncounter;
-                    spawner.maxEnemies = maxEnemiesPerEncounter;
-                    spawner.spawnRadius = spawnRadius;
-                    secondsBeforeEncounter = Random.Range(minEncounterTime, maxEncounterTime);
-                }
+                encounterInProgress = true;
+                Vector3 position = player.transform.position + (player.transform.forward * spawnRadius * 2);
+                currentSpawner = Instantiate(enemyFleatPrefab, position, Quaternion.identity);
+                EnemySpawner spawner = currentSpawner.GetComponent<EnemySpawner>();
+                spawner.skipPatrol = true;
+                spawner.spawnAtStart = true;
+                spawner.minEnemies = minEnemiesPerEncounter;
+                spawner.maxEnemies = maxEnemiesPerEncounter;
+                spawner.spawnRadius = spawnRadius;
+                secondsBeforeEncounter = Random.Range(minEncounterTime, maxEncounterTime);
             }
         }
     }

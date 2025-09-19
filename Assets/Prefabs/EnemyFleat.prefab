@@ -51,9 +51,8 @@ MonoBehaviour:
   minEnemies: 5
   spawnRadius: 500
   showDebug: 0
-  spawnAtStart: 0
-  skipPatrol: 0
-  enemyShips: []
+  spawnAtStart: 1
+  skipPatrol: 1
 --- !u!135 &2355711189741096969
 SphereCollider:
   m_ObjectHideFlags: 0

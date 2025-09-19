@@ -6170,8 +6170,9 @@ GameObject:
   - component: {fileID: 6932323581209396350}
   - component: {fileID: 2692108105168207850}
   - component: {fileID: 8131623140777354630}
+  - component: {fileID: 3361286605069313468}
   m_Layer: 3
-  m_Name: Mesh
+  m_Name: PlayerMesh
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6418,6 +6419,21 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
+--- !u!114 &3361286605069313468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6273798608279050327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f39ac0855bb10b45ba24587e05a07f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: {fileID: 8131623140777354630}
+  audioSource: {fileID: 8131623140777354625}
+  crashSound: {fileID: 8300000, guid: 673b1d10e04d4da4b8cfc53eb2a28282, type: 3}
 --- !u!1 &6508015524747324939
 GameObject:
   m_ObjectHideFlags: 0
@@ -7921,6 +7937,7 @@ MonoBehaviour:
   - {fileID: 8131623141203150230}
   - {fileID: 6819837170954737496}
   - {fileID: 3535604011133332701}
+  - {fileID: 3356516449726540306}
   gameOver: 0
   gamePaused: 0
   levelBeaten: 0

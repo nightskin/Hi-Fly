@@ -5,6 +5,9 @@ public class PickUp : MonoBehaviour
     [SerializeField] SpriteRenderer renderer;
     [SerializeField] Sprite[] visuals;
 
+    Transform player;
+    [SerializeField] LayerMask playerLayer;
+
     public enum Type
     {
         HEAL,
@@ -13,50 +16,45 @@ public class PickUp : MonoBehaviour
         RAPID_FIRE,
     }
     public Type type;
-    
-    bool followPlayer;
+
+    void Start()
+    {
+        player = GameManager.Get().playerShip.transform.Find("PlayerMesh");
+    }
 
     void OnEnable()
     {
         type = (Type)Random.Range(0, 3);
         renderer.sprite = visuals[(int)type];
-        followPlayer = false;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        if(Vector3.Distance(transform.position, GameManager.Get().playerShip.transform.position) < 10 || GameManager.Get().playerMode == GameManager.PlayerMode.ON_RAILS)
+        if (Physics.CheckSphere(transform.position, 1.25f, playerLayer))
         {
-            followPlayer = true;
-        }
-        if (followPlayer)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, GameManager.Get().playerShip.transform.position, 50 * Time.deltaTime);
+            ActivateEffect();
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    public void ActivateEffect()
     {
-        if(other.tag == "Player")
+        if (type == Type.HEAL)
         {
-            if (type == Type.HEAL)
-            {
-                other.GetComponent<HealthSystem>().Heal(30);
-            }
-            else if (type == Type.POWER_BEAM)
-            {
-                GameManager.Get().ChangePowerUp(GameManager.PlayerPowerUp.POWER_BEAM);
-            }
-            else if (type == Type.POWER_BOMB)
-            {
-                GameManager.Get().ChangePowerUp(GameManager.PlayerPowerUp.POWER_BOMB);
-            }
-            else if (type == Type.RAPID_FIRE)
-            {
-                //GameManager.Get().ChangePowerUp(GameManager.)
-            }
-            gameObject.SetActive(false);
+            player.GetComponent<HealthSystem>().Heal(30);
         }
+        else if (type == Type.POWER_BEAM)
+        {
+            GameManager.Get().ChangePowerUp(GameManager.PlayerPowerUp.POWER_BEAM);
+        }
+        else if (type == Type.POWER_BOMB)
+        {
+            GameManager.Get().ChangePowerUp(GameManager.PlayerPowerUp.POWER_BOMB);
+        }
+        else if (type == Type.RAPID_FIRE)
+        {
+
+        }
+        gameObject.SetActive(false);
     }
 
 }
