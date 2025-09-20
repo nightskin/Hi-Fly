@@ -103,7 +103,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DissolveEdgeWidth: 0.015
+    - _DissolveEdgeWidth: 0.01
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
@@ -122,7 +122,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _Value: 0
+    - _Value: 1
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZTest: 4
@@ -131,7 +131,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.4039216, g: 0.4039216, b: 0.4039216, a: 1}
     - _Color: {r: 0.40392157, g: 0.40392157, b: 0.40392157, a: 1}
-    - _DissolveColor: {r: 0, g: 16, b: 0, a: 1}
+    - _DissolveColor: {r: 21.361256, g: 16, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 0, g: 0.040714983, b: 0.1509434, a: 1}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
