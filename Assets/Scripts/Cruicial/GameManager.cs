@@ -1,27 +1,32 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEngine.Splines;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public enum GameMode
+    {
+        TUTORIAL,
+        ROGUE,
+        SURVIVOR,
+        ASSASSIN,
+    }
+    public GameMode gameMode;
+
     public enum PlayerMode
     {
         ALL_RANGE,
         ON_RAILS,
-        TPS,
     }
-    [HideInInspector] public PlayerMode playerMode;
+    public PlayerMode playerMode;
 
-    public enum PlayerPowerUp
+    public enum PlayerWeapon
     {
-        NONE,
-        POWER_BOMB,
+        CHARGE_BULLET,
         POWER_BEAM,
-        RAPID_FIRE,
+        RAPID_BULLET,
     }
-    [HideInInspector] public PlayerPowerUp currentPowerUp;
+    public PlayerWeapon playerWeapon;
 
 
 
@@ -30,8 +35,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject gameOverSelectedObject;
     [SerializeField] GameObject gameOverMenu;
     [SerializeField] GameObject gamePauseMenu;
-    [SerializeField] Image powerUpDisplayImage;
-    [SerializeField] Sprite[] powerUpSprites;
 
     [HideInInspector] public PlayerShip playerShip;
     public GameObject[] playerUIToHideOnPause;
@@ -44,8 +47,7 @@ public class GameManager : MonoBehaviour
     float gameOverTimer = 1;
     bool gameOverActive = false;
     
-    //For OnRails Movement
-    [HideInInspector] public SplineContainer path;
+
 
     public static GameManager Get()
     {
@@ -62,26 +64,6 @@ public class GameManager : MonoBehaviour
 
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
-        currentPowerUp = PlayerPowerUp.NONE;
-
-        GameObject pathObj = GameObject.Find("Path");
-        if (pathObj)
-        {
-            path = pathObj.GetComponent<SplineContainer>();
-            if (path)
-            {
-                playerMode = PlayerMode.ON_RAILS;
-            }
-            else
-            {
-                playerMode = PlayerMode.ALL_RANGE;
-            }
-        }
-        else
-        {
-            playerMode = PlayerMode.ALL_RANGE;
-        }
-
     }
 
     void Start()
@@ -145,20 +127,7 @@ public class GameManager : MonoBehaviour
         InputManager.input.Player.Pause.performed -= Pause_performed;
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
     }
-
-    public void ChangePowerUp(PlayerPowerUp powerUp)
-    {
-        currentPowerUp = powerUp;
-        powerUpDisplayImage.sprite = powerUpSprites[(int)powerUp];
-        if (powerUp == PlayerPowerUp.NONE)
-        {
-            powerUpDisplayImage.color = Color.clear;
-        }
-        else
-        {
-            powerUpDisplayImage.color = Color.white;
-        }
-    }
+    
 
     public void Pause()
     {

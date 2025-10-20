@@ -4,7 +4,6 @@ using UnityEngine.EventSystems;
 public class MenuButtons : MonoBehaviour
 {
     [SerializeField] EventSystem eventSystem;
-    int selectedLevel = 0;
 
     public void OpenSettings()
     {
@@ -12,21 +11,40 @@ public class MenuButtons : MonoBehaviour
         StartCoroutine(SceneLoader.instance.Load("Settings"));
     }
     
-    public void PlayGame()
+    public void PlayerSelect()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.Load("LevelSelect"));
+        StartCoroutine(SceneLoader.instance.Load("PlayerSelect"));
     }
 
-    public void ChangeSelectedLevel()
-    {
-
-    }
-
-    public void SelectLevel()
+    public void GameModeSelect()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.Load(selectedLevel.ToString()));
+        StartCoroutine(SceneLoader.instance.Load("GameMode"));
+    }
+
+    public void OpenTutorial()
+    {
+        eventSystem.gameObject.SetActive(false);
+        StartCoroutine(SceneLoader.instance.Load("Tutorial"));
+    }
+
+    public void RogueMode()
+    {
+        eventSystem.gameObject.SetActive(false);
+        StartCoroutine(SceneLoader.instance.Load("Rogue"));
+    }
+
+    public void SurvivorMode()
+    {
+        eventSystem.gameObject.SetActive(false);
+        StartCoroutine(SceneLoader.instance.Load("Survivor"));
+    }
+
+    public void AssassinMode()
+    {
+        eventSystem.gameObject.SetActive(false);
+        StartCoroutine(SceneLoader.instance.Load("Assassin"));
     }
 
     public void BackToMenu()

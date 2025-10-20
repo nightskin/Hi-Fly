@@ -64,7 +64,3 @@ MonoBehaviour:
     prefab: {fileID: 8336328388692570255, guid: b2e9da4ade67bb34cbc154042c0bdd33,
       type: 3}
     size: 100
-  - name: pickup
-    prefab: {fileID: 8398003246989385244, guid: b67f019871a350d459791c6409acf0d8,
-      type: 3}
-    size: 100

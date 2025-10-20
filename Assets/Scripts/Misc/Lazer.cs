@@ -8,7 +8,7 @@ public class Lazer : MonoBehaviour
     float colorChangeTimer = 0;
 
     [HideInInspector] public GameObject owner = null;
-    public float damage = 5;
+    public int damage = 5;
     [HideInInspector] public Vector3 direction;
     [HideInInspector] public Vector3 origin;
     ObjectPool objectPool;

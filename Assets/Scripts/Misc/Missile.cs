@@ -7,6 +7,7 @@ public class Missile : MonoBehaviour
     public Transform homingTarget = null;
     public float speed = 1000;
     public Vector3 direction;
+    public int damage;
 
     BoxCollider box;
     AudioSource sfx;
@@ -90,7 +91,8 @@ public class Missile : MonoBehaviour
         {
             if (rayhit.transform.gameObject != owner)
             {
-                objectPool.Spawn("powerBombExplosion", transform.position);
+                var powerBombExplosion = objectPool.Spawn("powerBombExplosion", transform.position);
+                powerBombExplosion.GetComponent<PowerBomb>().damage = damage;
 
                 if (rayhit.transform.tag == "Destructible")
                 {

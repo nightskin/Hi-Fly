@@ -3,7 +3,7 @@ using UnityEngine;
 public class Hazard : MonoBehaviour
 {
     [SerializeField] bool continousDamage;
-    [SerializeField] [Min(0)] float damage = 1;
+    [SerializeField] [Min(0)] int damage = 1;
 
     Collider collider;
     BoxCollider box;

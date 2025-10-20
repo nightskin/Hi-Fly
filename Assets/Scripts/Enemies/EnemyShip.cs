@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class EnemyShip : MonoBehaviour
 {
-    [SerializeField] GameObject pickUpPrefab;
     [SerializeField] EnemyDissolveEffect effect;
 
     ObjectPool objectPool;
@@ -47,7 +46,7 @@ public class EnemyShip : MonoBehaviour
         }
         target = GameManager.Get().playerShip.transform.GetChild(0);
         health = GetComponent<HealthSystem>();
-        health.Heal(health.GetMaxHealth());
+        health.Heal(health.MaxHP());
         //Set colors
         GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", Util.RandomColor()); 
         GetComponent<MeshRenderer>().materials[2].SetColor("_MainColor", Util.RandomColor()); 
@@ -86,12 +85,12 @@ public class EnemyShip : MonoBehaviour
             {
                 GameManager.Get().gameOver = true;
             }
-            health.TakeDamage(health.GetMaxHealth());
+            health.TakeDamage(health.MaxHP());
             diedByCrashing = true;
         }
         if (other.tag == "Destructible" || other.tag == "Surface")
         {
-            health.TakeDamage(health.GetMaxHealth());
+            health.TakeDamage(health.MaxHP());
             diedByCrashing = true;
         }
     }
@@ -99,12 +98,7 @@ public class EnemyShip : MonoBehaviour
     void Die()
     {
         var explosion = GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("explosion", transform.position);
-        if (Util.RandomBool() && !diedByCrashing)
-        {
-            GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("pickup", transform.position);
-        }
         gameObject.SetActive(false);
-
     }
 
     void Fight()

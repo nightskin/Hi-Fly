@@ -7,13 +7,13 @@ public class PlayerShip : MonoBehaviour
     public HealthSystem health;
     [SerializeField] PlayerCamera camera;
     [SerializeField] TrailRenderer[] trails;
+    [SerializeField] ParticleSystem chargeEffect;
     [SerializeField] TrailRenderer thruster;
     [SerializeField] Transform mesh;
     [SerializeField] Transform bulletSpawn;
     [SerializeField] CharacterController controller;
 
     [SerializeField] Transform OnRailsFollowTarget;
-    //[SerializeField][Min(1)] float onRailsDistanceFromCamera = 15;
     float distanceAlongSpline = 0;
     Vector3 offset = Vector3.one *  0.5f;
 
@@ -21,6 +21,7 @@ public class PlayerShip : MonoBehaviour
     
     [SerializeField][Min(1)] float turnSpeed = 5;
     [SerializeField] float baseSpeed = 10;
+    [SerializeField] float brakeSpeed = 5;
     [SerializeField] float boostSpeed = 50;
     [SerializeField] float acceleration = 10;
 
@@ -30,7 +31,7 @@ public class PlayerShip : MonoBehaviour
     float evadeSpeed = 360 * 5;
 
     float targetSpeed;
-    public float speed;
+    [HideInInspector] public float speed;
 
     //For Shooting
     [SerializeField] Image reticle;
@@ -39,17 +40,22 @@ public class PlayerShip : MonoBehaviour
     Vector2 reticlePosition;
     RaycastHit lockOn;
 
-    public static float fireRate = 1f;
-    public static float bulletPower = 10;
-    public static float lazerPower = 10;
+
+    [SerializeField] Material chargeMaterial;
+    bool charging = false;
+    float chargeAmount = 0;
+    Lazer lazer = null;
+    float shootTimer = 0;
+    
+    public static float maxChargeTime = 3;
+    public static float fireRate = 0.5f;
+    public static int baseBulletPower = 10;
+    public static int chargedBulletPower = 20;
+    public static int lazerPower = 10;
 
 
     ObjectPool objectPool;
-
-    Lazer lazer = null;
-    float shootTimer = 0;
-
-
+    
     void Start()
     {
         Cursor.visible = false;
@@ -66,8 +72,7 @@ public class PlayerShip : MonoBehaviour
         targetSpeed = baseSpeed;
 
         InputManager.input.Player.Fire1.performed += Fire1_performed;
-        InputManager.input.Player.Fire2.performed += Fire2_performed;
-        InputManager.input.Player.Fire2.canceled += Fire2_canceled;
+        InputManager.input.Player.Fire1.canceled += Fire1_canceled;
         InputManager.input.Player.Aim.performed += Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
@@ -108,48 +113,51 @@ public class PlayerShip : MonoBehaviour
             {
                 OnRailsMode();
             }
-            else if(GameManager.Get().playerMode == GameManager.PlayerMode.TPS)
-            {
-                TPS_MODE();
-            }
-
             
             //Shooting
             if (InputManager.input.Player.Fire1.IsPressed())
             {
-                if (shootTimer > 0)
+                if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.RAPID_BULLET)
                 {
-                    shootTimer -= Time.deltaTime;
-                }
-                else
-                {
-                    FireBullet();
-                    shootTimer = fireRate;
-                }
-            }
-            else if (InputManager.input.Player.Fire2.IsPressed())
-            {
-                if (lazer)
-                {
-                    if (lockOn.collider)
+                    if (shootTimer > 0)
                     {
-                        lazer.direction = (lockOn.point - lazer.origin).normalized;
+                        shootTimer -= Time.deltaTime;
                     }
                     else
                     {
-                        Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
-                        if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane))
+                        FireBullet();
+                        shootTimer = fireRate;
+                    }
+                }
+                else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.POWER_BEAM)
+                {
+                    if (lazer)
+                    {
+                        if (lockOn.collider)
                         {
-                            if (hit.transform.tag != "Player")
-                            {
-                                lazer.direction = (hit.point - lazer.origin).normalized;
-                            }
+                            lazer.direction = (lockOn.point - lazer.origin).normalized;
                         }
                         else
                         {
-                            lazer.direction = ray.direction;
+                            Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
+                            if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane))
+                            {
+                                if (hit.transform.tag != "Player")
+                                {
+                                    lazer.direction = (hit.point - lazer.origin).normalized;
+                                }
+                            }
+                            else
+                            {
+                                lazer.direction = ray.direction;
+                            }
                         }
                     }
+                }
+                else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
+                {
+                    chargeAmount += Time.deltaTime;
+                    chargeMaterial.SetColor("_Color", Color.Lerp(Color.green, Color.red, chargeAmount / maxChargeTime));
                 }
             }
         }
@@ -158,8 +166,7 @@ public class PlayerShip : MonoBehaviour
     void OnDestroy()
     {
         InputManager.input.Player.Fire1.performed -= Fire1_performed;
-        InputManager.input.Player.Fire2.performed -= Fire2_performed;
-        InputManager.input.Player.Fire2.canceled -= Fire2_canceled;
+        InputManager.input.Player.Fire1.canceled -= Fire1_canceled;
         InputManager.input.Player.Aim.performed -= Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed -= Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed -= CenterCrosshair_performed;
@@ -181,7 +188,6 @@ public class PlayerShip : MonoBehaviour
     {
         if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
         {
-            if (GameManager.Get().playerMode == GameManager.PlayerMode.TPS) GameManager.Get().playerMode = GameManager.PlayerMode.ALL_RANGE;
             camera.boostEffect.Play();
             thrustColor = Color.red;
             targetSpeed = boostSpeed;
@@ -201,27 +207,45 @@ public class PlayerShip : MonoBehaviour
     
     private void Fire1_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        shootTimer = 0;
-    }
-
-    private void Fire2_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if (GameManager.Get().currentPowerUp == GameManager.PlayerPowerUp.POWER_BEAM)
+        if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.RAPID_BULLET)
+        {
+            shootTimer = 0;
+        }
+        else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
+        {
+            charging = true;
+            chargeEffect.gameObject.SetActive(true);
+        }
+        else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.POWER_BEAM)
         {
             FireLazer();
         }
-        else if (GameManager.Get().currentPowerUp == GameManager.PlayerPowerUp.POWER_BOMB)
-        {
-            FirePowerBomb();
-        }
     }
-
-    private void Fire2_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    
+    
+    private void Fire1_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (lazer)
+        if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
         {
-            lazer.GetComponent<Lazer>().DeSpawn();
-            lazer = null;
+            if (chargeAmount >= maxChargeTime)
+            {
+                FirePowerBomb();
+            }
+            else
+            {
+                FireBullet();
+            }
+            charging = false;
+            chargeEffect.gameObject.SetActive(false);
+            chargeAmount = 0;
+        }
+        else if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.POWER_BEAM)
+        {
+            if (lazer)
+            {
+                lazer.GetComponent<Lazer>().DeSpawn();
+                lazer = null;
+            }
         }
     }
     
@@ -232,24 +256,12 @@ public class PlayerShip : MonoBehaviour
             if(GameManager.Get().playerMode == GameManager.PlayerMode.ALL_RANGE)
             {
                 //Stop
-                GameManager.Get().playerMode = GameManager.PlayerMode.TPS;
-                reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
-                reticle.rectTransform.position = reticlePosition;
+                speed = brakeSpeed;
                 camera.boostEffect.Stop();
                 thrustColor = Color.cyan;
                 foreach (TrailRenderer trail in trails)
                 {
                     trail.emitting = false;
-                }
-            }
-            else if(GameManager.Get().playerMode == GameManager.PlayerMode.TPS)
-            {
-                //Go
-                GameManager.Get().playerMode = GameManager.PlayerMode.ALL_RANGE;
-                camera.boostEffect.Stop();
-                foreach (TrailRenderer trail in trails)
-                {
-                    trail.emitting = true;
                 }
             }
         }
@@ -273,13 +285,10 @@ public class PlayerShip : MonoBehaviour
 
     private void Evade_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (!evading && GameManager.Get().playerMode != GameManager.PlayerMode.TPS)
-        {
-            evadeTimer = 0;
-            evading = true;
-            if (evadeDirection == 1) evadeDirection = -1;
-            else evadeDirection = 1;
-        }
+        evadeTimer = 0;
+        evading = true;
+        if (evadeDirection == 1) evadeDirection = -1;
+        else evadeDirection = 1;
     }
 
     public void Teleport(Vector3 position)
@@ -295,15 +304,8 @@ public class PlayerShip : MonoBehaviour
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
         thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
 
-        distanceAlongSpline += (speed * Time.deltaTime) / GameManager.Get().path.CalculateLength();
-        Vector3 positionAlongSpline = GameManager.Get().path.EvaluatePosition(distanceAlongSpline);
-        Vector3 nextPositionAlongSpline = GameManager.Get().path.EvaluatePosition(distanceAlongSpline + Time.deltaTime);
 
-        Vector3 directionAlongSpline = (nextPositionAlongSpline - positionAlongSpline).normalized;
-
-        OnRailsFollowTarget.transform.position = positionAlongSpline;
-        OnRailsFollowTarget.transform.forward = directionAlongSpline;
-        transform.forward = directionAlongSpline;
+        OnRailsFollowTarget.transform.position += OnRailsFollowTarget.transform.forward * speed * Time.deltaTime;
 
         Vector2 steer = InputManager.input.Player.Steer.ReadValue<Vector2>();
         offset += new Vector3(steer.x, steer.y, 0) * Time.deltaTime;
@@ -428,6 +430,7 @@ public class PlayerShip : MonoBehaviour
         if (obj != null)
         {
             Bullet b = obj.GetComponent<Bullet>();
+            b.damage = baseBulletPower;
             //Set Needed Variables
             b.owner = mesh.gameObject;
         
@@ -464,7 +467,7 @@ public class PlayerShip : MonoBehaviour
         if (obj != null)
         {
             Missile m = obj.GetComponent<Missile>();
-            //Set Needed Variables
+            
             m.owner = mesh.gameObject;
         
             if (lockOn.collider)

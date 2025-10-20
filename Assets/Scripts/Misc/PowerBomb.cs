@@ -5,7 +5,7 @@ public class PowerBomb : MonoBehaviour
     [SerializeField][Min(0.1f)] float maxScale = 20;
     [SerializeField][Min(1)] float shrinkRate = 5;
     [SerializeField][Min(0)] float timeBeforeShrink = 1;
-    [SerializeField][Min(0)] float damage = 30;
+    public int damage = 30;
     float timer;
 
 
