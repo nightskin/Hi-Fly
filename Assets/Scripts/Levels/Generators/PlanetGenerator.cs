@@ -6,23 +6,20 @@ using UnityEngine;
 [RequireComponent(typeof(MeshCollider))]
 public class PlanetGenerator : MonoBehaviour
 {
-    public string seed = "";
-    [SerializeField] Noise noise;
-    [SerializeField] Mesh mesh;
-    [SerializeField] List<Vector3> vertices = new List<Vector3>();
-    [SerializeField] List<Vector2> uvs = new List<Vector2>();
-    [SerializeField] List<Color> colors = new List<Color>();
-    [SerializeField] List<int> triangles = new List<int>();
-    [SerializeField] int buffer = 0;
+    Noise noise;
+    Mesh mesh;
+    List<Vector3> vertices = new List<Vector3>();
+    List<Color> colors = new List<Color>();
+    List<int> triangles = new List<int>();
+    int buffer = 0;
+    
 
-    [SerializeField] bool generateColors = true;
     [SerializeField] Gradient landGradient;
     [SerializeField][Min(1)] float gradientMult = 10;
-    [SerializeField] Color waterColor;
     [SerializeField] int resolution = 50;
 
     [SerializeField] float radius = 100;
-    [SerializeField] float waterLevel = 100;
+    float waterLevel = 100;
     [SerializeField] float baseRoughness = 1;
     [SerializeField] float roughness = 2;
     [SerializeField] float strength = 1;
@@ -38,7 +35,6 @@ public class PlanetGenerator : MonoBehaviour
             for (int z = 0; z <= resolution; z++)
             {
                 vertices.Add(rotation * new Vector3(x - resolution / 2, -resolution / 2, z - resolution / 2) * size);
-                uvs.Add(new Vector2(x,z) / resolution);
             }
         }
 
@@ -61,21 +57,10 @@ public class PlanetGenerator : MonoBehaviour
 
         buffer += (resolution + 1) * (resolution + 1);
     }
-
-
+    
     void Start()
     {
-        if (vertices.Count == 0) 
-        {
-            Generate();
-        }
-        else
-        {
-            mesh = new Mesh();
-            GetComponent<MeshFilter>().mesh = mesh;
-            UpdateMesh();
-        }
-        
+        Generate();
         GetComponent<MeshCollider>().sharedMesh = mesh;
     }
     void DrawCube()
@@ -99,25 +84,33 @@ public class PlanetGenerator : MonoBehaviour
 
     public void Generate()
     {
-        if(seed == string.Empty)
+        noise = Galaxy.noise;
+
+        GradientColorKey[] colorKeys = new GradientColorKey[landGradient.colorKeyCount]; 
+        for (int i = 0; i < landGradient.colorKeyCount; i++)
         {
-            noise = Galaxy.noise;
+            if(i == 0)
+            {
+                colorKeys[i] = new GradientColorKey(Util.RandomColor(), 0);
+            }
+            else
+            {
+                colorKeys[i] = new GradientColorKey(Util.RandomColor(), 1 / i);
+            }
         }
-        else
-        {
-            noise = new Noise(seed.GetHashCode());
-        }
+        landGradient.SetColorKeys(colorKeys);
 
 
         Transform water = transform.Find("Water");
         if (water)
         {
+            waterLevel = radius + Random.Range(1, layers);
             water.localScale = Vector3.one * waterLevel * 2;
-            water.GetComponent<MeshRenderer>().sharedMaterial.SetColor("_WaterColor", waterColor);
+            water.GetComponent<MeshRenderer>().material.SetColor("_WaterColor", Util.RandomColor());
+            water.GetComponent<MeshRenderer>().material.SetColor("_FoamColor", Util.RandomColor());
         }
-
+        
         vertices.Clear();
-        uvs.Clear();
         triangles.Clear();
         colors.Clear();
         buffer = 0;
@@ -145,9 +138,12 @@ public class PlanetGenerator : MonoBehaviour
             }
             vertices[v] *= radius * (1 + elevation);
             float t = elevation * gradientMult;
-            if(generateColors) colors.Add(landGradient.Evaluate(t));
+            colors.Add(landGradient.Evaluate(t));
         }
         UpdateMesh();
+
+
+
     }
     
     float Evaluate(Vector3 point)
@@ -173,15 +169,7 @@ public class PlanetGenerator : MonoBehaviour
         mesh.Clear();
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
-
-        if(generateColors)
-        {
-            mesh.colors = colors.ToArray();
-        }
-        else
-        {
-            mesh.uv = uvs.ToArray();
-        }
+        mesh.colors = colors.ToArray();
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
 

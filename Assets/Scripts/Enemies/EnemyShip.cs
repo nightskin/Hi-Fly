@@ -18,10 +18,10 @@ public class EnemyShip : MonoBehaviour
     [SerializeField] float fireRate = 1;
     [SerializeField] float moveSpeed = 75;
 
+    bool isSmart;
     Vector3 direction;
     float shootTimer = 0;
-
-    bool diedByCrashing;
+    float turnTimer;
 
     void Start()
     {
@@ -30,20 +30,8 @@ public class EnemyShip : MonoBehaviour
 
     void OnEnable()
     {
-        diedByCrashing = false;
+        isSmart = Util.RandomBool();
         effect.enabled = true;
-        if (GameSettings.difficulty == GameSettings.Difficulty.EASY)
-        {
-            
-        }
-        else if (GameSettings.difficulty == GameSettings.Difficulty.NORMAL)
-        {
-            
-        }
-        else if (GameSettings.difficulty == GameSettings.Difficulty.HARD)
-        {
-            
-        }
         target = GameManager.Get().playerShip.transform.GetChild(0);
         health = GetComponent<HealthSystem>();
         health.Heal(health.MaxHP());
@@ -64,7 +52,8 @@ public class EnemyShip : MonoBehaviour
                 }
                 else
                 {
-                    Fight();
+                    if (isSmart) Fight_Smart();
+                    else Fight_Dumb();
                 }
             }
             else
@@ -86,22 +75,24 @@ public class EnemyShip : MonoBehaviour
                 GameManager.Get().gameOver = true;
             }
             health.TakeDamage(health.MaxHP());
-            diedByCrashing = true;
         }
         if (other.tag == "Destructible" || other.tag == "Surface")
         {
             health.TakeDamage(health.MaxHP());
-            diedByCrashing = true;
         }
     }
 
     void Die()
     {
-        var explosion = GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("explosion", transform.position);
+        var explosion = objectPool.GetComponent<ObjectPool>().Spawn("explosion", transform.position);
+        if ((GameManager.Get().gameMode == GameManager.GameMode.SURVIVOR))
+        {
+            EnemyWaveManager.Get().EnemyDowned();
+        }
         gameObject.SetActive(false);
     }
 
-    void Fight()
+    void Fight_Smart()
     {
         direction = SteerTowardsTarget() + Seperation(avoidRadius);
         transform.rotation = Quaternion.LookRotation(direction);
@@ -110,7 +101,32 @@ public class EnemyShip : MonoBehaviour
         shootTimer -= Time.deltaTime;
         if (shootTimer <= 0 && !effect.enabled)
         {
-            if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) > shootThreshold)
+            if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) >= shootThreshold)
+            {
+                Shoot();
+            }
+        }
+    }
+
+    void Fight_Dumb()
+    {
+        if (turnTimer > 0)
+        {
+            turnTimer -= Time.deltaTime;
+        }
+        else
+        {
+            turnTimer = Random.Range(0, 5);
+            direction = GetDirectionTowardsTarget();
+        }
+
+        transform.rotation = Quaternion.LookRotation(Vector3.Lerp(transform.forward, direction, turnSpeed * Time.deltaTime));
+        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+
+        shootTimer -= Time.deltaTime;
+        if (shootTimer <= 0 && !effect.enabled)
+        {
+            if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) >= shootThreshold)
             {
                 Shoot();
             }

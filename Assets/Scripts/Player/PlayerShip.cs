@@ -48,9 +48,8 @@ public class PlayerShip : MonoBehaviour
     float shootTimer = 0;
     
     public static float maxChargeTime = 3;
-    public static float fireRate = 0.5f;
-    public static int baseBulletPower = 10;
-    public static int chargedBulletPower = 20;
+    public static float fireRate = 0.2f;
+    public static int bulletPower = 10;
     public static int lazerPower = 10;
 
 
@@ -430,7 +429,7 @@ public class PlayerShip : MonoBehaviour
         if (obj != null)
         {
             Bullet b = obj.GetComponent<Bullet>();
-            b.damage = baseBulletPower;
+            b.damage = bulletPower;
             //Set Needed Variables
             b.owner = mesh.gameObject;
         
@@ -467,7 +466,7 @@ public class PlayerShip : MonoBehaviour
         if (obj != null)
         {
             Missile m = obj.GetComponent<Missile>();
-            
+            m.damage = bulletPower * 3;
             m.owner = mesh.gameObject;
         
             if (lockOn.collider)

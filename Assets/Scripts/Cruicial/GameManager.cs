@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviour
     public enum GameMode
     {
         TUTORIAL,
-        ROGUE,
         SURVIVOR,
+        ROGUE,
         ASSASSIN,
     }
     public GameMode gameMode;
@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     //Other Stuff
     static GameManager instance;
     [SerializeField] GameObject gameOverSelectedObject;
+    [SerializeField] GameObject upgradeMenu;
     [SerializeField] GameObject gameOverMenu;
     [SerializeField] GameObject gamePauseMenu;
 
@@ -41,7 +42,6 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public bool gameOver;
     [HideInInspector] public bool gamePaused;
-    [HideInInspector] public bool levelBeaten;
     [HideInInspector] public EventSystem eventSystem;
 
     float gameOverTimer = 1;
@@ -59,11 +59,11 @@ public class GameManager : MonoBehaviour
         instance = this;
 
         gameOver = false;
-        levelBeaten = false;
         gamePaused = false;
 
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
+        
     }
 
     void Start()
@@ -175,5 +175,33 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void OpenUpgradeMenu()
+    {
+        if (upgradeMenu)
+        {
+            Time.timeScale = 0;
+            Cursor.visible = true;
+            foreach (GameObject playerUI in playerUIToHideOnPause)
+            {
+                playerUI.SetActive(false);
+            }
+            upgradeMenu.SetActive(true);
+        }
+    }
+
+    public void CloseUpgradeMenu()
+    {
+        if (upgradeMenu)
+        {
+            Time.timeScale = 1;
+            Cursor.visible = false;
+            foreach (GameObject playerUI in playerUIToHideOnPause)
+            {
+                playerUI.SetActive(true);
+            }
+            upgradeMenu.SetActive(false);
+        }
     }
 }

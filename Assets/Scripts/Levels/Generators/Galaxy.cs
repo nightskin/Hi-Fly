@@ -26,12 +26,18 @@ public class Galaxy : MonoBehaviour
 
     List<GalaxyQuadrant> quadrants;
     int levelIndex = 0;
-    [SerializeField] GameObject[] levelPrefabs;
+
+
+    [SerializeField] int numberOfPlanets = 10;
+    [SerializeField] GameObject planetGeneratorPrefab;
     [SerializeField] GameObject asteroidFieldPrefab;
+
+
     void Awake()
     {
         quadrants = new List<GalaxyQuadrant>();
 
+        seed = Random.value.ToString();
         Random.InitState(seed.GetHashCode());
         noise = new Noise(seed.GetHashCode());
         Generate();
@@ -50,13 +56,13 @@ public class Galaxy : MonoBehaviour
             }
         }
 
-        // Set Levels Player Can Visit in Random Quadrants
-        foreach(GameObject levels in levelPrefabs)
+        // Add Planets
+        for(int i = 0; i < numberOfPlanets; i++)
         {
             int randomIndex = Random.Range(0, quadrants.Count);
             quadrants[randomIndex].type = 1;
-            var lvl = Instantiate(levelPrefabs[levelIndex], quadrants[randomIndex].position, Quaternion.identity, transform);
-            lvl.name = levelPrefabs[levelIndex].name;
+            var lvl = Instantiate(planetGeneratorPrefab, quadrants[randomIndex].position, Quaternion.identity, transform);
+            lvl.name = i.ToString();
             levelIndex++;
         }
 

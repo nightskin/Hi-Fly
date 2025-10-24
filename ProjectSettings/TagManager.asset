@@ -10,7 +10,6 @@ TagManager:
   - Water
   - Destructible
   - Surface
-  - PickUp
   layers:
   - Default
   - TransparentFX
