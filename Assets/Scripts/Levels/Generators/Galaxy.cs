@@ -25,7 +25,6 @@ public class Galaxy : MonoBehaviour
     public Vector2Int numberOfQuadrants = new Vector2Int(10,10);
 
     List<GalaxyQuadrant> quadrants;
-    int levelIndex = 0;
 
 
     [SerializeField] int numberOfPlanets = 10;
@@ -37,7 +36,8 @@ public class Galaxy : MonoBehaviour
     {
         quadrants = new List<GalaxyQuadrant>();
 
-        seed = Random.value.ToString();
+        if(seed == string.Empty) seed = Random.value.ToString();
+
         Random.InitState(seed.GetHashCode());
         noise = new Noise(seed.GetHashCode());
         Generate();
@@ -63,7 +63,6 @@ public class Galaxy : MonoBehaviour
             quadrants[randomIndex].type = 1;
             var lvl = Instantiate(planetGeneratorPrefab, quadrants[randomIndex].position, Quaternion.identity, transform);
             lvl.name = i.ToString();
-            levelIndex++;
         }
 
         //Add Asteroid Fields

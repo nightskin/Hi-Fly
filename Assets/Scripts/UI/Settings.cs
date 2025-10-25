@@ -25,8 +25,8 @@ public class Settings : MonoBehaviour
         sceneNodeManager = GetComponent<SceneNodeManager>();
         aimSlider.value = GameSettings.aimSensitivy;
         difficultyBtn.transform.GetChild(0).GetComponent<Text>().text = GameSettings.difficulty.ToString();
-        musicVolume.value = SoundManager.audioSource.volume;
-        sfxVolume.value = SoundManager.audioSource.volume;
+        musicVolume.value = GameSettings.bgmVolume;
+        sfxVolume.value = GameSettings.sfxVolume;
     }
 
     public void ToggleDifficulty()
@@ -100,11 +100,11 @@ public class Settings : MonoBehaviour
     
     public void ChangeBGMVolume()
     {
-        SoundManager.audioSource.volume = musicVolume.value;
+        GameSettings.bgmVolume = musicVolume.value;
     }
 
     public void ChangeSFXVolume()
     {
-        SoundManager.sfxVolume = sfxVolume.value;
+        GameSettings.sfxVolume = sfxVolume.value;
     }
 }

@@ -19,13 +19,13 @@ public class PlanetGenerator : MonoBehaviour
     [SerializeField] int resolution = 50;
 
     [SerializeField] float radius = 100;
-    float waterLevel = 100;
     [SerializeField] float baseRoughness = 1;
     [SerializeField] float roughness = 2;
     [SerializeField] float strength = 1;
     [SerializeField] float persistance = 0.5f;
     [SerializeField] float minValue = 1;
     [SerializeField][Range(1, 10)] int layers = 1;
+
 
     
     void CreateVertexGrid(Quaternion rotation ,float size)
@@ -57,7 +57,6 @@ public class PlanetGenerator : MonoBehaviour
 
         buffer += (resolution + 1) * (resolution + 1);
     }
-    
     void Start()
     {
         Generate();
@@ -81,7 +80,6 @@ public class PlanetGenerator : MonoBehaviour
         CreateVertexGrid(Quaternion.Euler(0, 0, 90), 1);
 
     }
-
     public void Generate()
     {
         noise = Galaxy.noise;
@@ -100,16 +98,39 @@ public class PlanetGenerator : MonoBehaviour
         }
         landGradient.SetColorKeys(colorKeys);
 
+        Color color1 = Util.RandomColor();
+        Color color2 = Util.RandomColor();
 
         Transform water = transform.Find("Water");
         if (water)
         {
-            waterLevel = radius + Random.Range(1, layers);
-            water.localScale = Vector3.one * waterLevel * 2;
-            water.GetComponent<MeshRenderer>().material.SetColor("_WaterColor", Util.RandomColor());
-            water.GetComponent<MeshRenderer>().material.SetColor("_FoamColor", Util.RandomColor());
+            water.localScale = Vector3.one * (radius + 10) * 2;
+            water.GetComponent<MeshRenderer>().material.SetColor("_WaterColor", color1);
+            water.GetComponent<MeshRenderer>().material.SetColor("_FoamColor", color2);
+            water.gameObject.isStatic = true;
         }
-        
+
+        Transform rings = transform.Find("Rings");
+        bool useRings = Util.RandomBool();
+        if (useRings)
+        {
+            if (rings)
+            {
+                rings.localScale = Vector3.one * (radius + 100) * 2;
+                rings.GetComponent<MeshRenderer>().material.SetColor("_Color1", color1);
+                rings.GetComponent<MeshRenderer>().material.SetColor("_Color2", color2);
+                rings.gameObject.isStatic = true;
+            }
+        }
+        else
+        {
+            if(rings)
+            {
+                rings.gameObject.SetActive(false);
+            }
+        }
+
+
         vertices.Clear();
         triangles.Clear();
         colors.Clear();
@@ -145,7 +166,6 @@ public class PlanetGenerator : MonoBehaviour
 
 
     }
-    
     float Evaluate(Vector3 point)
     {
         float noiseValue = 0;

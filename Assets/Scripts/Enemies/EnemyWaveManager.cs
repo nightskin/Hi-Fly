@@ -16,7 +16,7 @@ public class EnemyWaveManager : MonoBehaviour
     [SerializeField] [Min(0)] int enemyIncrement = 1;
 
     
-    int currentWaveNumber = 1;
+    int currentWaveNumber = 0;
     int enemiesInCurrentWave;
     
     int enemiesDownedInTotal = 0;
@@ -41,14 +41,15 @@ public class EnemyWaveManager : MonoBehaviour
 
     void StartWave()
     {
-        waveInProgress = true;
-        enemiesInCurrentWave = 0;
+        currentWaveNumber++;
+        enemiesDownedInCurrentWave = 0;
         timeBeforeNextWave = intervalBetweenWaves;
 
         for (int i = 0; i < enemiesInCurrentWave; i++)
         {
             objectPool.Spawn("enemy", player.transform.position + (player.transform.forward * 500) + Random.insideUnitSphere * 500);
         }
+        waveInProgress = true;
     }
 
     public void EnemyDowned()
@@ -65,6 +66,8 @@ public class EnemyWaveManager : MonoBehaviour
 
     void Start()
     {
+        enemiesInCurrentWave = startAmountOfEnemiesInWave;
+        player = GameManager.Get().playerShip;
         GameManager.Get().CloseUpgradeMenu();
         StartWave();
     }
@@ -75,19 +78,14 @@ public class EnemyWaveManager : MonoBehaviour
         {
             if (WaveComplete())
             {
-                currentWaveNumber++;
-                waveInProgress = false;
                 enemiesInCurrentWave += enemyIncrement;
+                waveInProgress = false;
                 GameManager.Get().OpenUpgradeMenu();
-            }
-            else
-            {
-
             }
         }
         else
         {
-            if(timeBeforeNextWave > 0)
+            if(timeBeforeNextWave > 0 && !GameManager.Get().gamePaused)
             {
                 timeBeforeNextWave -= Time.deltaTime;
             }

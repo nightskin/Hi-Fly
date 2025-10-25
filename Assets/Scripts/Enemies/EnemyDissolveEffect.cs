@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyDissolveEffect : MonoBehaviour
 {
-    float t;
+    [SerializeField] float t;
     [SerializeField] MeshRenderer mesh;
     [SerializeField] SkinnedMeshRenderer skinnedMesh;
 
@@ -32,29 +32,31 @@ public class EnemyDissolveEffect : MonoBehaviour
     void Update()
     {
         if (!mesh && !skinnedMesh) return;
-
-        if (t < 1)
+        if(!GameManager.Get().gamePaused)
         {
-            t += Time.deltaTime;
-        }
-        else
-        {
-            this.enabled = false;
-        }
-
-
-        if (mesh)
-        {
-            for (int i = 0; i < mesh.materials.Length; i++)
+            if (t < 1)
             {
-                mesh.materials[i].SetFloat("_Value", t);
+                t += Time.deltaTime;
             }
-        }
-        else if (skinnedMesh)
-        {
-            for (int i = 0; i < skinnedMesh.materials.Length; i++)
+            else
             {
-                skinnedMesh.materials[i].SetFloat("_Value", t);
+                this.enabled = false;
+            }
+
+
+            if (mesh)
+            {
+                for (int i = 0; i < mesh.materials.Length; i++)
+                {
+                    mesh.materials[i].SetFloat("_Value", t);
+                }
+            }
+            else if (skinnedMesh)
+            {
+                for (int i = 0; i < skinnedMesh.materials.Length; i++)
+                {
+                    skinnedMesh.materials[i].SetFloat("_Value", t);
+                }
             }
         }
     }

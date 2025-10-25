@@ -5,6 +5,9 @@ public static class GameSettings
     public static float aimSensitivy = 1000;
     public static Color playerBodyColor = Color.red;
     public static Color playerStripeColor = new Color(1, 1, 0);
+    public static float sfxVolume = 0.5f;
+    public static float bgmVolume = 0.5f;
+
     public enum Difficulty
     {
         EASY,

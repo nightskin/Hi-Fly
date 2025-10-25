@@ -101,7 +101,6 @@ public class PlayerShip : MonoBehaviour
 
     void Update()
     {
-        //Debug.Log(Vector3.Distance(transform.position, camera.transform.position));
         if (health.IsAlive() && !GameManager.Get().gamePaused)
         {
             if (GameManager.Get().playerMode == GameManager.PlayerMode.ALL_RANGE)

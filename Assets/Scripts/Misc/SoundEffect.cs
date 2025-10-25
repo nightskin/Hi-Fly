@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class SoundEffect : MonoBehaviour
 {
+    [SerializeField] AudioSource audio;
     void Awake()
     {
-        GetComponent<AudioSource>().volume = SoundManager.sfxVolume;    
+        if(!audio) audio = GetComponent<AudioSource>();
+        if(audio) audio.volume = GameSettings.sfxVolume;    
     }
 }

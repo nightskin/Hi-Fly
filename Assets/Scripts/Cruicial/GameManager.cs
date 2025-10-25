@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        CloseUpgradeMenu();
         InputManager.input.Player.Pause.performed += Pause_performed;
         InputManager.input.Player.UnPause.performed += UnPause_performed;
     }
@@ -181,8 +182,8 @@ public class GameManager : MonoBehaviour
     {
         if (upgradeMenu)
         {
-            Time.timeScale = 0;
             Cursor.visible = true;
+            gamePaused = true;
             foreach (GameObject playerUI in playerUIToHideOnPause)
             {
                 playerUI.SetActive(false);
@@ -195,8 +196,8 @@ public class GameManager : MonoBehaviour
     {
         if (upgradeMenu)
         {
-            Time.timeScale = 1;
             Cursor.visible = false;
+            gamePaused = false;
             foreach (GameObject playerUI in playerUIToHideOnPause)
             {
                 playerUI.SetActive(true);

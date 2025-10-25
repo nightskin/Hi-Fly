@@ -455,8 +455,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cb2743e39fcaa24c839c179664c2a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Galaxy
-  seed: 
-  spawnAsteroidFieldChance: 3
+  seed: One Piece Is Mid
+  spawnAsteroidFieldChance: 4
   quadrantSize: 1000
   numberOfQuadrants: {x: 10, y: 10}
   numberOfPlanets: 8
@@ -939,16 +939,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8131623141319018978, guid: f9a426b5fc9288e48bcdc4a92bb825db,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8131623141319018978, guid: f9a426b5fc9288e48bcdc4a92bb825db,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1093,8 +1083,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 958192644}
   - {fileID: 9120474620811477194}
+  - {fileID: 2015928027}
   - {fileID: 203844589}
   - {fileID: 1160234427}
   - {fileID: 349310802}
   - {fileID: 1926307067}
-  - {fileID: 2015928027}
