@@ -49,6 +49,7 @@ public class EnemyWaveManager : MonoBehaviour
         {
             objectPool.Spawn("enemy", player.transform.position + (player.transform.forward * 500) + Random.insideUnitSphere * 500);
         }
+        waveInfo.text = "Wave: " + currentWaveNumber.ToString() + " - Kills: " + enemiesDownedInCurrentWave.ToString() + "/" + enemiesInCurrentWave.ToString();
         waveInProgress = true;
     }
 
@@ -58,6 +59,8 @@ public class EnemyWaveManager : MonoBehaviour
         enemiesDownedInCurrentWave++;
         waveInfo.text = "Wave: " + currentWaveNumber.ToString() + " - Kills: " + enemiesDownedInCurrentWave.ToString() + "/" + enemiesInCurrentWave.ToString();
     }
+
+
 
     void Awake()
     {

@@ -56,6 +56,8 @@ LineRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -77,6 +79,7 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -172,8 +175,9 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 2.9960785, a: 1}
   - {r: 1.4980392, g: 0, b: 4, a: 1}
   renderer: {fileID: 7468776964873725496}
+  damageInterval: 0.1
   owner: {fileID: 0}
-  damage: 30
+  damage: 5
   direction: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}
 --- !u!82 &983199469248207979
@@ -186,7 +190,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: c250f52461f190249bc47a7552970589, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: c250f52461f190249bc47a7552970589, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -285,3 +289,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14294570097fc6e40b58192ee5df4f31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audio: {fileID: 983199469248207979}

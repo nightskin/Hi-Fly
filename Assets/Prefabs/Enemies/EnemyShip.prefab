@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBar: {fileID: 0}
-  maxHP: 30
+  maxHP: 15
   hitMaterial:
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
@@ -200,5 +200,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef8dd0bea3e54743b6b81b007eb6315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  t: 0
   mesh: {fileID: 763720946152576720}
   skinnedMesh: {fileID: 0}

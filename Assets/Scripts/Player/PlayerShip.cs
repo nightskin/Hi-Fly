@@ -12,19 +12,17 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] Transform mesh;
     [SerializeField] Transform bulletSpawn;
     [SerializeField] CharacterController controller;
-
     [SerializeField] Transform OnRailsFollowTarget;
-    float distanceAlongSpline = 0;
-    Vector3 offset = Vector3.one *  0.5f;
-
-    Color thrustColor = Color.cyan;
     
+    
+    Vector3 offset = Vector3.one *  0.5f;
+    Color thrustColor = Color.cyan;
     [SerializeField][Min(1)] float turnSpeed = 5;
     [SerializeField] float baseSpeed = 10;
-    [SerializeField] float brakeSpeed = 5;
     [SerializeField] float boostSpeed = 50;
     [SerializeField] float acceleration = 10;
 
+    bool strafeMode = false;
     bool evading = false;
     int evadeDirection = 0;
     float evadeTimer;
@@ -47,10 +45,10 @@ public class PlayerShip : MonoBehaviour
     Lazer lazer = null;
     float shootTimer = 0;
     
-    public static float maxChargeTime = 3;
-    public static float fireRate = 0.2f;
-    public static int bulletPower = 10;
-    public static int lazerPower = 10;
+    public static float maxChargeTime = 2;
+    public static float fireRate = 1;
+    public static int firePower = 5;
+
 
 
     ObjectPool objectPool;
@@ -220,7 +218,6 @@ public class PlayerShip : MonoBehaviour
         }
     }
     
-    
     private void Fire1_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
@@ -251,15 +248,30 @@ public class PlayerShip : MonoBehaviour
     {
         if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
         {
-            if(GameManager.Get().playerMode == GameManager.PlayerMode.ALL_RANGE)
+            if (GameManager.Get().playerMode == GameManager.PlayerMode.ALL_RANGE)
             {
-                //Stop
-                speed = brakeSpeed;
-                camera.boostEffect.Stop();
-                thrustColor = Color.cyan;
-                foreach (TrailRenderer trail in trails)
+                if(strafeMode)
                 {
-                    trail.emitting = false;
+                    targetSpeed = baseSpeed;
+                    thrustColor = Color.cyan;
+                    foreach (TrailRenderer trail in trails)
+                    {
+                        trail.emitting = false;
+                    }
+
+                    reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
+                    reticle.rectTransform.position = reticlePosition;
+                    strafeMode = false;
+                }
+                else
+                {
+                    targetSpeed = baseSpeed;
+                    thrustColor = Color.cyan;
+                    foreach (TrailRenderer trail in trails)
+                    {
+                        trail.emitting = true;
+                    }
+                    strafeMode = true;
                 }
             }
         }
@@ -345,12 +357,7 @@ public class PlayerShip : MonoBehaviour
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;
         }
-
-        if (distanceAlongSpline >= 1)
-        {
-            GameManager.Get().playerMode = GameManager.PlayerMode.ALL_RANGE;
-        }
-
+        
     }
 
     void TPS_MODE()
@@ -428,7 +435,7 @@ public class PlayerShip : MonoBehaviour
         if (obj != null)
         {
             Bullet b = obj.GetComponent<Bullet>();
-            b.damage = bulletPower;
+            b.damage = firePower;
             //Set Needed Variables
             b.owner = mesh.gameObject;
         
@@ -465,7 +472,7 @@ public class PlayerShip : MonoBehaviour
         if (obj != null)
         {
             Missile m = obj.GetComponent<Missile>();
-            m.damage = bulletPower * 3;
+            m.damage = firePower * 3;
             m.owner = mesh.gameObject;
         
             if (lockOn.collider)
@@ -500,7 +507,7 @@ public class PlayerShip : MonoBehaviour
         {
             lazer = objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
             lazer.owner = mesh.gameObject;
-            lazer.damage = lazerPower;
+            lazer.damage = firePower;
 
             Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
             if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))

@@ -4,6 +4,7 @@ public class Lazer : MonoBehaviour
 {
     [ColorUsage(true, true)][SerializeField] Color[] colors;
     [SerializeField] LineRenderer renderer;
+    [SerializeField][Min(0)] float damageInterval = 0.05f;
     int colorIndex = 0;
     float colorChangeTimer = 0;
 
@@ -49,22 +50,19 @@ public class Lazer : MonoBehaviour
             }
             renderer.sharedMaterial.SetColor("_MainColor", Color.Lerp(renderer.sharedMaterial.GetColor("_MainColor"), colors[colorIndex], colorChangeTimer));
 
+
+            if (collisionTimer <= 0)
+            {
+                CheckCollisions();
+                collisionTimer = damageInterval;
+            }
+            else
+            {
+                collisionTimer -= Time.deltaTime;
+            }
         }
     }
-
-    void FixedUpdate()
-    {
-        if (collisionTimer <= 0)
-        {
-            CheckCollisions();
-            collisionTimer = 0.1f;
-        }
-        else
-        {
-            collisionTimer -= Time.fixedDeltaTime;
-        }
-    }
-
+    
     void CheckCollisions()
     {
         if (Physics.SphereCast(origin, renderer.startWidth * renderer.widthMultiplier, direction, out RaycastHit rayHit, Camera.main.farClipPlane))

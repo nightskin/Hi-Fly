@@ -12,6 +12,12 @@ public class PlayerCollisions : MonoBehaviour
         {
             health.TakeDamage(10);
             audioSource.PlayOneShot(crashSound);
+            if (health.IsDead())
+            {
+                GameObject.Find("ObjectPool").GetComponent<ObjectPool>().Spawn("explosion", transform.position);
+                GameManager.Get().playerShip.gameObject.SetActive(false);
+                GameManager.Get().gameOver = true;
+            }
         }
     }
 

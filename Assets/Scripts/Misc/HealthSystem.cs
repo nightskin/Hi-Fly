@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HealthSystem : MonoBehaviour
 {
     [SerializeField] Slider healthBar;
+    [SerializeField] TextMeshProUGUI text;
     [SerializeField] int maxHP = 100;
     [SerializeField] Material[] hitMaterial;
     
@@ -27,6 +29,10 @@ public class HealthSystem : MonoBehaviour
             healthBar.maxValue = maxHP;
             healthBar.minValue = 0;
             healthBar.value = hp;
+        }
+        if (text)
+        {
+            text.text = hp.ToString() + "/" + maxHP.ToString();
         }
     }
 
@@ -56,6 +62,21 @@ public class HealthSystem : MonoBehaviour
         return maxHP;
     }
 
+    public void IncreaseMaxHP(int amount)
+    {
+        maxHP += amount;
+        Heal(MaxHP());
+
+        if (healthBar)
+        {
+            healthBar.value = hp;
+        }
+        if (text)
+        {
+            text.text = hp.ToString() + "/" + maxHP.ToString();
+        }
+    }
+
     public void TakeDamage(int amount)
     {
         hp -= amount;
@@ -67,6 +88,10 @@ public class HealthSystem : MonoBehaviour
         if(healthBar)
         {
             healthBar.value = hp;
+        }
+        if (text)
+        {
+            text.text = hp.ToString() + "/" + maxHP.ToString();
         }
 
         meshRenderer.materials = hitMaterial;        
@@ -85,6 +110,10 @@ public class HealthSystem : MonoBehaviour
         if (healthBar)
         {
             healthBar.value = hp;
+        }
+        if (text)
+        {
+            text.text = hp.ToString() + "/" + maxHP.ToString();
         }
     }
 
