@@ -44,11 +44,10 @@ public class PlayerShip : MonoBehaviour
     float chargeAmount = 0;
     Lazer lazer = null;
     float shootTimer = 0;
-    
-    public static float maxChargeTime = 2;
+
+    public static float chargeSpeed = 0.5f;
     public static float fireRate = 1;
     public static int firePower = 5;
-
 
 
     ObjectPool objectPool;
@@ -103,7 +102,8 @@ public class PlayerShip : MonoBehaviour
         {
             if (GameManager.Get().playerMode == GameManager.PlayerMode.ALL_RANGE)
             {
-                AllRangeMode();
+                if (strafeMode) StrafeMode();
+                else AllRangeMode();
             }
             else if (GameManager.Get().playerMode == GameManager.PlayerMode.ON_RAILS)
             {
@@ -113,16 +113,16 @@ public class PlayerShip : MonoBehaviour
             //Shooting
             if (InputManager.input.Player.Fire1.IsPressed())
             {
-                if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.RAPID_BULLET)
+                if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.NORMAL_BULLET)
                 {
                     if (shootTimer > 0)
                     {
-                        shootTimer -= Time.deltaTime;
+                        shootTimer -= fireRate * Time.deltaTime;
                     }
                     else
                     {
                         FireBullet();
-                        shootTimer = fireRate;
+                        shootTimer = 1;
                     }
                 }
                 else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.POWER_BEAM)
@@ -149,11 +149,22 @@ public class PlayerShip : MonoBehaviour
                             }
                         }
                     }
+                    else
+                    {
+                        chargeAmount += chargeSpeed * Time.deltaTime;
+                        chargeMaterial.SetColor("_Color", Color.Lerp(Color.green, Color.red, chargeAmount / chargeSpeed));
+                        if(chargeAmount >= 1)
+                        {
+                            charging = false;
+                            chargeEffect.gameObject.SetActive(false);
+                            FireLazer();
+                        }
+                    }
                 }
                 else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
                 {
-                    chargeAmount += Time.deltaTime;
-                    chargeMaterial.SetColor("_Color", Color.Lerp(Color.green, Color.red, chargeAmount / maxChargeTime));
+                    chargeAmount += chargeSpeed * Time.deltaTime;
+                    chargeMaterial.SetColor("_Color", Color.Lerp(Color.green, Color.red, chargeAmount / chargeSpeed));
                 }
             }
         }
@@ -203,18 +214,21 @@ public class PlayerShip : MonoBehaviour
     
     private void Fire1_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.RAPID_BULLET)
+        if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.NORMAL_BULLET)
         {
             shootTimer = 0;
         }
         else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
         {
+            chargeAmount = 0;
             charging = true;
             chargeEffect.gameObject.SetActive(true);
         }
         else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.POWER_BEAM)
         {
-            FireLazer();
+            chargeAmount = 0;
+            charging = true;
+            chargeEffect.gameObject.SetActive(true);
         }
     }
     
@@ -222,7 +236,7 @@ public class PlayerShip : MonoBehaviour
     {
         if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
         {
-            if (chargeAmount >= maxChargeTime)
+            if (chargeAmount >= 1)
             {
                 FirePowerBomb();
             }
@@ -232,7 +246,6 @@ public class PlayerShip : MonoBehaviour
             }
             charging = false;
             chargeEffect.gameObject.SetActive(false);
-            chargeAmount = 0;
         }
         else if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.POWER_BEAM)
         {
@@ -360,7 +373,7 @@ public class PlayerShip : MonoBehaviour
         
     }
 
-    void TPS_MODE()
+    void StrafeMode()
     {
         //Moving
         float moveX = InputManager.input.Player.Steer.ReadValue<Vector2>().x;

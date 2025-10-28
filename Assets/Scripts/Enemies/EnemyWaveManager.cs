@@ -6,10 +6,10 @@ public class EnemyWaveManager : MonoBehaviour
     static EnemyWaveManager instance;
     static PlayerShip player;
 
-    public ObjectPool objectPool;
-    public TextMeshProUGUI waveInfo;
-    public GameObject enemyPrefab;
-    public GameObject upgradeMenu;
+    [SerializeField] ObjectPool objectPool;
+    [SerializeField] TextMeshProUGUI waveInfo;
+    [SerializeField] GameObject enemyPrefab;
+    [SerializeField] GameObject upgradeMenu;
 
     [SerializeField] int startAmountOfEnemiesInWave = 10;
     [SerializeField] [Min(0)] float intervalBetweenWaves = 3.0f;
@@ -49,7 +49,6 @@ public class EnemyWaveManager : MonoBehaviour
         {
             objectPool.Spawn("enemy", player.transform.position + (player.transform.forward * 500) + Random.insideUnitSphere * 500);
         }
-        waveInfo.text = "Wave: " + currentWaveNumber.ToString() + " - Kills: " + enemiesDownedInCurrentWave.ToString() + "/" + enemiesInCurrentWave.ToString();
         waveInProgress = true;
     }
 
@@ -57,10 +56,13 @@ public class EnemyWaveManager : MonoBehaviour
     {
         enemiesDownedInTotal++;
         enemiesDownedInCurrentWave++;
-        waveInfo.text = "Wave: " + currentWaveNumber.ToString() + " - Kills: " + enemiesDownedInCurrentWave.ToString() + "/" + enemiesInCurrentWave.ToString();
+        UpdateUI();
     }
 
-
+    public void UpdateUI()
+    {
+        waveInfo.text = "Wave: " + currentWaveNumber.ToString() + " - Kills: " + enemiesDownedInCurrentWave.ToString() + "/" + enemiesInCurrentWave.ToString();
+    }
 
     void Awake()
     {

@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     {
         CHARGE_BULLET,
         POWER_BEAM,
-        RAPID_BULLET,
+        NORMAL_BULLET,
     }
     public PlayerWeapon playerWeapon;
 
@@ -203,6 +203,12 @@ public class GameManager : MonoBehaviour
                 playerUI.SetActive(true);
             }
             upgradeMenu.SetActive(false);
+
+            if(EnemyWaveManager.Get())
+            {
+                EnemyWaveManager.Get().UpdateUI();
+            }
+
         }
     }
 }

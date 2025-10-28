@@ -6,6 +6,7 @@ public class Lazer : MonoBehaviour
     [SerializeField] LineRenderer renderer;
     [SerializeField][Min(0)] float damageInterval = 0.05f;
     int colorIndex = 0;
+    [SerializeField][Min(1)] float colorChangeRate = 2.0f;
     float colorChangeTimer = 0;
 
     [HideInInspector] public GameObject owner = null;
@@ -34,7 +35,7 @@ public class Lazer : MonoBehaviour
 
             if (colorChangeTimer < 1)
             {
-                colorChangeTimer += Time.deltaTime;
+                colorChangeTimer += colorChangeRate * Time.deltaTime;
             }
             else
             {

@@ -884,6 +884,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1069085150, guid: f9a426b5fc9288e48bcdc4a92bb825db, type: 3}
+      propertyPath: 'playerUIToHideOnPause.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1469801213}
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1006,7 +1010,7 @@ MonoBehaviour:
   upgradeMenu: {fileID: 466299919}
   startAmountOfEnemiesInWave: 10
   intervalBetweenWaves: 3
-  enemyIncrement: 5
+  enemyIncrement: 1
 --- !u!114 &4419068242589922780 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4419068241582400892, guid: 3502377a63101434aa59a6d9127fb3b5,
