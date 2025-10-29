@@ -460,8 +460,7 @@ MonoBehaviour:
   quadrantSize: 1000
   numberOfQuadrants: {x: 10, y: 10}
   numberOfPlanets: 8
-  planetGeneratorPrefab: {fileID: 6691990877626503176, guid: e1121d58d90e3e44da3f3102801c0aa7,
-    type: 3}
+  planetGeneratorPrefab: {fileID: 0}
   asteroidFieldPrefab: {fileID: 8392389577210535039, guid: 3f6a0aaf88c483a46934fd2c16e95966,
     type: 3}
 --- !u!1 &356974604
@@ -888,6 +887,11 @@ PrefabInstance:
       propertyPath: 'playerUIToHideOnPause.Array.data[2]'
       value: 
       objectReference: {fileID: 1469801213}
+    - target: {fileID: 8014940585488967141, guid: f9a426b5fc9288e48bcdc4a92bb825db,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}
       propertyPath: m_LocalPosition.x

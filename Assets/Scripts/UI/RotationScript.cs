@@ -3,8 +3,8 @@ using UnityEngine;
 public class RotationScript : MonoBehaviour
 {
     [SerializeField] Transform target;
-    [SerializeField] Vector3 rotationDirection;
-    [SerializeField] float rotationSpeed = 10;
+    public Vector3 rotationDirection;
+    public float rotationSpeed = 10;
 
     void Start()
     {

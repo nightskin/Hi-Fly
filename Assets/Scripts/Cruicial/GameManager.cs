@@ -13,22 +13,28 @@ public class GameManager : MonoBehaviour
     }
     public GameMode gameMode;
 
-    public enum PlayerMode
+    public enum PlayerMovement
     {
         ALL_RANGE,
         ON_RAILS,
     }
-    public PlayerMode playerMode;
+    public PlayerMovement playerMovement;
 
-    public enum PlayerWeapon
+    public enum RangedWeapon
     {
-        CHARGE_BULLET,
-        POWER_BEAM,
         NORMAL_BULLET,
+        CHARGE_BOMB,
+        RAVER_LAZER,
     }
-    public PlayerWeapon playerWeapon;
+    public RangedWeapon mainWeapon;
 
+    public enum OrbiterTypes
+    {
+        DASHER_DRILL,
+    }
+    public OrbiterTypes[] orbiters;
 
+    
 
     //Other Stuff
     static GameManager instance;
@@ -129,7 +135,6 @@ public class GameManager : MonoBehaviour
         InputManager.input.Player.UnPause.performed -= UnPause_performed;
     }
     
-
     public void Pause()
     {
         Time.timeScale = 0;

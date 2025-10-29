@@ -1,10 +1,13 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
 {
+
     //Necessary Components
     public HealthSystem health;
+    [SerializeField] GameObject drillDasher;
     [SerializeField] PlayerCamera camera;
     [SerializeField] TrailRenderer[] trails;
     [SerializeField] ParticleSystem chargeEffect;
@@ -69,6 +72,8 @@ public class PlayerShip : MonoBehaviour
 
         InputManager.input.Player.Fire1.performed += Fire1_performed;
         InputManager.input.Player.Fire1.canceled += Fire1_canceled;
+        InputManager.input.Player.Fire2.performed += Fire2_performed;
+        InputManager.input.Player.Fire2.canceled += Fire2_canceled;
         InputManager.input.Player.Aim.performed += Gamepad_Aim_performed;
         InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
         InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
@@ -77,7 +82,7 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.Boost.canceled += Boost_canceled;
         InputManager.input.Player.Evade.performed += Evade_performed;
 
-        if (GameManager.Get().playerMode == GameManager.PlayerMode.ON_RAILS)
+        if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
         {
             transform.parent = OnRailsFollowTarget;
         }
@@ -100,12 +105,12 @@ public class PlayerShip : MonoBehaviour
     {
         if (health.IsAlive() && !GameManager.Get().gamePaused)
         {
-            if (GameManager.Get().playerMode == GameManager.PlayerMode.ALL_RANGE)
+            if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ALL_RANGE)
             {
                 if (strafeMode) StrafeMode();
                 else AllRangeMode();
             }
-            else if (GameManager.Get().playerMode == GameManager.PlayerMode.ON_RAILS)
+            else if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
             {
                 OnRailsMode();
             }
@@ -113,7 +118,7 @@ public class PlayerShip : MonoBehaviour
             //Shooting
             if (InputManager.input.Player.Fire1.IsPressed())
             {
-                if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.NORMAL_BULLET)
+                if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.NORMAL_BULLET)
                 {
                     if (shootTimer > 0)
                     {
@@ -125,7 +130,7 @@ public class PlayerShip : MonoBehaviour
                         shootTimer = 1;
                     }
                 }
-                else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.POWER_BEAM)
+                else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.RAVER_LAZER)
                 {
                     if (lazer)
                     {
@@ -161,7 +166,7 @@ public class PlayerShip : MonoBehaviour
                         }
                     }
                 }
-                else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
+                else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.CHARGE_BOMB)
                 {
                     chargeAmount += chargeSpeed * Time.deltaTime;
                     chargeMaterial.SetColor("_Color", Color.Lerp(Color.green, Color.red, chargeAmount / chargeSpeed));
@@ -210,21 +215,24 @@ public class PlayerShip : MonoBehaviour
         camera.boostEffect.Stop();
         thrustColor = Color.cyan;
         targetSpeed = baseSpeed;
+
+        
+
     }
     
     private void Fire1_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.NORMAL_BULLET)
+        if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.NORMAL_BULLET)
         {
             shootTimer = 0;
         }
-        else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
+        else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.CHARGE_BOMB)
         {
             chargeAmount = 0;
             charging = true;
             chargeEffect.gameObject.SetActive(true);
         }
-        else if(GameManager.Get().playerWeapon == GameManager.PlayerWeapon.POWER_BEAM)
+        else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.RAVER_LAZER)
         {
             chargeAmount = 0;
             charging = true;
@@ -234,7 +242,7 @@ public class PlayerShip : MonoBehaviour
     
     private void Fire1_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
+        if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.CHARGE_BOMB)
         {
             if (chargeAmount >= 1)
             {
@@ -247,7 +255,7 @@ public class PlayerShip : MonoBehaviour
             charging = false;
             chargeEffect.gameObject.SetActive(false);
         }
-        else if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.POWER_BEAM)
+        else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.RAVER_LAZER)
         {
             if (lazer)
             {
@@ -256,12 +264,22 @@ public class PlayerShip : MonoBehaviour
             }
         }
     }
-    
+
+    private void Fire2_performed(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+
+    }
+
+    private void Fire2_canceled(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        
+    }
+
     private void Brake_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
         {
-            if (GameManager.Get().playerMode == GameManager.PlayerMode.ALL_RANGE)
+            if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ALL_RANGE)
             {
                 if(strafeMode)
                 {

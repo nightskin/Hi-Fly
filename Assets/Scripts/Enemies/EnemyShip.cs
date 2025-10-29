@@ -46,7 +46,7 @@ public class EnemyShip : MonoBehaviour
         {
             if (health.IsAlive())
             {
-                if (GameManager.Get().playerMode == GameManager.PlayerMode.ON_RAILS)
+                if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
                 {
                     FightOnRails();
                 }
@@ -76,7 +76,7 @@ public class EnemyShip : MonoBehaviour
             }
             health.TakeDamage(health.MaxHP());
         }
-        if (other.tag == "Destructible" || other.tag == "Surface")
+        if (other.tag == "Destructible" || other.tag == "Surface" || other.tag == "Drill")
         {
             health.TakeDamage(health.MaxHP());
         }

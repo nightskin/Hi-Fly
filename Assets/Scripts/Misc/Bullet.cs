@@ -164,6 +164,12 @@ public class Bullet : MonoBehaviour
                     sfx.clip = hitSound;
                     sfx.Play();
                 }
+                else if(rayhit.transform.tag == "Drill")
+                {
+                    owner = null;
+                    life = lifetime;
+                    direction = Vector3.Reflect(direction, rayhit.normal);
+                }
             }
         }
     }

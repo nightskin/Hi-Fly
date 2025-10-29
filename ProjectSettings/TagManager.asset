@@ -10,6 +10,7 @@ TagManager:
   - Water
   - Destructible
   - Surface
+  - Drill
   layers:
   - Default
   - TransparentFX

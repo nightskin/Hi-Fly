@@ -57,27 +57,35 @@ public class Galaxy : MonoBehaviour
         }
 
         // Add Planets
-        for(int i = 0; i < numberOfPlanets; i++)
+        if (planetGeneratorPrefab)
         {
-            int randomIndex = Random.Range(0, quadrants.Count);
-            quadrants[randomIndex].type = 1;
-            var lvl = Instantiate(planetGeneratorPrefab, quadrants[randomIndex].position, Quaternion.identity, transform);
-            lvl.name = i.ToString();
+            for (int i = 0; i < numberOfPlanets; i++)
+            {
+                int randomIndex = Random.Range(0, quadrants.Count);
+                quadrants[randomIndex].type = 1;
+                var lvl = Instantiate(planetGeneratorPrefab, quadrants[randomIndex].position, Quaternion.identity, transform);
+                lvl.name = i.ToString();
+            }
         }
 
+
         //Add Asteroid Fields
-        for(int i = 0; i < quadrants.Count; i++)
+        if (asteroidFieldPrefab)
         {
-            if (quadrants[i].type == 0)
+            for (int i = 0; i < quadrants.Count; i++)
             {
-                int makeAsteroidField = Random.Range(0, spawnAsteroidFieldChance + 1);
-                if(makeAsteroidField == 0)
+                if (quadrants[i].type == 0)
                 {
-                    quadrants[i].type = 2;
-                    Instantiate(asteroidFieldPrefab, quadrants[i].position , Quaternion.identity, transform);
+                    int makeAsteroidField = Random.Range(0, spawnAsteroidFieldChance + 1);
+                    if (makeAsteroidField == 0)
+                    {
+                        quadrants[i].type = 2;
+                        Instantiate(asteroidFieldPrefab, quadrants[i].position, Quaternion.identity, transform);
+                    }
                 }
             }
         }
+
 
     }
 }

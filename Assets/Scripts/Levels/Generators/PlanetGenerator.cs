@@ -104,7 +104,7 @@ public class PlanetGenerator : MonoBehaviour
         Transform water = transform.Find("Water");
         if (water)
         {
-            water.localScale = Vector3.one * (radius + 10) * 2;
+            water.localScale = Vector3.one * (radius + 5) * 2;
             water.GetComponent<MeshRenderer>().material.SetColor("_WaterColor", color1);
             water.GetComponent<MeshRenderer>().material.SetColor("_FoamColor", color2);
             water.gameObject.isStatic = true;

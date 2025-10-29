@@ -41,7 +41,7 @@ public class UpgradeMenu : MonoBehaviour
         }
         else if (c == 2)
         {
-            if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.NORMAL_BULLET)
+            if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.NORMAL_BULLET)
             {
                 btn.onClick.AddListener(ImproveFireRate);
                 btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Fire Rate+";
@@ -54,61 +54,30 @@ public class UpgradeMenu : MonoBehaviour
         }
         else if(c == 3)
         {
-            bool addOrbiter = Util.RandomBool();
-
-            if(addOrbiter)
+            if(Util.RandomBool())
             {
                 int i = Random.Range(0, 3);
-                if(i == 0)
+                if (i == 0)
                 {
                     btn.onClick.AddListener(AddBombOrbiter);
                     btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Bomb Orbiter";
                 }
-                else if(i == 1)
+                else if (i == 1)
                 {
                     btn.onClick.AddListener(AddLazerOrbiter);
                     btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Lazer Orbiter";
                 }
-                else
+                else if (i == 2)
                 {
                     btn.onClick.AddListener(AddNormalOrbiter);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Orbiter";
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Turret Orbiter";
                 }
             }
             else
             {
-                if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.CHARGE_BULLET)
+                if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.NORMAL_BULLET)
                 {
-                    bool goBack = Util.RandomBool();
-                    if(goBack)
-                    {
-                        btn.onClick.AddListener(ChangeWeaponToBackToNormal);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Starting Weapon";
-                    }
-                    else
-                    {
-                        btn.onClick.AddListener(ChangeWeaponToLazer);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Raver Lazer";
-                    }
-                }
-                else if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.POWER_BEAM)
-                {
-                    bool goBack = Util.RandomBool();
-                    if (goBack)
-                    {
-                        btn.onClick.AddListener(ChangeWeaponToBackToNormal);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Starting Weapon";
-                    }
-                    else
-                    {
-                        btn.onClick.AddListener(ChangeWeaponToChargeBlaster);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Bomb";
-                    }
-                }
-                else if (GameManager.Get().playerWeapon == GameManager.PlayerWeapon.NORMAL_BULLET)
-                {
-                    bool l = Util.RandomBool();
-                    if(l)
+                    if (Util.RandomBool())
                     {
                         btn.onClick.AddListener(ChangeWeaponToLazer);
                         btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Raver Lazer";
@@ -116,11 +85,20 @@ public class UpgradeMenu : MonoBehaviour
                     else
                     {
                         btn.onClick.AddListener(ChangeWeaponToChargeBlaster);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Bomb";
+                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Blaster";
                     }
+                }
+                else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.CHARGE_BOMB)
+                {
+                    btn.onClick.AddListener(ChangeWeaponToLazer);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Raver Lazer";
+                }
+                else if(GameManager.Get().mainWeapon == GameManager.RangedWeapon.RAVER_LAZER)
+                {
+                    btn.onClick.AddListener(ChangeWeaponToChargeBlaster);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Blaster";
                 }
             }
-
         }
     }
     
@@ -150,19 +128,19 @@ public class UpgradeMenu : MonoBehaviour
 
     void ChangeWeaponToLazer()
     {
-        GameManager.Get().playerWeapon = GameManager.PlayerWeapon.POWER_BEAM;
+        GameManager.Get().mainWeapon = GameManager.RangedWeapon.RAVER_LAZER;
         GameManager.Get().CloseUpgradeMenu();
     }
     
     void ChangeWeaponToBackToNormal()
     {
-        GameManager.Get().playerWeapon = GameManager.PlayerWeapon.NORMAL_BULLET;
+        GameManager.Get().mainWeapon = GameManager.RangedWeapon.NORMAL_BULLET;
         GameManager.Get().CloseUpgradeMenu();
     }
 
     void ChangeWeaponToChargeBlaster()
     {
-        GameManager.Get().playerWeapon = GameManager.PlayerWeapon.CHARGE_BULLET;
+        GameManager.Get().mainWeapon = GameManager.RangedWeapon.CHARGE_BOMB;
         GameManager.Get().CloseUpgradeMenu();
     }
 
