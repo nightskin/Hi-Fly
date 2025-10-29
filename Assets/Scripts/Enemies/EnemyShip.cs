@@ -76,7 +76,11 @@ public class EnemyShip : MonoBehaviour
             }
             health.TakeDamage(health.MaxHP());
         }
-        if (other.tag == "Destructible" || other.tag == "Surface" || other.tag == "Drill")
+        else if (other.tag == "Destructible" || other.tag == "Surface")
+        {
+            health.TakeDamage(health.MaxHP());
+        }
+        else if(other.tag == "Drill")
         {
             health.TakeDamage(health.MaxHP());
         }

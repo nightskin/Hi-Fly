@@ -56,7 +56,8 @@ public class UpgradeMenu : MonoBehaviour
         {
             if(Util.RandomBool())
             {
-                int i = Random.Range(0, 3);
+                //Add Orbiter
+                int i = Random.Range(0, 4);
                 if (i == 0)
                 {
                     btn.onClick.AddListener(AddBombOrbiter);
@@ -72,9 +73,15 @@ public class UpgradeMenu : MonoBehaviour
                     btn.onClick.AddListener(AddNormalOrbiter);
                     btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Turret Orbiter";
                 }
+                else if(i == 3)
+                {
+                    btn.onClick.AddListener(GetDrillDasher);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Drill Dasher";
+                }
             }
             else
             {
+                //Change Primary Weapon
                 if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.NORMAL_BULLET)
                 {
                     if (Util.RandomBool())
@@ -141,6 +148,12 @@ public class UpgradeMenu : MonoBehaviour
     void ChangeWeaponToChargeBlaster()
     {
         GameManager.Get().mainWeapon = GameManager.RangedWeapon.CHARGE_BOMB;
+        GameManager.Get().CloseUpgradeMenu();
+    }
+
+    void GetDrillDasher()
+    {
+        GameManager.Get().playerShip.drillDasher.SetActive(true);
         GameManager.Get().CloseUpgradeMenu();
     }
 

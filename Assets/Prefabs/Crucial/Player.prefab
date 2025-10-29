@@ -13582,6 +13582,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3044794285367321341}
+  - {fileID: 8963583041222359374}
   - {fileID: 6654862522394362605}
   m_Father: {fileID: 8131623139732956610}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13599,6 +13600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: {fileID: 8131623140777354630}
   drillDasher: {fileID: 8014940585488967141}
+  orbiters: {fileID: 6128535447888017660}
   camera: {fileID: 8504905812486363887}
   trails:
   - {fileID: 6615905817508830574}
@@ -13686,7 +13688,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3044794285367321341}
-  - component: {fileID: 8699034860927761826}
   - component: {fileID: 1048559311166873965}
   m_Layer: 0
   m_Name: DrillDasher
@@ -13694,7 +13695,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3044794285367321341
 Transform:
   m_ObjectHideFlags: 0
@@ -13704,7 +13705,7 @@ Transform:
   m_GameObject: {fileID: 8014940585488967141}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.5}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13714,21 +13715,6 @@ Transform:
   - {fileID: 4194261168560333023}
   m_Father: {fileID: 4432583782082290802}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8699034860927761826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8014940585488967141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ece18acc35328ce4999ecf8f812125de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RotationScript
-  target: {fileID: 3044794285367321341}
-  rotationDirection: {x: 0, y: 0, z: 1}
-  rotationSpeed: 45
 --- !u!114 &1048559311166873965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13747,7 +13733,7 @@ MonoBehaviour:
   - {fileID: 1034022190687083089}
   - {fileID: 3364177129261032967}
   - {fileID: 4194261168560333023}
-  rotationSpd: 45
+  maxTurn: 35
 --- !u!1 &8131623139629098542
 GameObject:
   m_ObjectHideFlags: 0
@@ -14704,6 +14690,53 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 2.2389126}
   m_Center: {x: 0.5000005, y: -0.50096107, z: -1.1258819}
+--- !u!1 &8571627249047061413
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8963583041222359374}
+  - component: {fileID: 6128535447888017660}
+  m_Layer: 0
+  m_Name: OrbiterPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8963583041222359374
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8571627249047061413}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4432583782082290802}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6128535447888017660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8571627249047061413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55e25ad89065db046a913bc73fff33f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerOrbiters
+  playerShip: {fileID: 3438586877348045626}
+  orbiterPrefab: {fileID: 1664566241619017703, guid: 7bb70d2e465ea384c94e6adfad41d6f2,
+    type: 3}
 --- !u!1 &8659897189068200085
 GameObject:
   m_ObjectHideFlags: 0

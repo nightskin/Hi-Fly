@@ -26,13 +26,15 @@ public class GameManager : MonoBehaviour
         CHARGE_BOMB,
         RAVER_LAZER,
     }
-    public RangedWeapon mainWeapon;
+    [HideInInspector] public RangedWeapon mainWeapon;
 
-    public enum OrbiterTypes
+    public enum OrbiterType
     {
-        DASHER_DRILL,
+        TURRET,
+        MISSILE,
+        BEAM_RIFLE,
     }
-    public OrbiterTypes[] orbiters;
+    [HideInInspector] public OrbiterType[] orbiters;
 
     
 

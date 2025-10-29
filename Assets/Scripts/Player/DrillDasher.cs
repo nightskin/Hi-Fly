@@ -4,8 +4,9 @@ public class DrillDasher : MonoBehaviour
 {
     [HideInInspector] public bool inUse = false;
     [SerializeField] Transform[] quadrants;
-    [SerializeField] float rotationSpd = 45;
-
+    [SerializeField] float maxTurn = 35;
+    
+    float rotationSpd = 45;
     Vector3[] startPositions;
     float z = 0;
 
@@ -21,7 +22,7 @@ public class DrillDasher : MonoBehaviour
     void Update()
     {
         z += rotationSpd * Time.deltaTime;
-        Vector2 steerInput = InputManager.input.Player.Steer.ReadValue<Vector2>() * 45;
+        Vector2 steerInput = InputManager.input.Player.Steer.ReadValue<Vector2>() * maxTurn;
         transform.localEulerAngles = new Vector3(steerInput.y, steerInput.x, z);
 
         if(InputManager.input.Player.Boost.IsPressed())

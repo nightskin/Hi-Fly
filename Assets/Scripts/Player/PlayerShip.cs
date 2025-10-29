@@ -7,8 +7,9 @@ public class PlayerShip : MonoBehaviour
 
     //Necessary Components
     public HealthSystem health;
-    [SerializeField] GameObject drillDasher;
-    [SerializeField] PlayerCamera camera;
+    public GameObject drillDasher;
+    public PlayerOrbiters orbiters;
+    public PlayerCamera camera;
     [SerializeField] TrailRenderer[] trails;
     [SerializeField] ParticleSystem chargeEffect;
     [SerializeField] TrailRenderer thruster;

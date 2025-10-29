@@ -887,11 +887,6 @@ PrefabInstance:
       propertyPath: 'playerUIToHideOnPause.Array.data[2]'
       value: 
       objectReference: {fileID: 1469801213}
-    - target: {fileID: 8014940585488967141, guid: f9a426b5fc9288e48bcdc4a92bb825db,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -978,7 +973,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2015928027
 Transform:
   m_ObjectHideFlags: 0
@@ -1085,6 +1080,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4419068241582400892, guid: 3502377a63101434aa59a6d9127fb3b5,
+        type: 3}
+      propertyPath: poolData.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4419068241582400892, guid: 3502377a63101434aa59a6d9127fb3b5,
+        type: 3}
+      propertyPath: poolData.Array.data[6].name
+      value: orbiter
+      objectReference: {fileID: 0}
+    - target: {fileID: 4419068241582400892, guid: 3502377a63101434aa59a6d9127fb3b5,
+        type: 3}
+      propertyPath: poolData.Array.data[6].size
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4419068241582400892, guid: 3502377a63101434aa59a6d9127fb3b5,
+        type: 3}
+      propertyPath: poolData.Array.data[6].prefab
+      value: 
+      objectReference: {fileID: 1268243056916477701, guid: 7730e9c7f3d1e1e438c7c6c1b4eb907b,
+        type: 3}
     - target: {fileID: 6929517734977390769, guid: 3502377a63101434aa59a6d9127fb3b5,
         type: 3}
       propertyPath: m_Name

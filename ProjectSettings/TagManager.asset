@@ -11,6 +11,7 @@ TagManager:
   - Destructible
   - Surface
   - Drill
+  - Orbiter
   layers:
   - Default
   - TransparentFX
