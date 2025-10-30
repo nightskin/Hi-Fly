@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +19,7 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] TrailRenderer[] trails;
     [SerializeField] ParticleSystem chargeEffect;
     [SerializeField] TrailRenderer thruster;
-    [SerializeField] Transform mesh;
+    public Transform mesh;
     [SerializeField] Transform bulletSpawn;
     [SerializeField] CharacterController controller;
     [SerializeField] Transform OnRailsFollowTarget;
@@ -272,7 +271,19 @@ public class PlayerShip : MonoBehaviour
 
     private void Fire2_performed(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-
+        int r = Random.Range(0, 4);
+        if (r == 0)
+        {
+            orbiters.AddOrbiter(Orbiter.Type.TURRET);
+        }
+        else if (r == 1)
+        {
+            orbiters.AddOrbiter(Orbiter.Type.RAVER_LAZER);
+        }
+        else if (r == 2)
+        {
+            orbiters.AddOrbiter(Orbiter.Type.MISSILE);
+        }
     }
 
     private void Fire2_canceled(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -467,7 +478,7 @@ public class PlayerShip : MonoBehaviour
     void FireBullet()
     {
         //Initialize Bullet
-        GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
+        GameObject obj = GameManager.Get().objectPool.SpawnFromObjectPool("bullet", bulletSpawn.position);
         if (obj != null)
         {
             Bullet b = obj.GetComponent<Bullet>();
@@ -504,7 +515,7 @@ public class PlayerShip : MonoBehaviour
     void FirePowerBomb()
     {
         //Initialize Bullet
-        GameObject obj = GameManager.Get().objectPool.Spawn("missile", bulletSpawn.position);
+        GameObject obj = GameManager.Get().objectPool.SpawnFromObjectPool("missile", bulletSpawn.position);
         if (obj != null)
         {
             Missile m = obj.GetComponent<Missile>();
@@ -541,7 +552,7 @@ public class PlayerShip : MonoBehaviour
     {
         if (lazer == null)
         {
-            lazer = GameManager.Get().objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
+            lazer = GameManager.Get().objectPool.SpawnFromObjectPool("lazer", Vector3.zero).GetComponent<Lazer>();
             lazer.owner = mesh.gameObject;
             lazer.damage = firePower;
 

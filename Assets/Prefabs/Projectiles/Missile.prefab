@@ -66,11 +66,13 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7805965318761107941, guid: 18ae574422c5acc48affa5d66c64ed43, type: 3}
-  - {fileID: -3303489080311633890, guid: 18ae574422c5acc48affa5d66c64ed43, type: 3}
+  - {fileID: 2100000, guid: 17d26b364a9920e4f9ae8fc489e3b436, type: 2}
+  - {fileID: 2100000, guid: f1e6e0782b9c58e4c8b86710361c7c18, type: 2}
   - {fileID: -5263312183963556308, guid: 18ae574422c5acc48affa5d66c64ed43, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -89,6 +91,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -124,7 +127,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 497dfb41e37cfda44b6cc17ae3803661, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 497dfb41e37cfda44b6cc17ae3803661, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -228,6 +231,7 @@ MonoBehaviour:
   homingTarget: {fileID: 0}
   speed: 1000
   direction: {x: 0, y: 0, z: 0}
+  damage: 0
 --- !u!114 &3420510911149879170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,6 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14294570097fc6e40b58192ee5df4f31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audio: {fileID: 0}
 --- !u!1 &8480945965109086087
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,6 +298,8 @@ TrailRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -314,6 +321,7 @@ TrailRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0

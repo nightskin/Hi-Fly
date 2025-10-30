@@ -54,14 +54,20 @@ public class UpgradeMenu : MonoBehaviour
         }
         else if(c == 3)
         {
+            //Get Drill Dasher
+            if(Util.RandomBool() && GameManager.Get().playerShip.drillDasher.activeSelf == false)
+            {
+                btn.onClick.AddListener(GetDrillDasher);
+                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Get Drill Dasher";
+            }
+            //Get Extra Orbiter
             if(Util.RandomBool())
             {
-                //Add Orbiter
-                int i = Random.Range(0, 4);
+                int i = Random.Range(0, 3);
                 if (i == 0)
                 {
                     btn.onClick.AddListener(AddBombOrbiter);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Bomb Orbiter";
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Missile Orbiter";
                 }
                 else if (i == 1)
                 {
@@ -73,12 +79,9 @@ public class UpgradeMenu : MonoBehaviour
                     btn.onClick.AddListener(AddNormalOrbiter);
                     btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Turret Orbiter";
                 }
-                else if(i == 3)
-                {
-                    btn.onClick.AddListener(GetDrillDasher);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Drill Dasher";
-                }
+
             }
+            // Change Primary Weapon
             else
             {
                 //Change Primary Weapon
@@ -97,13 +100,29 @@ public class UpgradeMenu : MonoBehaviour
                 }
                 else if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.CHARGE_BOMB)
                 {
-                    btn.onClick.AddListener(ChangeWeaponToLazer);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Raver Lazer";
+                    if(Util.RandomBool())
+                    {
+                        btn.onClick.AddListener(ChangeWeaponToLazer);
+                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Raver Lazer";
+                    }
+                    else
+                    {
+                        btn.onClick.AddListener(ChangeWeaponToBackToNormal);
+                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Starting Weapon";
+                    }
                 }
                 else if(GameManager.Get().playerShip.weapon == PlayerShip.Weapon.RAVER_LAZER)
                 {
-                    btn.onClick.AddListener(ChangeWeaponToChargeBlaster);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Blaster";
+                    if(Util.RandomBool())
+                    {
+                        btn.onClick.AddListener(ChangeWeaponToChargeBlaster);
+                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Blaster";
+                    }
+                    else
+                    {
+                        btn.onClick.AddListener(ChangeWeaponToBackToNormal);
+                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Starting Weapon";
+                    }
                 }
             }
         }
@@ -159,19 +178,19 @@ public class UpgradeMenu : MonoBehaviour
 
     void AddLazerOrbiter()
     {
-        
+        GameManager.Get().playerShip.orbiters.AddOrbiter(Orbiter.Type.RAVER_LAZER);
         GameManager.Get().CloseUpgradeMenu();
     }
     
     void AddBombOrbiter()
     {
-        
+        GameManager.Get().playerShip.orbiters.AddOrbiter(Orbiter.Type.MISSILE);
         GameManager.Get().CloseUpgradeMenu();
     }
 
     void AddNormalOrbiter()
     {
-        
+        GameManager.Get().playerShip.orbiters.AddOrbiter(Orbiter.Type.TURRET);
         GameManager.Get().CloseUpgradeMenu();
     }
 

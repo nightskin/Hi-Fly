@@ -81,7 +81,7 @@ public class EnemyShip : MonoBehaviour
 
     void Die()
     {
-        var explosion = GameManager.Get().objectPool.Spawn("explosion", transform.position);
+        var explosion = GameManager.Get().objectPool.SpawnFromObjectPool("explosion", transform.position);
         if ((GameManager.Get().gameMode == GameManager.GameMode.SURVIVOR))
         {
             EnemyWaveManager.Get().EnemyDowned();
@@ -156,7 +156,7 @@ public class EnemyShip : MonoBehaviour
 
     void Shoot()
     {
-        var b = GameManager.Get().objectPool.Spawn("bullet", transform.position + transform.forward);
+        var b = GameManager.Get().objectPool.SpawnFromObjectPool("bullet", transform.position + transform.forward);
         b.GetComponent<Bullet>().direction = GetDirectionTowardsTarget();
         b.GetComponent<Bullet>().owner = gameObject;
         b.GetComponent<Bullet>().damage = attackPower;

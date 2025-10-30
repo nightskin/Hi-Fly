@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class ObjectPool : MonoBehaviour
+public class ObjectPoolManager : MonoBehaviour
 {
-    public ObjectPoolData[] poolData;
-
+    [SerializeField] ObjectPoolData[] poolData;
 
     void Awake()
     {
@@ -23,10 +22,10 @@ public class ObjectPool : MonoBehaviour
         }        
     }
 
-    public GameObject Spawn(string name, Vector3 position)
+    public GameObject SpawnFromObjectPool(string objectPoolName, Vector3 position)
     {
-        Transform pool = transform.Find(name);
-        if (pool != null) 
+        Transform pool = transform.Find(objectPoolName);
+        if (pool) 
         {
             for(int i = 0; i < pool.childCount; i++) 
             {
@@ -41,5 +40,23 @@ public class ObjectPool : MonoBehaviour
         Debug.Log("Could Not Find Object Pool");
         return null;
     }
-
+    
+    public GameObject GetActiveFromObjectPool(string objectPoolName)
+    {
+        Transform pool = transform.Find(objectPoolName);
+        if (pool)
+        {
+            for (int i = 0; i < pool.childCount; i++)
+            {
+                if (pool.GetChild(i).gameObject.activeSelf)
+                {
+                    return pool.GetChild(i).gameObject;
+                }
+            }
+            Debug.Log("No Active Objects Found");
+            return null;
+        }
+        Debug.Log("Could Not Find Object Pool");
+        return null;
+    }
 }

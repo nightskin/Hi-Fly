@@ -6,7 +6,7 @@ public class EnemyWaveManager : MonoBehaviour
     static EnemyWaveManager instance;
     static PlayerShip player;
 
-    [SerializeField] ObjectPool objectPool;
+    [SerializeField] ObjectPoolManager objectPool;
     [SerializeField] TextMeshProUGUI waveInfo;
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] GameObject upgradeMenu;
@@ -47,7 +47,7 @@ public class EnemyWaveManager : MonoBehaviour
 
         for (int i = 0; i < enemiesInCurrentWave; i++)
         {
-            objectPool.Spawn("enemy", player.transform.position + (player.transform.forward * 500) + Random.insideUnitSphere * 500);
+            objectPool.SpawnFromObjectPool("enemy", player.transform.position + (player.transform.forward * 500) + Random.insideUnitSphere * 500);
         }
         waveInProgress = true;
     }

@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1664566241619017703}
   serializedVersion: 2
-  m_LocalRotation: {x: -6.123234e-17, y: 1, z: 6.123234e-17, w: -3.7493994e-33}
-  m_LocalPosition: {x: -0, y: 0.905, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -105,6 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0521db4df326bf3428669d5a8c001aeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Orbiter
+  bulletSpawn: {fileID: 7746937801854185134}
+  threshold: 0.25
   type: 0
 --- !u!1 &8513982001113251311
 GameObject:
@@ -131,7 +133,7 @@ Transform:
   m_GameObject: {fileID: 8513982001113251311}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.2, z: -1.6}
+  m_LocalPosition: {x: -0, y: 0.2, z: 1.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

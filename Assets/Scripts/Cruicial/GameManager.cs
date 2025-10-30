@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public PlayerMovement playerMovement;
 
 
-    public ObjectPool objectPool;
+    public ObjectPoolManager objectPool;
 
     //Other Stuff
     static GameManager instance;
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (!objectPool) objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
+        if (!objectPool) objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPoolManager>();
 
         instance = this;
 
