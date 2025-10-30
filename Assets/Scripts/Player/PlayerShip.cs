@@ -4,6 +4,13 @@ using UnityEngine.UI;
 
 public class PlayerShip : MonoBehaviour
 {
+    public enum Weapon
+    {
+        NORMAL_BULLET,
+        CHARGE_BOMB,
+        RAVER_LAZER,
+    }
+    [HideInInspector] public Weapon weapon = Weapon.NORMAL_BULLET;
 
     //Necessary Components
     public HealthSystem health;
@@ -53,17 +60,14 @@ public class PlayerShip : MonoBehaviour
     public static float fireRate = 1;
     public static int firePower = 5;
 
-
-    ObjectPool objectPool;
+    
     
     void Start()
     {
         Cursor.visible = false;
         mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
         mesh.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameSettings.playerStripeColor);
-
-
-        objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
+        
         if (trails.Length == 0) trails = GetComponentsInChildren<TrailRenderer>();
         reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
         reticle.rectTransform.position = reticlePosition;
@@ -119,7 +123,7 @@ public class PlayerShip : MonoBehaviour
             //Shooting
             if (InputManager.input.Player.Fire1.IsPressed())
             {
-                if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.NORMAL_BULLET)
+                if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.NORMAL_BULLET)
                 {
                     if (shootTimer > 0)
                     {
@@ -131,7 +135,7 @@ public class PlayerShip : MonoBehaviour
                         shootTimer = 1;
                     }
                 }
-                else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.RAVER_LAZER)
+                else if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.RAVER_LAZER)
                 {
                     if (lazer)
                     {
@@ -167,7 +171,7 @@ public class PlayerShip : MonoBehaviour
                         }
                     }
                 }
-                else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.CHARGE_BOMB)
+                else if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.CHARGE_BOMB)
                 {
                     chargeAmount += chargeSpeed * Time.deltaTime;
                     chargeMaterial.SetColor("_Color", Color.Lerp(Color.green, Color.red, chargeAmount / chargeSpeed));
@@ -223,17 +227,17 @@ public class PlayerShip : MonoBehaviour
     
     private void Fire1_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.NORMAL_BULLET)
+        if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.NORMAL_BULLET)
         {
             shootTimer = 0;
         }
-        else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.CHARGE_BOMB)
+        else if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.CHARGE_BOMB)
         {
             chargeAmount = 0;
             charging = true;
             chargeEffect.gameObject.SetActive(true);
         }
-        else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.RAVER_LAZER)
+        else if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.RAVER_LAZER)
         {
             chargeAmount = 0;
             charging = true;
@@ -243,7 +247,7 @@ public class PlayerShip : MonoBehaviour
     
     private void Fire1_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.CHARGE_BOMB)
+        if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.CHARGE_BOMB)
         {
             if (chargeAmount >= 1)
             {
@@ -256,7 +260,7 @@ public class PlayerShip : MonoBehaviour
             charging = false;
             chargeEffect.gameObject.SetActive(false);
         }
-        else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.RAVER_LAZER)
+        else if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.RAVER_LAZER)
         {
             if (lazer)
             {
@@ -463,7 +467,7 @@ public class PlayerShip : MonoBehaviour
     void FireBullet()
     {
         //Initialize Bullet
-        GameObject obj = objectPool.Spawn("bullet", bulletSpawn.position);
+        GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
         if (obj != null)
         {
             Bullet b = obj.GetComponent<Bullet>();
@@ -500,7 +504,7 @@ public class PlayerShip : MonoBehaviour
     void FirePowerBomb()
     {
         //Initialize Bullet
-        GameObject obj = objectPool.Spawn("missile", bulletSpawn.position);
+        GameObject obj = GameManager.Get().objectPool.Spawn("missile", bulletSpawn.position);
         if (obj != null)
         {
             Missile m = obj.GetComponent<Missile>();
@@ -537,7 +541,7 @@ public class PlayerShip : MonoBehaviour
     {
         if (lazer == null)
         {
-            lazer = objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
+            lazer = GameManager.Get().objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
             lazer.owner = mesh.gameObject;
             lazer.damage = firePower;
 

@@ -13,14 +13,12 @@ public class Lazer : MonoBehaviour
     public int damage = 5;
     [HideInInspector] public Vector3 direction;
     [HideInInspector] public Vector3 origin;
-    ObjectPool objectPool;
 
     float collisionTimer;
 
     void OnEnable()
     {
         collisionTimer = 0;
-        objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
         renderer.sharedMaterial.color = colors[colorIndex];
     }
 
@@ -72,7 +70,7 @@ public class Lazer : MonoBehaviour
             {
                 if (rayHit.transform.tag == "Destructible")
                 {
-                    objectPool.Spawn("explosion", rayHit.point);
+                    GameManager.Get().objectPool.Spawn("explosion", rayHit.point);
                     Asteroid asteroid = rayHit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
@@ -88,7 +86,7 @@ public class Lazer : MonoBehaviour
                 }
                 else if (rayHit.transform.tag == "Surface")
                 {
-                    objectPool.Spawn("explosion", rayHit.point);
+                    GameManager.Get().objectPool.Spawn("explosion", rayHit.point);
                 }
                 else if (rayHit.transform.tag == "Enemy")
                 {
@@ -109,7 +107,7 @@ public class Lazer : MonoBehaviour
                             health.TakeDamage(damage);
                             if (health.IsDead())
                             {
-                                objectPool.Spawn("explosion", rayHit.point);
+                                GameManager.Get().objectPool.Spawn("explosion", rayHit.point);
                                 rayHit.transform.gameObject.SetActive(false);
                                 GameManager.Get().gameOver = true;
                             }

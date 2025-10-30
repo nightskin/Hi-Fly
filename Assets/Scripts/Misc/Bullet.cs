@@ -13,7 +13,6 @@ public class Bullet : MonoBehaviour
 
     AudioSource sfx;
     TrailRenderer trail;
-    ObjectPool objectPool;
     Vector3 prevPosition;
     bool hit;
     float life = 0;
@@ -21,7 +20,6 @@ public class Bullet : MonoBehaviour
     void Awake()
     {
         life = lifetime;
-        objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
         sfx = GetComponent<AudioSource>();
         trail = GetComponent<TrailRenderer>();
     }
@@ -115,7 +113,7 @@ public class Bullet : MonoBehaviour
             {
                 if (rayhit.transform.tag == "Destructible")
                 {
-                    objectPool.Spawn("explosion", rayhit.point);
+                    GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
                     Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
@@ -132,7 +130,7 @@ public class Bullet : MonoBehaviour
                 }
                 else if (rayhit.transform.tag == "Surface")
                 {
-                    objectPool.Spawn("explosion", rayhit.point);
+                    GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
                     hit = true;
                 }
                 else if (rayhit.transform.tag == "Enemy")
@@ -155,7 +153,7 @@ public class Bullet : MonoBehaviour
                         health.TakeDamage(damage);
                         if (health.IsDead())
                         {
-                            objectPool.Spawn("explosion", rayhit.point);
+                            GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
                             rayhit.transform.gameObject.SetActive(false);
                             GameManager.Get().gameOver = true;
                         }

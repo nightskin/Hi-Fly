@@ -12,7 +12,6 @@ public class Missile : MonoBehaviour
     BoxCollider box;
     AudioSource sfx;
     TrailRenderer trail;
-    ObjectPool objectPool;
     Vector3 prevPosition;
     bool hit;
     float life = 0;
@@ -22,7 +21,6 @@ public class Missile : MonoBehaviour
     {
         life = lifetime;
         box = GetComponent<BoxCollider>();
-        objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
         sfx = GetComponent<AudioSource>();
         trail = transform.Find("Trail").GetComponent<TrailRenderer>();
     }
@@ -50,7 +48,7 @@ public class Missile : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.deltaTime);
                 if(Vector3.Distance(transform.position, homingTarget.position) < 1.0f)
                 {
-                    objectPool.Spawn("powerBombExplosion", transform.position);
+                    GameManager.Get().objectPool.Spawn("powerBombExplosion", transform.position);
                     DeSpawn();
                 }
             }
@@ -91,7 +89,7 @@ public class Missile : MonoBehaviour
         {
             if (rayhit.transform.gameObject != owner)
             {
-                var powerBombExplosion = objectPool.Spawn("powerBombExplosion", transform.position);
+                var powerBombExplosion = GameManager.Get().objectPool.Spawn("powerBombExplosion", transform.position);
                 powerBombExplosion.GetComponent<PowerBomb>().damage = damage;
 
                 if (rayhit.transform.tag == "Destructible")
@@ -112,7 +110,6 @@ public class Missile : MonoBehaviour
             }
         }
     }
-
     
     void DeSpawn()
     {

@@ -8,8 +8,6 @@ public class GameManager : MonoBehaviour
     {
         TUTORIAL,
         SURVIVOR,
-        ROGUE,
-        ASSASSIN,
     }
     public GameMode gameMode;
 
@@ -20,23 +18,8 @@ public class GameManager : MonoBehaviour
     }
     public PlayerMovement playerMovement;
 
-    public enum RangedWeapon
-    {
-        NORMAL_BULLET,
-        CHARGE_BOMB,
-        RAVER_LAZER,
-    }
-    [HideInInspector] public RangedWeapon mainWeapon;
 
-    public enum OrbiterType
-    {
-        TURRET,
-        MISSILE,
-        BEAM_RIFLE,
-    }
-    [HideInInspector] public OrbiterType[] orbiters;
-
-    
+    public ObjectPool objectPool;
 
     //Other Stuff
     static GameManager instance;
@@ -64,6 +47,8 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        if (!objectPool) objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPool>();
+
         instance = this;
 
         gameOver = false;

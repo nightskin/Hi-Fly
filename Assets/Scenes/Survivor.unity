@@ -884,6 +884,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1069085150, guid: f9a426b5fc9288e48bcdc4a92bb825db, type: 3}
+      propertyPath: objectPool
+      value: 
+      objectReference: {fileID: 4419068242589922780}
+    - target: {fileID: 1069085150, guid: f9a426b5fc9288e48bcdc4a92bb825db, type: 3}
       propertyPath: 'playerUIToHideOnPause.Array.data[2]'
       value: 
       objectReference: {fileID: 1469801213}

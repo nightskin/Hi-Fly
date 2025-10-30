@@ -2,12 +2,28 @@ using UnityEngine;
 
 public class PlayerOrbiters : MonoBehaviour
 {
+    public ObjectPool objectPool;
     [SerializeField] PlayerShip playerShip;
     [SerializeField] GameObject orbiterPrefab;
     [SerializeField] float orbiterRadius = 3;
 
 
-    public void AddOrbiter(GameManager.OrbiterType type)
+    void Update()
+    {
+        transform.rotation *= Quaternion.AngleAxis(45 * Time.deltaTime, Vector3.forward);
+        //Just Here For Debug
+        if (InputManager.input.Player.Fire2.WasPressedThisFrame())
+        {
+            AddOrbiter(Orbiter.Type.TURRET);
+        }
+    }
+
+    void FixedUpdate()
+    {
+        FireOrbiters();
+    }
+
+    public void AddOrbiter(Orbiter.Type type)
     {
         var obj = Instantiate(orbiterPrefab, transform);
         obj.GetComponent<Orbiter>().type = type;
@@ -21,12 +37,19 @@ public class PlayerOrbiters : MonoBehaviour
             float y = orbiterRadius * Mathf.Cos(r);
             transform.GetChild(i).localPosition = new Vector3(x, y, 0);
         }
-
     }
 
-    public void FireOrbiter(int i)
+    public void FireOrbiters()
     {
-
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Orbiter o = transform.GetChild(i).GetComponent<Orbiter>();
+            o.shootTimer -= o.fireRate * Time.fixedDeltaTime;
+            if(o.shootTimer <= 0)
+            {
+                o.Fire();
+            }
+        }
     }
 
 }

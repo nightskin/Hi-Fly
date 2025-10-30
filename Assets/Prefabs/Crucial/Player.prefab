@@ -13598,6 +13598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weapon: 0
   health: {fileID: 8131623140777354630}
   drillDasher: {fileID: 8014940585488967141}
   orbiters: {fileID: 6128535447888017660}
@@ -13706,8 +13707,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 3}
-  m_LocalScale: {x: 2, y: 2, z: 2}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 955617525543853223}
   - {fileID: 1034022190687083089}
@@ -13954,8 +13955,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameMode: 1
   playerMovement: 0
-  mainWeapon: 0
-  orbiters: 00000000
+  objectPool: {fileID: 0}
   gameOverSelectedObject: {fileID: 5628535168723790810}
   upgradeMenu: {fileID: 3278340037502080093}
   gameOverMenu: {fileID: 8131623140616228715}
@@ -14734,9 +14734,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55e25ad89065db046a913bc73fff33f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerOrbiters
+  objectPool: {fileID: 0}
   playerShip: {fileID: 3438586877348045626}
   orbiterPrefab: {fileID: 1664566241619017703, guid: 7bb70d2e465ea384c94e6adfad41d6f2,
     type: 3}
+  orbiterRadius: 3
 --- !u!1 &8659897189068200085
 GameObject:
   m_ObjectHideFlags: 0

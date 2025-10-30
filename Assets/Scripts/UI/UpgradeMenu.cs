@@ -41,7 +41,7 @@ public class UpgradeMenu : MonoBehaviour
         }
         else if (c == 2)
         {
-            if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.NORMAL_BULLET)
+            if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.NORMAL_BULLET)
             {
                 btn.onClick.AddListener(ImproveFireRate);
                 btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Fire Rate+";
@@ -82,7 +82,7 @@ public class UpgradeMenu : MonoBehaviour
             else
             {
                 //Change Primary Weapon
-                if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.NORMAL_BULLET)
+                if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.NORMAL_BULLET)
                 {
                     if (Util.RandomBool())
                     {
@@ -95,12 +95,12 @@ public class UpgradeMenu : MonoBehaviour
                         btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Blaster";
                     }
                 }
-                else if (GameManager.Get().mainWeapon == GameManager.RangedWeapon.CHARGE_BOMB)
+                else if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.CHARGE_BOMB)
                 {
                     btn.onClick.AddListener(ChangeWeaponToLazer);
                     btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Raver Lazer";
                 }
-                else if(GameManager.Get().mainWeapon == GameManager.RangedWeapon.RAVER_LAZER)
+                else if(GameManager.Get().playerShip.weapon == PlayerShip.Weapon.RAVER_LAZER)
                 {
                     btn.onClick.AddListener(ChangeWeaponToChargeBlaster);
                     btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Blaster";
@@ -135,19 +135,19 @@ public class UpgradeMenu : MonoBehaviour
 
     void ChangeWeaponToLazer()
     {
-        GameManager.Get().mainWeapon = GameManager.RangedWeapon.RAVER_LAZER;
+        GameManager.Get().playerShip.weapon = PlayerShip.Weapon.RAVER_LAZER;
         GameManager.Get().CloseUpgradeMenu();
     }
     
     void ChangeWeaponToBackToNormal()
     {
-        GameManager.Get().mainWeapon = GameManager.RangedWeapon.NORMAL_BULLET;
+        GameManager.Get().playerShip.weapon = PlayerShip.Weapon.NORMAL_BULLET;
         GameManager.Get().CloseUpgradeMenu();
     }
 
     void ChangeWeaponToChargeBlaster()
     {
-        GameManager.Get().mainWeapon = GameManager.RangedWeapon.CHARGE_BOMB;
+        GameManager.Get().playerShip.weapon = PlayerShip.Weapon.CHARGE_BOMB;
         GameManager.Get().CloseUpgradeMenu();
     }
 
