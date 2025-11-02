@@ -24,7 +24,6 @@ public class PlayerShip : MonoBehaviour
     public GameObject drillDasher;
 
     public PlayerCamera camera;
-    [SerializeField] TrailRenderer[] trails;
     [SerializeField] ParticleSystem chargeEffect;
     [SerializeField] TrailRenderer thruster;
     public Transform mesh;
@@ -42,8 +41,8 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] float boostSpeed = 200;
     [SerializeField] float acceleration = 10;
 
-    [HideInInspector] public bool strafeMode = false;
-    bool boostInStrafeMode = false;
+    public bool strafeMode = false;
+    bool boostWhileStrafing = false;
     bool evading = false;
     int evadeDirection = 0;
     float evadeTimer;
@@ -77,14 +76,13 @@ public class PlayerShip : MonoBehaviour
         Cursor.visible = false;
         mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
         mesh.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameSettings.playerStripeColor);
-        
-        if (trails.Length == 0) trails = GetComponentsInChildren<TrailRenderer>();
+
         reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
         reticle.rectTransform.position = reticlePosition;
         if (!camera) camera = Camera.main.GetComponent<PlayerCamera>();
         controller = GetComponent<CharacterController>();
         targetSpeed = baseSpeed;
-
+        strafeSpeed = baseStrafeSpeed;
         InputManager.input.Player.Shoot.performed += Shoot_performed;
         InputManager.input.Player.Shoot.canceled += Shoot_canceled;
         InputManager.input.Player.Melee.performed += Melee_performed;
@@ -121,12 +119,12 @@ public class PlayerShip : MonoBehaviour
         {
             if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ALL_RANGE)
             {
-                if (strafeMode) StrafeMode();
-                else AllRangeMode();
+                if (strafeMode) StrafeControls();
+                else AllRangeControls();
             }
             else if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
             {
-                OnRailsMode();
+                OnRailsControls();
             }
             
             //Shooting
@@ -163,13 +161,6 @@ public class PlayerShip : MonoBehaviour
         InputManager.input.Player.Roll.performed -= Roll_performed;
         InputManager.input.Player.Dash.performed -= Dash_performed;
     }
-    void OnTriggerEnter(Collider other)
-    {   
-        if(other.tag == "Bounds")
-        {
-            Teleport(transform.position * -1);
-        }
-    }
 
     private void Boost_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
@@ -177,36 +168,36 @@ public class PlayerShip : MonoBehaviour
         {
             if (strafeMode)
             {
-                boostInStrafeMode = true;
-                strafeMode = false;
+                boostWhileStrafing = true;
             }
             else
             {
-                boostInStrafeMode = false;
+                boostWhileStrafing = false;
             }
+            strafeMode = false;
+            thruster.emitting = true;
             camera.boostEffect.Play();
             thrustColor = Color.red;
             targetSpeed = boostSpeed;
-            foreach (TrailRenderer trail in trails)
-            {
-                trail.emitting = true;
-            }
         }
     }
 
     private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (boostInStrafeMode)
+        if(!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
         {
-            strafeMode = true;
-            foreach (TrailRenderer trail in trails)
+            if(boostWhileStrafing)
             {
-                trail.emitting = false;
+                SetStrafeMode(true);
             }
+            else
+            {
+                SetStrafeMode(false);
+            }
+            camera.boostEffect.Stop();
+            thrustColor = Color.cyan;
+            targetSpeed = baseSpeed;
         }
-        camera.boostEffect.Stop();
-        thrustColor = Color.cyan;
-        targetSpeed = baseSpeed;
     }
     
     private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -279,28 +270,11 @@ public class PlayerShip : MonoBehaviour
             {
                 if (strafeMode)
                 {
-                    targetSpeed = baseSpeed;
-                    thrustColor = Color.cyan;
-                    foreach (TrailRenderer trail in trails)
-                    {
-                        trail.emitting = true;
-                    }
-                    strafeMode = false;
-                    camera.followSpeed = camera.baseFollowSpeed;
+                    SetStrafeMode(false);
                 }
                 else
                 {
-                    if(camera.boostEffect.isPlaying) camera.boostEffect.Stop();
-                    targetSpeed = baseSpeed;
-                    thrustColor = Color.cyan;
-                    reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
-                    reticle.rectTransform.position = reticlePosition;
-                    foreach (TrailRenderer trail in trails)
-                    {
-                        trail.emitting = false;
-                    }
-                    strafeMode = true;
-                    camera.followSpeed = camera.maxFollowSpeed;
+                    SetStrafeMode(true);
                 }
             }
         }
@@ -324,21 +298,19 @@ public class PlayerShip : MonoBehaviour
 
     private void Roll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(!strafeMode)
+        if (!strafeMode)
         {
             evadeTimer = 0;
             evading = true;
             if (evadeDirection == 1) evadeDirection = -1;
             else evadeDirection = 1;
         }
-
     }
 
     private void Dash_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if(strafeMode)
         {
-            strafeSpeed = maxStrafeSpeed;
             evadeTimer = 0;
             evading = true;
             if (evadeDirection == 1) evadeDirection = -1;
@@ -354,7 +326,29 @@ public class PlayerShip : MonoBehaviour
         controller.enabled = true;
     }
 
-    void OnRailsMode()
+    void SetStrafeMode(bool active)
+    {
+        strafeMode = active;
+        if(strafeMode)
+        {
+            if (camera.boostEffect.isPlaying) camera.boostEffect.Stop();
+            targetSpeed = baseSpeed;
+            thrustColor = Color.cyan;
+            reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
+            reticle.rectTransform.position = reticlePosition;
+            thruster.emitting = false;
+            camera.followSpeed = camera.maxFollowSpeed;
+        }
+        else
+        {
+            targetSpeed = baseSpeed;
+            thrustColor = Color.cyan;
+            thruster.emitting = true;
+            camera.followSpeed = camera.baseFollowSpeed;
+        }
+    }
+
+    void OnRailsControls()
     {
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
         thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
@@ -405,7 +399,7 @@ public class PlayerShip : MonoBehaviour
         
     }
 
-    void StrafeMode()
+    void StrafeControls()
     {
         //Moving
         float x = InputManager.input.Player.Steer.ReadValue<Vector2>().x;
@@ -426,7 +420,6 @@ public class PlayerShip : MonoBehaviour
         }
         else
         {
-            strafeSpeed = baseStrafeSpeed;
             mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, x * -45, 10 * Time.deltaTime));
         }
 
@@ -438,7 +431,7 @@ public class PlayerShip : MonoBehaviour
         transform.rotation *= Quaternion.AngleAxis(-lookY * turnSpeed * Time.deltaTime, Vector3.right);
     }
 
-    void AllRangeMode()
+    void AllRangeControls()
     {
         //Forward Movement
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);

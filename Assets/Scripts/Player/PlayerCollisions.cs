@@ -24,6 +24,10 @@ public class PlayerCollisions : MonoBehaviour
             }
 
         }
+        else if (other.tag == "Bounds")
+        {
+           playerShip.Teleport(transform.position * -1);
+        }
     }
 
 }
