@@ -57,7 +57,7 @@ public class Galaxy : MonoBehaviour
         }
 
         // Add Planets
-        if (planetGeneratorPrefab)
+        if(planetGeneratorPrefab)
         {
             for (int i = 0; i < numberOfPlanets; i++)
             {
@@ -68,7 +68,7 @@ public class Galaxy : MonoBehaviour
             }
         }
 
-
+        
         //Add Asteroid Fields
         if (asteroidFieldPrefab)
         {

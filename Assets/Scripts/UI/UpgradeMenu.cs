@@ -30,113 +30,135 @@ public class UpgradeMenu : MonoBehaviour
     {
         if (c == 0)
         {
-            btn.onClick.AddListener(ImproveFirePower);
-            btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Fire Power+";
+            if(Util.RandomBool())
+            {
+                btn.onClick.AddListener(ImproveShipDurability);
+                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Ship Durability+";
+            }
+            else
+            {
+                btn.onClick.AddListener(RepairShip);
+                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Repair Ship";
+            }
         }
         else if (c == 1)
         {
-            btn.onClick.AddListener(ImproveShipDurability);
-            btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Ship Durability+";
-
-        }
-        else if (c == 2)
-        {
-            if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.NORMAL_BULLET)
-            {
-                btn.onClick.AddListener(ImproveFireRate);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Fire Rate+";
-            }
-            else
+            bool b = Util.RandomBool();
+            if (GameManager.Get().playerShip.weapon == PlayerShip.RangedWeapon.CHARGE_MISSILE && b)
             {
                 btn.onClick.AddListener(ImproveChargeSpeed);
                 btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Charge Rate+";
             }
-        }
-        else if(c == 3)
-        {
-            //Get Drill Dasher
-            if(Util.RandomBool() && GameManager.Get().playerShip.drillDasher.activeSelf == false)
+            else if(GameManager.Get().playerShip.weapon == PlayerShip.RangedWeapon.CHARGE_MISSILE && !b)
             {
-                btn.onClick.AddListener(GetDrillDasher);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Get Drill Dasher";
+                btn.onClick.AddListener(ImproveMissilePower);
+                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Missile Power+";
             }
-            //Get Extra Orbiter
-            if(Util.RandomBool())
+            else
             {
-                int i = Random.Range(0, 3);
-                if (i == 0)
+                btn.onClick.AddListener(ImproveFirePower);
+                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Fire Power+";
+            }
+        }
+        else if(c == 2)
+        {
+            int r = Random.Range(0, 3);
+            //Change Melee Weapon
+            if(r == 1)
+            {
+                if(GameManager.Get().playerShip.meleeWeapon == PlayerShip.MeleeWeapon.NONE)
                 {
-                    btn.onClick.AddListener(AddBombOrbiter);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Missile Orbiter";
+                    btn.onClick.AddListener(GetDrillDasher);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Get Drill Dasher";
                 }
-                else if (i == 1)
+                else
                 {
-                    btn.onClick.AddListener(AddLazerOrbiter);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Lazer Orbiter";
-                }
-                else if (i == 2)
-                {
-                    btn.onClick.AddListener(AddNormalOrbiter);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Turret Orbiter";
+
                 }
 
             }
             // Change Primary Weapon
-            else
+            else if (r == 1)
             {
                 //Change Primary Weapon
-                if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.NORMAL_BULLET)
+                if (GameManager.Get().playerShip.weapon == PlayerShip.RangedWeapon.MULTI_SHOT)
                 {
                     if (Util.RandomBool())
                     {
-                        btn.onClick.AddListener(ChangeWeaponToLazer);
+                        btn.onClick.AddListener(ChangeRangedWeaponToLazer);
                         btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Raver Lazer";
                     }
                     else
                     {
-                        btn.onClick.AddListener(ChangeWeaponToChargeBlaster);
+                        btn.onClick.AddListener(ChangeRangedWeaponToChargeBlaster);
                         btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Blaster";
                     }
                 }
-                else if (GameManager.Get().playerShip.weapon == PlayerShip.Weapon.CHARGE_BOMB)
+                else if (GameManager.Get().playerShip.weapon == PlayerShip.RangedWeapon.CHARGE_MISSILE)
                 {
-                    if(Util.RandomBool())
+                    if (Util.RandomBool())
                     {
-                        btn.onClick.AddListener(ChangeWeaponToLazer);
+                        btn.onClick.AddListener(ChangeRangedWeaponToLazer);
                         btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Raver Lazer";
                     }
                     else
                     {
-                        btn.onClick.AddListener(ChangeWeaponToBackToNormal);
+                        btn.onClick.AddListener(ChangeRangedWeaponToBackToNormal);
                         btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Starting Weapon";
                     }
                 }
-                else if(GameManager.Get().playerShip.weapon == PlayerShip.Weapon.RAVER_LAZER)
+                else if (GameManager.Get().playerShip.weapon == PlayerShip.RangedWeapon.RAVER_LAZER)
                 {
-                    if(Util.RandomBool())
+                    if (Util.RandomBool())
                     {
-                        btn.onClick.AddListener(ChangeWeaponToChargeBlaster);
+                        btn.onClick.AddListener(ChangeRangedWeaponToChargeBlaster);
                         btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Blaster";
                     }
                     else
                     {
-                        btn.onClick.AddListener(ChangeWeaponToBackToNormal);
+                        btn.onClick.AddListener(ChangeRangedWeaponToBackToNormal);
                         btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Starting Weapon";
                     }
+                }
+            }
+            // Add Turret
+            if (r == 2)
+            {
+                int turretType = Random.Range(0, 3);
+                if (turretType == 0)
+                {
+                    btn.onClick.AddListener(AddBombTurret);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Missile Orbiter";
+                }
+                else if (turretType == 1)
+                {
+                    btn.onClick.AddListener(AddLazerTurret);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Lazer Orbiter";
+                }
+                else if (turretType == 2)
+                {
+                    btn.onClick.AddListener(AddNormalTurret);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Turret Orbiter";
                 }
             }
         }
     }
     
-    void ImproveFirePower()
+    void ImproveMissilePower()
     {
-        PlayerShip.firePower++;
+        GameManager.Get().playerShip.missilePower++;
         GameManager.Get().CloseUpgradeMenu();
     }
 
-    void ImproveFireRate()
+    void ImproveFirePower()
     {
-        PlayerShip.fireRate++;
+        GameManager.Get().playerShip.firePower++;
+        GameManager.Get().CloseUpgradeMenu();
+    }
+    
+    void RepairShip()
+    {
+        GameManager.Get().playerShip.health.Heal(GameManager.Get().playerShip.health.MaxHP());
         GameManager.Get().CloseUpgradeMenu();
     }
 
@@ -148,25 +170,25 @@ public class UpgradeMenu : MonoBehaviour
 
     void ImproveChargeSpeed()
     {
-        PlayerShip.chargeSpeed++;
+        GameManager.Get().playerShip.chargeSpeed++;
         GameManager.Get().CloseUpgradeMenu();
     }
 
-    void ChangeWeaponToLazer()
+    void ChangeRangedWeaponToLazer()
     {
-        GameManager.Get().playerShip.weapon = PlayerShip.Weapon.RAVER_LAZER;
+        GameManager.Get().playerShip.weapon = PlayerShip.RangedWeapon.RAVER_LAZER;
         GameManager.Get().CloseUpgradeMenu();
     }
     
-    void ChangeWeaponToBackToNormal()
+    void ChangeRangedWeaponToBackToNormal()
     {
-        GameManager.Get().playerShip.weapon = PlayerShip.Weapon.NORMAL_BULLET;
+        GameManager.Get().playerShip.weapon = PlayerShip.RangedWeapon.MULTI_SHOT;
         GameManager.Get().CloseUpgradeMenu();
     }
 
-    void ChangeWeaponToChargeBlaster()
+    void ChangeRangedWeaponToChargeBlaster()
     {
-        GameManager.Get().playerShip.weapon = PlayerShip.Weapon.CHARGE_BOMB;
+        GameManager.Get().playerShip.weapon = PlayerShip.RangedWeapon.CHARGE_MISSILE;
         GameManager.Get().CloseUpgradeMenu();
     }
 
@@ -176,21 +198,21 @@ public class UpgradeMenu : MonoBehaviour
         GameManager.Get().CloseUpgradeMenu();
     }
 
-    void AddLazerOrbiter()
+    void AddLazerTurret()
     {
-        GameManager.Get().playerShip.orbiters.AddOrbiter(Orbiter.Type.RAVER_LAZER);
+        
         GameManager.Get().CloseUpgradeMenu();
     }
     
-    void AddBombOrbiter()
+    void AddBombTurret()
     {
-        GameManager.Get().playerShip.orbiters.AddOrbiter(Orbiter.Type.MISSILE);
+        
         GameManager.Get().CloseUpgradeMenu();
     }
 
-    void AddNormalOrbiter()
+    void AddNormalTurret()
     {
-        GameManager.Get().playerShip.orbiters.AddOrbiter(Orbiter.Type.TURRET);
+        
         GameManager.Get().CloseUpgradeMenu();
     }
 

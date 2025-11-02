@@ -113,7 +113,7 @@ public class Bullet : MonoBehaviour
             {
                 if (rayhit.transform.tag == "Destructible")
                 {
-                    GameManager.Get().objectPool.SpawnFromObjectPool("explosion", rayhit.point);
+                    GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
                     Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
@@ -130,7 +130,7 @@ public class Bullet : MonoBehaviour
                 }
                 else if (rayhit.transform.tag == "Surface")
                 {
-                    GameManager.Get().objectPool.SpawnFromObjectPool("explosion", rayhit.point);
+                    GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
                     hit = true;
                 }
                 else if (rayhit.transform.tag == "Enemy")
@@ -153,7 +153,7 @@ public class Bullet : MonoBehaviour
                         health.TakeDamage(damage);
                         if (health.IsDead())
                         {
-                            GameManager.Get().objectPool.SpawnFromObjectPool("explosion", rayhit.point);
+                            GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
                             rayhit.transform.gameObject.SetActive(false);
                             GameManager.Get().gameOver = true;
                         }

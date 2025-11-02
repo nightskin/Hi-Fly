@@ -22,11 +22,12 @@ public class ObjectPoolManager : MonoBehaviour
         }        
     }
 
-    public GameObject SpawnFromObjectPool(string objectPoolName, Vector3 position)
+    public GameObject Spawn(string objectPoolName, Vector3 position)
     {
         Transform pool = transform.Find(objectPoolName);
         if (pool) 
         {
+            //Find object Inside of pool
             for(int i = 0; i < pool.childCount; i++) 
             {
                 if(!pool.GetChild(i).gameObject.activeSelf)
@@ -36,25 +37,54 @@ public class ObjectPoolManager : MonoBehaviour
                     return pool.GetChild(i).gameObject;
                 }
             }
+            // If none can be found Make one
+            GameObject obj = Instantiate(GetObjectPoolData(objectPoolName).prefab, position, Quaternion.identity, transform);
         }
         Debug.Log("Could Not Find Object Pool");
         return null;
     }
-    
-    public GameObject GetActiveFromObjectPool(string objectPoolName)
+
+    public GameObject Spawn(string objectPoolName, Vector3 position, Quaternion rotation)
     {
         Transform pool = transform.Find(objectPoolName);
         if (pool)
         {
+            //Find object Inside of pool
             for (int i = 0; i < pool.childCount; i++)
             {
-                if (pool.GetChild(i).gameObject.activeSelf)
+                if (!pool.GetChild(i).gameObject.activeSelf)
                 {
+                    pool.GetChild(i).transform.position = position;
+                    pool.GetChild(i).transform.rotation = rotation;
+                    pool.GetChild(i).gameObject.SetActive(true);
                     return pool.GetChild(i).gameObject;
                 }
             }
-            Debug.Log("No Active Objects Found");
-            return null;
+            // If none can be found Make one
+            GameObject obj = Instantiate(GetObjectPoolData(objectPoolName).prefab, position, rotation, transform);
+        }
+        Debug.Log("Could Not Find Object Pool");
+        return null;
+    }
+
+    public ObjectPoolData GetObjectPoolData(string objectPoolName)
+    {
+        for(int i = 0; i < transform.childCount; i++)
+        {
+            if (poolData[i].name == objectPoolName)
+            {
+                return poolData[i];
+            }
+        }
+        return null;
+    }
+
+    public Transform GetObjectPool(string objectPoolName)
+    {
+        Transform pool = transform.Find(objectPoolName);
+        if(pool)
+        {
+            return pool;
         }
         Debug.Log("Could Not Find Object Pool");
         return null;

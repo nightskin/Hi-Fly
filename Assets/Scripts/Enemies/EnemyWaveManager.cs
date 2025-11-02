@@ -47,7 +47,7 @@ public class EnemyWaveManager : MonoBehaviour
 
         for (int i = 0; i < enemiesInCurrentWave; i++)
         {
-            objectPool.SpawnFromObjectPool("enemy", player.transform.position + (player.transform.forward * 500) + Random.insideUnitSphere * 500);
+            objectPool.Spawn("enemy", player.transform.position + (player.transform.forward * 500) + Random.insideUnitSphere * 500);
         }
         waveInProgress = true;
     }

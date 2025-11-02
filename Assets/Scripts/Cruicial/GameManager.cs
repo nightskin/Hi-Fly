@@ -62,8 +62,33 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         CloseUpgradeMenu();
-        InputManager.input.Player.Pause.performed += Pause_performed;
-        InputManager.input.Player.UnPause.performed += UnPause_performed;
+        InputManager.input.UI.Pause.performed += Pause_performed;
+        InputManager.input.UI.UnPause.performed += UnPause_performed;
+        InputManager.input.UI.ChangeUISelectorToGamepad.performed += ChangeUISelectorGamepad_performed;
+        InputManager.input.UI.ChangeUISelectorToMouse.performed += ChangeUISelectorToMouse_performed;
+    }
+
+    private void ChangeUISelectorToMouse_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        if(gamePaused || gameOver)
+        {
+            eventSystem.firstSelectedGameObject = null;
+        }
+    }
+
+    private void ChangeUISelectorGamepad_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        if (gamePaused || gameOver)
+        {
+            if(gamePauseMenu.activeSelf)
+            {
+                eventSystem.SetSelectedGameObject(gamePauseMenu.transform.GetChild(0).transform.GetChild(1).gameObject);
+            }
+            else if(gameOverMenu.activeSelf)
+            {
+                eventSystem.SetSelectedGameObject(gameOverSelectedObject);
+            }
+        }
     }
 
     private void UnPause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -118,8 +143,10 @@ public class GameManager : MonoBehaviour
 
     void OnDestroy()
     {
-        InputManager.input.Player.Pause.performed -= Pause_performed;
-        InputManager.input.Player.UnPause.performed -= UnPause_performed;
+        InputManager.input.UI.Pause.performed -= Pause_performed;
+        InputManager.input.UI.UnPause.performed -= UnPause_performed;
+        InputManager.input.UI.ChangeUISelectorToGamepad.performed -= ChangeUISelectorGamepad_performed;
+        InputManager.input.UI.ChangeUISelectorToMouse.performed -= ChangeUISelectorToMouse_performed;
     }
     
     public void Pause()
@@ -174,6 +201,7 @@ public class GameManager : MonoBehaviour
     {
         if (upgradeMenu)
         {
+            Time.timeScale = 0;
             Cursor.visible = true;
             gamePaused = true;
             foreach (GameObject playerUI in playerUIToHideOnPause)
@@ -188,6 +216,7 @@ public class GameManager : MonoBehaviour
     {
         if (upgradeMenu)
         {
+            Time.timeScale = 1;
             Cursor.visible = false;
             gamePaused = false;
             foreach (GameObject playerUI in playerUIToHideOnPause)

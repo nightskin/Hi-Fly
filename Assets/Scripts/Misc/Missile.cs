@@ -48,7 +48,7 @@ public class Missile : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.deltaTime);
                 if(Vector3.Distance(transform.position, homingTarget.position) < 1.0f)
                 {
-                    GameManager.Get().objectPool.SpawnFromObjectPool("powerBombExplosion", transform.position);
+                    GameManager.Get().objectPool.Spawn("powerBombExplosion", transform.position);
                     DeSpawn();
                 }
             }
@@ -89,7 +89,7 @@ public class Missile : MonoBehaviour
         {
             if (rayhit.transform.gameObject != owner)
             {
-                var powerBombExplosion = GameManager.Get().objectPool.SpawnFromObjectPool("powerBombExplosion", transform.position);
+                var powerBombExplosion = GameManager.Get().objectPool.Spawn("powerBombExplosion", transform.position);
                 powerBombExplosion.GetComponent<PowerBomb>().damage = damage;
 
                 if (rayhit.transform.tag == "Destructible")

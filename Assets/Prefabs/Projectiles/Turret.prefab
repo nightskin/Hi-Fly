@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 8653942033786227808}
   - component: {fileID: 338980856536415229}
   - component: {fileID: 4356918672277597392}
-  - component: {fileID: -735006315025100010}
+  - component: {fileID: 350027310915966916}
+  - component: {fileID: 7853159348854811345}
   m_Layer: 0
-  m_Name: Orbiter
+  m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,7 +94,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-735006315025100010
+--- !u!114 &350027310915966916
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -102,9 +103,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 1664566241619017703}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0521db4df326bf3428669d5a8c001aeb, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ef955cfd1559524f99c9080502e95b7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Orbiter
+  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
+  healthBar: {fileID: 0}
+  text: {fileID: 0}
+  maxHP: 10
+  hitMaterial:
+  - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
+  - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
+  - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
+--- !u!114 &7853159348854811345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664566241619017703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5a5a5b42a8f68c4f8e3a495f6fb0792, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerTurret
   bulletSpawn: {fileID: 7746937801854185134}
   threshold: 0.25
   type: 0
