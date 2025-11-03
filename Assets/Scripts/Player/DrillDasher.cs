@@ -22,10 +22,10 @@ public class DrillDasher : MonoBehaviour
     void Update()
     {
         z += rotationSpd * Time.deltaTime;
-        Vector2 steerInput = InputManager.input.Player.Steer.ReadValue<Vector2>() * maxTurn;
+        Vector2 steerInput = InputManager.player.Steer.ReadValue<Vector2>() * maxTurn;
         transform.localEulerAngles = new Vector3(steerInput.y, steerInput.x, z);
 
-        if(InputManager.input.Player.Boost.IsPressed())
+        if(InputManager.player.Boost.IsPressed())
         {
             StartDrilling();
         }

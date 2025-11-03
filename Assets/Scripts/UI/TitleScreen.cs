@@ -5,7 +5,7 @@ public class TitleScreen : MonoBehaviour
 {
     void Start()
     {
-        InputManager.input.UI.StartGame.performed += StartGame_performed;    
+        InputManager.ui.StartGame.performed += StartGame_performed;    
     }
 
     void StartGame_performed(InputAction.CallbackContext obj)
@@ -15,6 +15,6 @@ public class TitleScreen : MonoBehaviour
 
     void OnDestroy()
     {
-        InputManager.input.UI.StartGame.performed -= StartGame_performed;
+        InputManager.ui.StartGame.performed -= StartGame_performed;
     }
 }

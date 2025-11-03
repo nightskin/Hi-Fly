@@ -30,33 +30,33 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] Transform bulletSpawn;
     [SerializeField] CharacterController controller;
     [SerializeField] Transform OnRailsFollowTarget;
-    
-    
+
+    //Flight variables
+    [HideInInspector] public float speed;
+    float targetSpeed;
     Vector3 offset = Vector3.one *  0.5f;
     Color thrustColor = Color.cyan;
     [SerializeField][Min(1)] float turnSpeed = 5;
-    [SerializeField] float baseStrafeSpeed = 25;
-    [SerializeField] float maxStrafeSpeed = 100;
     [SerializeField] float baseSpeed = 50;
     [SerializeField] float boostSpeed = 200;
     [SerializeField] float acceleration = 10;
-
-    public bool strafeMode = false;
-    bool boostWhileStrafing = false;
+    //Barrel Rolls
     bool evading = false;
     int evadeDirection = 0;
     float evadeTimer;
     float evadeSpeed = 360 * 5;
 
-    float targetSpeed;
+    //Strafe Mode
+    public bool strafeMode = false;
+    [SerializeField] float baseStrafeSpeed = 25;
+    [SerializeField] float maxStrafeSpeed = 100;
     float strafeSpeed;
-    [HideInInspector] public float speed;
+
 
     //For Shooting
     List<Transform> homingTargets = new List<Transform>();
     [SerializeField] Image reticle;
     [SerializeField] LayerMask lockOnLayer;
-    bool aimingViaGamepad = false;
     Vector2 reticlePosition;
     RaycastHit lockOn;
 
@@ -83,18 +83,15 @@ public class PlayerShip : MonoBehaviour
         controller = GetComponent<CharacterController>();
         targetSpeed = baseSpeed;
         strafeSpeed = baseStrafeSpeed;
-        InputManager.input.Player.Shoot.performed += Shoot_performed;
-        InputManager.input.Player.Shoot.canceled += Shoot_canceled;
-        InputManager.input.Player.Melee.performed += Melee_performed;
-        InputManager.input.Player.Melee.canceled += Melee_canceled;
-        InputManager.input.Player.Aim.performed += Gamepad_Aim_performed;
-        InputManager.input.Player.Mouse_Position.performed += Mouse_Aim_performed;
-        InputManager.input.Player.CenterCrosshair.performed += CenterCrosshair_performed;
-        InputManager.input.Player.ToggleStrafeMode.performed += StrafeMode_performed;
-        InputManager.input.Player.Boost.performed += Boost_performed;
-        InputManager.input.Player.Boost.canceled += Boost_canceled;
-        InputManager.input.Player.Roll.performed += Roll_performed;
-        InputManager.input.Player.Dash.performed += Dash_performed;
+        InputManager.player.Shoot.performed += Shoot_performed;
+        InputManager.player.Shoot.canceled += Shoot_canceled;
+        InputManager.player.CenterCrosshair.performed += CenterCrosshair;
+        InputManager.player.ToggleStrafeMode.performed += StrafeMode_performed;
+        InputManager.player.Boost.performed += Boost_performed;
+        InputManager.player.Boost.canceled += Boost_canceled;
+        InputManager.player.Roll.performed += Roll_performed;
+        InputManager.player.Dash.performed += Dash_performed;
+        InputManager.player.Dash.canceled += Dash_canceled;
 
         if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
         {
@@ -148,37 +145,28 @@ public class PlayerShip : MonoBehaviour
     }
     void OnDestroy()
     {
-        InputManager.input.Player.Shoot.performed -= Shoot_performed;
-        InputManager.input.Player.Shoot.canceled -= Shoot_canceled;
-        InputManager.input.Player.Melee.performed -= Melee_performed;
-        InputManager.input.Player.Melee.canceled -= Melee_canceled;
-        InputManager.input.Player.Aim.performed -= Gamepad_Aim_performed;
-        InputManager.input.Player.Mouse_Position.performed -= Mouse_Aim_performed;
-        InputManager.input.Player.CenterCrosshair.performed -= CenterCrosshair_performed;
-        InputManager.input.Player.ToggleStrafeMode.performed -= StrafeMode_performed;
-        InputManager.input.Player.Boost.performed -= Boost_performed;
-        InputManager.input.Player.Boost.canceled -= Boost_canceled;
-        InputManager.input.Player.Roll.performed -= Roll_performed;
-        InputManager.input.Player.Dash.performed -= Dash_performed;
+        InputManager.player.Shoot.performed -= Shoot_performed;
+        InputManager.player.Shoot.canceled -= Shoot_canceled;
+        InputManager.player.CenterCrosshair.performed -= CenterCrosshair;
+        InputManager.player.ToggleStrafeMode.performed -= StrafeMode_performed;
+        InputManager.player.Boost.performed -= Boost_performed;
+        InputManager.player.Boost.canceled -= Boost_canceled;
+        InputManager.player.Roll.performed -= Roll_performed;
+        InputManager.player.Dash.performed -= Dash_performed;
+        InputManager.player.Dash.canceled -= Dash_canceled;
     }
 
     private void Boost_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
         {
-            if (strafeMode)
+            if(!strafeMode)
             {
-                boostWhileStrafing = true;
+                thruster.emitting = true;
+                camera.boostEffect.Play();
+                thrustColor = Color.red;
+                targetSpeed = boostSpeed;
             }
-            else
-            {
-                boostWhileStrafing = false;
-            }
-            strafeMode = false;
-            thruster.emitting = true;
-            camera.boostEffect.Play();
-            thrustColor = Color.red;
-            targetSpeed = boostSpeed;
         }
     }
 
@@ -186,17 +174,12 @@ public class PlayerShip : MonoBehaviour
     {
         if(!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
         {
-            if(boostWhileStrafing)
+            if(!strafeMode)
             {
-                SetStrafeMode(true);
+                camera.boostEffect.Stop();
+                thrustColor = Color.cyan;
+                targetSpeed = baseSpeed;
             }
-            else
-            {
-                SetStrafeMode(false);
-            }
-            camera.boostEffect.Stop();
-            thrustColor = Color.cyan;
-            targetSpeed = baseSpeed;
         }
     }
     
@@ -251,17 +234,7 @@ public class PlayerShip : MonoBehaviour
 
         }
     }
-
-    private void Melee_performed(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        
-    }
-
-    private void Melee_canceled(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        
-    }
-
+    
     private void StrafeMode_performed(UnityEngine.InputSystem.InputAction.CallbackContext context) 
     {
         if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
@@ -280,22 +253,12 @@ public class PlayerShip : MonoBehaviour
         }
     }
     
-    private void CenterCrosshair_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void CenterCrosshair(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
         reticle.rectTransform.position = reticlePosition;
     }
-
-    private void Gamepad_Aim_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        aimingViaGamepad = true;
-    }
-
-    private void Mouse_Aim_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        aimingViaGamepad = false;
-    }
-
+    
     private void Roll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (!strafeMode)
@@ -311,10 +274,15 @@ public class PlayerShip : MonoBehaviour
     {
         if(strafeMode)
         {
-            evadeTimer = 0;
-            evading = true;
-            if (evadeDirection == 1) evadeDirection = -1;
-            else evadeDirection = 1;
+            strafeSpeed = maxStrafeSpeed;
+        }
+    }
+
+    private void Dash_canceled(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (strafeMode)
+        {
+            strafeSpeed = baseStrafeSpeed;
         }
     }
 
@@ -356,7 +324,7 @@ public class PlayerShip : MonoBehaviour
 
         OnRailsFollowTarget.transform.position += OnRailsFollowTarget.transform.forward * speed * Time.deltaTime;
 
-        Vector2 steer = InputManager.input.Player.Steer.ReadValue<Vector2>();
+        Vector2 steer = InputManager.player.Steer.ReadValue<Vector2>();
         offset += new Vector3(steer.x, steer.y, 0) * Time.deltaTime;
         offset.x = Mathf.Clamp01(offset.x);
         offset.y = Mathf.Clamp01(offset.y);
@@ -382,14 +350,14 @@ public class PlayerShip : MonoBehaviour
         }
 
         //Aiming
-        if (aimingViaGamepad)
+        if(InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD)
         {
-            reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * GameSettings.aimSensitivy * Time.deltaTime;
+            reticlePosition += InputManager.player.Aim.ReadValue<Vector2>() * GameSettings.aimSensitivy * Time.deltaTime;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;
         }
-        else
+        else if(InputManager.controlScheme == InputManager.ControlScheme.DESKTOP)
         {
             reticlePosition = Input.mousePosition;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
@@ -402,31 +370,17 @@ public class PlayerShip : MonoBehaviour
     void StrafeControls()
     {
         //Moving
-        float x = InputManager.input.Player.Steer.ReadValue<Vector2>().x;
-        float z = InputManager.input.Player.Steer.ReadValue<Vector2>().y;
-        float y = InputManager.input.Player.Ascend_Descend.ReadValue<float>();
+        float x = InputManager.player.Steer.ReadValue<Vector2>().x;
+        float z = InputManager.player.Steer.ReadValue<Vector2>().y;
+        float y = InputManager.player.Ascend_Descend.ReadValue<float>();
         controller.Move(((transform.forward * z) + (transform.right * x) + (transform.up * y)).normalized * strafeSpeed * Time.deltaTime);
 
-        //Evasion
-        if (evading)
-        {
-            mesh.localEulerAngles += new Vector3(0, 0, evadeDirection * evadeSpeed * Time.deltaTime);
-            evadeTimer += Time.deltaTime;
-            if (evadeTimer > 1)
-            {
-                strafeSpeed = baseStrafeSpeed;
-                evading = false;
-            }
-        }
-        else
-        {
-            mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, x * -45, 10 * Time.deltaTime));
-        }
+        mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, x * -45, 10 * Time.deltaTime));
 
 
         //Aiming
-        float lookX = InputManager.input.Player.Aim.ReadValue<Vector2>().x;
-        float lookY = InputManager.input.Player.Aim.ReadValue<Vector2>().y;
+        float lookX = InputManager.player.Aim.ReadValue<Vector2>().x;
+        float lookY = InputManager.player.Aim.ReadValue<Vector2>().y;
         transform.rotation *= Quaternion.AngleAxis(lookX * turnSpeed * Time.deltaTime, Vector3.up);
         transform.rotation *= Quaternion.AngleAxis(-lookY * turnSpeed * Time.deltaTime, Vector3.right);
     }
@@ -440,8 +394,8 @@ public class PlayerShip : MonoBehaviour
 
 
         //steering
-        float x = InputManager.input.Player.Steer.ReadValue<Vector2>().x;
-        float y = InputManager.input.Player.Steer.ReadValue<Vector2>().y;
+        float x = InputManager.player.Steer.ReadValue<Vector2>().x;
+        float y = InputManager.player.Steer.ReadValue<Vector2>().y;
 
 
         transform.rotation *= Quaternion.AngleAxis(x * turnSpeed * Time.deltaTime, Vector3.up);
@@ -469,14 +423,14 @@ public class PlayerShip : MonoBehaviour
         }
 
         //Aiming
-        if (aimingViaGamepad)
+        if (InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD)
         {
-            reticlePosition += InputManager.input.Player.Aim.ReadValue<Vector2>() * GameSettings.aimSensitivy * Time.deltaTime;
+            reticlePosition += InputManager.player.Aim.ReadValue<Vector2>() * GameSettings.aimSensitivy * Time.deltaTime;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
             reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
             reticle.rectTransform.position = reticlePosition;
         }
-        else
+        else if(InputManager.controlScheme == InputManager.ControlScheme.DESKTOP)
         {
             reticlePosition = Input.mousePosition;
             reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));

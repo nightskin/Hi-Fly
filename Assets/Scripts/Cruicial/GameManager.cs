@@ -62,10 +62,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         CloseUpgradeMenu();
-        InputManager.input.UI.Pause.performed += Pause_performed;
-        InputManager.input.UI.UnPause.performed += UnPause_performed;
-        InputManager.input.UI.ChangeUISelectorToGamepad.performed += ChangeUISelectorGamepad_performed;
-        InputManager.input.UI.ChangeUISelectorToMouse.performed += ChangeUISelectorToMouse_performed;
+        InputManager.ui.Pause.performed += Pause_performed;
+        InputManager.ui.UnPause.performed += UnPause_performed;
+        InputManager.ui.ChangeUISelectorToGamepad.performed += ChangeUISelectorGamepad_performed;
+        InputManager.ui.ChangeUISelectorToMouse.performed += ChangeUISelectorToMouse_performed;
     }
 
     private void ChangeUISelectorToMouse_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -143,10 +143,10 @@ public class GameManager : MonoBehaviour
 
     void OnDestroy()
     {
-        InputManager.input.UI.Pause.performed -= Pause_performed;
-        InputManager.input.UI.UnPause.performed -= UnPause_performed;
-        InputManager.input.UI.ChangeUISelectorToGamepad.performed -= ChangeUISelectorGamepad_performed;
-        InputManager.input.UI.ChangeUISelectorToMouse.performed -= ChangeUISelectorToMouse_performed;
+        InputManager.ui.Pause.performed -= Pause_performed;
+        InputManager.ui.UnPause.performed -= UnPause_performed;
+        InputManager.ui.ChangeUISelectorToGamepad.performed -= ChangeUISelectorGamepad_performed;
+        InputManager.ui.ChangeUISelectorToMouse.performed -= ChangeUISelectorToMouse_performed;
     }
     
     public void Pause()
