@@ -13338,25 +13338,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: 0
+  weapon: 2
   meleeWeapon: 0
   health: {fileID: 8131623140777354630}
   drillDasher: {fileID: 8153784042621796564}
   camera: {fileID: 8504905812486363887}
+  mesh: {fileID: 6654862522394362605}
   chargeEffect: {fileID: 2810059126631421823}
   thruster: {fileID: 6615905817508830574}
-  mesh: {fileID: 6654862522394362605}
   bulletSpawn: {fileID: 8436338386794596101}
   controller: {fileID: 9140705048856704088}
   OnRailsFollowTarget: {fileID: 436392920321828641}
+  speed: 0
+  boosting: 0
   turnSpeed: 100
-  baseStrafeSpeed: 25
-  maxStrafeSpeed: 100
   baseSpeed: 50
   boostSpeed: 200
   acceleration: 10
   strafeMode: 0
-  speed: 0
+  baseStrafeSpeed: 25
+  maxStrafeSpeed: 100
   reticle: {fileID: 6819837170954737498}
   lockOnLayer:
     serializedVersion: 2
@@ -14426,13 +14427,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f1486e85f23594fae9349d7213af31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 10
   boostEffect: {fileID: 1814296040985746741}
-  followSpeed: 10
-  maxFollowSpeed: 15
-  baseFollowSpeed: 10
   player: {fileID: 3438586877348045626}
   onRailsFollowTarget: {fileID: 436392920321828641}
+  offsetY: 3
+  maxDistanceFromPlayer: 10
+  cameraLerpSpeed: 10
 --- !u!1 &8571627249047061413
 GameObject:
   m_ObjectHideFlags: 0

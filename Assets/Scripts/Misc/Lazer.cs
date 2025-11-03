@@ -11,13 +11,18 @@ public class Lazer : MonoBehaviour
 
     [HideInInspector] public GameObject owner = null;
     public int damage = 5;
+    [SerializeField] float lerpSpeed = 1.0f;
     [HideInInspector] public Vector3 direction;
     [HideInInspector] public Vector3 origin;
 
     float collisionTimer;
+    float length;
+    float t;
 
     void OnEnable()
     {
+        t = 0;
+        length = 0;
         collisionTimer = 0;
         renderer.sharedMaterial.color = colors[colorIndex];
     }
@@ -26,9 +31,11 @@ public class Lazer : MonoBehaviour
     {
         if (!GameManager.Get().gamePaused)
         {
+            if(t < 1) t += lerpSpeed * Time.deltaTime;
+            length = Mathf.Lerp(length, Camera.main.farClipPlane, t);
             origin = owner.transform.position + owner.transform.forward;
             renderer.SetPosition(0, origin);
-            renderer.SetPosition(1, origin + (direction * Camera.main.farClipPlane));
+            renderer.SetPosition(1, origin + (direction * length));
 
 
             if (colorChangeTimer < 1)
@@ -64,7 +71,7 @@ public class Lazer : MonoBehaviour
     
     void CheckCollisions()
     {
-        if (Physics.SphereCast(origin, renderer.startWidth * renderer.widthMultiplier, direction, out RaycastHit rayHit, Camera.main.farClipPlane))
+        if (Physics.Linecast(origin, origin + (direction * length), out RaycastHit rayHit))
         {
             if (rayHit.transform.gameObject != owner)
             {

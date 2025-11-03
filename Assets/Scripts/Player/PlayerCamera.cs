@@ -2,29 +2,15 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
-    public float distance = 10;
     public ParticleSystem boostEffect;
-
-    [HideInInspector] public float followSpeed;
-    public float maxFollowSpeed = 40;
-    public float baseFollowSpeed = 10;
-
     public PlayerShip player;
     public Transform onRailsFollowTarget;
 
-    void Start()
-    {
-        if(player.strafeMode)
-        {
-            followSpeed = maxFollowSpeed;
-        }
-        else
-        {
-            followSpeed = baseFollowSpeed;
-        }
+    [SerializeField] float offsetY = 3;
+    public float maxDistanceFromPlayer = 10;
+    public float cameraLerpSpeed = 10;
 
-        if (!boostEffect) boostEffect = transform.GetChild(0).GetComponent<ParticleSystem>();
-    }
+    float t = 0;
 
     void Update()
     {
@@ -44,16 +30,29 @@ public class PlayerCamera : MonoBehaviour
     void FollowShip()
     {
         Quaternion targetRot = Quaternion.Euler(player.transform.localEulerAngles);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, followSpeed * Time.deltaTime);
-        Vector3 camPos = player.transform.position + (player.transform.up * 3) - (transform.forward * distance);
-        transform.position = Vector3.Lerp(transform.position, camPos, followSpeed * Time.deltaTime);
+        Vector3 camPos = player.transform.position + (player.transform.up * offsetY) - (transform.forward * maxDistanceFromPlayer);
+
+
+        if(player.strafeMode)
+        {
+            if (t < 1) t = Mathf.PingPong(Time.time, 1);
+            transform.position = Vector3.Lerp(transform.position, camPos, t);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, t);
+        }
+        else
+        {
+            if (t > 0) t = 0;
+            transform.position = Vector3.Lerp(transform.position, camPos, cameraLerpSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, cameraLerpSpeed * Time.deltaTime);
+        }
+
     }
 
     void FollowOnRailsTarget()
     {
         Quaternion targetRot = Quaternion.Euler(onRailsFollowTarget.localEulerAngles);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, followSpeed * Time.deltaTime);
-        Vector3 camPos = onRailsFollowTarget.position + (onRailsFollowTarget.up * 3) - (transform.forward * distance);
-        transform.position = Vector3.Lerp(transform.position, camPos, followSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, cameraLerpSpeed * Time.deltaTime);
+        Vector3 camPos = onRailsFollowTarget.position + (onRailsFollowTarget.up * 3) - (transform.forward * maxDistanceFromPlayer);
+        transform.position = Vector3.Lerp(transform.position, camPos, cameraLerpSpeed * Time.deltaTime);
     }
 }
