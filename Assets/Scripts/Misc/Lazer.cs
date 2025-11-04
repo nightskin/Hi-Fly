@@ -11,7 +11,7 @@ public class Lazer : MonoBehaviour
 
     [HideInInspector] public GameObject owner = null;
     public int damage = 5;
-    [SerializeField] float lerpSpeed = 1.0f;
+    public float speed = 0.01f;
     [HideInInspector] public Vector3 direction;
     [HideInInspector] public Vector3 origin;
 
@@ -31,7 +31,7 @@ public class Lazer : MonoBehaviour
     {
         if (!GameManager.Get().gamePaused)
         {
-            if(t < 1) t += lerpSpeed * Time.deltaTime;
+            if(t < 1) t += speed * Time.deltaTime;
             length = Mathf.Lerp(length, Camera.main.farClipPlane, t);
             origin = owner.transform.position + owner.transform.forward;
             renderer.SetPosition(0, origin);

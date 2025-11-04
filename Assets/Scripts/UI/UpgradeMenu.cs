@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Net.NetworkInformation;
 
 public class UpgradeMenu : MonoBehaviour
 {
@@ -37,128 +38,111 @@ public class UpgradeMenu : MonoBehaviour
             }
             else
             {
-                btn.onClick.AddListener(RepairShip);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Repair Ship";
+                btn.onClick.AddListener(ImproveBaseFirePower);
+                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Base Fire Power+";
             }
         }
+        //Improve Ranged Weapons
         else if (c == 1)
         {
-            bool b = Util.RandomBool();
-            if (GameManager.Get().playerShip.weapon == PlayerShip.RangedWeapon.CHARGE_MISSILE && b)
+            if (GameManager.Get().playerShip.rangedWeapon == PlayerShip.RangedWeapon.CHARGE_MISSILE)
             {
-                btn.onClick.AddListener(ImproveChargeSpeed);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Charge Rate+";
-            }
-            else if(GameManager.Get().playerShip.weapon == PlayerShip.RangedWeapon.CHARGE_MISSILE && !b)
-            {
-                btn.onClick.AddListener(ImproveMissilePower);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Missile Power+";
-            }
-            else
-            {
-                btn.onClick.AddListener(ImproveFirePower);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Fire Power+";
-            }
-        }
-        else if(c == 2)
-        {
-            int r = Random.Range(0, 3);
-            //Change Melee Weapon
-            if(r == 1)
-            {
-                if(GameManager.Get().playerShip.meleeWeapon == PlayerShip.MeleeWeapon.NONE)
+                int r = Random.Range(0, 3);
+                if(r== 0)
                 {
-                    btn.onClick.AddListener(GetDrillDasher);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Get Drill Dasher";
+                    btn.onClick.AddListener(ImproveChargeSpeed);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Charge Rate +";
+                }
+                else if(r == 1)
+                {
+                    btn.onClick.AddListener(ImproveMissilePower);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Charge Shot Power +";
+                }
+                else if(r == 2)
+                {
+                    btn.onClick.AddListener(ImproveBlastRadius);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Blast Radius +";
+                }
+            }
+            else if(GameManager.Get().playerShip.rangedWeapon == PlayerShip.RangedWeapon.RAVER_LAZER)
+            {
+                if(Util.RandomBool())
+                {
+                    btn.onClick.AddListener(ImproveLazerPower);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Lazer Power +";
                 }
                 else
                 {
-
+                    btn.onClick.AddListener(ImproveLazerSpeed);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Lazer Speed +";
+                }
+            }
+            else if (GameManager.Get().playerShip.rangedWeapon == PlayerShip.RangedWeapon.MULTI_SHOT)
+            {
+                int i = Random.Range(0, 4);
+                if(i == 0)
+                {
+                    if(GameManager.Get().playerShip.explodingBullets)
+                    {
+                        btn.onClick.AddListener(ImproveBlastRadius);
+                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Blast Radius +";
+                    }
+                    else
+                    {
+                        btn.onClick.AddListener(GetExplodingBullets);
+                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Exploding Bullets";
+                    }
+                }
+                else
+                {
+                    btn.onClick.AddListener(ImproveMultiShot);
+                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Max Targets +";
                 }
 
             }
-            // Change Primary Weapon
-            else if (r == 1)
+        }
+        //Get new Weapon
+        else if(c == 2)
+        {
+            int turretType = Random.Range(0, 4);
+            if (turretType == 0)
             {
-                //Change Primary Weapon
-                if (GameManager.Get().playerShip.weapon == PlayerShip.RangedWeapon.MULTI_SHOT)
-                {
-                    if (Util.RandomBool())
-                    {
-                        btn.onClick.AddListener(ChangeRangedWeaponToLazer);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Raver Lazer";
-                    }
-                    else
-                    {
-                        btn.onClick.AddListener(ChangeRangedWeaponToChargeBlaster);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Blaster";
-                    }
-                }
-                else if (GameManager.Get().playerShip.weapon == PlayerShip.RangedWeapon.CHARGE_MISSILE)
-                {
-                    if (Util.RandomBool())
-                    {
-                        btn.onClick.AddListener(ChangeRangedWeaponToLazer);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Raver Lazer";
-                    }
-                    else
-                    {
-                        btn.onClick.AddListener(ChangeRangedWeaponToBackToNormal);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Starting Weapon";
-                    }
-                }
-                else if (GameManager.Get().playerShip.weapon == PlayerShip.RangedWeapon.RAVER_LAZER)
-                {
-                    if (Util.RandomBool())
-                    {
-                        btn.onClick.AddListener(ChangeRangedWeaponToChargeBlaster);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Charge Blaster";
-                    }
-                    else
-                    {
-                        btn.onClick.AddListener(ChangeRangedWeaponToBackToNormal);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Equip Starting Weapon";
-                    }
-                }
+                btn.onClick.AddListener(AddBombTurret);
+                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Missile Orbiter";
             }
-            // Add Turret
-            if (r == 2)
+            else if (turretType == 1)
             {
-                int turretType = Random.Range(0, 3);
-                if (turretType == 0)
-                {
-                    btn.onClick.AddListener(AddBombTurret);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Missile Orbiter";
-                }
-                else if (turretType == 1)
-                {
-                    btn.onClick.AddListener(AddLazerTurret);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Lazer Orbiter";
-                }
-                else if (turretType == 2)
-                {
-                    btn.onClick.AddListener(AddNormalTurret);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Turret Orbiter";
-                }
+                btn.onClick.AddListener(AddLazerTurret);
+                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Lazer Orbiter";
+            }
+            else if (turretType == 2)
+            {
+                btn.onClick.AddListener(AddNormalTurret);
+                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Turret Orbiter";
+            }
+            else if(turretType == 3)
+            {
+                btn.onClick.AddListener(GetDrillDasher);
+                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Drill Dasher";
             }
         }
     }
     
     void ImproveMissilePower()
     {
-        GameManager.Get().playerShip.missilePower++;
+        GameManager.Get().playerShip.missileMult++;
         GameManager.Get().CloseUpgradeMenu();
     }
 
-    void ImproveFirePower()
+    void ImproveBaseFirePower()
     {
-        GameManager.Get().playerShip.firePower++;
+        GameManager.Get().playerShip.baseFirePower++;
         GameManager.Get().CloseUpgradeMenu();
     }
     
-    void RepairShip()
+    void ImproveBlastRadius()
     {
-        GameManager.Get().playerShip.health.Heal(GameManager.Get().playerShip.health.MaxHP());
+        GameManager.Get().playerShip.blastRadius += 5;
         GameManager.Get().CloseUpgradeMenu();
     }
 
@@ -174,21 +158,27 @@ public class UpgradeMenu : MonoBehaviour
         GameManager.Get().CloseUpgradeMenu();
     }
 
-    void ChangeRangedWeaponToLazer()
+    void ImproveLazerPower()
     {
-        GameManager.Get().playerShip.weapon = PlayerShip.RangedWeapon.RAVER_LAZER;
+        GameManager.Get().playerShip.lazerPower++;
         GameManager.Get().CloseUpgradeMenu();
     }
     
-    void ChangeRangedWeaponToBackToNormal()
+    void ImproveLazerSpeed()
     {
-        GameManager.Get().playerShip.weapon = PlayerShip.RangedWeapon.MULTI_SHOT;
+        GameManager.Get().playerShip.lazerSpeed += 0.01f;
         GameManager.Get().CloseUpgradeMenu();
     }
 
-    void ChangeRangedWeaponToChargeBlaster()
+    void ImproveMultiShot()
     {
-        GameManager.Get().playerShip.weapon = PlayerShip.RangedWeapon.CHARGE_MISSILE;
+        GameManager.Get().playerShip.maxTargets++;
+        GameManager.Get().CloseUpgradeMenu();
+    }
+
+    void GetExplodingBullets()
+    {
+        GameManager.Get().playerShip.explodingBullets = true;
         GameManager.Get().CloseUpgradeMenu();
     }
 

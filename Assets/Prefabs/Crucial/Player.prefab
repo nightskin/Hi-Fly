@@ -13338,7 +13338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: 2
+  weapon: 0
   meleeWeapon: 0
   health: {fileID: 8131623140777354630}
   drillDasher: {fileID: 8153784042621796564}

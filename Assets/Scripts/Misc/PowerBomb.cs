@@ -2,23 +2,24 @@ using UnityEngine;
 
 public class PowerBomb : MonoBehaviour
 {
-    [SerializeField][Min(0.1f)] float maxScale = 20;
-    [SerializeField][Min(1)] float shrinkRate = 5;
-    [SerializeField][Min(0)] float timeBeforeShrink = 1;
+    public float blastRadius = 20;
     public int damage = 30;
+
+
+    float shrinkRate = 5;
     float timer;
 
 
     void OnEnable()
     {
         timer = 0;
-        transform.localScale = Vector3.one * maxScale;
+        transform.localScale = Vector3.one * blastRadius;
     }
 
     void Update()
     {
         timer += Time.deltaTime;
-        if(timer >= timeBeforeShrink)
+        if(timer >= 1)
         {
             transform.localScale -= Vector3.one * shrinkRate * Time.deltaTime;
             if(transform.localScale.x <= 0)
@@ -35,6 +36,7 @@ public class PowerBomb : MonoBehaviour
             HealthSystem health = hit.GetComponent<HealthSystem>();
             if (health) health.TakeDamage(damage);
         }
+        
     }
 
 }

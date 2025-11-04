@@ -8,6 +8,7 @@ public class Missile : MonoBehaviour
     public float speed = 1000;
     public Vector3 direction;
     public int damage;
+    public float blastRadius = 20;
 
     BoxCollider box;
     AudioSource sfx;
@@ -91,22 +92,27 @@ public class Missile : MonoBehaviour
             {
                 var powerBombExplosion = GameManager.Get().objectPool.Spawn("powerBombExplosion", transform.position);
                 powerBombExplosion.GetComponent<PowerBomb>().damage = damage;
+                powerBombExplosion.GetComponent<PowerBomb>().blastRadius = blastRadius;
 
                 if (rayhit.transform.tag == "Destructible")
                 {
                     Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
-                        asteroid.RemoveBlocksInRadius(rayhit, 10);
+                        asteroid.RemoveBlocksInRadius(rayhit, blastRadius);
+                        DeSpawn();
                     }
                     DestructibleTerrainChunk terrain = rayhit.transform.GetComponent<DestructibleTerrainChunk>();
                     if (terrain)
                     {
                         terrain.TeraForm(rayhit, 1);
+                        DeSpawn();
                     }
                 }
-
-                DeSpawn();
+                else
+                {
+                    DeSpawn();
+                }
             }
         }
     }

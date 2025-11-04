@@ -179,7 +179,7 @@ MonoBehaviour:
   colorChangeRate: 2
   owner: {fileID: 0}
   damage: 5
-  lerpSpeed: 0.1
+  speed: 0.01
   direction: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}
 --- !u!82 &983199469248207979
