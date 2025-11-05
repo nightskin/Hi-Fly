@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 203844589}
   - component: {fileID: 203844588}
   - component: {fileID: 203844587}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Sun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -456,7 +456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Galaxy
   seed: None Piece
-  spawnAsteroidFieldChance: 5
+  spawnAsteroidFieldChance: 4
   quadrantSize: 1000
   numberOfQuadrants: {x: 10, y: 10}
   numberOfPlanets: 8

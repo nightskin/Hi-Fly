@@ -1,18 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.Collections.Generic;
 
 public class PlayerShip : MonoBehaviour
 {
-    public enum RangedWeapon
-    {
-        CHARGE_MISSILE,
-        MULTI_SHOT,
-        RAVER_LAZER,
-    }
-    public RangedWeapon rangedWeapon = RangedWeapon.CHARGE_MISSILE;
-    int rangedWeaponIndex = 0;
-
     public enum MeleeWeapon
     {
         NONE,
@@ -57,7 +49,16 @@ public class PlayerShip : MonoBehaviour
 
 
     //For Shooting
+    public enum RangedWeapon
+    {
+        CHARGE_MISSILE,
+        MULTI_SHOT,
+        RAVER_LAZER,
+    }
+    public RangedWeapon rangedWeapon = RangedWeapon.CHARGE_MISSILE;
+    int rangedWeaponIndex = 0;
     List<Transform> homingTargets = new List<Transform>();
+    [SerializeField] TextMeshProUGUI weaponText;
     [SerializeField] Image reticle;
     [SerializeField] LayerMask lockOnLayer;
     Vector2 reticlePosition;
@@ -70,7 +71,7 @@ public class PlayerShip : MonoBehaviour
     Lazer lazer = null;
 
     [HideInInspector] public float chargeSpeed = 1;
-    [HideInInspector]public int baseFirePower = 1;
+    [HideInInspector]public int baseFirePower = 3;
 
     [HideInInspector] public int missileMult = 2;
     [HideInInspector] public float blastRadius = 20;
@@ -83,6 +84,9 @@ public class PlayerShip : MonoBehaviour
     
     void Start()
     {
+        rangedWeapon = (RangedWeapon)rangedWeaponIndex;
+        weaponText.text = " Weapon: " + rangedWeapon.ToString();
+
         Cursor.visible = false;
         mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
         mesh.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameSettings.playerStripeColor);
@@ -333,6 +337,7 @@ public class PlayerShip : MonoBehaviour
 
         }
         rangedWeapon = (RangedWeapon)rangedWeaponIndex;
+        weaponText.text = " Weapon: " + rangedWeapon.ToString();
     }
 
     public void Teleport(Vector3 position)
