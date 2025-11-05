@@ -107,9 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 836ae75803f93094593366c10053b260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxScale: 20
-  shrinkRate: 20
-  timeBeforeShrink: 1
+  blastRadius: 10
   damage: 30
 --- !u!135 &6289166282623917522
 SphereCollider:

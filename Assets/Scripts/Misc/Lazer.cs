@@ -54,7 +54,7 @@ public class Lazer : MonoBehaviour
                 }
                 colorChangeTimer = 0;
             }
-            renderer.sharedMaterial.SetColor("_MainColor", Color.Lerp(renderer.sharedMaterial.GetColor("_MainColor"), colors[colorIndex], colorChangeTimer));
+            renderer.sharedMaterial.SetColor("_Color", Color.Lerp(renderer.sharedMaterial.GetColor("_Color"), colors[colorIndex], colorChangeTimer));
 
 
             if (collisionTimer <= 0)
@@ -67,8 +67,8 @@ public class Lazer : MonoBehaviour
                 collisionTimer -= Time.deltaTime;
             }
         }
-    }
-    
+    }   
+
     void CheckCollisions()
     {
         if (Physics.Linecast(origin, origin + (direction * length), out RaycastHit rayHit))

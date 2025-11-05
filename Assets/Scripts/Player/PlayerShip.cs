@@ -17,6 +17,7 @@ public class PlayerShip : MonoBehaviour
     public GameObject drillDasher;
     public PlayerCamera camera;
     public Transform mesh;
+    [SerializeField] Material chargeMaterial;
     [SerializeField] ParticleSystem chargeEffect;
     [SerializeField] TrailRenderer thruster;
     [SerializeField] Transform bulletSpawn;
@@ -35,7 +36,7 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] float acceleration = 10;
     
     //Barrel Rolls
-    bool evading = false;
+    [HideInInspector] public bool evading = false;
     int evadeDirection = 0;
     float evadeTimer;
     float evadeSpeed = 360 * 5;
@@ -51,11 +52,11 @@ public class PlayerShip : MonoBehaviour
     //For Shooting
     public enum RangedWeapon
     {
-        CHARGE_MISSILE,
+        CHARGE_BOMB,
         MULTI_SHOT,
         RAVER_LAZER,
     }
-    public RangedWeapon rangedWeapon = RangedWeapon.CHARGE_MISSILE;
+    public RangedWeapon rangedWeapon = RangedWeapon.CHARGE_BOMB;
     int rangedWeaponIndex = 0;
     List<Transform> homingTargets = new List<Transform>();
     [SerializeField] TextMeshProUGUI weaponText;
@@ -63,18 +64,17 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] LayerMask lockOnLayer;
     Vector2 reticlePosition;
     RaycastHit lockOn;
+    
 
-
-    [SerializeField] Material chargeMaterial;
     bool fireBtnHeldDown = false;
     float chargeAmount = 0;
     Lazer lazer = null;
 
-    [HideInInspector] public float chargeSpeed = 1;
-    [HideInInspector]public int baseFirePower = 3;
+    [HideInInspector] public float chargeSpeed = 0.5f;
+    [HideInInspector] public int baseFirePower = 3;
 
     [HideInInspector] public int missileMult = 2;
-    [HideInInspector] public float blastRadius = 20;
+    [HideInInspector] public float blastRadius = 10;
 
     [HideInInspector] public int lazerPower = 1;
     [HideInInspector] public float lazerSpeed = 0.01f;
@@ -124,6 +124,8 @@ public class PlayerShip : MonoBehaviour
         {
             reticle.color = Color.white;
         }
+
+
     }
     void Update()
     {
@@ -146,10 +148,10 @@ public class PlayerShip : MonoBehaviour
                 {
                     UpdateLazer();
                 }
-                else if (rangedWeapon == RangedWeapon.CHARGE_MISSILE)
+                else if (rangedWeapon == RangedWeapon.CHARGE_BOMB)
                 {
                     chargeAmount += chargeSpeed * Time.deltaTime;
-                    chargeMaterial.SetColor("_Color", Color.Lerp(Color.green, Color.red, chargeAmount / chargeSpeed));
+                    chargeMaterial.SetColor("_Color", Color.Lerp(Color.green * 2, Color.red * 2, chargeAmount / chargeSpeed));
                 }
                 else if(rangedWeapon == RangedWeapon.MULTI_SHOT)
                 {
@@ -169,6 +171,7 @@ public class PlayerShip : MonoBehaviour
         InputManager.player.Roll.performed -= Roll_performed;
         InputManager.player.Dash.performed -= Dash_performed;
         InputManager.player.Dash.canceled -= Dash_canceled;
+        InputManager.player.ToggleWeapon.performed -= ToggleWeapon_performed;
     }
 
     private void Boost_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -207,32 +210,29 @@ public class PlayerShip : MonoBehaviour
     private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         fireBtnHeldDown = true;
-        if (rangedWeapon == RangedWeapon.CHARGE_MISSILE)
+        if (rangedWeapon == RangedWeapon.MULTI_SHOT)
+        {
+            return;
+        }
+        else if (rangedWeapon == RangedWeapon.CHARGE_BOMB)
         {
             chargeAmount = 0;
             chargeEffect.gameObject.SetActive(true);
-            FireBullet();
         }
         else if(rangedWeapon == RangedWeapon.RAVER_LAZER)
         {
             FireLazer();
         }
-        else if(rangedWeapon == RangedWeapon.MULTI_SHOT)
-        {
-            FireBullet();
-        }
+
     }
     
     private void Shoot_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         fireBtnHeldDown = false;
-        if (rangedWeapon == RangedWeapon.CHARGE_MISSILE)
+        if (rangedWeapon == RangedWeapon.CHARGE_BOMB)
         {
-            if (chargeAmount >= 1)
-            {
-                FireMissile();
-            }
             chargeEffect.gameObject.SetActive(false);
+            FireChargeShot();
         }
         else if (rangedWeapon == RangedWeapon.RAVER_LAZER)
         {
@@ -516,6 +516,8 @@ public class PlayerShip : MonoBehaviour
             //Set Needed Variables
             b.damage = baseFirePower;
             b.owner = mesh.gameObject;
+            b.explosive = explodingBullets;
+            b.trail.material.SetColor("_Color", Color.white * Mathf.Pow(1, 2));
         
             if (lockOn.collider)
             {
@@ -548,37 +550,50 @@ public class PlayerShip : MonoBehaviour
 
     }
 
-    void FireMissile()
+    void FireChargeShot()
     {
         //Initialize Bullet
-        GameObject obj = GameManager.Get().objectPool.Spawn("missile", bulletSpawn.position);
+        GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
         if (obj != null)
         {
-            Missile m = obj.GetComponent<Missile>();
-            m.damage = baseFirePower * missileMult;
-            m.owner = mesh.gameObject;
-        
+            Bullet b = obj.GetComponent<Bullet>();
+            b.trail.material.SetColor("_Color", chargeMaterial.GetColor("_Color"));
+            b.owner = mesh.gameObject;
+            
+            if(chargeAmount >= 1)
+            {
+                b.explosive = true;
+                b.damage = baseFirePower * missileMult;
+                b.blastRadius = blastRadius;
+            }
+            else
+            {
+                b.damage = baseFirePower;
+                b.explosive = false;
+                b.blastRadius = 0;
+            }
+
             if (lockOn.collider)
             {
-                m.homingTarget = lockOn.collider.transform;
+                b.homingTarget = lockOn.collider.transform;
             }
             else
             {
                 Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    if (hit.transform.gameObject == m.owner)
+                    if (hit.transform.gameObject == b.owner)
                     {
-                        m.direction = ray.direction;
+                        b.direction = ray.direction;
                     }
                     else
                     {
-                        m.direction = (hit.point - bulletSpawn.position).normalized;
+                        b.direction = (hit.point - bulletSpawn.position).normalized;
                     }
                 }
                 else
                 {
-                    m.direction = ray.direction;
+                    b.direction = ray.direction;
                 }
             }
         }
@@ -586,7 +601,7 @@ public class PlayerShip : MonoBehaviour
 
     void FireLazer()
     {
-        if (lazer == null)
+        if (!lazer)
         {
             lazer = GameManager.Get().objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
             lazer.owner = mesh.gameObject;
@@ -631,14 +646,7 @@ public class PlayerShip : MonoBehaviour
         }
         else
         {
-            chargeAmount += chargeSpeed * Time.deltaTime;
-            chargeMaterial.SetColor("_Color", Color.Lerp(Color.green, Color.red, chargeAmount / chargeSpeed));
-            if (chargeAmount >= 1)
-            {
-                fireBtnHeldDown = false;
-                chargeEffect.gameObject.SetActive(false);
-                FireLazer();
-            }
+            FireLazer();
         }
     }
 }

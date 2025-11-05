@@ -45,7 +45,7 @@ public class UpgradeMenu : MonoBehaviour
         //Improve Ranged Weapons
         else if (c == 1)
         {
-            if (GameManager.Get().playerShip.rangedWeapon == PlayerShip.RangedWeapon.CHARGE_MISSILE)
+            if (GameManager.Get().playerShip.rangedWeapon == PlayerShip.RangedWeapon.CHARGE_BOMB)
             {
                 int r = Random.Range(0, 3);
                 if(r== 0)

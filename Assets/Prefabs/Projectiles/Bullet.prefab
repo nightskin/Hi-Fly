@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -1048180488164767668}
   - component: {fileID: -4044343467507740741}
   m_Layer: 0
-  m_Name: StandardBullet
+  m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -56,6 +56,8 @@ TrailRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -77,6 +79,7 @@ TrailRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -163,13 +166,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4671b1cbeeea7bf49b2d3f899a8394dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sfx: {fileID: -1048180488164767668}
+  trail: {fileID: 7305079670371382639}
   shootSound: {fileID: 8300000, guid: cea60a9edf8d0cb44978ac5dba39bc31, type: 3}
   hitSound: {fileID: 8300000, guid: 673b1d10e04d4da4b8cfc53eb2a28282, type: 3}
+  material: {fileID: 2100000, guid: 35a11f0f2716e224abfa290ad27b8134, type: 2}
+  intensity: 2
   lifetime: 5
-  owner: {fileID: 0}
   damage: 10
-  homingTarget: {fileID: 0}
   speed: 1000
+  blastRadius: 5
+  explosive: 0
+  homingTarget: {fileID: 0}
+  owner: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}
 --- !u!82 &-1048180488164767668
 AudioSource:
@@ -181,7 +190,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: cea60a9edf8d0cb44978ac5dba39bc31, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: cea60a9edf8d0cb44978ac5dba39bc31, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -280,3 +289,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14294570097fc6e40b58192ee5df4f31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audio: {fileID: -1048180488164767668}

@@ -156,10 +156,14 @@ public class EnemyShip : MonoBehaviour
 
     void Shoot()
     {
-        var b = GameManager.Get().objectPool.Spawn("bullet", transform.position + transform.forward);
-        b.GetComponent<Bullet>().direction = GetDirectionTowardsTarget();
-        b.GetComponent<Bullet>().owner = gameObject;
-        b.GetComponent<Bullet>().damage = attackPower;
+        var obj = GameManager.Get().objectPool.Spawn("bullet", transform.position + transform.forward);
+        var b = obj.GetComponent<Bullet>();
+        b.explosive = false;
+        b.direction = GetDirectionTowardsTarget();
+        b.owner = gameObject;
+        b.damage = attackPower;
+        b.trail.material.SetColor("_Color", Color.white * 2);
+
         shootTimer = Random.Range(0.1f, fireRate);
     }
     

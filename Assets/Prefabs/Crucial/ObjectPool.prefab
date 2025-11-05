@@ -56,19 +56,11 @@ MonoBehaviour:
   - name: explosion
     prefab: {fileID: 279913065598733499, guid: f9e0b7f63787b4f45960fd1168d67997, type: 3}
     size: 500
-  - name: missile
-    prefab: {fileID: 3058321018423864868, guid: 03ae3337d91e0b94c9e99a13e77fe0ca,
-      type: 3}
-    size: 100
   - name: powerBombExplosion
     prefab: {fileID: 8336328388692570255, guid: b2e9da4ade67bb34cbc154042c0bdd33,
       type: 3}
     size: 100
   - name: enemy
     prefab: {fileID: 1268243056916477701, guid: 7730e9c7f3d1e1e438c7c6c1b4eb907b,
-      type: 3}
-    size: 100
-  - name: turret
-    prefab: {fileID: 1664566241619017703, guid: 7bb70d2e465ea384c94e6adfad41d6f2,
       type: 3}
     size: 100

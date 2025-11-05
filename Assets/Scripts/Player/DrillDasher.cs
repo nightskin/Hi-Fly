@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DrillDasher : MonoBehaviour
 {
-    [HideInInspector] public bool inUse = false;
+    [SerializeField] BoxCollider collider;
     [SerializeField] Transform[] quadrants;
     [SerializeField] float maxTurn = 35;
     
@@ -12,6 +12,7 @@ public class DrillDasher : MonoBehaviour
 
     void Start()
     {
+        collider.enabled = false;
         startPositions = new Vector3[quadrants.Length];
         for (int i = 0; i < quadrants.Length; i++)
         {
@@ -25,7 +26,7 @@ public class DrillDasher : MonoBehaviour
         Vector2 steerInput = InputManager.player.Steer.ReadValue<Vector2>() * maxTurn;
         transform.localEulerAngles = new Vector3(steerInput.y, steerInput.x, z);
 
-        if(InputManager.player.Boost.IsPressed())
+        if(InputManager.player.Melee.IsPressed())
         {
             StartDrilling();
         }
@@ -37,22 +38,27 @@ public class DrillDasher : MonoBehaviour
 
     void StartDrilling()
     {
-        inUse = true;
         rotationSpd = 500;
         for (int i = 0; i < quadrants.Length; i++)
         {
             quadrants[i].transform.localPosition = Vector3.Lerp(quadrants[i].localPosition, Vector3.zero, 10 * Time.deltaTime);
         }
-        
+        if (quadrants[3].localPosition ==  Vector3.zero && !collider.enabled)
+        {
+            collider.enabled = true;
+        }
     }
 
     void StopDrilling()
     {
-        inUse = false;
         rotationSpd = 45;
         for (int i = 0; i < quadrants.Length; i++)
         {
             quadrants[i].transform.localPosition = Vector3.Lerp(quadrants[i].localPosition, startPositions[i], 10 * Time.deltaTime);
+        }
+        if (quadrants[3].localPosition == startPositions[3] && collider.enabled)
+        {
+            collider.enabled = false;
         }
     }
 

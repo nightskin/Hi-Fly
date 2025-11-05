@@ -4838,6 +4838,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4859,6 +4861,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -4904,7 +4907,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 2dc98d2f59eb6724ba81c1c2428b5e9d, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 2dc98d2f59eb6724ba81c1c2428b5e9d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -5016,3 +5019,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14294570097fc6e40b58192ee5df4f31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audio: {fileID: 2757920808048779928}

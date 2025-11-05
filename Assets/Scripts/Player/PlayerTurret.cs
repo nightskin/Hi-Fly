@@ -10,7 +10,8 @@ public class PlayerTurret : MonoBehaviour
 
     public PlayerShip.RangedWeapon type;
 
-    int damage;
+    [HideInInspector] public int damage;
+    [HideInInspector] public float blastRadius;
     float fireRate;
     float shootTimer = 1;
 
@@ -22,7 +23,7 @@ public class PlayerTurret : MonoBehaviour
             fireRate = 1;
             damage = 5;
         }
-        else if (type == PlayerShip.RangedWeapon.CHARGE_MISSILE)
+        else if (type == PlayerShip.RangedWeapon.CHARGE_BOMB)
         {
             fireRate = 0.5f;
             damage = 15;
@@ -47,15 +48,19 @@ public class PlayerTurret : MonoBehaviour
                 {
                     var obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                     var p = obj.GetComponent<Bullet>();
+                    p.explosive = false;
+                    p.blastRadius = 0;
                     p.damage = damage;
                     p.owner = GameManager.Get().playerShip.mesh.gameObject;
                     p.direction = heading;
                 }
-                else if (type == PlayerShip.RangedWeapon.CHARGE_MISSILE)
+                else if (type == PlayerShip.RangedWeapon.CHARGE_BOMB)
                 {
-                    var obj = GameManager.Get().objectPool.Spawn("missile", bulletSpawn.position);
-                    var p = obj.GetComponent<Missile>();
+                    var obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
+                    var p = obj.GetComponent<Bullet>();
                     p.owner = GameManager.Get().playerShip.mesh.gameObject;
+                    p.explosive = true;
+                    p.blastRadius = blastRadius;
                     p.damage = damage;
                     p.direction = heading;
                 }

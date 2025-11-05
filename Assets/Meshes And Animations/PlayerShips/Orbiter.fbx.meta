@@ -13,8 +13,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Internals
-    second: {fileID: -7805965318761107941, guid: 18ae574422c5acc48affa5d66c64ed43,
-      type: 3}
+    second: {fileID: 2100000, guid: bdb62bb2fb94a8a488708b385eb656b5, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
