@@ -48,8 +48,8 @@ public class Bullet : MonoBehaviour
         homingTarget = null;
         trail.emitting = false;
     }
-
-    void Update()
+    
+    void FixedUpdate()
     {
         if(!GameManager.Get().gamePaused)
         {
@@ -57,7 +57,7 @@ public class Bullet : MonoBehaviour
             prevPosition = transform.position;
             if (homingTarget)
             {
-                transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.fixedDeltaTime);
                 if(!hit)
                 {
                     if (Vector3.Distance(transform.position, homingTarget.position) < 1)
@@ -90,7 +90,7 @@ public class Bullet : MonoBehaviour
             }
             else
             {
-                transform.position += direction * speed * Time.deltaTime;
+                transform.position += direction * speed * Time.fixedDeltaTime;
             }
 
             //If bullet has not hit something check collisions
@@ -109,7 +109,7 @@ public class Bullet : MonoBehaviour
             //Destroy Bullet After A Certain Time has Past
             if (life > 0)
             {
-                life -= Time.deltaTime;
+                life -= Time.fixedDeltaTime;
             }
             else
             {
@@ -117,7 +117,7 @@ public class Bullet : MonoBehaviour
             }
         }
     }
-
+    
     void CheckCollisions()
     {
         if (Physics.Linecast(prevPosition, transform.position, out RaycastHit rayhit))

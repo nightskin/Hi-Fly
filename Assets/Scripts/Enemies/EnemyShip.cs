@@ -3,8 +3,6 @@ using UnityEngine;
 public class EnemyShip : MonoBehaviour
 {
     [SerializeField] EnemyDissolveEffect effect;
-    Transform target;
-
     [SerializeField] HealthSystem health;
     [SerializeField] LayerMask targetLayer;
     [SerializeField][Range(0, 1)] float shootThreshold = 0.75f;
@@ -25,7 +23,6 @@ public class EnemyShip : MonoBehaviour
     {
         isSmart = Util.RandomBool();
         effect.enabled = true;
-        target = GameManager.Get().playerShip.transform.GetChild(0);
         health = GetComponent<HealthSystem>();
         health.Heal(health.MaxHP());
         //Set colors
@@ -41,13 +38,23 @@ public class EnemyShip : MonoBehaviour
             {
                 if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
                 {
-                    FightOnRails();
+                    SteerOnRails();
                 }
                 else
                 {
-                    if (isSmart) Fight_Smart();
-                    else Fight_Dumb();
+                    if (isSmart) Steer_Smart();
+                    else Steer_Dumb();
                 }
+
+                shootTimer -= Time.deltaTime;
+                if (shootTimer <= 0 && !effect.enabled)
+                {
+                    if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) >= shootThreshold)
+                    {
+                        ShootAtPlayer();
+                    }
+                }
+
             }
             else
             {
@@ -89,23 +96,14 @@ public class EnemyShip : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void Fight_Smart()
+    void Steer_Smart()
     {
         direction = SteerTowardsTarget() + Seperation(avoidRadius);
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
-
-        shootTimer -= Time.deltaTime;
-        if (shootTimer <= 0 && !effect.enabled)
-        {
-            if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) >= shootThreshold)
-            {
-                Shoot();
-            }
-        }
     }
 
-    void Fight_Dumb()
+    void Steer_Dumb()
     {
         if (turnTimer > 0)
         {
@@ -119,20 +117,11 @@ public class EnemyShip : MonoBehaviour
 
         transform.rotation = Quaternion.LookRotation(Vector3.Lerp(transform.forward, direction, turnSpeed * Time.deltaTime));
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
-
-        shootTimer -= Time.deltaTime;
-        if (shootTimer <= 0 && !effect.enabled)
-        {
-            if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) >= shootThreshold)
-            {
-                Shoot();
-            }
-        }
     }
 
-    void FightOnRails()
+    void SteerOnRails()
     {
-        Vector3 heading = (transform.position - target.position).normalized;
+        Vector3 heading = GetDirectionTowardsTarget();
         if (Vector3.Dot(Camera.main.transform.forward, heading) > 0)
         {
             direction = SteerTowardsTarget();
@@ -144,7 +133,7 @@ public class EnemyShip : MonoBehaviour
             {
                 if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) > shootThreshold)
                 {
-                    Shoot();
+                    ShootAtPlayer();
                 }
             }
         }
@@ -154,9 +143,9 @@ public class EnemyShip : MonoBehaviour
         }
     }
 
-    void Shoot()
+    void ShootAtPlayer()
     {
-        var obj = GameManager.Get().objectPool.Spawn("bullet", transform.position + transform.forward);
+        var obj = GameManager.Get().objectPool.Spawn("bullet", transform.position);
         var b = obj.GetComponent<Bullet>();
         b.explosive = false;
         b.direction = GetDirectionTowardsTarget();
@@ -169,7 +158,7 @@ public class EnemyShip : MonoBehaviour
     
     Vector3 GetDirectionTowardsTarget()
     {
-        return (target.transform.position - transform.position).normalized;
+        return (GameManager.Get().playerShip.transform.position - transform.position).normalized;
     }
     
     Vector3 SteerTowardsTarget()

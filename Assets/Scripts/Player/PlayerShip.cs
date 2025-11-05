@@ -348,7 +348,7 @@ public class PlayerShip : MonoBehaviour
         controller.enabled = true;
     }
 
-    void SetStrafeMode(bool active)
+    public void SetStrafeMode(bool active)
     {
         strafeMode = active;
         if(strafeMode)
@@ -365,7 +365,7 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
-    void SetBoost(bool active)
+    public void SetBoost(bool active)
     {
         boosting = active;
         if(boosting)

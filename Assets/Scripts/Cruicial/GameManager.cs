@@ -124,19 +124,16 @@ public class GameManager : MonoBehaviour
                 {
                     playerUIToHideOnPause[i].SetActive(false);
                 }
-                playerShip.gameObject.SetActive(false);
+                if(playerShip.gameObject.activeSelf)
+                {
+                    playerShip.SetBoost(false);
+                    playerShip.gameObject.SetActive(false);
+                }
                 gameOverTimer -= Time.deltaTime;
             }
             else
             {
-                if (!gameOverActive)
-                {
-                    Cursor.visible = true;
-                    Cursor.lockState = CursorLockMode.None;
-                    gameOverMenu.SetActive(true);
-                    eventSystem.SetSelectedGameObject(gameOverSelectedObject);
-                    gameOverActive = true;
-                }   
+                OpenGameOverMenu();
             }
         }
     }
@@ -149,6 +146,19 @@ public class GameManager : MonoBehaviour
         InputManager.ui.ChangeUISelectorToMouse.performed -= ChangeUISelectorToMouse_performed;
     }
     
+    public void OpenGameOverMenu()
+    {
+        if (!gameOverActive)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            gameOverMenu.SetActive(true);
+            eventSystem.SetSelectedGameObject(gameOverSelectedObject);
+            gameOverActive = true;
+            
+        }
+    }
+
     public void Pause()
     {
         Time.timeScale = 0;
@@ -199,7 +209,7 @@ public class GameManager : MonoBehaviour
 
     public void OpenUpgradeMenu()
     {
-        if (upgradeMenu)
+        if (upgradeMenu && !gameOver)
         {
             Time.timeScale = 0;
             Cursor.visible = true;

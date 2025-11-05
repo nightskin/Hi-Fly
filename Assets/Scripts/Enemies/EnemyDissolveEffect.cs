@@ -9,8 +9,6 @@ public class EnemyDissolveEffect : MonoBehaviour
     void OnEnable()
     {
         if (!mesh && !skinnedMesh) return;
-
-
         t = 0;
 
         if (mesh)
