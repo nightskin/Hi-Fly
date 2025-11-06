@@ -3,20 +3,28 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
+public class HomingTarget
+{
+    public Transform followTarget;
+    public GameObject ui;
+
+    public HomingTarget(Transform transform, GameObject lockUI)
+    {
+        followTarget = transform;
+        ui = lockUI;
+    }
+
+}
+
 public class PlayerShip : MonoBehaviour
 {
-    public enum MeleeWeapon
-    {
-        NONE,
-        DRILL_DASHER,
-    }
-    [HideInInspector] public MeleeWeapon meleeWeapon = MeleeWeapon.NONE;
-
     //Necessary Components
     public HealthSystem health;
     public GameObject drillDasher;
     public PlayerCamera camera;
     public Transform mesh;
+    [SerializeField] GameObject lockUI;
+    [SerializeField] Transform hud;
     [SerializeField] Material chargeMaterial;
     [SerializeField] ParticleSystem chargeEffect;
     [SerializeField] TrailRenderer thruster;
@@ -48,6 +56,13 @@ public class PlayerShip : MonoBehaviour
     float strafeSpeed;
     bool boostWhileStrafing = false;
 
+    //For Melee
+    public enum MeleeWeapon
+    {
+        NONE,
+        DRILL_DASHER,
+    }
+    public MeleeWeapon meleeWeapon = MeleeWeapon.NONE;
 
     //For Shooting
     public enum RangedWeapon
@@ -57,14 +72,15 @@ public class PlayerShip : MonoBehaviour
         RAVER_LAZER,
     }
     public RangedWeapon rangedWeapon = RangedWeapon.CHARGE_BOMB;
-    int rangedWeaponIndex = 0;
-    List<Transform> homingTargets = new List<Transform>();
+    int rangedWeaponIndex;
+    
     [SerializeField] TextMeshProUGUI weaponText;
     [SerializeField] Image reticle;
     [SerializeField] LayerMask lockOnLayer;
     Vector2 reticlePosition;
     RaycastHit lockOn;
-    
+
+    [HideInInspector] public List<HomingTarget> targets = new List<HomingTarget>();
 
     bool fireBtnHeldDown = false;
     float chargeAmount = 0;
@@ -79,11 +95,19 @@ public class PlayerShip : MonoBehaviour
     [HideInInspector] public int lazerPower = 1;
     [HideInInspector] public float lazerSpeed = 0.01f;
     
-    [HideInInspector] public int maxTargets = 3;
+    [HideInInspector] public int maxTargets = 5;
     [HideInInspector] public bool explodingBullets = false;
     
     void Start()
     {
+        for (int i = 0; i < maxTargets; i++)
+        {
+            var l = Instantiate(lockUI, hud);
+            l.gameObject.SetActive(false);
+            targets.Add(new HomingTarget(null, l));
+        }
+
+        rangedWeaponIndex = 1;
         rangedWeapon = (RangedWeapon)rangedWeaponIndex;
         weaponText.text = " Weapon: " + rangedWeapon.ToString();
 
@@ -119,13 +143,34 @@ public class PlayerShip : MonoBehaviour
         if (Physics.SphereCast(ray, 4, out lockOn, Camera.main.farClipPlane, lockOnLayer))
         {
             reticle.color = Color.red;
+
+            if (fireBtnHeldDown && rangedWeapon == RangedWeapon.MULTI_SHOT)
+            {
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    bool alreadyTargeted = false;
+                    for(int j = 0 ; j < targets.Count; j++)
+                    {
+                        if (targets[j].followTarget == lockOn.transform)
+                        {
+                            alreadyTargeted = true;
+                            break;
+                        }
+                    }
+
+                    if (!targets[i].ui.activeSelf && !alreadyTargeted)
+                    {
+                        targets[i].followTarget = lockOn.transform;
+                        targets[i].ui.SetActive(true);
+                    }
+                }
+
+            }
         }
         else
         {
             reticle.color = Color.white;
         }
-
-
     }
     void Update()
     {
@@ -155,7 +200,25 @@ public class PlayerShip : MonoBehaviour
                 }
                 else if(rangedWeapon == RangedWeapon.MULTI_SHOT)
                 {
-                    
+                    for (int i = 0; i < targets.Count; i++)
+                    {
+                        if (targets[i].ui.activeSelf)
+                        {
+                            if (targets[i].followTarget)
+                            {
+                                Vector3 heading = (targets[i].followTarget.position - Camera.main.transform.position).normalized;
+                                if (Vector3.Dot(Camera.main.transform.forward, heading) > 0)
+                                {
+                                    targets[i].ui.transform.position = Camera.main.WorldToScreenPoint(targets[i].followTarget.position);
+                                }
+                                else
+                                {
+                                    targets[i].followTarget = null;
+                                }
+                            }
+
+                        }
+                    }
                 }
             }
         }
@@ -210,11 +273,7 @@ public class PlayerShip : MonoBehaviour
     private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         fireBtnHeldDown = true;
-        if (rangedWeapon == RangedWeapon.MULTI_SHOT)
-        {
-            return;
-        }
-        else if (rangedWeapon == RangedWeapon.CHARGE_BOMB)
+        if (rangedWeapon == RangedWeapon.CHARGE_BOMB)
         {
             chargeAmount = 0;
             chargeEffect.gameObject.SetActive(true);
@@ -223,7 +282,10 @@ public class PlayerShip : MonoBehaviour
         {
             FireLazer();
         }
+        else if (rangedWeapon == RangedWeapon.MULTI_SHOT)
+        {
 
+        }
     }
     
     private void Shoot_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -244,7 +306,7 @@ public class PlayerShip : MonoBehaviour
         }
         else if(rangedWeapon == RangedWeapon.MULTI_SHOT)
         {
-            if (homingTargets.Count > 0)
+            if (targets.Count > 0)
             {
                 FireHomingBullets();
             }
@@ -381,7 +443,7 @@ public class PlayerShip : MonoBehaviour
             targetSpeed = baseSpeed;
         }
     }
-
+    
     void OnRailsControls()
     {
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
@@ -510,7 +572,7 @@ public class PlayerShip : MonoBehaviour
     {
         //Initialize Bullet
         GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
-        if (obj != null)
+        if (obj)
         {
             Bullet b = obj.GetComponent<Bullet>();
             //Set Needed Variables
@@ -547,7 +609,24 @@ public class PlayerShip : MonoBehaviour
 
     void FireHomingBullets()
     {
+        for(int i = 0; i < targets.Count; i++)
+        {
+            GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
+            Bullet b = obj.GetComponent<Bullet>();
+            if(obj)
+            {
+                //Set Needed Variables
+                b.damage = baseFirePower;
+                b.owner = mesh.gameObject;
+                b.explosive = explodingBullets;
+                b.trail.material.SetColor("_Color", Color.white * Mathf.Pow(1, 2));
+                b.homingTarget = targets[i].followTarget;
+            }
 
+
+            targets[i].followTarget = null;
+            targets[i].ui.SetActive(false);
+        }
     }
 
     void FireChargeShot()
@@ -643,10 +722,6 @@ public class PlayerShip : MonoBehaviour
                     lazer.direction = ray.direction;
                 }
             }
-        }
-        else
-        {
-            FireLazer();
         }
     }
 }

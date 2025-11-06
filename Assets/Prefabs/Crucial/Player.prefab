@@ -13274,11 +13274,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea4411b3a1ef1479ce70d05fae9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meleeWeapon: 0
   health: {fileID: 8131623140777354630}
   drillDasher: {fileID: 8153784042621796564}
   camera: {fileID: 8504905812486363887}
   mesh: {fileID: 6654862522394362605}
+  lockUI: {fileID: 1722506613295537615, guid: ba686a2ed200db240a8ce6acd3aa5a98, type: 3}
+  hud: {fileID: 6819837170472286716}
   chargeMaterial: {fileID: 2100000, guid: 04fadf6323676cc4dab2dff141b385cc, type: 2}
   chargeEffect: {fileID: 2810059126631421823}
   thruster: {fileID: 6615905817508830574}
@@ -13295,7 +13296,8 @@ MonoBehaviour:
   strafeMode: 0
   baseStrafeSpeed: 25
   maxStrafeSpeed: 100
-  rangedWeapon: 0
+  meleeWeapon: 0
+  rangedWeapon: 1
   weaponText: {fileID: 6795800724227073974}
   reticle: {fileID: 6819837170954737498}
   lockOnLayer:
