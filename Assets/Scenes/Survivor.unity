@@ -962,9 +962,9 @@ MonoBehaviour:
   enemyPrefab: {fileID: 1268243056916477701, guid: 7730e9c7f3d1e1e438c7c6c1b4eb907b,
     type: 3}
   upgradeMenu: {fileID: 466299919}
-  startAmountOfEnemiesInWave: 5
+  startAmountOfEnemiesInWave: 10
   intervalBetweenWaves: 3
-  enemyIncrement: 1
+  enemyIncrement: 2
 --- !u!114 &4419068242589922780 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4419068241582400892, guid: 3502377a63101434aa59a6d9127fb3b5,

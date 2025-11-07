@@ -13309,7 +13309,7 @@ MonoBehaviour:
   blastRadius: 20
   lazerPower: 1
   lazerSpeed: 0.01
-  maxTargets: 3
+  maxTargets: 5
   explodingBullets: 0
 --- !u!143 &9140705048856704088
 CharacterController:
