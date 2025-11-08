@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Net.NetworkInformation;
 
 public class UpgradeMenu : MonoBehaviour
 {
@@ -101,10 +100,10 @@ public class UpgradeMenu : MonoBehaviour
 
             }
         }
-        //Get new Weapon
+        //Get Turret
         else if(c == 2)
         {
-            int turretType = Random.Range(0, 4);
+            int turretType = Random.Range(0, 3);
             if (turretType == 0)
             {
                 btn.onClick.AddListener(AddBombTurret);

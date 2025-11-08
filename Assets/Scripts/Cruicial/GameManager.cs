@@ -23,7 +23,10 @@ public class GameManager : MonoBehaviour
 
     //Other Stuff
     static GameManager instance;
+    [SerializeField] GameObject upgradeSelectedObject;
     [SerializeField] GameObject gameOverSelectedObject;
+    [SerializeField] GameObject gamePauseSelectedObject;
+    
     [SerializeField] GameObject upgradeMenu;
     [SerializeField] GameObject gameOverMenu;
     [SerializeField] GameObject gamePauseMenu;
@@ -38,8 +41,6 @@ public class GameManager : MonoBehaviour
     float gameOverTimer = 1;
     bool gameOverActive = false;
     
-
-
     public static GameManager Get()
     {
         return instance;
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
     {
         if(gamePaused || gameOver)
         {
-            eventSystem.firstSelectedGameObject = null;
+            if (eventSystem.currentSelectedGameObject) eventSystem.SetSelectedGameObject(null);
         }
     }
 
@@ -80,14 +81,18 @@ public class GameManager : MonoBehaviour
     {
         if (gamePaused || gameOver)
         {
-            if(gamePauseMenu.activeSelf)
+            if(eventSystem.currentSelectedGameObject == null)
             {
-                eventSystem.SetSelectedGameObject(gamePauseMenu.transform.GetChild(0).transform.GetChild(1).gameObject);
+                if (gamePauseMenu.activeSelf)
+                {
+                    eventSystem.SetSelectedGameObject(gamePauseSelectedObject);
+                }
+                else if (gameOverMenu.activeSelf)
+                {
+                    eventSystem.SetSelectedGameObject(gameOverSelectedObject);
+                }
             }
-            else if(gameOverMenu.activeSelf)
-            {
-                eventSystem.SetSelectedGameObject(gameOverSelectedObject);
-            }
+
         }
     }
 
@@ -153,9 +158,9 @@ public class GameManager : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             gameOverMenu.SetActive(true);
-            eventSystem.SetSelectedGameObject(gameOverSelectedObject);
+            if (InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD) eventSystem.SetSelectedGameObject(gameOverSelectedObject);
+            else eventSystem.SetSelectedGameObject(null);
             gameOverActive = true;
-            
         }
     }
 
@@ -167,7 +172,8 @@ public class GameManager : MonoBehaviour
         {
             playerUI.SetActive(false);
         }
-        eventSystem.SetSelectedGameObject(gamePauseMenu.transform.GetChild(0).transform.GetChild(1).gameObject);
+        if (InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD) eventSystem.SetSelectedGameObject(gamePauseSelectedObject);
+        else eventSystem.SetSelectedGameObject(null);
         gamePaused = true;
         gamePauseMenu.SetActive(gamePaused);
     }
@@ -219,6 +225,8 @@ public class GameManager : MonoBehaviour
                 playerUI.SetActive(false);
             }
             upgradeMenu.SetActive(true);
+            if (InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD) eventSystem.SetSelectedGameObject(upgradeSelectedObject);
+            else eventSystem.SetSelectedGameObject(null);
         }
     }
 
