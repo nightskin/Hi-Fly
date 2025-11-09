@@ -44,7 +44,7 @@ public class UpgradeMenu : MonoBehaviour
         //Improve Ranged Weapons
         else if (c == 1)
         {
-            if (GameManager.Get().playerShip.rangedWeapon == PlayerShip.RangedWeapon.CHARGE_BOMB)
+            if (GameManager.Get().playerShip.rangedWeapon == PlayerShip.Weapon.CHARGE_BOMB)
             {
                 int r = Random.Range(0, 3);
                 if(r== 0)
@@ -63,7 +63,7 @@ public class UpgradeMenu : MonoBehaviour
                     btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Blast Radius +";
                 }
             }
-            else if(GameManager.Get().playerShip.rangedWeapon == PlayerShip.RangedWeapon.RAVER_LAZER)
+            else if(GameManager.Get().playerShip.rangedWeapon == PlayerShip.Weapon.RAVER_LAZER)
             {
                 if(Util.RandomBool())
                 {
@@ -76,7 +76,7 @@ public class UpgradeMenu : MonoBehaviour
                     btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Lazer Speed +";
                 }
             }
-            else if (GameManager.Get().playerShip.rangedWeapon == PlayerShip.RangedWeapon.MULTI_SHOT)
+            else if (GameManager.Get().playerShip.rangedWeapon == PlayerShip.Weapon.MULTI_SHOT)
             {
                 int i = Random.Range(0, 4);
                 if(i == 0)

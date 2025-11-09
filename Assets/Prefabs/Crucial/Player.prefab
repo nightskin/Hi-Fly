@@ -14045,9 +14045,6 @@ MonoBehaviour:
   acceleration: 10
   evading: 0
   strafeMode: 0
-  baseStrafeSpeed: 25
-  maxStrafeSpeed: 100
-  meleeWeapon: 0
   rangedWeapon: 1
   weaponText: {fileID: 6795800724227073974}
   reticle: {fileID: 6819837170954737498}

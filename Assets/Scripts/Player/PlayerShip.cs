@@ -34,7 +34,7 @@ public class PlayerShip : MonoBehaviour
 
     //Flight variables
     [HideInInspector] public float speed;
-    float targetSpeed;
+    float thrustSpeed;
     Vector3 offset = Vector3.one *  0.5f;
     Color thrustColor = Color.cyan;
     [HideInInspector] public bool boosting = false;
@@ -51,27 +51,16 @@ public class PlayerShip : MonoBehaviour
 
     //Strafe Mode
     [HideInInspector] public bool strafeMode = false;
-    [SerializeField] float baseStrafeSpeed = 25;
-    [SerializeField] float maxStrafeSpeed = 100;
     float strafeSpeed;
-    bool boostWhileStrafing = false;
-
-    //For Melee
-    public enum MeleeWeapon
-    {
-        NONE,
-        DRILL_DASHER,
-    }
-    public MeleeWeapon meleeWeapon = MeleeWeapon.NONE;
 
     //For Shooting
-    public enum RangedWeapon
+    public enum Weapon
     {
         CHARGE_BOMB,
         MULTI_SHOT,
         RAVER_LAZER,
     }
-    public RangedWeapon rangedWeapon = RangedWeapon.CHARGE_BOMB;
+    public Weapon rangedWeapon = Weapon.CHARGE_BOMB;
     int rangedWeaponIndex;
     
     [SerializeField] TextMeshProUGUI weaponText;
@@ -116,8 +105,8 @@ public class PlayerShip : MonoBehaviour
         reticle.rectTransform.position = reticlePosition;
 
 
-        targetSpeed = baseSpeed;
-        strafeSpeed = baseStrafeSpeed;
+        thrustSpeed = baseSpeed;
+        strafeSpeed = baseSpeed;
         InputManager.player.Shoot.performed += Shoot_performed;
         InputManager.player.Shoot.canceled += Shoot_canceled;
         InputManager.player.CenterCrosshair.performed += CenterCrosshair;
@@ -125,8 +114,6 @@ public class PlayerShip : MonoBehaviour
         InputManager.player.Boost.performed += Boost_performed;
         InputManager.player.Boost.canceled += Boost_canceled;
         InputManager.player.Roll.performed += Roll_performed;
-        InputManager.player.Dash.performed += Dash_performed;
-        InputManager.player.Dash.canceled += Dash_canceled;
         InputManager.player.ToggleWeapon.performed += ToggleWeapon_performed;
 
         if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
@@ -141,7 +128,7 @@ public class PlayerShip : MonoBehaviour
         {
             reticle.color = Color.red;
 
-            if (rangedWeapon == RangedWeapon.MULTI_SHOT && InputManager.player.Shoot.IsPressed())
+            if (rangedWeapon == Weapon.MULTI_SHOT && InputManager.player.Shoot.IsPressed())
             {
                 for (int i = 0; i < targets.Count; i++)
                 {
@@ -185,16 +172,16 @@ public class PlayerShip : MonoBehaviour
             //Shooting
             if (InputManager.player.Shoot.IsPressed())
             {
-                if (rangedWeapon == RangedWeapon.RAVER_LAZER)
+                if (rangedWeapon == Weapon.RAVER_LAZER)
                 {
                     UpdateLazer();
                 }
-                else if (rangedWeapon == RangedWeapon.CHARGE_BOMB)
+                else if (rangedWeapon == Weapon.CHARGE_BOMB)
                 {
                     chargeAmount += chargeSpeed * Time.deltaTime;
                     chargeMaterial.SetColor("_Color", Color.Lerp(Color.green * 2, Color.red * 2, chargeAmount / chargeSpeed));
                 }
-                else if(rangedWeapon == RangedWeapon.MULTI_SHOT)
+                else if(rangedWeapon == Weapon.MULTI_SHOT)
                 {
                     for(int i = 0; i < targets.Count; i++)
                     {
@@ -230,8 +217,6 @@ public class PlayerShip : MonoBehaviour
         InputManager.player.Boost.performed -= Boost_performed;
         InputManager.player.Boost.canceled -= Boost_canceled;
         InputManager.player.Roll.performed -= Roll_performed;
-        InputManager.player.Dash.performed -= Dash_performed;
-        InputManager.player.Dash.canceled -= Dash_canceled;
         InputManager.player.ToggleWeapon.performed -= ToggleWeapon_performed;
     }
 
@@ -241,14 +226,12 @@ public class PlayerShip : MonoBehaviour
         {
             if (strafeMode)
             {
-                boostWhileStrafing = true;
-                SetStrafeMode(false);
+                strafeSpeed = boostSpeed;
             }
             else
             {
-                boostWhileStrafing = false;
+                SetBoost(true);
             }
-            SetBoost(true);
         }
     }
 
@@ -256,30 +239,30 @@ public class PlayerShip : MonoBehaviour
     {
         if(!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
         {
-            if(boostWhileStrafing)
+            if(strafeMode)
             {
-                SetStrafeMode(true);
+                strafeSpeed = baseSpeed;
             }
             else
             {
-                SetStrafeMode(false);
+                SetBoost(false);
             }
-            SetBoost(false);
+
         }
     }
     
     private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (rangedWeapon == RangedWeapon.CHARGE_BOMB)
+        if (rangedWeapon == Weapon.CHARGE_BOMB)
         {
             chargeAmount = 0;
             chargeEffect.gameObject.SetActive(true);
         }
-        else if(rangedWeapon == RangedWeapon.RAVER_LAZER)
+        else if(rangedWeapon == Weapon.RAVER_LAZER)
         {
             FireLazer();
         }
-        else if (rangedWeapon == RangedWeapon.MULTI_SHOT)
+        else if (rangedWeapon == Weapon.MULTI_SHOT)
         {
             FireBullet();
         }
@@ -287,12 +270,12 @@ public class PlayerShip : MonoBehaviour
     
     private void Shoot_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (rangedWeapon == RangedWeapon.CHARGE_BOMB)
+        if (rangedWeapon == Weapon.CHARGE_BOMB)
         {
             chargeEffect.gameObject.SetActive(false);
             FireChargeShot();
         }
-        else if (rangedWeapon == RangedWeapon.RAVER_LAZER)
+        else if (rangedWeapon == Weapon.RAVER_LAZER)
         {
             if (lazer)
             {
@@ -300,7 +283,7 @@ public class PlayerShip : MonoBehaviour
                 lazer = null;
             }
         }
-        else if (rangedWeapon == RangedWeapon.MULTI_SHOT)
+        else if (rangedWeapon == Weapon.MULTI_SHOT)
         {
             FireHomingBullets();
         }
@@ -317,7 +300,7 @@ public class PlayerShip : MonoBehaviour
                     SetStrafeMode(false);
                     if(camera.boostEffect.isPlaying) camera.boostEffect.Stop();
                     thrustColor = Color.cyan;
-                    targetSpeed = baseSpeed;
+                    thrustSpeed = baseSpeed;
                 }
                 else
                 {
@@ -343,23 +326,7 @@ public class PlayerShip : MonoBehaviour
             else evadeDirection = 1;
         }
     }
-
-    private void Dash_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if(strafeMode)
-        {
-            strafeSpeed = maxStrafeSpeed;
-        }
-    }
-
-    private void Dash_canceled(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        if (strafeMode)
-        {
-            strafeSpeed = baseStrafeSpeed;
-        }
-    }
-
+    
     private void ToggleWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         float v = obj.ReadValue<float>();
@@ -386,7 +353,7 @@ public class PlayerShip : MonoBehaviour
             }
 
         }
-        rangedWeapon = (RangedWeapon)rangedWeaponIndex;
+        rangedWeapon = (Weapon)rangedWeaponIndex;
         weaponText.text = " Weapon: " + rangedWeapon.ToString();
     }
 
@@ -403,14 +370,14 @@ public class PlayerShip : MonoBehaviour
         strafeMode = active;
         if(strafeMode)
         {
-            targetSpeed = baseSpeed;
+            thrustSpeed = baseSpeed;
             thruster.emitting = false;
             reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
             reticle.rectTransform.position = reticlePosition;
         }
         else
         {
-            targetSpeed = baseSpeed;
+            thrustSpeed = baseSpeed;
             thruster.emitting = true;
         }
     }
@@ -422,19 +389,19 @@ public class PlayerShip : MonoBehaviour
         {
             if (!camera.boostEffect.isPlaying) camera.boostEffect.Play();
             thrustColor = Color.red;
-            targetSpeed = boostSpeed;
+            thrustSpeed = boostSpeed;
         }
         else
         {
             if (camera.boostEffect.isPlaying) camera.boostEffect.Stop();
             thrustColor = Color.cyan;
-            targetSpeed = baseSpeed;
+            thrustSpeed = baseSpeed;
         }
     }
     
     void OnRailsControls()
     {
-        speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
+        speed = Mathf.Lerp(speed, thrustSpeed, acceleration * Time.deltaTime);
         thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
 
 
@@ -489,6 +456,7 @@ public class PlayerShip : MonoBehaviour
         float x = InputManager.player.Steer.ReadValue<Vector2>().x;
         float z = InputManager.player.Steer.ReadValue<Vector2>().y;
         float y = InputManager.player.Ascend_Descend.ReadValue<float>();
+
         controller.Move(((transform.forward * z) + (transform.right * x) + (transform.up * y)).normalized * strafeSpeed * Time.deltaTime);
 
 
@@ -505,7 +473,7 @@ public class PlayerShip : MonoBehaviour
     void AllRangeControls()
     {
         //Forward Movement
-        speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.deltaTime);
+        speed = Mathf.Lerp(speed, thrustSpeed, acceleration * Time.deltaTime);
         controller.Move(transform.forward * speed * Time.deltaTime);
         thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
 

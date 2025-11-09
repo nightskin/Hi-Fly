@@ -8,7 +8,7 @@ public class PlayerTurret : MonoBehaviour
     Transform target;
     Lazer lazer;
 
-    public PlayerShip.RangedWeapon type;
+    public PlayerShip.Weapon type;
 
     [HideInInspector] public int damage;
     [HideInInspector] public float blastRadius;
@@ -18,17 +18,17 @@ public class PlayerTurret : MonoBehaviour
     void OnEnable()
     {
         target = FindTarget();
-        if (type == PlayerShip.RangedWeapon.MULTI_SHOT)
+        if (type == PlayerShip.Weapon.MULTI_SHOT)
         {
             fireRate = 1;
             damage = 5;
         }
-        else if (type == PlayerShip.RangedWeapon.CHARGE_BOMB)
+        else if (type == PlayerShip.Weapon.CHARGE_BOMB)
         {
             fireRate = 0.5f;
             damage = 15;
         }
-        else if (type == PlayerShip.RangedWeapon.RAVER_LAZER)
+        else if (type == PlayerShip.Weapon.RAVER_LAZER)
         {
             fireRate = 2;
             damage = 2;
@@ -44,7 +44,7 @@ public class PlayerTurret : MonoBehaviour
             if(target)
             {
                 Vector3 heading = (target.position - bulletSpawn.position).normalized;
-                if (type == PlayerShip.RangedWeapon.MULTI_SHOT)
+                if (type == PlayerShip.Weapon.MULTI_SHOT)
                 {
                     var obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                     var p = obj.GetComponent<Bullet>();
@@ -54,7 +54,7 @@ public class PlayerTurret : MonoBehaviour
                     p.owner = GameManager.Get().playerShip.mesh.gameObject;
                     p.direction = heading;
                 }
-                else if (type == PlayerShip.RangedWeapon.CHARGE_BOMB)
+                else if (type == PlayerShip.Weapon.CHARGE_BOMB)
                 {
                     var obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                     var p = obj.GetComponent<Bullet>();

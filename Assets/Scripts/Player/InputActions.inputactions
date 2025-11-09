@@ -88,15 +88,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Dash",
-                    "type": "Button",
-                    "id": "f9aa2d87-cefb-448a-9584-a30589ed5f09",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "ToggleWeapon",
                     "type": "Value",
                     "id": "9577dd1f-4289-4c72-b286-6eb2adc96f94",
@@ -189,7 +180,7 @@
                     "id": "aa6dc2da-c0fd-47ae-80ea-eb39b50257da",
                     "path": "<Mouse>/delta",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "NormalizeVector2",
                     "groups": "KeyboardMouse",
                     "action": "Aim",
                     "isComposite": false,
@@ -352,7 +343,7 @@
                 {
                     "name": "negative",
                     "id": "9d33eeb8-b1cc-48e4-8b9a-304840342a39",
-                    "path": "<Keyboard>/ctrl",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
@@ -370,28 +361,6 @@
                     "action": "Ascend_Descend",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "3dbb6469-fd38-4e9b-84d1-52f349f4642f",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "85e1c64d-c658-40d4-89d3-c0e1493ba487",
-                    "path": "<Keyboard>/shift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "Dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 },
                 {
                     "name": "DpadV",

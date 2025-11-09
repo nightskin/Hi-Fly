@@ -35,13 +35,16 @@ public class PlayerCamera : MonoBehaviour
 
         if(player.strafeMode)
         {
-            if (t < 1) t = Mathf.PingPong(Time.time, 1);
+            Cursor.lockState = CursorLockMode.Locked;
+            t += Time.deltaTime;
+            t = Mathf.Clamp01(t);
             transform.position = Vector3.Lerp(transform.position, camPos, t);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, t);
         }
         else
         {
-            if (t > 0) t = 0;
+            Cursor.lockState = CursorLockMode.Confined;
+            t = 0;
             transform.position = Vector3.Lerp(transform.position, camPos, cameraLerpSpeed * Time.deltaTime);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, cameraLerpSpeed * Time.deltaTime);
         }

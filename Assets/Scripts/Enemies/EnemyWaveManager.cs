@@ -85,6 +85,7 @@ public class EnemyWaveManager : MonoBehaviour
             {
                 enemiesInCurrentWave += enemyIncrement;
                 waveInProgress = false;
+                GameManager.Get().playerShip.health.Heal(GameManager.Get().playerShip.health.MaxHP());
                 GameManager.Get().OpenUpgradeMenu();
             }
         }

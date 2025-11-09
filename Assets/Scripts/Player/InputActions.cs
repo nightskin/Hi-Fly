@@ -174,15 +174,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Dash"",
-                    ""type"": ""Button"",
-                    ""id"": ""f9aa2d87-cefb-448a-9584-a30589ed5f09"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""ToggleWeapon"",
                     ""type"": ""Value"",
                     ""id"": ""9577dd1f-4289-4c72-b286-6eb2adc96f94"",
@@ -275,7 +266,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""id"": ""aa6dc2da-c0fd-47ae-80ea-eb39b50257da"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""NormalizeVector2"",
                     ""groups"": ""KeyboardMouse"",
                     ""action"": ""Aim"",
                     ""isComposite"": false,
@@ -438,7 +429,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""9d33eeb8-b1cc-48e4-8b9a-304840342a39"",
-                    ""path"": ""<Keyboard>/ctrl"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
@@ -456,28 +447,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Ascend_Descend"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3dbb6469-fd38-4e9b-84d1-52f349f4642f"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Dash"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""85e1c64d-c658-40d4-89d3-c0e1493ba487"",
-                    ""path"": ""<Keyboard>/shift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardMouse"",
-                    ""action"": ""Dash"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""DpadV"",
@@ -1105,7 +1074,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_ToggleStrafeMode = m_Player.FindAction("ToggleStrafeMode", throwIfNotFound: true);
         m_Player_CenterCrosshair = m_Player.FindAction("CenterCrosshair", throwIfNotFound: true);
         m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
-        m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_ToggleWeapon = m_Player.FindAction("ToggleWeapon", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -1206,7 +1174,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ToggleStrafeMode;
     private readonly InputAction m_Player_CenterCrosshair;
     private readonly InputAction m_Player_Roll;
-    private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_ToggleWeapon;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
@@ -1255,10 +1222,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Roll".
         /// </summary>
         public InputAction @Roll => m_Wrapper.m_Player_Roll;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/Dash".
-        /// </summary>
-        public InputAction @Dash => m_Wrapper.m_Player_Dash;
         /// <summary>
         /// Provides access to the underlying input action "Player/ToggleWeapon".
         /// </summary>
@@ -1316,9 +1279,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Roll.started += instance.OnRoll;
             @Roll.performed += instance.OnRoll;
             @Roll.canceled += instance.OnRoll;
-            @Dash.started += instance.OnDash;
-            @Dash.performed += instance.OnDash;
-            @Dash.canceled += instance.OnDash;
             @ToggleWeapon.started += instance.OnToggleWeapon;
             @ToggleWeapon.performed += instance.OnToggleWeapon;
             @ToggleWeapon.canceled += instance.OnToggleWeapon;
@@ -1360,9 +1320,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Roll.started -= instance.OnRoll;
             @Roll.performed -= instance.OnRoll;
             @Roll.canceled -= instance.OnRoll;
-            @Dash.started -= instance.OnDash;
-            @Dash.performed -= instance.OnDash;
-            @Dash.canceled -= instance.OnDash;
             @ToggleWeapon.started -= instance.OnToggleWeapon;
             @ToggleWeapon.performed -= instance.OnToggleWeapon;
             @ToggleWeapon.canceled -= instance.OnToggleWeapon;
@@ -1657,13 +1614,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRoll(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Dash" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnDash(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "ToggleWeapon" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
