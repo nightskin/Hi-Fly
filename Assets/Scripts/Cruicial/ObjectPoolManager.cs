@@ -38,30 +38,7 @@ public class ObjectPoolManager : MonoBehaviour
                 }
             }
             // If none can be found Make one
-            GameObject obj = Instantiate(GetObjectPoolData(objectPoolName).prefab, position, Quaternion.identity, transform);
-        }
-        Debug.Log("Could Not Find Object Pool");
-        return null;
-    }
-
-    public GameObject Spawn(string objectPoolName, Vector3 position, Quaternion rotation)
-    {
-        Transform pool = transform.Find(objectPoolName);
-        if (pool)
-        {
-            //Find object Inside of pool
-            for (int i = 0; i < pool.childCount; i++)
-            {
-                if (!pool.GetChild(i).gameObject.activeSelf)
-                {
-                    pool.GetChild(i).transform.position = position;
-                    pool.GetChild(i).transform.rotation = rotation;
-                    pool.GetChild(i).gameObject.SetActive(true);
-                    return pool.GetChild(i).gameObject;
-                }
-            }
-            // If none can be found Make one
-            GameObject obj = Instantiate(GetObjectPoolData(objectPoolName).prefab, position, rotation, transform);
+            GameObject obj = Instantiate(GetObjectPoolData(objectPoolName).prefab, position, Quaternion.identity, pool);
         }
         Debug.Log("Could Not Find Object Pool");
         return null;

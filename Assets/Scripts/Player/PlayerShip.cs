@@ -27,22 +27,26 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] Transform hud;
     [SerializeField] Material chargeMaterial;
     [SerializeField] ParticleSystem chargeEffect;
-    [SerializeField] TrailRenderer thruster;
+    [SerializeField] Transform thruster;
+    [SerializeField] Material thrusterMaterial;
     [SerializeField] Transform bulletSpawn;
     [SerializeField] CharacterController controller;
     [SerializeField] Transform OnRailsFollowTarget;
 
     //Flight variables
+    float thrustScale = 0.25f;
+    float normalThrusterScale = 0.25f;
+    float boostThrusterScale = 2;
     [HideInInspector] public float speed;
     float thrustSpeed;
-    Vector3 offset = Vector3.one *  0.5f;
-    Color thrustColor = Color.cyan;
+    
     [HideInInspector] public bool boosting = false;
     [SerializeField][Min(1)] float turnSpeed = 100;
     [SerializeField] float baseSpeed = 50;
     [SerializeField] float boostSpeed = 200;
     [SerializeField] float acceleration = 10;
-    
+    Vector3 offset = Vector3.one *  0.5f;
+
     //Barrel Rolls
     [HideInInspector] public bool evading = false;
     int evadeDirection = 0;
@@ -51,7 +55,6 @@ public class PlayerShip : MonoBehaviour
 
     //Strafe Mode
     [HideInInspector] public bool strafeMode = false;
-    float strafeSpeed;
 
     //For Shooting
     public enum Weapon
@@ -103,16 +106,12 @@ public class PlayerShip : MonoBehaviour
 
         reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
         reticle.rectTransform.position = reticlePosition;
-
-
         thrustSpeed = baseSpeed;
-        strafeSpeed = baseSpeed;
+
         InputManager.player.Shoot.performed += Shoot_performed;
         InputManager.player.Shoot.canceled += Shoot_canceled;
         InputManager.player.CenterCrosshair.performed += CenterCrosshair;
         InputManager.player.ToggleStrafeMode.performed += StrafeMode_performed;
-        InputManager.player.Boost.performed += Boost_performed;
-        InputManager.player.Boost.canceled += Boost_canceled;
         InputManager.player.Roll.performed += Roll_performed;
         InputManager.player.ToggleWeapon.performed += ToggleWeapon_performed;
 
@@ -123,6 +122,10 @@ public class PlayerShip : MonoBehaviour
     }
     void FixedUpdate()
     {
+        speed = Mathf.Lerp(speed, thrustSpeed, acceleration * Time.fixedDeltaTime);
+        thruster.localScale = Vector3.Lerp(thruster.localScale, new Vector3(thruster.localScale.x, thruster.localScale.y, thrustScale), 5 * Time.fixedDeltaTime);
+
+
         Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
         if (Physics.SphereCast(ray, 4, out lockOn, Camera.main.farClipPlane, lockOnLayer))
         {
@@ -169,6 +172,15 @@ public class PlayerShip : MonoBehaviour
                 OnRailsControls();
             }
             
+            if(InputManager.player.Boost.IsPressed())
+            {
+                SetBoost(true);
+            }
+            else
+            {
+                SetBoost(false);
+            }
+
             //Shooting
             if (InputManager.player.Shoot.IsPressed())
             {
@@ -214,43 +226,10 @@ public class PlayerShip : MonoBehaviour
         InputManager.player.Shoot.canceled -= Shoot_canceled;
         InputManager.player.CenterCrosshair.performed -= CenterCrosshair;
         InputManager.player.ToggleStrafeMode.performed -= StrafeMode_performed;
-        InputManager.player.Boost.performed -= Boost_performed;
-        InputManager.player.Boost.canceled -= Boost_canceled;
         InputManager.player.Roll.performed -= Roll_performed;
         InputManager.player.ToggleWeapon.performed -= ToggleWeapon_performed;
     }
-
-    private void Boost_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
-        {
-            if (strafeMode)
-            {
-                strafeSpeed = boostSpeed;
-            }
-            else
-            {
-                SetBoost(true);
-            }
-        }
-    }
-
-    private void Boost_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if(!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
-        {
-            if(strafeMode)
-            {
-                strafeSpeed = baseSpeed;
-            }
-            else
-            {
-                SetBoost(false);
-            }
-
-        }
-    }
-    
+        
     private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (rangedWeapon == Weapon.CHARGE_BOMB)
@@ -299,7 +278,6 @@ public class PlayerShip : MonoBehaviour
                 {
                     SetStrafeMode(false);
                     if(camera.boostEffect.isPlaying) camera.boostEffect.Stop();
-                    thrustColor = Color.cyan;
                     thrustSpeed = baseSpeed;
                 }
                 else
@@ -371,14 +349,12 @@ public class PlayerShip : MonoBehaviour
         if(strafeMode)
         {
             thrustSpeed = baseSpeed;
-            thruster.emitting = false;
             reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
             reticle.rectTransform.position = reticlePosition;
         }
         else
         {
             thrustSpeed = baseSpeed;
-            thruster.emitting = true;
         }
     }
 
@@ -387,24 +363,38 @@ public class PlayerShip : MonoBehaviour
         boosting = active;
         if(boosting)
         {
-            if (!camera.boostEffect.isPlaying) camera.boostEffect.Play();
-            thrustColor = Color.red;
-            thrustSpeed = boostSpeed;
+            if(strafeMode)
+            {
+                if(InputManager.player.Steer.IsPressed() || InputManager.player.Ascend_Descend.IsPressed())
+                {
+                    if (!camera.boostEffect.isPlaying) camera.boostEffect.Play();
+                    thrustSpeed = boostSpeed;
+                    thrustScale = boostThrusterScale;
+                }
+                else
+                {
+                    if (camera.boostEffect.isPlaying) camera.boostEffect.Stop();
+                    thrustSpeed = baseSpeed;
+                    thrustScale = normalThrusterScale;
+                }
+            }
+            else
+            {
+                if (!camera.boostEffect.isPlaying) camera.boostEffect.Play();
+                thrustSpeed = boostSpeed;
+                thrustScale = boostThrusterScale;
+            }
         }
         else
         {
             if (camera.boostEffect.isPlaying) camera.boostEffect.Stop();
-            thrustColor = Color.cyan;
             thrustSpeed = baseSpeed;
+            thrustScale = normalThrusterScale;
         }
     }
     
     void OnRailsControls()
     {
-        speed = Mathf.Lerp(speed, thrustSpeed, acceleration * Time.deltaTime);
-        thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
-
-
         OnRailsFollowTarget.transform.position += OnRailsFollowTarget.transform.forward * speed * Time.deltaTime;
 
         Vector2 steer = InputManager.player.Steer.ReadValue<Vector2>();
@@ -457,9 +447,9 @@ public class PlayerShip : MonoBehaviour
         float z = InputManager.player.Steer.ReadValue<Vector2>().y;
         float y = InputManager.player.Ascend_Descend.ReadValue<float>();
 
-        controller.Move(((transform.forward * z) + (transform.right * x) + (transform.up * y)).normalized * strafeSpeed * Time.deltaTime);
 
 
+        controller.Move(((transform.forward * z) + (transform.right * x) + (transform.up * y)).normalized * speed * Time.deltaTime);
         mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, x * -45, 10 * Time.deltaTime));
 
 
@@ -473,9 +463,7 @@ public class PlayerShip : MonoBehaviour
     void AllRangeControls()
     {
         //Forward Movement
-        speed = Mathf.Lerp(speed, thrustSpeed, acceleration * Time.deltaTime);
         controller.Move(transform.forward * speed * Time.deltaTime);
-        thruster.endColor = Color.Lerp(thruster.endColor, thrustColor, 5 * Time.deltaTime);
 
 
         //steering

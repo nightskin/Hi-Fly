@@ -219,6 +219,7 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 0;
             Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             gamePaused = true;
             foreach (GameObject playerUI in playerUIToHideOnPause)
             {

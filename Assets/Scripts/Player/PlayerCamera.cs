@@ -12,6 +12,11 @@ public class PlayerCamera : MonoBehaviour
 
     float t = 0;
 
+    void Start()
+    {
+        InputManager.player.ToggleStrafeMode.performed += ToggleStrafeMode_performed;    
+    }
+
     void Update()
     {
         if (player.health.IsAlive() && !GameManager.Get().gamePaused)
@@ -27,24 +32,34 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
+    void OnDestroy()
+    {
+        InputManager.player.ToggleStrafeMode.performed -= ToggleStrafeMode_performed;
+    }
+
+    void ToggleStrafeMode_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        t = 0;
+    }
+
     void FollowShip()
     {
         Quaternion targetRot = Quaternion.Euler(player.transform.localEulerAngles);
         Vector3 camPos = player.transform.position + (player.transform.up * offsetY) - (transform.forward * maxDistanceFromPlayer);
 
-
         if(player.strafeMode)
         {
             Cursor.lockState = CursorLockMode.Locked;
             t += Time.deltaTime;
-            t = Mathf.Clamp01(t);
             transform.position = Vector3.Lerp(transform.position, camPos, t);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, t);
+
+
+
         }
         else
         {
             Cursor.lockState = CursorLockMode.Confined;
-            t = 0;
             transform.position = Vector3.Lerp(transform.position, camPos, cameraLerpSpeed * Time.deltaTime);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, cameraLerpSpeed * Time.deltaTime);
         }
