@@ -37,6 +37,16 @@ public static class Util
         return new Vector3(x, y, z);
     }
 
+    public static Vector4 RandomVector4(float min , float max)
+    {
+        float x = Random.Range(min, max);
+        float y = Random.Range(min, max);
+        float z = Random.Range(min, max);
+        float w = Random.Range(min, max);
+
+        return new Vector4(x, y, z, w);
+    }
+
     public static Vector3 RandomPositionInBox(Vector3 boxSize)
     {
         float x = Random.Range(-boxSize.x/2, boxSize.x/2);

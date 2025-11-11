@@ -141,7 +141,7 @@ public class Bullet : MonoBehaviour
                             asteroid.RemoveBlock(rayhit);
                             DeSpawn();
                         }
-                        PlanetGenerator planet = rayhit.transform.GetComponent<PlanetGenerator>();
+                        Planet planet = rayhit.transform.GetComponent<Planet>();
                         if(planet)
                         {
                             planet.RemoveBlock(rayhit);
@@ -211,7 +211,7 @@ public class Bullet : MonoBehaviour
                             asteroid.RemoveBlock(rayhit);
                             hit = true;
                         }
-                        PlanetGenerator planet = rayhit.transform.GetComponent<PlanetGenerator>();
+                        Planet planet = rayhit.transform.GetComponent<Planet>();
                         if(planet)
                         {
                             planet.RemoveBlock(rayhit);

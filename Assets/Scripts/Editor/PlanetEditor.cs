@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(PlanetGenerator))]
+[CustomEditor(typeof(Planet))]
 public class PlanetEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
-        PlanetGenerator planet = (PlanetGenerator)target;
+        Planet planet = (Planet)target;
 
         if(GUILayout.Button("Generate"))
         {

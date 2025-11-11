@@ -319,6 +319,42 @@ public class PlayerShip : MonoBehaviour
     
     private void ToggleWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
+        //Cancel Current Weapon
+        if (rangedWeapon == Weapon.CHARGE_BOMB)
+        {
+            chargeEffect.gameObject.SetActive(false);
+            FireChargeShot();
+        }
+        else if (rangedWeapon == Weapon.RAVER_LAZER)
+        {
+            if (lazer)
+            {
+                lazer.GetComponent<Lazer>().DeSpawn();
+                lazer = null;
+            }
+        }
+        else if (rangedWeapon == Weapon.MULTI_SHOT)
+        {
+            int targetCount = 0;
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i].followTarget)
+                {
+                    targetCount++;
+                }
+            }
+
+            if (targetCount > 0)
+            {
+                FireHomingBullets();
+            }
+            else
+            {
+                FireBullet();
+            }
+        }
+
+        //Then Change Weapon
         float v = obj.ReadValue<float>();
         if (v > 0)
         {

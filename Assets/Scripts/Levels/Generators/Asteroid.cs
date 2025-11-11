@@ -76,7 +76,6 @@ public class Asteroid : MonoBehaviour
         }
         else
         {
-
             verts.Clear();
             tris.Clear();
             uvs.Clear();
@@ -140,8 +139,8 @@ public class Asteroid : MonoBehaviour
                     Vector3 vertexPos = Voxel.MidPoint(points[a], points[b]);
                     verts.Add(vertexPos);
                     tris.Add(buffer);
-                    
-                    if(triIndex == 0)
+
+                    if (triIndex == 0)
                     {
                         triVerts[0] = vertexPos;
                         triIndex++;

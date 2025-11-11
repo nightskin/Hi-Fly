@@ -85,7 +85,7 @@ public class Lazer : MonoBehaviour
                         return;
                     }
 
-                    PlanetGenerator planet = rayHit.transform.GetComponent<PlanetGenerator>();
+                    Planet planet = rayHit.transform.GetComponent<Planet>();
                     if(planet)
                     {
                         planet.RemoveBlock(rayHit);

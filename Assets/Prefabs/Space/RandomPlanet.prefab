@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1475949699820372987
 Transform:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 1729277925219333819}
   - component: {fileID: 1324848329877054420}
   - component: {fileID: 651572770596543695}
-  - component: {fileID: 9107448966832154309}
+  - component: {fileID: 1632303130953425846}
   m_Layer: 0
   m_Name: RandomPlanet
   m_TagString: Destructible
@@ -203,7 +203,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &9107448966832154309
+--- !u!114 &1632303130953425846
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -212,10 +212,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6691990877626503176}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41e89089d428b7f49852b972886f8f64, type: 3}
+  m_Script: {fileID: 11500000, guid: a1b04c26c8e641e4b84f1c66cf150a66, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlanetGenerator
-  underGroundColor: {r: 0.49056602, g: 0.27446914, b: 0.04396581, a: 1}
-  landColor: {r: 0, g: 1, b: 0, a: 1}
-  voxelResolution: 25
-  voxelSize: 40
+  m_EditorClassIdentifier: Assembly-CSharp::Planet
+  planetMesh: {fileID: 1324848329877054420}
+  cloudMesh: {fileID: 6756953557179509165}
+  underGroundColor: {r: 0, g: 0, b: 0, a: 1}
+  cloudOffset: 10
+  voxelResolution: 20
+  voxelSize: 50

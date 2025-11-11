@@ -4,15 +4,17 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
-public class PlanetGenerator : MonoBehaviour
+public class Planet : MonoBehaviour
 {
+    [SerializeField] MeshRenderer planetMesh;
+    [SerializeField] MeshRenderer cloudMesh;
+
     Voxel[] voxels = null;
     float radius;
     float isoLevel = 0.5f;
 
     [SerializeField] Color underGroundColor;
-    [SerializeField] Color landColor;
-
+    [SerializeField] float cloudOffset = 10;
     public int voxelResolution = 10;
     public float voxelSize = 10;
 
@@ -44,7 +46,6 @@ public class PlanetGenerator : MonoBehaviour
 
     public void Generate()
     {
-        landColor = Util.RandomColor();
 
         verts.Clear(); 
         uvs.Clear(); 
@@ -59,12 +60,16 @@ public class PlanetGenerator : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
         UpdateMesh();
 
-        transform.GetChild(0).localScale = Vector3.one * (radius + voxelSize) * 2;
-        transform.GetChild(0).localPosition = Vector3.one * radius;
-        transform.GetChild(0).gameObject.isStatic = true;
-        transform.GetChild(0).GetComponent<MeshRenderer>().material.SetFloat("_Tiling", Random.Range(1.0f, 10.0f));
-        transform.GetChild(0).GetComponent<MeshRenderer>().material.SetFloat("_OffsetSpeed", Random.value);
-        transform.GetChild(0).GetComponent<MeshRenderer>().material.SetVector("_Offset", new Vector4(Random.value, Random.value));
+        planetMesh.material.SetColor("_LandColor", Util.RandomColor());
+        planetMesh.material.SetColor("_WaterColor", Util.RandomColor());
+        planetMesh.material.SetFloat("_Tiling", Random.Range(0.5f, 1));
+        planetMesh.material.SetVector("_Offset", Util.RandomVector4(-10,10));
+
+        cloudMesh.transform.localScale = Vector3.one * (radius + cloudOffset) * 2;
+        cloudMesh.transform.localPosition = Vector3.one * radius;
+        cloudMesh.transform.gameObject.isStatic = true;
+        cloudMesh.material.SetFloat("_Tiling", Random.Range(5f, 10f));
+
     }
 
     public void RemoveBlock(RaycastHit hit)
@@ -122,7 +127,7 @@ public class PlanetGenerator : MonoBehaviour
 
             if (distanceFromCenter > radius)
             {
-                voxels[i].color = landColor;
+                voxels[i].color = Color.white;
                 voxels[i].value = 0;
             }
             else
@@ -137,7 +142,7 @@ public class PlanetGenerator : MonoBehaviour
                 }
                 else
                 {
-                    voxels[i].color = landColor;
+                    voxels[i].color = Color.white;
                 }
 
             }
