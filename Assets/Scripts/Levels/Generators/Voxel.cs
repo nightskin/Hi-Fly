@@ -19,8 +19,7 @@ using UnityEngine;
     {
         return ((int)(position.x / voxelSize)) + ((int)(position.y / voxelSize)  * voxelResolution) + ((int)(position.z / voxelSize) * voxelResolution * voxelResolution);
     }
-
-
+    
     public static Vector2[] GetUVs(Vector3 a, Vector3 b, Vector3 c, float voxelSize)
     {
         Vector3 s1 = b - a;
@@ -67,21 +66,7 @@ using UnityEngine;
         if (voxels[7].value > isoLevel) state |= 128;
         return state;
     }
-
-    public static int GetState(float[] values, float isoLevel)
-    {
-        int state = 0;
-        if (values[0] > isoLevel) state |= 1;
-        if (values[1] > isoLevel) state |= 2;
-        if (values[2] > isoLevel) state |= 4;
-        if (values[3] > isoLevel) state |= 8;
-        if (values[4] > isoLevel) state |= 16;
-        if (values[5] > isoLevel) state |= 32;
-        if (values[6] > isoLevel) state |= 64;
-        if (values[7] > isoLevel) state |= 128;
-        return state;
-    }
-
+    
     public static int GetStateInverted(Voxel[] voxels, float isoLevel)
     {
         int state = 0;
@@ -95,21 +80,7 @@ using UnityEngine;
         if (voxels[7].value < isoLevel) state |= 128;
         return state;
     }
-
-    public static int GetStateInverted(float[] values, float isoLevel)
-    {
-        int state = 0;
-        if (values[0] < isoLevel) state |= 1;
-        if (values[1] < isoLevel) state |= 2;
-        if (values[2] < isoLevel) state |= 4;
-        if (values[3] < isoLevel) state |= 8;
-        if (values[4] < isoLevel) state |= 16;
-        if (values[5] < isoLevel) state |= 32;
-        if (values[6] < isoLevel) state |= 64;
-        if (values[7] < isoLevel) state |= 128;
-        return state;
-    }
-
+    
     public static Vector3 MidPoint(Voxel v1, Voxel v2)
     {
         return (v1.position + v2.position) / 2;

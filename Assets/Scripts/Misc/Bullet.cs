@@ -138,9 +138,15 @@ public class Bullet : MonoBehaviour
                         Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                         if (asteroid)
                         {
-                            asteroid.RemoveBlocksInRadius(rayhit, blastRadius / 2);
+                            asteroid.RemoveBlock(rayhit);
+                            DeSpawn();
                         }
-
+                        PlanetGenerator planet = rayhit.transform.GetComponent<PlanetGenerator>();
+                        if(planet)
+                        {
+                            planet.RemoveBlock(rayhit);
+                            DeSpawn();
+                        }
                     }
                     else if(rayhit.transform.tag == "Surface")
                     {
@@ -151,6 +157,7 @@ public class Bullet : MonoBehaviour
                             bomb.blastRadius = blastRadius;
                             bomb.damage = damage;
                         }
+                        DeSpawn();
                     }
                     else if(rayhit.transform.tag == "Enemy")
                     {
@@ -161,6 +168,7 @@ public class Bullet : MonoBehaviour
                             bomb.blastRadius = blastRadius;
                             bomb.damage = damage;
                         }
+                        DeSpawn();
                     }
                     else if(rayhit.transform.tag == "Drill")
                     {
@@ -187,9 +195,10 @@ public class Bullet : MonoBehaviour
                                 bomb.blastRadius = blastRadius;
                                 bomb.damage = damage;
                             }
+                            DeSpawn();
                         }
                     }
-                    DeSpawn();
+
                 }
                 else
                 {
@@ -202,7 +211,12 @@ public class Bullet : MonoBehaviour
                             asteroid.RemoveBlock(rayhit);
                             hit = true;
                         }
-                        return;
+                        PlanetGenerator planet = rayhit.transform.GetComponent<PlanetGenerator>();
+                        if(planet)
+                        {
+                            planet.RemoveBlock(rayhit);
+                            hit = true;
+                        }
                     }
                     else if (rayhit.transform.tag == "Surface")
                     {
@@ -247,7 +261,6 @@ public class Bullet : MonoBehaviour
                             sfx.clip = hitSound;
                             sfx.Play();
                         }
-
                     }
                     else if (rayhit.transform.tag == "Drill")
                     {

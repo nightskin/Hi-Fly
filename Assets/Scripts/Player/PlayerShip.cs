@@ -241,10 +241,6 @@ public class PlayerShip : MonoBehaviour
         {
             FireLazer();
         }
-        else if (rangedWeapon == Weapon.MULTI_SHOT)
-        {
-            FireBullet();
-        }
     }
     
     private void Shoot_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -264,7 +260,23 @@ public class PlayerShip : MonoBehaviour
         }
         else if (rangedWeapon == Weapon.MULTI_SHOT)
         {
-            FireHomingBullets();
+            int targetCount = 0;
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i].followTarget)
+                {
+                    targetCount++;
+                }
+            }
+
+            if(targetCount > 0)
+            {
+                FireHomingBullets();
+            }
+            else
+            {
+                FireBullet();
+            }
         }
     }
     

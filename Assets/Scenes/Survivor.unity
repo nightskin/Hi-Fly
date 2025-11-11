@@ -460,7 +460,8 @@ MonoBehaviour:
   quadrantSize: 1000
   numberOfQuadrants: {x: 10, y: 10}
   numberOfPlanets: 8
-  planetGeneratorPrefab: {fileID: 0}
+  planetGeneratorPrefab: {fileID: 6691990877626503176, guid: e1121d58d90e3e44da3f3102801c0aa7,
+    type: 3}
   asteroidFieldPrefab: {fileID: 8392389577210535039, guid: 3f6a0aaf88c483a46934fd2c16e95966,
     type: 3}
 --- !u!1 &356974604
@@ -928,7 +929,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2015928027
 Transform:
   m_ObjectHideFlags: 0
@@ -962,7 +963,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 1268243056916477701, guid: 7730e9c7f3d1e1e438c7c6c1b4eb907b,
     type: 3}
   upgradeMenu: {fileID: 466299919}
-  startAmountOfEnemiesInWave: 25
+  startAmountOfEnemiesInWave: 5
   intervalBetweenWaves: 3
   enemyIncrement: 1
 --- !u!114 &4419068242589922780 stripped
@@ -1034,11 +1035,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4419068241582400892, guid: 3502377a63101434aa59a6d9127fb3b5,
-        type: 3}
-      propertyPath: poolData.Array.data[4].size
-      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6929517734977390769, guid: 3502377a63101434aa59a6d9127fb3b5,
         type: 3}

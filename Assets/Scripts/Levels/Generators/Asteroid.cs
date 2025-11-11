@@ -85,35 +85,7 @@ public class Asteroid : MonoBehaviour
             UpdateMesh();
         }
     }
-
-    public void RemoveBlocksInRadius(RaycastHit hit, float radius)
-    {
-        Vector3 pos = transform.InverseTransformPoint(hit.point);
-        for (int i = 0; i < voxels.Length; i++)
-        {
-            if (Vector3.Distance(pos, voxels[i].position) <= radius)
-            {
-                voxels[i].value = -1;
-            }
-        }
-
-        if (BlocksGone())
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-
-            verts.Clear();
-            tris.Clear();
-            uvs.Clear();
-            buffer = 0;
-            CreateMeshData();
-            UpdateMesh();
-        }
-    }
-
-
+    
     void CreateVoxelData()
     {
         radius = Random.Range(voxelSize * (voxelResolution - 1) / 4, voxelSize * (voxelResolution - 1) / 2);

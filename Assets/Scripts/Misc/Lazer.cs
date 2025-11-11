@@ -84,6 +84,14 @@ public class Lazer : MonoBehaviour
                         asteroid.RemoveBlock(rayHit);
                         return;
                     }
+
+                    PlanetGenerator planet = rayHit.transform.GetComponent<PlanetGenerator>();
+                    if(planet)
+                    {
+                        planet.RemoveBlock(rayHit);
+                        return;
+                    }
+
                     DestructibleTerrainChunk terrain = rayHit.transform.GetComponent<DestructibleTerrainChunk>();
                     if (terrain)
                     {

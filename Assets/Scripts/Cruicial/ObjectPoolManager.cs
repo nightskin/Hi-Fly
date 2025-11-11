@@ -38,7 +38,7 @@ public class ObjectPoolManager : MonoBehaviour
                 }
             }
             // If none can be found Make one
-            GameObject obj = Instantiate(GetObjectPoolData(objectPoolName).prefab, position, Quaternion.identity, pool);
+            return Instantiate(GetObjectPoolData(objectPoolName).prefab, position, Quaternion.identity, pool);
         }
         Debug.Log("Could Not Find Object Pool");
         return null;
