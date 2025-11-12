@@ -62,13 +62,15 @@ public class Planet : MonoBehaviour
 
         planetMesh.material.SetColor("_LandColor", Util.RandomColor());
         planetMesh.material.SetColor("_WaterColor", Util.RandomColor());
-        planetMesh.material.SetFloat("_Tiling", Random.Range(0.5f, 1));
+        planetMesh.material.SetFloat("_NoiseScale", Random.Range(0.1f, 1f));
         planetMesh.material.SetVector("_Offset", Util.RandomVector4(-10,10));
 
         cloudMesh.transform.localScale = Vector3.one * (radius + cloudOffset) * 2;
         cloudMesh.transform.localPosition = Vector3.one * radius;
         cloudMesh.transform.gameObject.isStatic = true;
-        cloudMesh.material.SetFloat("_Tiling", Random.Range(5f, 10f));
+        cloudMesh.material.SetFloat("_Speed", Random.value);
+        cloudMesh.material.SetVector("_Offset", Util.RandomVector4(-1, 1));
+        cloudMesh.material.SetFloat("_NoiseScale", Random.Range(5, 10));
 
     }
 

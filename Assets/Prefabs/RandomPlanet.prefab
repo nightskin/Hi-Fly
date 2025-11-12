@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 1475949699820372987}
   - component: {fileID: 8911709788366450517}
   - component: {fileID: 6756953557179509165}
-  m_Layer: 0
+  - component: {fileID: 8195813408329037381}
+  m_Layer: 2
   m_Name: Clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1475949699820372987
 Transform:
   m_ObjectHideFlags: 0
@@ -89,6 +90,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &8195813408329037381
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3812983528150196001}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6691990877626503176
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,5 +241,5 @@ MonoBehaviour:
   cloudMesh: {fileID: 6756953557179509165}
   underGroundColor: {r: 0, g: 0, b: 0, a: 1}
   cloudOffset: 10
-  voxelResolution: 20
-  voxelSize: 50
+  voxelResolution: 25
+  voxelSize: 10

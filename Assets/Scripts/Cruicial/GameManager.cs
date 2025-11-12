@@ -57,12 +57,11 @@ public class GameManager : MonoBehaviour
 
         playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
-        
+
     }
 
     void Start()
     {
-        CloseUpgradeMenu();
         InputManager.ui.Pause.performed += Pause_performed;
         InputManager.ui.UnPause.performed += UnPause_performed;
         InputManager.ui.ChangeUISelectorToGamepad.performed += ChangeUISelectorGamepad_performed;
@@ -193,8 +192,6 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         Cursor.visible = false;
-        gameOver = false;
-        gamePaused = false;
         StartCoroutine(SceneLoader.instance.Load(SceneManager.GetActiveScene().buildIndex));
         Time.timeScale = 1;
     }
@@ -203,8 +200,6 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
         Cursor.visible = true;
-        gameOver = false;
-        gamePaused = false;
         StartCoroutine(SceneLoader.instance.Load("Title"));
     }
 
@@ -215,8 +210,9 @@ public class GameManager : MonoBehaviour
 
     public void OpenUpgradeMenu()
     {
-        if (upgradeMenu && !gameOver)
+        if (!gameOver)
         {
+            playerShip.health.Heal(playerShip.health.MaxHP());
             Time.timeScale = 0;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -233,22 +229,18 @@ public class GameManager : MonoBehaviour
 
     public void CloseUpgradeMenu()
     {
-        if (upgradeMenu)
+        Time.timeScale = 1;
+        Cursor.visible = false;
+        gamePaused = false;
+        foreach (GameObject playerUI in playerUIToHideOnPause)
         {
-            Time.timeScale = 1;
-            Cursor.visible = false;
-            gamePaused = false;
-            foreach (GameObject playerUI in playerUIToHideOnPause)
-            {
-                playerUI.SetActive(true);
-            }
-            upgradeMenu.SetActive(false);
+            playerUI.SetActive(true);
+        }
+        upgradeMenu.SetActive(false);
 
-            if(EnemyWaveManager.Get())
-            {
-                EnemyWaveManager.Get().UpdateUI();
-            }
-
+        if (EnemyWaveManager.Get())
+        {
+            EnemyWaveManager.Get().UpdateUI();
         }
     }
 }

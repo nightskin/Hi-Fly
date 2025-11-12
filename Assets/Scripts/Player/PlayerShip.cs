@@ -39,6 +39,7 @@ public class PlayerShip : MonoBehaviour
     float boostThrusterScale = 2;
     [HideInInspector] public float speed;
     float thrustSpeed;
+    Vector3 steer;
     
     [HideInInspector] public bool boosting = false;
     [SerializeField][Min(1)] float turnSpeed = 100;
@@ -75,7 +76,7 @@ public class PlayerShip : MonoBehaviour
     [HideInInspector] public List<HomingTarget> targets = new List<HomingTarget>();
     float chargeAmount = 0;
     Lazer lazer = null;
-
+    
     public float chargeSpeed = 0.5f;
     public int baseFirePower = 3;
 
@@ -171,8 +172,27 @@ public class PlayerShip : MonoBehaviour
             {
                 OnRailsControls();
             }
-            
-            if(InputManager.player.Boost.IsPressed())
+
+            steer.x = InputManager.player.Steer.ReadValue<Vector2>().x;
+            steer.y = InputManager.player.Steer.ReadValue<Vector2>().y;
+            steer.z = InputManager.player.Ascend_Descend.ReadValue<float>();
+
+            //Evading
+            if (evading)
+            {
+                mesh.localEulerAngles += new Vector3(0, 0, evadeDirection * evadeSpeed * Time.deltaTime);
+                evadeTimer += Time.deltaTime;
+                if (evadeTimer > 1)
+                {
+                    evading = false;
+                }
+            }
+            else
+            {
+                mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, steer.x * -45, 10 * Time.deltaTime));
+            }
+
+            if (InputManager.player.Boost.IsPressed())
             {
                 SetBoost(true);
             }
@@ -308,13 +328,10 @@ public class PlayerShip : MonoBehaviour
     
     private void Roll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (!strafeMode)
-        {
-            evadeTimer = 0;
-            evading = true;
-            if (evadeDirection == 1) evadeDirection = -1;
-            else evadeDirection = 1;
-        }
+        evadeTimer = 0;
+        evading = true;
+        if (evadeDirection == 1) evadeDirection = -1;
+        else evadeDirection = 1;
     }
     
     private void ToggleWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -323,7 +340,6 @@ public class PlayerShip : MonoBehaviour
         if (rangedWeapon == Weapon.CHARGE_BOMB)
         {
             chargeEffect.gameObject.SetActive(false);
-            FireChargeShot();
         }
         else if (rangedWeapon == Weapon.RAVER_LAZER)
         {
@@ -335,23 +351,12 @@ public class PlayerShip : MonoBehaviour
         }
         else if (rangedWeapon == Weapon.MULTI_SHOT)
         {
-            int targetCount = 0;
             for (int i = 0; i < targets.Count; i++)
             {
-                if (targets[i].followTarget)
-                {
-                    targetCount++;
-                }
+                targets[i].followTarget = null;
+                targets[i].ui.SetActive(false);
             }
 
-            if (targetCount > 0)
-            {
-                FireHomingBullets();
-            }
-            else
-            {
-                FireBullet();
-            }
         }
 
         //Then Change Weapon
@@ -445,7 +450,7 @@ public class PlayerShip : MonoBehaviour
     {
         OnRailsFollowTarget.transform.position += OnRailsFollowTarget.transform.forward * speed * Time.deltaTime;
 
-        Vector2 steer = InputManager.player.Steer.ReadValue<Vector2>();
+
         offset += new Vector3(steer.x, steer.y, 0) * Time.deltaTime;
         offset.x = Mathf.Clamp01(offset.x);
         offset.y = Mathf.Clamp01(offset.y);
@@ -454,21 +459,6 @@ public class PlayerShip : MonoBehaviour
 
         Vector3 offsetWorld = Camera.main.ViewportToWorldPoint(offset);
         transform.position = offsetWorld;
-
-        //Evading
-        if (evading)
-        {
-            mesh.localEulerAngles += new Vector3(0, 0, evadeDirection * evadeSpeed * Time.deltaTime);
-            evadeTimer += Time.deltaTime;
-            if (evadeTimer > 1)
-            {
-                evading = false;
-            }
-        }
-        else
-        {
-            mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, steer.x * -45, 10 * Time.deltaTime));
-        }
 
         //Aiming
         if(InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD)
@@ -491,15 +481,7 @@ public class PlayerShip : MonoBehaviour
     void StrafeControls()
     {
         //Moving
-        float x = InputManager.player.Steer.ReadValue<Vector2>().x;
-        float z = InputManager.player.Steer.ReadValue<Vector2>().y;
-        float y = InputManager.player.Ascend_Descend.ReadValue<float>();
-
-
-
-        controller.Move(((transform.forward * z) + (transform.right * x) + (transform.up * y)).normalized * speed * Time.deltaTime);
-        mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, x * -45, 10 * Time.deltaTime));
-
+        controller.Move(((transform.forward * steer.y) + (transform.right * steer.x) + (transform.up * steer.z)).normalized * speed * Time.deltaTime);
 
         //Aiming
         float lookX = InputManager.player.Aim.ReadValue<Vector2>().x;
@@ -513,35 +495,15 @@ public class PlayerShip : MonoBehaviour
         //Forward Movement
         controller.Move(transform.forward * speed * Time.deltaTime);
 
-
-        //steering
-        float x = InputManager.player.Steer.ReadValue<Vector2>().x;
-        float y = InputManager.player.Steer.ReadValue<Vector2>().y;
-
-
-        transform.rotation *= Quaternion.AngleAxis(x * turnSpeed * Time.deltaTime, Vector3.up);
-        transform.rotation *= Quaternion.AngleAxis(y * turnSpeed * Time.deltaTime, Vector3.right);
+        transform.rotation *= Quaternion.AngleAxis(steer.x * turnSpeed * Time.deltaTime, Vector3.up);
+        transform.rotation *= Quaternion.AngleAxis(steer.y * turnSpeed * Time.deltaTime, Vector3.right);
 
         //Auto Level
-        if (x == 0 && y == 0)
+        if (steer.magnitude == 0)
         {
             transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, 5 * Time.deltaTime));
         }
 
-        //Evasion
-        if (evading)
-        {
-            mesh.localEulerAngles += new Vector3(0, 0, evadeDirection * evadeSpeed * Time.deltaTime);
-            evadeTimer += Time.deltaTime;
-            if (evadeTimer > 1)
-            {
-                evading = false;
-            }
-        }
-        else
-        {
-            mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, x * -45, 10 * Time.deltaTime));
-        }
 
         //Aiming
         if (InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD)
@@ -571,6 +533,7 @@ public class PlayerShip : MonoBehaviour
             b.damage = baseFirePower;
             b.owner = mesh.gameObject;
             b.explosive = explodingBullets;
+            b.blastRadius = blastRadius;
             b.trail.material.SetColor("_Color", Color.white * 2);
         
             if (lockOn.collider)
@@ -611,6 +574,7 @@ public class PlayerShip : MonoBehaviour
                 b.damage = baseFirePower;
                 b.owner = mesh.gameObject;
                 b.explosive = explodingBullets;
+                b.blastRadius = blastRadius;
                 b.trail.material.SetColor("_Color", Color.white * 2);
                 b.homingTarget = targets[i].followTarget;
                 targets[i].followTarget = null;

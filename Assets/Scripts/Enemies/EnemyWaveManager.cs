@@ -4,11 +4,9 @@ using UnityEngine;
 public class EnemyWaveManager : MonoBehaviour
 {
     static EnemyWaveManager instance;
-    static PlayerShip player;
 
     [SerializeField] ObjectPoolManager objectPool;
     [SerializeField] TextMeshProUGUI waveInfo;
-    [SerializeField] GameObject enemyPrefab;
     [SerializeField] GameObject upgradeMenu;
 
     [SerializeField] int startAmountOfEnemiesInWave = 10;
@@ -16,10 +14,9 @@ public class EnemyWaveManager : MonoBehaviour
     [SerializeField] [Min(0)] int enemyIncrement = 1;
 
     
-    int currentWaveNumber = 0;
+    int currentWaveNumber = 1;
     int enemiesInCurrentWave;
-    
-    int enemiesDownedInTotal = 0;
+
     int enemiesDownedInCurrentWave = 0;
 
     bool waveInProgress = false;
@@ -39,22 +36,18 @@ public class EnemyWaveManager : MonoBehaviour
         return false;
     }
 
-    void StartWave()
+    public void StartWave()
     {
-        currentWaveNumber++;
-        enemiesDownedInCurrentWave = 0;
-        timeBeforeNextWave = intervalBetweenWaves;
-
         for (int i = 0; i < enemiesInCurrentWave; i++)
         {
-            objectPool.Spawn("enemy", player.transform.position + (player.transform.forward * 500) + Random.insideUnitSphere * 500);
+            Vector3 AheadOfPlayer = GameManager.Get().playerShip.transform.position + (GameManager.Get().playerShip.transform.forward * 500);
+            objectPool.Spawn("enemy", AheadOfPlayer + Random.insideUnitSphere * 500);
         }
         waveInProgress = true;
     }
 
     public void EnemyDowned()
     {
-        enemiesDownedInTotal++;
         enemiesDownedInCurrentWave++;
         UpdateUI();
     }
@@ -66,38 +59,42 @@ public class EnemyWaveManager : MonoBehaviour
 
     void Awake()
     {
-        instance = this;    
+        instance = this;
     }
 
     void Start()
     {
+        timeBeforeNextWave = intervalBetweenWaves;
         enemiesInCurrentWave = startAmountOfEnemiesInWave;
-        player = GameManager.Get().playerShip;
-        GameManager.Get().CloseUpgradeMenu();
-        StartWave();
+        UpdateUI();
     }
     
     void Update()
     {
-        if (waveInProgress)
+        if(!GameManager.Get().gameOver && !GameManager.Get().gamePaused)
         {
-            if (WaveComplete())
+            if (waveInProgress)
             {
-                enemiesInCurrentWave += enemyIncrement;
-                waveInProgress = false;
-                GameManager.Get().playerShip.health.Heal(GameManager.Get().playerShip.health.MaxHP());
-                GameManager.Get().OpenUpgradeMenu();
-            }
-        }
-        else
-        {
-            if(timeBeforeNextWave > 0 && !GameManager.Get().gamePaused)
-            {
-                timeBeforeNextWave -= Time.deltaTime;
+                if (WaveComplete())
+                {
+                    currentWaveNumber++;
+                    timeBeforeNextWave = intervalBetweenWaves;
+                    enemiesInCurrentWave += enemyIncrement;
+                    waveInProgress = false;
+                    enemiesDownedInCurrentWave = 0;
+                    GameManager.Get().OpenUpgradeMenu();
+                }
             }
             else
             {
-                StartWave();
+                if (timeBeforeNextWave > 0)
+                {
+                    timeBeforeNextWave -= Time.deltaTime;
+                }
+                else
+                {
+                    StartWave();
+                }
             }
         }
     }

@@ -6,7 +6,6 @@ public class EnemyShip : MonoBehaviour
     [SerializeField] HealthSystem health;
     [SerializeField] LayerMask targetLayer;
     [SerializeField][Range(0, 1)] float shootThreshold = 0.75f;
-    [SerializeField] float cohesionRadius = 100;
     [SerializeField] float avoidRadius = 10;
     [SerializeField] int attackPower = 10;
     [SerializeField] float turnSpeed = 10;
@@ -21,7 +20,7 @@ public class EnemyShip : MonoBehaviour
 
     void OnEnable()
     {
-        isSmart = Util.RandomBool();
+        isSmart = true;
         effect.enabled = true;
         health = GetComponent<HealthSystem>();
         health.Heal(health.MaxHP());
@@ -49,7 +48,7 @@ public class EnemyShip : MonoBehaviour
                 shootTimer -= Time.deltaTime;
                 if (shootTimer <= 0 && !effect.enabled)
                 {
-                    if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) >= shootThreshold)
+                    if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) > shootThreshold)
                     {
                         ShootAtPlayer();
                     }
@@ -98,7 +97,7 @@ public class EnemyShip : MonoBehaviour
 
     void Steer_Smart()
     {
-        direction = SteerTowardsTarget() + Seperation(avoidRadius);
+        direction = SteerTowardsTarget() + (Seperation(avoidRadius));
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
     }
@@ -182,7 +181,7 @@ public class EnemyShip : MonoBehaviour
                 }
             }
             steer /= colliders.Length;
-            return Vector3.Lerp(transform.forward, (transform.position - steer).normalized, turnSpeed * Time.deltaTime).normalized;
+            return Vector3.Lerp(transform.forward, (transform.position - steer).normalized, turnSpeed * Time.deltaTime);
         }
         return transform.forward;
     }

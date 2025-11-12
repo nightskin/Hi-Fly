@@ -7,7 +7,7 @@ public class HealthSystem : MonoBehaviour
     [SerializeField] Slider healthBar;
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] int maxHP = 100;
-    [SerializeField] Material[] hitMaterial;
+    [SerializeField] Material[] hitMaterials;
     
     int hp;
     bool flickering = false;
@@ -94,7 +94,7 @@ public class HealthSystem : MonoBehaviour
             text.text = hp.ToString() + "/" + maxHP.ToString();
         }
 
-        meshRenderer.materials = hitMaterial;        
+        meshRenderer.materials = hitMaterials;        
         flickerTimer = damageFlicker;
         flickering = true;
     }

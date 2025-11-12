@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7978833964992945737}
   - component: {fileID: -2206290432636866133}
   m_Layer: 6
-  m_Name: EnemyGrunt
+  m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -163,7 +163,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   shootThreshold: 0.5
-  cohesionRadius: 500
   avoidRadius: 5
   attackPower: 5
   turnSpeed: 10
@@ -182,8 +181,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBar: {fileID: 0}
-  maxHP: 15
-  hitMaterial:
+  text: {fileID: 0}
+  maxHP: 18
+  hitMaterials:
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}

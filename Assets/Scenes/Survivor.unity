@@ -960,8 +960,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectPool: {fileID: 4419068242589922780}
   waveInfo: {fileID: 1469801215}
-  enemyPrefab: {fileID: 1268243056916477701, guid: 7730e9c7f3d1e1e438c7c6c1b4eb907b,
-    type: 3}
   upgradeMenu: {fileID: 466299919}
   startAmountOfEnemiesInWave: 5
   intervalBetweenWaves: 3

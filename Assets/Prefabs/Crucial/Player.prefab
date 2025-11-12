@@ -12925,8 +12925,7 @@ MonoBehaviour:
   healthBar: {fileID: 8131623141203150216}
   text: {fileID: 4379383902657999379}
   maxHP: 100
-  hitMaterial:
-  - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
+  hitMaterials:
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
@@ -15228,7 +15227,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 10000
+  far clip plane: 5000
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5
