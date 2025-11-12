@@ -1,17 +1,19 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EnemyShip : MonoBehaviour
 {
+    [SerializeField] Transform bulletSpawn;
     [SerializeField] EnemyDissolveEffect effect;
     [SerializeField] HealthSystem health;
-    [SerializeField] LayerMask targetLayer;
     [SerializeField][Range(0, 1)] float shootThreshold = 0.75f;
-    [SerializeField] float avoidRadius = 10;
+    [SerializeField] float perceptionRadius = 20;
     [SerializeField] int attackPower = 10;
-    [SerializeField] float turnSpeed = 10;
+    [SerializeField] float turnRate = 10;
 
     [SerializeField] float fireRate = 1;
     [SerializeField] float moveSpeed = 75;
+
 
     bool isSmart;
     Vector3 direction;
@@ -20,7 +22,7 @@ public class EnemyShip : MonoBehaviour
 
     void OnEnable()
     {
-        isSmart = true;
+        isSmart = Util.RandomBool();
         effect.enabled = true;
         health = GetComponent<HealthSystem>();
         health.Heal(health.MaxHP());
@@ -62,7 +64,7 @@ public class EnemyShip : MonoBehaviour
         }
 
     }
-
+    
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
@@ -97,7 +99,7 @@ public class EnemyShip : MonoBehaviour
 
     void Steer_Smart()
     {
-        direction = SteerTowardsTarget() + (Seperation(avoidRadius));
+        direction = SteerTowardsTarget() + Seperation();
         transform.rotation = Quaternion.LookRotation(direction);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
     }
@@ -114,7 +116,7 @@ public class EnemyShip : MonoBehaviour
             direction = GetDirectionTowardsTarget();
         }
 
-        transform.rotation = Quaternion.LookRotation(Vector3.Lerp(transform.forward, direction, turnSpeed * Time.deltaTime));
+        transform.rotation = Quaternion.LookRotation(Vector3.Lerp(transform.forward, direction, turnRate * Time.deltaTime));
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
     }
 
@@ -144,15 +146,31 @@ public class EnemyShip : MonoBehaviour
 
     void ShootAtPlayer()
     {
-        var obj = GameManager.Get().objectPool.Spawn("bullet", transform.position);
-        var b = obj.GetComponent<Bullet>();
-        b.explosive = false;
-        b.direction = GetDirectionTowardsTarget();
-        b.owner = gameObject;
-        b.damage = attackPower;
-        b.trail.material.SetColor("_Color", Color.white * 2);
+        if(Physics.Linecast(transform.position, GameManager.Get().playerShip.transform.position,out RaycastHit hit))
+        {
+            if(hit.transform.tag == "Player")
+            {
+                var obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
+                var b = obj.GetComponent<Bullet>();
+                b.explosive = false;
+                b.direction = (hit.transform.position - bulletSpawn.position).normalized;
+                b.owner = gameObject;
+                b.damage = attackPower;
+                b.trail.material.SetColor("_Color", Color.white * 2);
 
-        shootTimer = Random.Range(0.1f, fireRate);
+            }
+            else if(hit.transform.tag == "Destructible")
+            {
+                var obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
+                var b = obj.GetComponent<Bullet>();
+                b.explosive = false;
+                b.direction = (hit.point - bulletSpawn.position).normalized;
+                b.owner = gameObject;
+                b.damage = attackPower;
+                b.trail.material.SetColor("_Color", Color.white * 2);
+            }
+            shootTimer = Random.Range(0, fireRate);
+        }
     }
     
     Vector3 GetDirectionTowardsTarget()
@@ -162,27 +180,33 @@ public class EnemyShip : MonoBehaviour
     
     Vector3 SteerTowardsTarget()
     {
-        return Vector3.Lerp(transform.forward, GetDirectionTowardsTarget(), turnSpeed * Time.deltaTime).normalized;
+        return Vector3.Lerp(transform.forward, GetDirectionTowardsTarget(), turnRate * Time.deltaTime).normalized;
     }
 
-    Vector3 Seperation(float radius)
+    Vector3 Seperation()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
-
-        Vector3 steer = transform.forward;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, perceptionRadius);
+        Vector3 steer = Vector3.zero;
         if (colliders.Length > 0)
         {
             foreach (Collider collider in colliders)
             {
-                if (Vector3.Dot(transform.forward, collider.transform.forward) >= 0)
+                if (Vector3.Dot(transform.forward, collider.transform.forward) >= shootThreshold)
                 {
-                    Vector3 pos = collider.transform.position;
-                    steer += pos;
+                    if(Physics.Linecast(transform.position, collider.transform.position, out RaycastHit hit))
+                    {
+                        steer += hit.point;
+                    }
+                    else
+                    {
+                        steer += collider.transform.position;
+                    }
                 }
             }
             steer /= colliders.Length;
-            return Vector3.Lerp(transform.forward, (transform.position - steer).normalized, turnSpeed * Time.deltaTime);
+            return Vector3.Lerp(transform.forward, (transform.position - steer).normalized, turnRate * Time.deltaTime).normalized;
         }
-        return transform.forward;
+        return steer;
     }
+
 }

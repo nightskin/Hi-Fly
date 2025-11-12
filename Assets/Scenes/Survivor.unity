@@ -961,7 +961,7 @@ MonoBehaviour:
   objectPool: {fileID: 4419068242589922780}
   waveInfo: {fileID: 1469801215}
   upgradeMenu: {fileID: 466299919}
-  startAmountOfEnemiesInWave: 5
+  startAmountOfEnemiesInWave: 10
   intervalBetweenWaves: 3
   enemyIncrement: 1
 --- !u!114 &4419068242589922780 stripped

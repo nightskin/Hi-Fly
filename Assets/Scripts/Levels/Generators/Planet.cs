@@ -13,7 +13,6 @@ public class Planet : MonoBehaviour
     float radius;
     float isoLevel = 0.5f;
 
-    [SerializeField] Color underGroundColor;
     [SerializeField] float cloudOffset = 10;
     public int voxelResolution = 10;
     public float voxelSize = 10;
@@ -140,7 +139,7 @@ public class Planet : MonoBehaviour
 
                 if (voxels[i].value > 0.65f)
                 {
-                    voxels[i].color = underGroundColor;
+                    voxels[i].color = Color.black;
                 }
                 else
                 {
@@ -210,7 +209,6 @@ public class Planet : MonoBehaviour
                 }
             }
         }
-
     }
 
     bool BlocksGone()

@@ -35,7 +35,8 @@ Transform:
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4074504933440886174}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3277986585595077146
@@ -157,15 +158,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b13d33fb715c2bc4eb8a704eb0adfb43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletSpawn: {fileID: 4074504933440886174}
   effect: {fileID: -2206290432636866133}
   health: {fileID: 7978833964992945737}
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  shootThreshold: 0.5
-  avoidRadius: 5
+  shootThreshold: 0.25
+  perceptionRadius: 5
   attackPower: 5
-  turnSpeed: 10
+  turnRate: 10
   fireRate: 3
   moveSpeed: 60
 --- !u!114 &7978833964992945737
@@ -203,3 +202,34 @@ MonoBehaviour:
   t: 0
   mesh: {fileID: 763720946152576720}
   skinnedMesh: {fileID: 0}
+--- !u!1 &3937820891849921352
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4074504933440886174}
+  m_Layer: 6
+  m_Name: BulletSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4074504933440886174
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3937820891849921352}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1932718222967893439}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
