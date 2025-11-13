@@ -392,7 +392,7 @@ public class PlayerShip : MonoBehaviour
     {
         controller.enabled = false;
         transform.position = position;
-        camera.transform.position = position + (transform.up * 3) - (camera.transform.forward * camera.maxDistanceFromPlayer);
+        camera.transform.position = position + (transform.up * 3) - (camera.transform.forward * camera.distanceFromPlayer);
         controller.enabled = true;
     }
 
@@ -404,10 +404,12 @@ public class PlayerShip : MonoBehaviour
             thrustSpeed = baseSpeed;
             reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
             reticle.rectTransform.position = reticlePosition;
+            camera.transform.parent = transform;
         }
         else
         {
             thrustSpeed = baseSpeed;
+            camera.transform.parent = transform.parent;
         }
     }
 

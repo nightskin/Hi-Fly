@@ -15313,9 +15313,9 @@ MonoBehaviour:
   boostEffect: {fileID: 1814296040985746741}
   player: {fileID: 3438586877348045626}
   onRailsFollowTarget: {fileID: 436392920321828641}
-  offsetY: 3
-  maxDistanceFromPlayer: 10
-  cameraLerpSpeed: 10
+  offset: 3
+  distanceFromPlayer: 10
+  lerpSpeed: 20
 --- !u!1 &8571627249047061413
 GameObject:
   m_ObjectHideFlags: 0
