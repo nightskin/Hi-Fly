@@ -103,7 +103,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.5
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -182,6 +182,7 @@ MonoBehaviour:
   speed: 0.01
   direction: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}
+  endFire: 0
 --- !u!82 &983199469248207979
 AudioSource:
   m_ObjectHideFlags: 0

@@ -38,11 +38,15 @@ public class InputManager : MonoBehaviour
 
     void OnDisable()
     {
-        ui.ChangeControlsGamepad.performed -= ChangeControlsGamepad_performed;
-        ui.ChangeControlsMouseAndKeyboard.performed -= ChangeControlsDesktop_performed;
         player.Disable();
         ui.Disable();
         input.Disable();
+    }
+
+    void OnDestroy()
+    {
+        ui.ChangeControlsGamepad.performed -= ChangeControlsGamepad_performed;
+        ui.ChangeControlsMouseAndKeyboard.performed -= ChangeControlsDesktop_performed;
     }
 
 }

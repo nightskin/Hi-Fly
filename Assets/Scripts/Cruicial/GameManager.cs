@@ -68,6 +68,38 @@ public class GameManager : MonoBehaviour
         InputManager.ui.ChangeUISelectorToMouse.performed += ChangeUISelectorToMouse_performed;
     }
 
+    void OnDestroy()
+    {
+        InputManager.ui.Pause.performed -= Pause_performed;
+        InputManager.ui.UnPause.performed -= UnPause_performed;
+        InputManager.ui.ChangeUISelectorToGamepad.performed -= ChangeUISelectorGamepad_performed;
+        InputManager.ui.ChangeUISelectorToMouse.performed -= ChangeUISelectorToMouse_performed;
+    }
+
+    void Update()
+    {
+        if (gameOver)
+        {
+            if (gameOverTimer > 0)
+            {
+                for (int i = 0; i < playerUIToHideOnPause.Length; i++)
+                {
+                    playerUIToHideOnPause[i].SetActive(false);
+                }
+                if (playerShip.gameObject.activeSelf)
+                {
+                    playerShip.SetBoost(false);
+                    playerShip.gameObject.SetActive(false);
+                }
+                gameOverTimer -= Time.deltaTime;
+            }
+            else
+            {
+                OpenGameOverMenu();
+            }
+        }
+    }
+
     private void ChangeUISelectorToMouse_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if(gamePaused || gameOver)
@@ -116,38 +148,6 @@ public class GameManager : MonoBehaviour
                 Pause();
             }
         }
-    }
-
-    void Update()
-    {
-        if(gameOver)
-        {
-            if (gameOverTimer > 0)
-            {
-                for (int i = 0; i < playerUIToHideOnPause.Length; i++)
-                {
-                    playerUIToHideOnPause[i].SetActive(false);
-                }
-                if(playerShip.gameObject.activeSelf)
-                {
-                    playerShip.SetBoost(false);
-                    playerShip.gameObject.SetActive(false);
-                }
-                gameOverTimer -= Time.deltaTime;
-            }
-            else
-            {
-                OpenGameOverMenu();
-            }
-        }
-    }
-
-    void OnDestroy()
-    {
-        InputManager.ui.Pause.performed -= Pause_performed;
-        InputManager.ui.UnPause.performed -= UnPause_performed;
-        InputManager.ui.ChangeUISelectorToGamepad.performed -= ChangeUISelectorGamepad_performed;
-        InputManager.ui.ChangeUISelectorToMouse.performed -= ChangeUISelectorToMouse_performed;
     }
     
     public void OpenGameOverMenu()

@@ -93,18 +93,7 @@ public class Bullet : MonoBehaviour
                 transform.position += direction * speed * Time.deltaTime;
             }
 
-            //If bullet has not hit something check collisions
-            if (!hit)
-            {
-                CheckCollisions();
-            }
-            else
-            {
-                if (!sfx.isPlaying)
-                {
-                    DeSpawn();
-                }
-            }
+
 
             //Destroy Bullet After A Certain Time has Past
             if (life > 0)
@@ -117,7 +106,23 @@ public class Bullet : MonoBehaviour
             }
         }
     }
-    
+
+    void FixedUpdate()
+    {
+        //If bullet has not hit something check collisions
+        if (!hit)
+        {
+            CheckCollisions();
+        }
+        else
+        {
+            if (!sfx.isPlaying)
+            {
+                DeSpawn();
+            }
+        }
+    }
+
     void CheckCollisions()
     {
         if (Physics.Linecast(prevPosition, transform.position, out RaycastHit rayhit))

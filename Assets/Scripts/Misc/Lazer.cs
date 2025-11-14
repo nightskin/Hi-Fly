@@ -14,6 +14,7 @@ public class Lazer : MonoBehaviour
     public float speed = 0.01f;
     [HideInInspector] public Vector3 direction;
     [HideInInspector] public Vector3 origin;
+    [HideInInspector] public bool endFire;
 
     float collisionTimer;
     float length;
@@ -21,10 +22,13 @@ public class Lazer : MonoBehaviour
 
     void OnEnable()
     {
+        renderer.startWidth = 0.5f;
+        renderer.endWidth = 1;
         t = 0;
         length = 0;
         collisionTimer = 0;
         renderer.sharedMaterial.color = colors[colorIndex];
+        endFire = false;
     }
 
     void Update()
@@ -36,7 +40,17 @@ public class Lazer : MonoBehaviour
             origin = owner.transform.position + owner.transform.forward;
             renderer.SetPosition(0, origin);
             renderer.SetPosition(1, origin + (direction * length));
+            
 
+            if(endFire)
+            {
+                renderer.startWidth = Mathf.Lerp(renderer.startWidth, 0, 10 * Time.deltaTime);
+                renderer.endWidth = Mathf.Lerp(renderer.endWidth, 0, 10 * Time.deltaTime);
+                if(renderer.endWidth <= 0)
+                {
+                    gameObject.SetActive(false);
+                }
+            }
 
             if (colorChangeTimer < 1)
             {
@@ -57,17 +71,22 @@ public class Lazer : MonoBehaviour
             renderer.sharedMaterial.SetColor("_Color", Color.Lerp(renderer.sharedMaterial.GetColor("_Color"), colors[colorIndex], colorChangeTimer));
 
 
-            if (collisionTimer <= 0)
-            {
-                CheckCollisions();
-                collisionTimer = damageInterval;
-            }
-            else
-            {
-                collisionTimer -= Time.deltaTime;
-            }
+
         }
-    }   
+    }
+
+    void FixedUpdate()
+    {
+        if (collisionTimer <= 0 && !endFire)
+        {
+            CheckCollisions();
+            collisionTimer = damageInterval;
+        }
+        else
+        {
+            collisionTimer -= Time.fixedDeltaTime;
+        }
+    }
 
     void CheckCollisions()
     {
@@ -132,9 +151,6 @@ public class Lazer : MonoBehaviour
             }
         }
     }
-    
-    public void DeSpawn()
-    {
-        gameObject.SetActive(false);
-    }
+   
+
 }

@@ -20,7 +20,6 @@ public class Planet : MonoBehaviour
 
     Mesh mesh;
     List<Vector3> verts = new List<Vector3>();
-    List<Vector2> uvs = new List<Vector2>();
     List<int> tris = new List<int>();
     List<Color> colors = new List<Color>();
     int buffer = 0;
@@ -45,9 +44,8 @@ public class Planet : MonoBehaviour
 
     public void Generate()
     {
-
+        colors.Clear();
         verts.Clear(); 
-        uvs.Clear(); 
         tris.Clear(); 
         buffer = 0;
 
@@ -61,15 +59,13 @@ public class Planet : MonoBehaviour
 
         planetMesh.material.SetColor("_LandColor", Util.RandomColor());
         planetMesh.material.SetColor("_WaterColor", Util.RandomColor());
-        planetMesh.material.SetFloat("_NoiseScale", Random.Range(0.1f, 1f));
-        planetMesh.material.SetVector("_Offset", Util.RandomVector4(-10,10));
+        planetMesh.material.SetVector("_Offset", Util.RandomVector3(-voxelSize * voxelResolution, voxelSize * voxelResolution));
 
         cloudMesh.transform.localScale = Vector3.one * (radius + cloudOffset) * 2;
         cloudMesh.transform.localPosition = Vector3.one * radius;
         cloudMesh.transform.gameObject.isStatic = true;
-        cloudMesh.material.SetFloat("_Speed", Random.value);
-        cloudMesh.material.SetVector("_Offset", Util.RandomVector4(-1, 1));
-        cloudMesh.material.SetFloat("_NoiseScale", Random.Range(5, 10));
+        cloudMesh.material.SetVector("_Direction", Util.RandomVector4(-1, 1).normalized);
+        cloudMesh.material.SetFloat("_NoiseScale", Random.Range(2.5f, 5));
 
     }
 
@@ -107,7 +103,6 @@ public class Planet : MonoBehaviour
             colors.Clear();
             verts.Clear();
             tris.Clear();
-            uvs.Clear();
             buffer = 0;
             CreateMeshData();
             UpdateMesh();
@@ -170,9 +165,6 @@ public class Planet : MonoBehaviour
             int cubeIndex = Voxel.GetState(points, isoLevel);
             int[] triangulation = MarchingCubesTables.triTable[cubeIndex];
 
-            Vector3[] triVerts = new Vector3[3];
-            int triIndex = 0;
-
             foreach (int edgeIndex in triangulation)
             {
                 if (edgeIndex > -1)
@@ -183,23 +175,6 @@ public class Planet : MonoBehaviour
                     verts.Add(vertexPos);
                     tris.Add(buffer);
                     colors.Add(Color.Lerp(points[a].color, points[b].color, isoLevel));
-
-                    if (triIndex == 0)
-                    {
-                        triVerts[0] = vertexPos;
-                        triIndex++;
-                    }
-                    else if (triIndex == 1)
-                    {
-                        triVerts[1] = vertexPos;
-                        triIndex++;
-                    }
-                    else if (triIndex == 2)
-                    {
-                        triVerts[2] = vertexPos;
-                        uvs.AddRange(Voxel.GetUVs(triVerts[0], triVerts[1], triVerts[2], voxelSize));
-                        triIndex = 0;
-                    }
 
                     buffer++;
                 }
@@ -213,7 +188,7 @@ public class Planet : MonoBehaviour
 
     bool BlocksGone()
     {
-        for (int i = 0; i < voxelResolution * voxelResolution * voxelResolution; i++)
+        for (int i = 0; i < voxels.Length; i++)
         {
             if (voxels[i].value > isoLevel) return false;
         }
@@ -226,7 +201,6 @@ public class Planet : MonoBehaviour
         mesh.Clear();
         mesh.vertices = verts.ToArray();
         mesh.triangles = tris.ToArray();
-        mesh.uv = uvs.ToArray();
         mesh.colors = colors.ToArray();
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();

@@ -274,7 +274,7 @@ public class PlayerShip : MonoBehaviour
         {
             if (lazer)
             {
-                lazer.GetComponent<Lazer>().DeSpawn();
+                lazer.GetComponent<Lazer>().endFire = true;
                 lazer = null;
             }
         }
@@ -345,7 +345,7 @@ public class PlayerShip : MonoBehaviour
         {
             if (lazer)
             {
-                lazer.GetComponent<Lazer>().DeSpawn();
+                lazer.GetComponent<Lazer>().endFire = true;
                 lazer = null;
             }
         }
