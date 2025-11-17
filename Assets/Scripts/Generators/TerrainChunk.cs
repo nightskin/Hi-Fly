@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
-public class DestructibleTerrainChunk : MonoBehaviour
+public class TerrainChunk : MonoBehaviour
 {
     [Range(0,1) ]public float isoLevel = 0.5f;
 
@@ -36,7 +36,7 @@ public class DestructibleTerrainChunk : MonoBehaviour
         pos.x = Mathf.Round(pos.x / TerrainGenerator.voxelSize) * TerrainGenerator.voxelSize;
         pos.y = Mathf.Round(pos.y / TerrainGenerator.voxelSize) * TerrainGenerator.voxelSize;
         pos.z = Mathf.Round(pos.z / TerrainGenerator.voxelSize) * TerrainGenerator.voxelSize;
-        int i = Voxel.PositionToIndex(pos,TerrainGenerator.chunkResolution,TerrainGenerator.voxelSize);
+        int i = Voxel.ToIndex(pos,TerrainGenerator.chunkResolution,TerrainGenerator.voxelSize);
 
         if (voxels[i].position.y == 0) return;
         
@@ -47,7 +47,7 @@ public class DestructibleTerrainChunk : MonoBehaviour
             pos.x = Mathf.Round(pos.x / TerrainGenerator.voxelSize) * TerrainGenerator.voxelSize;
             pos.y = Mathf.Round(pos.y / TerrainGenerator.voxelSize) * TerrainGenerator.voxelSize;
             pos.z = Mathf.Round(pos.z / TerrainGenerator.voxelSize) * TerrainGenerator.voxelSize;
-            i = Voxel.PositionToIndex(pos, TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize);
+            i = Voxel.ToIndex(pos, TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize);
             voxels[i].value -= damage;
         }
         else
@@ -87,7 +87,7 @@ public class DestructibleTerrainChunk : MonoBehaviour
         for (int i = 0; i < TerrainGenerator.chunkResolution * TerrainGenerator.chunkResolution * TerrainGenerator.chunkResolution; i++)
         {
             voxels[i] = new Voxel();
-            voxels[i].position = Voxel.IndexToPosition(i, TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize);
+            voxels[i].position = Voxel.ToPosition(i, TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize);
 
             int yi = Mathf.RoundToInt(voxels[i].position.y / TerrainGenerator.chunkResolution);
 
@@ -115,17 +115,17 @@ public class DestructibleTerrainChunk : MonoBehaviour
         mesh.MarkDynamic();
         for (int i = TerrainGenerator.chunkResolution * TerrainGenerator.chunkResolution * TerrainGenerator.chunkResolution; i > 0; i--)
         {
-            Vector3 position = Voxel.IndexToPosition(i, TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize);
+            Vector3 position = Voxel.ToPosition(i, TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize);
             Voxel[] points = new Voxel[]
             {
-                voxels[Voxel.PositionToIndex(position + new Vector3(0,0,-1), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
-                voxels[Voxel.PositionToIndex(position +  new Vector3(-1, 0, -1), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
-                voxels[Voxel.PositionToIndex(position +  new Vector3(-1, 0, 0), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
-                voxels[Voxel.PositionToIndex(position, TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
-                voxels[Voxel.PositionToIndex(position + new Vector3(0, -1, -1), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
-                voxels[Voxel.PositionToIndex(position + new Vector3(-1,-1,-1),TerrainGenerator.chunkResolution ,TerrainGenerator.voxelSize)],
-                voxels[Voxel.PositionToIndex(position + new Vector3(-1,-1, 0), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
-                voxels[Voxel.PositionToIndex(position + new Vector3(0, -1, 0), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)]
+                voxels[Voxel.ToIndex(position + new Vector3(0,0,-1), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
+                voxels[Voxel.ToIndex(position +  new Vector3(-1, 0, -1), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
+                voxels[Voxel.ToIndex(position +  new Vector3(-1, 0, 0), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
+                voxels[Voxel.ToIndex(position, TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
+                voxels[Voxel.ToIndex(position + new Vector3(0, -1, -1), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
+                voxels[Voxel.ToIndex(position + new Vector3(-1,-1,-1),TerrainGenerator.chunkResolution ,TerrainGenerator.voxelSize)],
+                voxels[Voxel.ToIndex(position + new Vector3(-1,-1, 0), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)],
+                voxels[Voxel.ToIndex(position + new Vector3(0, -1, 0), TerrainGenerator.chunkResolution, TerrainGenerator.voxelSize)]
             };
 
             int cubeIndex = Voxel.GetState(points, isoLevel);
@@ -140,7 +140,7 @@ public class DestructibleTerrainChunk : MonoBehaviour
                 {
                     int a = MarchingCubesTables.edgeConnections[edgeIndex][0];
                     int b = MarchingCubesTables.edgeConnections[edgeIndex][1];
-                    Vector3 vertexPos = Voxel.LerpPoint(points[a], points[b], isoLevel);
+                    Vector3 vertexPos = Voxel.LerpPosition(points[a], points[b], isoLevel);
                     vertices.Add(vertexPos);
                     triangles.Add(buffer);
 

@@ -42,23 +42,10 @@ public class TerrainGenerator : MonoBehaviour
                 {
                     GameObject chunkObject = Instantiate(terrainChunkPrefab, transform);
                     chunkObject.transform.position = new Vector3(x - (xSize / 2), 0, z - (zSize / 2)) * spacingBetweenChunks;
-                    DestructibleTerrainChunk destructibleTerrain = chunkObject.GetComponent<DestructibleTerrainChunk>();
+                    TerrainChunk destructibleTerrain = chunkObject.GetComponent<TerrainChunk>();
                     if (destructibleTerrain)
                     {
                         destructibleTerrain.Generate();
-                    }
-                    else
-                    {
-                        TerrainChunk terrain = chunkObject.GetComponent<TerrainChunk>();
-                        if (terrain)
-                        {
-                            terrain.Generate();
-                        }
-                        else
-                        {
-                            Debug.Log("Prefab Does Not Have TerrainChunk.cs Or DestructibleTerrainChunk.cs Attached");
-                            return;
-                        }
                     }
                 }
             }

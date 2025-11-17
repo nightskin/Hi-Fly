@@ -104,25 +104,23 @@ public class Bullet : MonoBehaviour
             {
                 DeSpawn();
             }
-        }
-    }
 
-    void FixedUpdate()
-    {
-        //If bullet has not hit something check collisions
-        if (!hit)
-        {
-            CheckCollisions();
-        }
-        else
-        {
-            if (!sfx.isPlaying)
+            //If bullet has not hit something check collisions
+            if (!hit)
             {
-                DeSpawn();
+                CheckCollisions();
             }
+            else
+            {
+                if (!sfx.isPlaying)
+                {
+                    DeSpawn();
+                }
+            }
+
         }
     }
-
+    
     void CheckCollisions()
     {
         if (Physics.Linecast(prevPosition, transform.position, out RaycastHit rayhit))
@@ -146,7 +144,7 @@ public class Bullet : MonoBehaviour
                             asteroid.RemoveBlock(rayhit);
                             DeSpawn();
                         }
-                        Planet planet = rayhit.transform.GetComponent<Planet>();
+                        PlanetChunk planet = rayhit.transform.GetComponent<PlanetChunk>();
                         if(planet)
                         {
                             planet.RemoveBlock(rayhit);
@@ -216,7 +214,7 @@ public class Bullet : MonoBehaviour
                             asteroid.RemoveBlock(rayhit);
                             hit = true;
                         }
-                        Planet planet = rayhit.transform.GetComponent<Planet>();
+                        PlanetChunk planet = rayhit.transform.GetComponent<PlanetChunk>();
                         if(planet)
                         {
                             planet.RemoveBlock(rayhit);

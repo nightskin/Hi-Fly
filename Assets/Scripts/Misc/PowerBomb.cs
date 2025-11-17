@@ -1,19 +1,21 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PowerBomb : MonoBehaviour
 {
-    public float blastRadius = 20;
+    public float blastRadius;
     public int damage = 30;
 
 
     float shrinkRate = 5;
     float timer;
 
+    List<Collider> alreadyHit;
 
     void OnEnable()
     {
+        alreadyHit = new List<Collider>();
         timer = 0;
-        transform.localScale = Vector3.one * blastRadius;
     }
 
     void Update()
@@ -21,22 +23,31 @@ public class PowerBomb : MonoBehaviour
         timer += Time.deltaTime;
         if(timer >= 1)
         {
-            transform.localScale -= Vector3.one * shrinkRate * Time.deltaTime;
-            if(transform.localScale.x <= 0)
+            blastRadius -= shrinkRate * Time.deltaTime;
+            if(blastRadius <= 0)
             {
                 gameObject.SetActive(false);
             }
         }
+
+        transform.localScale = Vector3.one * blastRadius * 2;
+
     }
 
-    void OnTriggerEnter(Collider hit)
+    void FixedUpdate()
     {
-        if (hit.tag == "Enemy")
+        Collider[] hits = Physics.OverlapSphere(transform.position, blastRadius);
+        if(hits.Length > 0)
         {
-            HealthSystem health = hit.GetComponent<HealthSystem>();
-            if (health) health.TakeDamage(damage);
+            foreach(Collider hit in hits)
+            {
+                HealthSystem health = hit.GetComponent<HealthSystem>();
+                if (health && !alreadyHit.Contains(hit))
+                {
+                    health.TakeDamage(damage);
+                    alreadyHit.Add(hit);
+                }
+            }
         }
-        
     }
-
 }

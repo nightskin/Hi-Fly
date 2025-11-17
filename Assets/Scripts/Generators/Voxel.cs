@@ -1,23 +1,23 @@
 using UnityEngine;
 
 
-[System.Serializable] public struct Voxel
+[System.Serializable] public class Voxel
 {
-    public Color color;
-    public float value;
+    public Color color = Color.black;
+    public float value = 0;
     public Vector3 position;
 
-    public static Vector3 IndexToPosition(int i, int voxelResolution, float voxelSize)
+    public static Vector3 ToPosition(int i, int voxelRes, float voxelSize)
     {
-        int x = i % voxelResolution;
-        int y = i / voxelResolution % voxelResolution;
-        int z = i / voxelResolution / voxelResolution % voxelResolution;
+        int x = i % voxelRes;
+        int y = i / voxelRes % voxelRes;
+        int z = i / voxelRes / voxelRes % voxelRes;
         return new Vector3(x, y, z) * voxelSize;
     }
 
-    public static int PositionToIndex(Vector3 position, int voxelResolution ,float voxelSize)
+    public static int ToIndex(Vector3 position, int voxelRes ,float voxelSize)
     {
-        return ((int)(position.x / voxelSize)) + ((int)(position.y / voxelSize)  * voxelResolution) + ((int)(position.z / voxelSize) * voxelResolution * voxelResolution);
+        return ((int)(position.x / voxelSize)) + ((int)(position.y / voxelSize)  * voxelRes) + ((int)(position.z / voxelSize) * voxelRes * voxelRes);
     }
     
     public static Vector2[] GetUVs(Vector3 a, Vector3 b, Vector3 c, float voxelSize)
@@ -86,10 +86,16 @@ using UnityEngine;
         return (v1.position + v2.position) / 2;
     }
 
-    public static Vector3 LerpPoint(Voxel v1, Voxel v2, float isoLevel)
+    public static Vector3 LerpPosition(Voxel v1, Voxel v2, float isoLevel)
     {
         float t = (isoLevel - v1.value) / (v2.value - v1.value);
         return Vector3.Lerp(v1.position, v2.position, t);
+    }
+
+    public static Color LerpColor(Voxel v1, Voxel v2, float isoLevel)
+    {
+        float t = (isoLevel - v1.value) / (v2.value - v1.value);
+        return Color.Lerp(v1.color, v2.color, t);
     }
 
 }

@@ -70,24 +70,19 @@ public class Lazer : MonoBehaviour
             }
             renderer.sharedMaterial.SetColor("_Color", Color.Lerp(renderer.sharedMaterial.GetColor("_Color"), colors[colorIndex], colorChangeTimer));
 
-
+            if (collisionTimer <= 0 && !endFire)
+            {
+                CheckCollisions();
+                collisionTimer = damageInterval;
+            }
+            else
+            {
+                collisionTimer -= Time.deltaTime;
+            }
 
         }
     }
-
-    void FixedUpdate()
-    {
-        if (collisionTimer <= 0 && !endFire)
-        {
-            CheckCollisions();
-            collisionTimer = damageInterval;
-        }
-        else
-        {
-            collisionTimer -= Time.fixedDeltaTime;
-        }
-    }
-
+    
     void CheckCollisions()
     {
         if (Physics.Linecast(origin, origin + (direction * length), out RaycastHit rayHit))
@@ -104,14 +99,14 @@ public class Lazer : MonoBehaviour
                         return;
                     }
 
-                    Planet planet = rayHit.transform.GetComponent<Planet>();
+                    PlanetChunk planet = rayHit.transform.GetComponent<PlanetChunk>();
                     if(planet)
                     {
                         planet.RemoveBlock(rayHit);
                         return;
                     }
 
-                    DestructibleTerrainChunk terrain = rayHit.transform.GetComponent<DestructibleTerrainChunk>();
+                    TerrainChunk terrain = rayHit.transform.GetComponent<TerrainChunk>();
                     if (terrain)
                     {
                         terrain.TeraForm(rayHit, 0.1f);
@@ -151,6 +146,4 @@ public class Lazer : MonoBehaviour
             }
         }
     }
-   
-
 }
