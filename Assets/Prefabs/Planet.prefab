@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlanetGenerator
   chunkPrefab: {fileID: 6691990877626503176, guid: e1121d58d90e3e44da3f3102801c0aa7,
     type: 3}
-  threshold: 3.75
+  threshold: 2
   landColor: {r: 0, g: 0, b: 0, a: 0}
   WaterColor: {r: 0, g: 0, b: 0, a: 0}
   chunkResolution: 2

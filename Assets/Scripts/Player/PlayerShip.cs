@@ -37,8 +37,7 @@ public class PlayerShip : MonoBehaviour
     float thrustScale = 0.25f;
     float normalThrusterScale = 0.25f;
     float boostThrusterScale = 2;
-    [HideInInspector] public float speed;
-    float thrustSpeed;
+    float speed;
     Vector3 steer;
     
     [HideInInspector] public bool boosting = false;
@@ -107,7 +106,7 @@ public class PlayerShip : MonoBehaviour
 
         reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
         reticle.rectTransform.position = reticlePosition;
-        thrustSpeed = baseSpeed;
+        speed = baseSpeed;
 
         InputManager.player.Shoot.performed += Shoot_performed;
         InputManager.player.Shoot.canceled += Shoot_canceled;
@@ -123,8 +122,8 @@ public class PlayerShip : MonoBehaviour
     }
     void FixedUpdate()
     {
-        speed = Mathf.Lerp(speed, thrustSpeed, acceleration * Time.fixedDeltaTime);
-        thruster.localScale = Vector3.Lerp(thruster.localScale, new Vector3(thruster.localScale.x, thruster.localScale.y, thrustScale), 5 * Time.fixedDeltaTime);
+        speed = Mathf.Lerp(speed, speed, acceleration * Time.fixedDeltaTime);
+        thruster.localScale = Vector3.Lerp(thruster.localScale, new Vector3(thruster.localScale.x, thruster.localScale.y, thrustScale), 10 * Time.fixedDeltaTime);
 
 
         Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
@@ -173,9 +172,7 @@ public class PlayerShip : MonoBehaviour
                 OnRailsControls();
             }
 
-            steer.x = InputManager.player.Steer.ReadValue<Vector2>().x;
-            steer.y = InputManager.player.Steer.ReadValue<Vector2>().y;
-            steer.z = InputManager.player.Ascend_Descend.ReadValue<float>();
+
 
             //Evading
             if (evading)
@@ -192,7 +189,8 @@ public class PlayerShip : MonoBehaviour
                 mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, steer.x * -45, 10 * Time.deltaTime));
             }
 
-            if (InputManager.player.Boost.IsPressed())
+            //Boosting
+            if(InputManager.player.Boost.IsPressed())
             {
                 SetBoost(true);
             }
@@ -240,6 +238,10 @@ public class PlayerShip : MonoBehaviour
             }
         }
     }
+    void OnDisable()
+    {
+        camera.boostEffect.SetFloat("_Show", 0); 
+    }
     void OnDestroy()
     {
         InputManager.player.Shoot.performed -= Shoot_performed;
@@ -249,7 +251,7 @@ public class PlayerShip : MonoBehaviour
         InputManager.player.Roll.performed -= Roll_performed;
         InputManager.player.ToggleWeapon.performed -= ToggleWeapon_performed;
     }
-        
+    
     private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         if (rangedWeapon == Weapon.CHARGE_BOMB)
@@ -309,8 +311,6 @@ public class PlayerShip : MonoBehaviour
                 if (strafeMode)
                 {
                     SetStrafeMode(false);
-                    if(camera.boostEffect.isPlaying) camera.boostEffect.Stop();
-                    thrustSpeed = baseSpeed;
                 }
                 else
                 {
@@ -401,14 +401,14 @@ public class PlayerShip : MonoBehaviour
         strafeMode = active;
         if(strafeMode)
         {
-            thrustSpeed = baseSpeed;
+            speed = baseSpeed;
             reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
             reticle.rectTransform.position = reticlePosition;
             camera.transform.parent = transform;
         }
         else
         {
-            thrustSpeed = baseSpeed;
+            speed = baseSpeed;
             camera.transform.parent = transform.parent;
         }
     }
@@ -418,33 +418,45 @@ public class PlayerShip : MonoBehaviour
         boosting = active;
         if(boosting)
         {
-            if(strafeMode)
+            if(strafeMode && (InputManager.player.Steer.IsPressed() || InputManager.player.Ascend_Descend.IsPressed()))
             {
-                if(InputManager.player.Steer.IsPressed() || InputManager.player.Ascend_Descend.IsPressed())
+                float x = 0;
+                float y = 0;
+                if(steer.normalized.x > 0.5f)
                 {
-                    if (!camera.boostEffect.isPlaying) camera.boostEffect.Play();
-                    thrustSpeed = boostSpeed;
-                    thrustScale = boostThrusterScale;
+                    x = 5;
                 }
-                else
+                else if(steer.normalized.x < -0.5f)
                 {
-                    if (camera.boostEffect.isPlaying) camera.boostEffect.Stop();
-                    thrustSpeed = baseSpeed;
-                    thrustScale = normalThrusterScale;
+                    x = -6;
                 }
+                
+                if(steer.normalized.z > 0.5f)
+                {
+                    y = 5;
+                }
+                else if (steer.normalized.z < -0.5f)
+                {
+                    y = -6;
+                }
+
+                camera.boostEffect.SetVector("_Direction", new Vector4(0.5f + x, 0.5f + y, 0, 0));
+                camera.boostEffect.SetFloat("_Show", 1);
             }
             else
             {
-                if (!camera.boostEffect.isPlaying) camera.boostEffect.Play();
-                thrustSpeed = boostSpeed;
-                thrustScale = boostThrusterScale;
+                camera.boostEffect.SetVector("_Direction", new Vector4(0.5f, 0.5f, 0, 0));
+                camera.boostEffect.SetFloat("_Show", 1);
             }
+
+            thrustScale = boostThrusterScale;
+            speed = boostSpeed;
         }
         else
         {
-            if (camera.boostEffect.isPlaying) camera.boostEffect.Stop();
-            thrustSpeed = baseSpeed;
+            camera.boostEffect.SetFloat("_Show", 0);
             thrustScale = normalThrusterScale;
+            speed = baseSpeed;
         }
     }
     
@@ -483,6 +495,10 @@ public class PlayerShip : MonoBehaviour
     void StrafeControls()
     {
         //Moving
+        steer.x = InputManager.player.Steer.ReadValue<Vector2>().x;
+        steer.y = InputManager.player.Steer.ReadValue<Vector2>().y;
+        steer.z = InputManager.player.Ascend_Descend.ReadValue<float>();
+
         controller.Move(((transform.forward * steer.y) + (transform.right * steer.x) + (transform.up * steer.z)).normalized * speed * Time.deltaTime);
 
         //Aiming
@@ -495,6 +511,10 @@ public class PlayerShip : MonoBehaviour
     void AllRangeControls()
     {
         //Forward Movement
+        steer.x = InputManager.player.Steer.ReadValue<Vector2>().x;
+        steer.y = InputManager.player.Steer.ReadValue<Vector2>().y;
+
+
         controller.Move(transform.forward * speed * Time.deltaTime);
 
         transform.rotation *= Quaternion.AngleAxis(steer.x * turnSpeed * Time.deltaTime, Vector3.up);

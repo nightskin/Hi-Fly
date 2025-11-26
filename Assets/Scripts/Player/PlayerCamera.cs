@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
-    public ParticleSystem boostEffect;
+    public Material boostEffect;
     public PlayerShip player;
     public Transform onRailsFollowTarget;
 
