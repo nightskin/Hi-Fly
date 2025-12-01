@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System.Collections.Generic;
 
 public class HomingTarget
@@ -66,7 +65,7 @@ public class PlayerShip : MonoBehaviour
     public Weapon rangedWeapon = Weapon.CHARGE_BOMB;
     int rangedWeaponIndex;
     
-    [SerializeField] TextMeshProUGUI weaponText;
+    [SerializeField] Text weaponText;
     [SerializeField] Image reticle;
     [SerializeField] LayerMask lockOnLayer;
     Vector2 reticlePosition;

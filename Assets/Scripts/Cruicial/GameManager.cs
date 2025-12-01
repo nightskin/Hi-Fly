@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour
                 }
                 if (playerShip.gameObject.activeSelf)
                 {
+                    playerShip.camera.transform.parent = transform;
                     playerShip.SetBoost(false);
                     playerShip.gameObject.SetActive(false);
                 }

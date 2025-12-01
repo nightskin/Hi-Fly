@@ -1,12 +1,12 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyWaveManager : MonoBehaviour
 {
     static EnemyWaveManager instance;
 
     [SerializeField] ObjectPoolManager objectPool;
-    [SerializeField] TextMeshProUGUI waveInfo;
+    [SerializeField] Text waveInfo;
     [SerializeField] GameObject upgradeMenu;
 
     [SerializeField] int startAmountOfEnemiesInWave = 10;

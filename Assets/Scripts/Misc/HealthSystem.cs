@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class HealthSystem : MonoBehaviour
 {
     [SerializeField] Slider healthBar;
-    [SerializeField] TextMeshProUGUI text;
+    [SerializeField] Text text;
     [SerializeField] int maxHP = 100;
     [SerializeField] Material[] hitMaterials;
     
