@@ -107,8 +107,6 @@ public class PlayerShip : MonoBehaviour
         reticle.rectTransform.position = reticlePosition;
         speed = baseSpeed;
 
-        InputManager.player.Shoot.performed += Shoot_performed;
-        InputManager.player.Shoot.canceled += Shoot_canceled;
         InputManager.player.CenterCrosshair.performed += CenterCrosshair;
         InputManager.player.ToggleStrafeMode.performed += StrafeMode_performed;
         InputManager.player.Roll.performed += Roll_performed;
@@ -199,6 +197,17 @@ public class PlayerShip : MonoBehaviour
             }
 
             //Shooting
+            if(InputManager.player.Shoot.WasPressedThisFrame())
+            {
+                if (rangedWeapon == Weapon.CHARGE_BOMB)
+                {
+                    chargeEffect.gameObject.SetActive(true);
+                }
+                else if (rangedWeapon == Weapon.RAVER_LAZER)
+                {
+                    FireLazer();
+                }
+            }
             if (InputManager.player.Shoot.IsPressed())
             {
                 if (rangedWeapon == Weapon.RAVER_LAZER)
@@ -235,6 +244,43 @@ public class PlayerShip : MonoBehaviour
                     }
                 }
             }
+            else if(InputManager.player.Shoot.WasReleasedThisFrame())
+            {
+                if (rangedWeapon == Weapon.CHARGE_BOMB)
+                {
+                    chargeEffect.gameObject.SetActive(false);
+                    FireChargeShot();
+                    chargeAmount = 0;
+                }
+                else if (rangedWeapon == Weapon.RAVER_LAZER)
+                {
+                    if (lazer)
+                    {
+                        lazer.GetComponent<Lazer>().endFire = true;
+                        lazer = null;
+                    }
+                }
+                else if (rangedWeapon == Weapon.MULTI_SHOT)
+                {
+                    int targetCount = 0;
+                    for (int i = 0; i < targets.Count; i++)
+                    {
+                        if (targets[i].followTarget)
+                        {
+                            targetCount++;
+                        }
+                    }
+
+                    if (targetCount > 0)
+                    {
+                        FireHomingBullets();
+                    }
+                    else
+                    {
+                        FireBullet();
+                    }
+                }
+            }
         }
     }
     void OnDisable()
@@ -243,62 +289,10 @@ public class PlayerShip : MonoBehaviour
     }
     void OnDestroy()
     {
-        InputManager.player.Shoot.performed -= Shoot_performed;
-        InputManager.player.Shoot.canceled -= Shoot_canceled;
         InputManager.player.CenterCrosshair.performed -= CenterCrosshair;
         InputManager.player.ToggleStrafeMode.performed -= StrafeMode_performed;
         InputManager.player.Roll.performed -= Roll_performed;
         InputManager.player.ToggleWeapon.performed -= ToggleWeapon_performed;
-    }
-    
-    private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if (rangedWeapon == Weapon.CHARGE_BOMB)
-        {
-            chargeAmount = 0;
-            chargeEffect.gameObject.SetActive(true);
-        }
-        else if(rangedWeapon == Weapon.RAVER_LAZER)
-        {
-            FireLazer();
-        }
-    }
-    
-    private void Shoot_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if (rangedWeapon == Weapon.CHARGE_BOMB)
-        {
-            chargeEffect.gameObject.SetActive(false);
-            FireChargeShot();
-        }
-        else if (rangedWeapon == Weapon.RAVER_LAZER)
-        {
-            if (lazer)
-            {
-                lazer.GetComponent<Lazer>().endFire = true;
-                lazer = null;
-            }
-        }
-        else if (rangedWeapon == Weapon.MULTI_SHOT)
-        {
-            int targetCount = 0;
-            for (int i = 0; i < targets.Count; i++)
-            {
-                if (targets[i].followTarget)
-                {
-                    targetCount++;
-                }
-            }
-
-            if(targetCount > 0)
-            {
-                FireHomingBullets();
-            }
-            else
-            {
-                FireBullet();
-            }
-        }
     }
     
     private void StrafeMode_performed(UnityEngine.InputSystem.InputAction.CallbackContext context) 

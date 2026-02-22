@@ -1,5 +1,4 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
 
 public class UpgradeMenu : MonoBehaviour
@@ -33,12 +32,12 @@ public class UpgradeMenu : MonoBehaviour
             if(Util.RandomBool())
             {
                 btn.onClick.AddListener(ImproveShipDurability);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Ship Durability+";
+                btn.transform.GetChild(0).GetComponent<Text>().text = "Ship Durability+";
             }
             else
             {
                 btn.onClick.AddListener(ImproveBaseFirePower);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Base Fire Power+";
+                btn.transform.GetChild(0).GetComponent<Text>().text = "Base Fire Power+";
             }
         }
         //Improve Ranged Weapons
@@ -50,17 +49,17 @@ public class UpgradeMenu : MonoBehaviour
                 if(r== 0)
                 {
                     btn.onClick.AddListener(ImproveChargeSpeed);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Charge Rate +";
+                    btn.transform.GetChild(0).GetComponent<Text>().text = "Charge Rate +";
                 }
                 else if(r == 1)
                 {
                     btn.onClick.AddListener(ImproveMissilePower);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Charge Shot Power +";
+                    btn.transform.GetChild(0).GetComponent<Text>().text = "Charge Shot Power +";
                 }
                 else if(r == 2)
                 {
                     btn.onClick.AddListener(ImproveBlastRadius);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Blast Radius +";
+                    btn.transform.GetChild(0).GetComponent<Text>().text = "Blast Radius +";
                 }
             }
             else if(GameManager.Get().playerShip.rangedWeapon == PlayerShip.Weapon.RAVER_LAZER)
@@ -68,12 +67,12 @@ public class UpgradeMenu : MonoBehaviour
                 if(Util.RandomBool())
                 {
                     btn.onClick.AddListener(ImproveLazerPower);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Lazer Power +";
+                    btn.transform.GetChild(0).GetComponent<Text>().text = "Lazer Power +";
                 }
                 else
                 {
                     btn.onClick.AddListener(ImproveLazerSpeed);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Lazer Speed +";
+                    btn.transform.GetChild(0).GetComponent<Text>().text = "Lazer Speed +";
                 }
             }
             else if (GameManager.Get().playerShip.rangedWeapon == PlayerShip.Weapon.MULTI_SHOT)
@@ -84,18 +83,18 @@ public class UpgradeMenu : MonoBehaviour
                     if(GameManager.Get().playerShip.explodingBullets)
                     {
                         btn.onClick.AddListener(ImproveBlastRadius);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Blast Radius +";
+                        btn.transform.GetChild(0).GetComponent<Text>().text = "Blast Radius +";
                     }
                     else
                     {
                         btn.onClick.AddListener(GetExplodingBullets);
-                        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Exploding Bullets";
+                        btn.transform.GetChild(0).GetComponent<Text>().text = "Exploding Bullets";
                     }
                 }
                 else
                 {
                     btn.onClick.AddListener(ImproveMultiShot);
-                    btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Max Targets +";
+                    btn.transform.GetChild(0).GetComponent<Text>().text = "Max Targets +";
                 }
 
             }
@@ -107,22 +106,22 @@ public class UpgradeMenu : MonoBehaviour
             if (turretType == 0)
             {
                 btn.onClick.AddListener(AddBombTurret);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Missile Orbiter";
+                btn.transform.GetChild(0).GetComponent<Text>().text = "Add Missile Orbiter";
             }
             else if (turretType == 1)
             {
                 btn.onClick.AddListener(AddLazerTurret);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Lazer Orbiter";
+                btn.transform.GetChild(0).GetComponent<Text>().text = "Add Lazer Orbiter";
             }
             else if (turretType == 2)
             {
                 btn.onClick.AddListener(AddNormalTurret);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Add Turret Orbiter";
+                btn.transform.GetChild(0).GetComponent<Text>().text = "Add Turret Orbiter";
             }
             else if(turretType == 3)
             {
                 btn.onClick.AddListener(GetDrillDasher);
-                btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Drill Dasher";
+                btn.transform.GetChild(0).GetComponent<Text>().text = "Drill Dasher";
             }
         }
     }
