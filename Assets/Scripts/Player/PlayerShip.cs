@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
+using Mono.Cecil;
 
 public class HomingTarget
 {
@@ -127,28 +129,6 @@ public class PlayerShip : MonoBehaviour
         if (Physics.SphereCast(ray, 4, out lockOn, Camera.main.farClipPlane, lockOnLayer))
         {
             reticle.color = Color.red;
-
-            if (rangedWeapon == Weapon.MULTI_SHOT && InputManager.player.Shoot.IsPressed())
-            {
-                for (int i = 0; i < targets.Count; i++)
-                {
-                    bool alreadyTargeted = false;
-                    for(int j = 0 ; j < targets.Count; j++)
-                    {
-                        if (targets[j].followTarget == lockOn.transform)
-                        {
-                            alreadyTargeted = true;
-                            break;
-                        }
-                    }
-
-                    if (!targets[i].ui.activeSelf && !alreadyTargeted)
-                    {
-                        targets[i].followTarget = lockOn.transform;
-                        targets[i].ui.SetActive(true);
-                    }
-                }
-            }
         }
         else
         {
@@ -168,8 +148,6 @@ public class PlayerShip : MonoBehaviour
             {
                 OnRailsControls();
             }
-
-
 
             //Evading
             if (evading)
@@ -223,6 +201,24 @@ public class PlayerShip : MonoBehaviour
                 {
                     for(int i = 0; i < targets.Count; i++)
                     {
+                        //add any new targets that have not already been added
+                        bool alreadyTargeted = false;
+                        for(int j = 0 ; j < targets.Count; j++)
+                        {
+                            if (targets[j].followTarget == lockOn.transform)
+                            {
+                                alreadyTargeted = true;
+                                break;
+                            }
+                        }
+
+                        if (!targets[i].ui.activeSelf && !alreadyTargeted)
+                        {
+                            targets[i].followTarget = lockOn.transform;
+                            targets[i].ui.SetActive(true);
+                        }
+
+                        //update targets on screen
                         if (targets[i].followTarget && targets[i].ui.activeSelf)
                         {
                             Vector3 viewPortPos = Camera.main.WorldToViewportPoint(targets[i].followTarget.position);
@@ -273,7 +269,7 @@ public class PlayerShip : MonoBehaviour
 
                     if (targetCount > 0)
                     {
-                        FireHomingBullets();
+                        StartCoroutine(FireHomingBullets());
                     }
                     else
                     {
@@ -577,8 +573,19 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
-    void FireHomingBullets()
+    int GetNumberOfActiveTargets()
     {
+        int n = 0;
+        foreach(var t in targets)
+        {
+            if(t.followTarget != null) n++;
+        }
+        return n;
+    }
+
+    IEnumerator FireHomingBullets()
+    {
+        int numberOfTargets = GetNumberOfActiveTargets();
         for(int i = 0; i < targets.Count; i++)
         {
             if(targets[i].followTarget && targets[i].ui.activeSelf)
@@ -586,14 +593,15 @@ public class PlayerShip : MonoBehaviour
                 GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                 Bullet b = obj.GetComponent<Bullet>();
                 //Set Needed Variables
-                b.damage = baseFirePower;
+                b.damage = baseFirePower * numberOfTargets;
                 b.owner = mesh.gameObject;
-                b.explosive = explodingBullets;
+                b.explosive = numberOfTargets == maxTargets;
                 b.blastRadius = blastRadius;
                 b.trail.material.SetColor("_Color", Color.white * 2);
                 b.homingTarget = targets[i].followTarget;
                 targets[i].followTarget = null;
                 targets[i].ui.SetActive(false);
+                yield return new WaitForSeconds(0.05f);
             }
         }
     }

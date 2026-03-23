@@ -175,14 +175,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 203844586}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
@@ -426,7 +426,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &349310802
 Transform:
   m_ObjectHideFlags: 0
@@ -785,6 +785,11 @@ PrefabInstance:
       propertyPath: 'playerUIToHideOnPause.Array.data[2]'
       value: 
       objectReference: {fileID: 1469801213}
+    - target: {fileID: 3438586877348045626, guid: f9a426b5fc9288e48bcdc4a92bb825db,
+        type: 3}
+      propertyPath: rangedWeapon
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}
       propertyPath: m_LocalPosition.x
