@@ -785,11 +785,6 @@ PrefabInstance:
       propertyPath: 'playerUIToHideOnPause.Array.data[2]'
       value: 
       objectReference: {fileID: 1469801213}
-    - target: {fileID: 3438586877348045626, guid: f9a426b5fc9288e48bcdc4a92bb825db,
-        type: 3}
-      propertyPath: rangedWeapon
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8131623139732956610, guid: f9a426b5fc9288e48bcdc4a92bb825db,
         type: 3}
       propertyPath: m_LocalPosition.x

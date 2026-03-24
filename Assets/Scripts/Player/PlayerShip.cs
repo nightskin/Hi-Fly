@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
-using Mono.Cecil;
 
 public class HomingTarget
 {
@@ -24,20 +23,17 @@ public class PlayerShip : MonoBehaviour
     public GameObject drillDasher;
     public PlayerCamera camera;
     public Transform mesh;
+    [SerializeField] GameObject boostEffect;
     [SerializeField] GameObject lockUI;
     [SerializeField] Transform hud;
     [SerializeField] Material chargeMaterial;
     [SerializeField] ParticleSystem chargeEffect;
-    [SerializeField] Transform thruster;
     [SerializeField] Material thrusterMaterial;
     [SerializeField] Transform bulletSpawn;
     [SerializeField] CharacterController controller;
     [SerializeField] Transform OnRailsFollowTarget;
 
     //Flight variables
-    float thrustScale = 0.25f;
-    float normalThrusterScale = 0.25f;
-    float boostThrusterScale = 2;
     float speed;
     Vector3 steer;
     
@@ -122,8 +118,6 @@ public class PlayerShip : MonoBehaviour
     void FixedUpdate()
     {
         speed = Mathf.Lerp(speed, speed, acceleration * Time.fixedDeltaTime);
-        thruster.localScale = Vector3.Lerp(thruster.localScale, new Vector3(thruster.localScale.x, thruster.localScale.y, thrustScale), 10 * Time.fixedDeltaTime);
-
 
         Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
         if (Physics.SphereCast(ray, 4, out lockOn, Camera.main.farClipPlane, lockOnLayer))
@@ -279,10 +273,6 @@ public class PlayerShip : MonoBehaviour
             }
         }
     }
-    void OnDisable()
-    {
-        camera.boostEffect.SetFloat("_Show", 0); 
-    }
     void OnDestroy()
     {
         InputManager.player.CenterCrosshair.performed -= CenterCrosshair;
@@ -405,47 +395,15 @@ public class PlayerShip : MonoBehaviour
     public void SetBoost(bool active)
     {
         boosting = active;
-        if(boosting)
+        if(boosting && !strafeMode)
         {
-            if(strafeMode && (InputManager.player.Steer.IsPressed() || InputManager.player.Ascend_Descend.IsPressed()))
-            {
-                float x = 0;
-                float y = 0;
-                if(steer.normalized.x > 0.5f)
-                {
-                    x = 5;
-                }
-                else if(steer.normalized.x < -0.5f)
-                {
-                    x = -6;
-                }
-                
-                if(steer.normalized.z > 0.5f)
-                {
-                    y = 5;
-                }
-                else if (steer.normalized.z < -0.5f)
-                {
-                    y = -6;
-                }
-
-                camera.boostEffect.SetVector("_Direction", new Vector4(0.5f + x, 0.5f + y, 0, 0));
-                camera.boostEffect.SetFloat("_Show", 1);
-            }
-            else
-            {
-                camera.boostEffect.SetVector("_Direction", new Vector4(0.5f, 0.5f, 0, 0));
-                camera.boostEffect.SetFloat("_Show", 1);
-            }
-
-            thrustScale = boostThrusterScale;
             speed = boostSpeed;
+            boostEffect.SetActive(true);
         }
         else
         {
-            camera.boostEffect.SetFloat("_Show", 0);
-            thrustScale = normalThrusterScale;
             speed = baseSpeed;
+            boostEffect.SetActive(false);
         }
     }
     
