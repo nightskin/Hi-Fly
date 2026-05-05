@@ -143,7 +143,7 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1.4980394, g: 0, b: 0, a: 1}
-    - _Color: {r: 3.042301, g: 0, b: 0.18416712, a: 1}
+    - _Color: {r: 2.9960785, g: 0, b: 0, a: 1}
     - _DissolveColor: {r: 0.023153365, g: 0.023153365, b: 0.023153365, a: 1}
     - _EmissionColor: {r: 8, g: 8, b: 8, a: 1}
     - _MainColor: {r: 2.9960783, g: 0.5610303, b: 0, a: 1}

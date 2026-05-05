@@ -1,23 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class EnemyWaveManager : MonoBehaviour
 {
     static EnemyWaveManager instance;
 
     [SerializeField] ObjectPoolManager objectPool;
-    [SerializeField] Text waveInfo;
-    [SerializeField] GameObject upgradeMenu;
 
-    [SerializeField] int startAmountOfEnemiesInWave = 10;
-    [SerializeField] [Min(0)] float intervalBetweenWaves = 3.0f;
-    [SerializeField] [Min(0)] int enemyIncrement = 1;
+    [SerializeField] float minTime = 5;
+    [SerializeField] float maxTime = 20;
 
-    
-    int currentWaveNumber = 1;
-    int enemiesInCurrentWave;
-
-    int enemiesDownedInCurrentWave = 0;
+    [SerializeField] int maxEnemies = 10;
+    [SerializeField] int minEnemies = 5;
 
     bool waveInProgress = false;
     float timeBeforeNextWave = 0;
@@ -29,7 +22,7 @@ public class EnemyWaveManager : MonoBehaviour
     
     bool WaveComplete()
     {
-        if (enemiesDownedInCurrentWave == enemiesInCurrentWave)
+        if (maxEnemies == 0)
         {
             return true;
         }
@@ -38,23 +31,14 @@ public class EnemyWaveManager : MonoBehaviour
 
     public void StartWave()
     {
-        for (int i = 0; i < enemiesInCurrentWave; i++)
+        int enemiesInWave = Random.Range(minEnemies, maxEnemies);
+
+        for (int i = 0; i < enemiesInWave; i++)
         {
             Vector3 AheadOfPlayer = GameManager.Get().playerShip.transform.position + (GameManager.Get().playerShip.transform.forward * 500);
             objectPool.Spawn("enemy", AheadOfPlayer + Random.insideUnitSphere * 500);
         }
         waveInProgress = true;
-    }
-
-    public void EnemyDowned()
-    {
-        enemiesDownedInCurrentWave++;
-        UpdateUI();
-    }
-
-    public void UpdateUI()
-    {
-        waveInfo.text = "Wave: " + currentWaveNumber.ToString() + " - Kills: " + enemiesDownedInCurrentWave.ToString() + "/" + enemiesInCurrentWave.ToString();
     }
 
     void Awake()
@@ -64,9 +48,7 @@ public class EnemyWaveManager : MonoBehaviour
 
     void Start()
     {
-        timeBeforeNextWave = intervalBetweenWaves;
-        enemiesInCurrentWave = startAmountOfEnemiesInWave;
-        UpdateUI();
+        timeBeforeNextWave = Random.Range(minEnemies, maxEnemies+1);
     }
     
     void Update()
@@ -77,12 +59,8 @@ public class EnemyWaveManager : MonoBehaviour
             {
                 if (WaveComplete())
                 {
-                    currentWaveNumber++;
-                    timeBeforeNextWave = intervalBetweenWaves;
-                    enemiesInCurrentWave += enemyIncrement;
+                    timeBeforeNextWave = Random.Range(minTime,maxTime);
                     waveInProgress = false;
-                    enemiesDownedInCurrentWave = 0;
-                    GameManager.Get().OpenUpgradeMenu();
                 }
             }
             else

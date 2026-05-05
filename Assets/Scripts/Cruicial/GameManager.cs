@@ -4,13 +4,6 @@ using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
-    public enum GameMode
-    {
-        TUTORIAL,
-        SURVIVOR,
-    }
-    public GameMode gameMode;
-
     public enum PlayerMovement
     {
         ALL_RANGE,
@@ -23,12 +16,9 @@ public class GameManager : MonoBehaviour
 
     //Other Stuff
     static GameManager instance;
-    [SerializeField] GameObject upgradeSelectedObject;
     [SerializeField] GameObject gameOverSelectedObject;
     [SerializeField] GameObject gamePauseSelectedObject;
-    
-    [SerializeField] GameObject upgradeMenu;
-    [SerializeField] GameObject gameOverMenu;
+        [SerializeField] GameObject gameOverMenu;
     [SerializeField] GameObject gamePauseMenu;
 
     [HideInInspector] public PlayerShip playerShip;
@@ -209,39 +199,4 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void OpenUpgradeMenu()
-    {
-        if (!gameOver)
-        {
-            playerShip.health.Heal(playerShip.health.MaxHP());
-            Time.timeScale = 0;
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            gamePaused = true;
-            foreach (GameObject playerUI in playerUIToHideOnPause)
-            {
-                playerUI.SetActive(false);
-            }
-            upgradeMenu.SetActive(true);
-            if (InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD) eventSystem.SetSelectedGameObject(upgradeSelectedObject);
-            else eventSystem.SetSelectedGameObject(null);
-        }
-    }
-
-    public void CloseUpgradeMenu()
-    {
-        Time.timeScale = 1;
-        Cursor.visible = false;
-        gamePaused = false;
-        foreach (GameObject playerUI in playerUIToHideOnPause)
-        {
-            playerUI.SetActive(true);
-        }
-        upgradeMenu.SetActive(false);
-
-        if (EnemyWaveManager.Get())
-        {
-            EnemyWaveManager.Get().UpdateUI();
-        }
-    }
 }

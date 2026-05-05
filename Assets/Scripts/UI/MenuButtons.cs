@@ -29,22 +29,15 @@ public class MenuButtons : MonoBehaviour
         StartCoroutine(SceneLoader.instance.Load("Tutorial"));
     }
 
-    public void RogueMode()
+    public void NewGame()
     {
         eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.Load("Rogue"));
+        StartCoroutine(SceneLoader.instance.Load("Hub"));
     }
 
-    public void SurvivorMode()
+    public void Continue()
     {
-        eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.Load("Survivor"));
-    }
-
-    public void AssassinMode()
-    {
-        eventSystem.gameObject.SetActive(false);
-        StartCoroutine(SceneLoader.instance.Load("Assassin"));
+        
     }
 
     public void BackToMenu()

@@ -90,10 +90,6 @@ public class EnemyShip : MonoBehaviour
     void Die()
     {
         var explosion = GameManager.Get().objectPool.Spawn("explosion", transform.position);
-        if ((GameManager.Get().gameMode == GameManager.GameMode.SURVIVOR))
-        {
-            EnemyWaveManager.Get().EnemyDowned();
-        }
         gameObject.SetActive(false);
     }
 

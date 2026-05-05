@@ -28,7 +28,8 @@ public class Galaxy : MonoBehaviour
 
 
     [SerializeField] int numberOfPlanets = 10;
-    [SerializeField] GameObject planetGeneratorPrefab;
+    [SerializeField] GameObject[] mainLevels;
+    //[SerializeField] GameObject[] sideQuests;
     [SerializeField] GameObject asteroidFieldPrefab;
 
 
@@ -56,18 +57,16 @@ public class Galaxy : MonoBehaviour
             }
         }
 
-        // Add Planets
-        if(planetGeneratorPrefab)
+        // Add Levels
+        if(mainLevels.Length > 0)
         {
-            for (int i = 0; i < numberOfPlanets; i++)
+            foreach(GameObject level in mainLevels)
             {
                 int randomIndex = Random.Range(0, quadrants.Count);
                 quadrants[randomIndex].type = 1;
-                var lvl = Instantiate(planetGeneratorPrefab, quadrants[randomIndex].position, Quaternion.identity, transform);
-                lvl.name = i.ToString();
+                var lvl = Instantiate(level, quadrants[randomIndex].position, Quaternion.identity, transform);
             }
         }
-
         
         //Add Asteroid Fields
         if (asteroidFieldPrefab)
