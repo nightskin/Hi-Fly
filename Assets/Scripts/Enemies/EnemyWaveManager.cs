@@ -7,22 +7,31 @@ public class EnemyWaveManager : MonoBehaviour
     [SerializeField] ObjectPoolManager objectPool;
 
     [SerializeField] float minTime = 5;
-    [SerializeField] float maxTime = 20;
+    [SerializeField] float maxTime = 10;
 
-    [SerializeField] int maxEnemies = 10;
-    [SerializeField] int minEnemies = 5;
+    [SerializeField] int minEnemies = 10;
+    [SerializeField] int maxEnemies = 20;
 
+    public bool infinite = true;
     bool waveInProgress = false;
-    float timeBeforeNextWave = 0;
+    public int enemiesInWave;
+    [SerializeField] float timeBeforeNextWave;
 
     public static EnemyWaveManager Get()
     {
-        return instance;
+        if(instance)
+        {
+            return instance;
+        }
+        else
+        {
+            return null;
+        }
     }
     
     bool WaveComplete()
     {
-        if (maxEnemies == 0)
+        if (enemiesInWave == 0)
         {
             return true;
         }
@@ -31,7 +40,7 @@ public class EnemyWaveManager : MonoBehaviour
 
     public void StartWave()
     {
-        int enemiesInWave = Random.Range(minEnemies, maxEnemies);
+        enemiesInWave = Random.Range(minEnemies, maxEnemies);
 
         for (int i = 0; i < enemiesInWave; i++)
         {
@@ -51,7 +60,7 @@ public class EnemyWaveManager : MonoBehaviour
         timeBeforeNextWave = Random.Range(minEnemies, maxEnemies+1);
     }
     
-    void Update()
+    void FixedUpdate()
     {
         if(!GameManager.Get().gameOver && !GameManager.Get().gamePaused)
         {
@@ -59,7 +68,7 @@ public class EnemyWaveManager : MonoBehaviour
             {
                 if (WaveComplete())
                 {
-                    timeBeforeNextWave = Random.Range(minTime,maxTime);
+                    if(infinite) timeBeforeNextWave = Random.Range(minTime,maxTime);
                     waveInProgress = false;
                 }
             }
@@ -67,7 +76,7 @@ public class EnemyWaveManager : MonoBehaviour
             {
                 if (timeBeforeNextWave > 0)
                 {
-                    timeBeforeNextWave -= Time.deltaTime;
+                    timeBeforeNextWave -= Time.fixedDeltaTime;
                 }
                 else
                 {

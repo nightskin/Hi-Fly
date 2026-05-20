@@ -49,7 +49,7 @@ public class Bullet : MonoBehaviour
         trail.emitting = false;
     }
     
-    void Update()
+    void FixedUpdate()
     {
         if(!GameManager.Get().gamePaused)
         {
@@ -57,7 +57,7 @@ public class Bullet : MonoBehaviour
             prevPosition = transform.position;
             if (homingTarget)
             {
-                transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.fixedDeltaTime);
                 if(!hit)
                 {
                     if (Vector3.Distance(transform.position, homingTarget.position) < 1)
@@ -90,37 +90,40 @@ public class Bullet : MonoBehaviour
             }
             else
             {
-                transform.position += direction * speed * Time.deltaTime;
+                transform.position += direction * speed * Time.fixedDeltaTime;
             }
-
-
 
             //Destroy Bullet After A Certain Time has Past
             if (life > 0)
             {
-                life -= Time.deltaTime;
+                life -= Time.fixedDeltaTime;
             }
             else
             {
                 DeSpawn();
             }
 
-            //If bullet has not hit something check collisions
-            if (!hit)
-            {
-                CheckCollisions();
-            }
-            else
-            {
-                if (!sfx.isPlaying)
-                {
-                    DeSpawn();
-                }
-            }
+
 
         }
     }
+
     
+    void Update()
+    {
+        //If bullet has not hit something check collisions
+        if (!hit)
+        {
+            CheckCollisions();
+        }
+        else
+        {
+            if (!sfx.isPlaying)
+            {
+                    DeSpawn();
+            }
+        }
+    }
     void CheckCollisions()
     {
         if (Physics.Linecast(prevPosition, transform.position, out RaycastHit rayhit))

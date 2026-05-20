@@ -13,14 +13,7 @@ public class PlayerCamera : MonoBehaviour
     {
         if (!GameManager.Get().gamePaused)
         {
-            if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
-            {
-                FollowOnRailsTarget();
-            }
-            else
-            {
-                FollowShip();
-            }
+            FollowShip();
         }
     }
     
@@ -38,10 +31,4 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
-    void FollowOnRailsTarget()
-    {
-        Vector3 camPos = onRailsFollowTarget.position + (onRailsFollowTarget.up * 3) - (transform.forward * distanceFromPlayer);
-        transform.position = Vector3.Lerp(transform.position, camPos, lerpSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation, onRailsFollowTarget.rotation, lerpSpeed * Time.deltaTime);
-    }
 }

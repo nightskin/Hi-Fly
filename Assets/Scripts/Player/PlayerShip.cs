@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
@@ -20,7 +21,6 @@ public class PlayerShip : MonoBehaviour
 {
     //Necessary Components
     public HealthSystem health;
-    public GameObject drillDasher;
     public PlayerCamera camera;
     public Transform mesh;
     [SerializeField] GameObject boostEffect;
@@ -31,7 +31,6 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] Material thrusterMaterial;
     [SerializeField] Transform bulletSpawn;
     [SerializeField] CharacterController controller;
-    [SerializeField] Transform OnRailsFollowTarget;
 
     //Flight variables
     float speed;
@@ -53,16 +52,15 @@ public class PlayerShip : MonoBehaviour
     //Strafe Mode
     [HideInInspector] public bool strafeMode = false;
 
+
     //For Shooting
     public enum Weapon
     {
-        CHARGE_BOMB,
-        MULTI_SHOT,
-        RAVER_LAZER,
+        BLASTER,
+        LAZER,
     }
-    public Weapon rangedWeapon = Weapon.CHARGE_BOMB;
-    int rangedWeaponIndex;
-    
+    Weapon equipedWeapon = Weapon.BLASTER;
+
     [SerializeField] Text weaponText;
     [SerializeField] Image reticle;
     [SerializeField] LayerMask lockOnLayer;
@@ -71,19 +69,16 @@ public class PlayerShip : MonoBehaviour
 
     [HideInInspector] public List<HomingTarget> targets = new List<HomingTarget>();
     float chargeAmount = 0;
+    Color chargeColor;
     Lazer lazer = null;
     
-    public float chargeSpeed = 0.5f;
     public int baseFirePower = 3;
-
-    public int missileMult = 2;
     public float blastRadius = 10;
 
     public int lazerPower = 1;
     public float lazerSpeed = 0.01f;
     
     public int maxTargets = 5;
-    [HideInInspector] public bool explodingBullets = false;
     
     void Start()
     {
@@ -94,8 +89,6 @@ public class PlayerShip : MonoBehaviour
             targets.Add(new HomingTarget(null, l));
         }
 
-        rangedWeaponIndex = (int)rangedWeapon;
-        weaponText.text = " Weapon: " + rangedWeapon.ToString();
 
         Cursor.visible = false;
         mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
@@ -105,20 +98,21 @@ public class PlayerShip : MonoBehaviour
         reticle.rectTransform.position = reticlePosition;
         speed = baseSpeed;
 
-        InputManager.player.CenterCrosshair.performed += CenterCrosshair;
-        InputManager.player.ToggleStrafeMode.performed += StrafeMode_performed;
-        InputManager.player.Roll.performed += Roll_performed;
-        InputManager.player.ToggleWeapon.performed += ToggleWeapon_performed;
+        weaponText.text = equipedWeapon.ToString();
 
-        if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
-        {
-            transform.parent = OnRailsFollowTarget;
-        }
+        InputManager.player.CenterCrosshair.performed += CenterCrosshair;
+        InputManager.player.ToggleStrafeMode.performed += StrafeMode_pressed;
+        InputManager.player.ToggleWeapon.performed += ToggleWeapon_pressed;
+        InputManager.player.Roll.performed += Roll_pressed;
+        InputManager.player.Shoot.performed += Shoot_pressed;
+        InputManager.player.Shoot.canceled += Shoot_released;
     }
     void FixedUpdate()
-    {
+    {   
+        //Handles acceleration
         speed = Mathf.Lerp(speed, speed, acceleration * Time.fixedDeltaTime);
 
+        //Handles targeting
         Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
         if (Physics.SphereCast(ray, 4, out lockOn, Camera.main.farClipPlane, lockOnLayer))
         {
@@ -128,20 +122,61 @@ public class PlayerShip : MonoBehaviour
         {
             reticle.color = Color.white;
         }
+
+        if (InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.BLASTER)
+        {
+            chargeAmount += Time.fixedDeltaTime;
+            chargeColor = Color.Lerp(Color.green * 2, Color.orangeRed * 2, chargeAmount);
+            chargeMaterial.SetColor("_Color", chargeColor);
+
+            for(int i = 0; i < targets.Count; i++)
+            {
+                //add any new targets that have not already been added
+                bool alreadyTargeted = false;
+                for(int j = 0 ; j < targets.Count; j++)
+                {
+                    if (targets[j].followTarget == lockOn.transform)
+                    {
+                        alreadyTargeted = true;
+                        break;
+                    }
+                }
+
+                if (!targets[i].ui.activeSelf && !alreadyTargeted)
+                {
+                    targets[i].followTarget = lockOn.transform;
+                    targets[i].ui.SetActive(true);
+                }
+
+                //update targets on screen
+                if (targets[i].followTarget && targets[i].ui.activeSelf)
+                {
+                    Vector3 viewPortPos = Camera.main.WorldToViewportPoint(targets[i].followTarget.position);
+                    if(viewPortPos.x > 0 &&  viewPortPos.x < 1 && viewPortPos.y > 0 && viewPortPos.y < 1 && viewPortPos.z > 0)
+                    {
+                        targets[i].ui.transform.position = Camera.main.WorldToScreenPoint(targets[i].followTarget.position);
+                    }
+                    else
+                    {
+                        targets[i].followTarget = null;
+                        targets[i].ui.SetActive(false);
+                    }
+                }
+                else
+                {
+                    targets[i].followTarget = null;
+                    targets[i].ui.SetActive(false);
+                }
+            }
+
+        }
     }
     void Update()
     {
         if (health.IsAlive() && !GameManager.Get().gamePaused)
         {
-            if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ALL_RANGE)
-            {
-                if (strafeMode) StrafeControls();
-                else AllRangeControls();
-            }
-            else if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
-            {
-                OnRailsControls();
-            }
+            if (strafeMode) StrafeControls();
+            else BoostControls();
 
             //Evading
             if (evading)
@@ -168,159 +203,39 @@ public class PlayerShip : MonoBehaviour
                 SetBoost(false);
             }
 
-            //Shooting
-            if(InputManager.player.Shoot.WasPressedThisFrame())
+            //Handles Lazer
+            if(InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.LAZER)
             {
-                if (rangedWeapon == Weapon.CHARGE_BOMB)
-                {
-                    chargeEffect.gameObject.SetActive(true);
-                }
-                else if (rangedWeapon == Weapon.RAVER_LAZER)
-                {
-                    FireLazer();
-                }
+                UpdateLazer();
             }
-            if (InputManager.player.Shoot.IsPressed())
-            {
-                if (rangedWeapon == Weapon.RAVER_LAZER)
-                {
-                    UpdateLazer();
-                }
-                else if (rangedWeapon == Weapon.CHARGE_BOMB)
-                {
-                    chargeAmount += chargeSpeed * Time.deltaTime;
-                    chargeMaterial.SetColor("_Color", Color.Lerp(Color.green * 2, Color.red * 2, chargeAmount / chargeSpeed));
-                }
-                else if(rangedWeapon == Weapon.MULTI_SHOT)
-                {
-                    for(int i = 0; i < targets.Count; i++)
-                    {
-                        //add any new targets that have not already been added
-                        bool alreadyTargeted = false;
-                        for(int j = 0 ; j < targets.Count; j++)
-                        {
-                            if (targets[j].followTarget == lockOn.transform)
-                            {
-                                alreadyTargeted = true;
-                                break;
-                            }
-                        }
 
-                        if (!targets[i].ui.activeSelf && !alreadyTargeted)
-                        {
-                            targets[i].followTarget = lockOn.transform;
-                            targets[i].ui.SetActive(true);
-                        }
-
-                        //update targets on screen
-                        if (targets[i].followTarget && targets[i].ui.activeSelf)
-                        {
-                            Vector3 viewPortPos = Camera.main.WorldToViewportPoint(targets[i].followTarget.position);
-                            if(viewPortPos.x > 0 &&  viewPortPos.x < 1 && viewPortPos.y > 0 && viewPortPos.y < 1 && viewPortPos.z > 0)
-                            {
-                                targets[i].ui.transform.position = Camera.main.WorldToScreenPoint(targets[i].followTarget.position);
-                            }
-                            else
-                            {
-                                targets[i].followTarget = null;
-                                targets[i].ui.SetActive(false);
-                            }
-                        }
-                        else
-                        {
-                            targets[i].followTarget = null;
-                            targets[i].ui.SetActive(false);
-                        }
-                    }
-                }
-            }
-            else if(InputManager.player.Shoot.WasReleasedThisFrame())
-            {
-                if (rangedWeapon == Weapon.CHARGE_BOMB)
-                {
-                    chargeEffect.gameObject.SetActive(false);
-                    FireChargeShot();
-                    chargeAmount = 0;
-                }
-                else if (rangedWeapon == Weapon.RAVER_LAZER)
-                {
-                    if (lazer)
-                    {
-                        lazer.GetComponent<Lazer>().endFire = true;
-                        lazer = null;
-                    }
-                }
-                else if (rangedWeapon == Weapon.MULTI_SHOT)
-                {
-                    int targetCount = 0;
-                    for (int i = 0; i < targets.Count; i++)
-                    {
-                        if (targets[i].followTarget)
-                        {
-                            targetCount++;
-                        }
-                    }
-
-                    if (targetCount > 0)
-                    {
-                        StartCoroutine(FireHomingBullets());
-                    }
-                    else
-                    {
-                        FireBullet();
-                    }
-                }
-            }
         }
     }
     void OnDestroy()
     {
         InputManager.player.CenterCrosshair.performed -= CenterCrosshair;
-        InputManager.player.ToggleStrafeMode.performed -= StrafeMode_performed;
-        InputManager.player.Roll.performed -= Roll_performed;
-        InputManager.player.ToggleWeapon.performed -= ToggleWeapon_performed;
+        InputManager.player.ToggleStrafeMode.performed -= StrafeMode_pressed;
+        InputManager.player.ToggleWeapon.performed += ToggleWeapon_pressed;
+        InputManager.player.Roll.performed -= Roll_pressed;
+        InputManager.player.Shoot.performed -= Shoot_pressed;
+        InputManager.player.Shoot.canceled -= Shoot_released;
     }
     
-    private void StrafeMode_performed(UnityEngine.InputSystem.InputAction.CallbackContext context) 
+    private void Shoot_pressed(InputAction.CallbackContext obj)
     {
-        if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
+        if (equipedWeapon == Weapon.BLASTER)
         {
-            if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ALL_RANGE)
-            {
-                if (strafeMode)
-                {
-                    SetStrafeMode(false);
-                }
-                else
-                {
-                    SetStrafeMode(true);
-                }
-            }
+                chargeEffect.gameObject.SetActive(true);
+        }
+        else if (equipedWeapon == Weapon.LAZER)
+        {
+            FireLazer();
         }
     }
-    
-    private void CenterCrosshair(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+
+    private void Shoot_released(InputAction.CallbackContext obj)
     {
-        reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
-        reticle.rectTransform.position = reticlePosition;
-    }
-    
-    private void Roll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        evadeTimer = 0;
-        evading = true;
-        if (evadeDirection == 1) evadeDirection = -1;
-        else evadeDirection = 1;
-    }
-    
-    private void ToggleWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        //Cancel Current Weapon
-        if (rangedWeapon == Weapon.CHARGE_BOMB)
-        {
-            chargeEffect.gameObject.SetActive(false);
-        }
-        else if (rangedWeapon == Weapon.RAVER_LAZER)
+        if (equipedWeapon == Weapon.LAZER)
         {
             if (lazer)
             {
@@ -328,43 +243,70 @@ public class PlayerShip : MonoBehaviour
                 lazer = null;
             }
         }
-        else if (rangedWeapon == Weapon.MULTI_SHOT)
+        else if (equipedWeapon == Weapon.BLASTER)
         {
+            chargeEffect.gameObject.SetActive(false);
+            int targetCount = 0;
             for (int i = 0; i < targets.Count; i++)
             {
-                targets[i].followTarget = null;
-                targets[i].ui.SetActive(false);
+                if (targets[i].followTarget)
+                {
+                    targetCount++;
+                }
             }
 
-        }
-
-        //Then Change Weapon
-        float v = obj.ReadValue<float>();
-        if (v > 0)
-        {
-            if(rangedWeaponIndex < 2)
+            if (targetCount > 0)
             {
-                rangedWeaponIndex++;
+                StartCoroutine(FireMultiBlaster());
             }
             else
             {
-                rangedWeaponIndex = 0;
+                FireBlaster();
             }
         }
-        else if(v < 0)
+    }
+
+    private void StrafeMode_pressed(InputAction.CallbackContext obj) 
+    {
+        if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
         {
-            if(rangedWeaponIndex > 0)
+            if (strafeMode)
             {
-                rangedWeaponIndex--;
+                SetStrafeMode(false);
             }
             else
             {
-                rangedWeaponIndex = 2;
+                SetStrafeMode(true);
             }
-
         }
-        rangedWeapon = (Weapon)rangedWeaponIndex;
-        weaponText.text = " Weapon: " + rangedWeapon.ToString();
+    }
+    
+    private void CenterCrosshair(InputAction.CallbackContext obj)
+    {
+        reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
+        reticle.rectTransform.position = reticlePosition;
+    }
+    
+    private void Roll_pressed(InputAction.CallbackContext obj)
+    {
+        evadeTimer = 0;
+        evading = true;
+        if (evadeDirection == 1) evadeDirection = -1;
+        else evadeDirection = 1;
+    }
+    
+    private void ToggleWeapon_pressed(InputAction.CallbackContext obj)
+    {
+        if(equipedWeapon == Weapon.BLASTER)
+        {
+            equipedWeapon = Weapon.LAZER;
+        }
+        else if(equipedWeapon == Weapon.LAZER)
+        {
+            equipedWeapon = Weapon.BLASTER;
+        }
+
+        weaponText.text = equipedWeapon.ToString();
     }
 
     public void Teleport(Vector3 position)
@@ -407,38 +349,6 @@ public class PlayerShip : MonoBehaviour
         }
     }
     
-    void OnRailsControls()
-    {
-        OnRailsFollowTarget.transform.position += OnRailsFollowTarget.transform.forward * speed * Time.deltaTime;
-
-
-        offset += new Vector3(steer.x, steer.y, 0) * Time.deltaTime;
-        offset.x = Mathf.Clamp01(offset.x);
-        offset.y = Mathf.Clamp01(offset.y);
-        offset.z = speed / 4;
-       
-
-        Vector3 offsetWorld = Camera.main.ViewportToWorldPoint(offset);
-        transform.position = offsetWorld;
-
-        //Aiming
-        if(InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD)
-        {
-            reticlePosition += InputManager.player.Aim.ReadValue<Vector2>() * GameSettings.aimSensitivy * Time.deltaTime;
-            reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
-            reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
-            reticle.rectTransform.position = reticlePosition;
-        }
-        else if(InputManager.controlScheme == InputManager.ControlScheme.DESKTOP)
-        {
-            reticlePosition = Input.mousePosition;
-            reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
-            reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
-            reticle.rectTransform.position = reticlePosition;
-        }
-        
-    }
-
     void StrafeControls()
     {
         //Moving
@@ -455,7 +365,7 @@ public class PlayerShip : MonoBehaviour
         transform.rotation *= Quaternion.AngleAxis(-lookY * turnSpeed * Time.deltaTime, Vector3.right);
     }
 
-    void AllRangeControls()
+    void BoostControls()
     {
         //Forward Movement
         steer.x = InputManager.player.Steer.ReadValue<Vector2>().x;
@@ -491,19 +401,29 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
-    void FireBullet()
+    void FireBlaster()
     {
         //Initialize Bullet
         GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
         if (obj)
         {
             Bullet b = obj.GetComponent<Bullet>();
-            //Set Needed Variables
-            b.damage = baseFirePower;
             b.owner = mesh.gameObject;
-            b.explosive = explodingBullets;
-            b.blastRadius = blastRadius;
-            b.trail.material.SetColor("_Color", Color.white * 2);
+
+            if(chargeAmount >= 1)
+            {
+                b.explosive = true;
+                b.damage = baseFirePower;
+                b.blastRadius = blastRadius;
+            }
+            else
+            {
+                b.damage = baseFirePower;
+                b.explosive = false;
+                b.blastRadius = 0;
+            }
+
+            b.trail.material.SetColor("_Color", chargeColor);
         
             if (lockOn.collider)
             {
@@ -528,6 +448,7 @@ public class PlayerShip : MonoBehaviour
                     b.direction = ray.direction;
                 }
             }
+            chargeAmount = 0;
         }
     }
 
@@ -541,7 +462,7 @@ public class PlayerShip : MonoBehaviour
         return n;
     }
 
-    IEnumerator FireHomingBullets()
+    IEnumerator FireMultiBlaster()
     {
         int numberOfTargets = GetNumberOfActiveTargets();
         for(int i = 0; i < targets.Count; i++)
@@ -551,66 +472,29 @@ public class PlayerShip : MonoBehaviour
                 GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                 Bullet b = obj.GetComponent<Bullet>();
                 //Set Needed Variables
-                b.damage = baseFirePower * numberOfTargets;
                 b.owner = mesh.gameObject;
-                b.explosive = numberOfTargets == maxTargets;
-                b.blastRadius = blastRadius;
-                b.trail.material.SetColor("_Color", Color.white * 2);
+
+                if(chargeAmount >= 1)
+                {
+                    b.explosive = true;
+                    b.damage = baseFirePower * 5;
+                    b.blastRadius = blastRadius;
+                }
+                else
+                {
+                    b.damage = baseFirePower;
+                    b.explosive = false;
+                    b.blastRadius = 0;
+                }
+
+                b.trail.material.SetColor("_Color", chargeColor);
                 b.homingTarget = targets[i].followTarget;
                 targets[i].followTarget = null;
                 targets[i].ui.SetActive(false);
                 yield return new WaitForSeconds(0.05f);
             }
         }
-    }
-
-    void FireChargeShot()
-    {
-        //Initialize Bullet
-        GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
-        if (obj != null)
-        {
-            Bullet b = obj.GetComponent<Bullet>();
-            b.trail.material.SetColor("_Color", chargeMaterial.GetColor("_Color"));
-            b.owner = mesh.gameObject;
-            
-            if(chargeAmount >= 1)
-            {
-                b.explosive = true;
-                b.damage = baseFirePower * missileMult;
-                b.blastRadius = blastRadius;
-            }
-            else
-            {
-                b.damage = baseFirePower;
-                b.explosive = false;
-                b.blastRadius = 0;
-            }
-
-            if (lockOn.collider)
-            {
-                b.homingTarget = lockOn.collider.transform;
-            }
-            else
-            {
-                Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
-                if (Physics.Raycast(ray, out RaycastHit hit))
-                {
-                    if (hit.transform.gameObject == b.owner)
-                    {
-                        b.direction = ray.direction;
-                    }
-                    else
-                    {
-                        b.direction = (hit.point - bulletSpawn.position).normalized;
-                    }
-                }
-                else
-                {
-                    b.direction = ray.direction;
-                }
-            }
-        }
+        chargeAmount = 0;
     }
 
     void FireLazer()
@@ -619,7 +503,7 @@ public class PlayerShip : MonoBehaviour
         {
             lazer = GameManager.Get().objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
             lazer.owner = mesh.gameObject;
-            lazer.damage = baseFirePower;
+            lazer.damage = lazerPower;
             lazer.speed = lazerSpeed;
 
             Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);

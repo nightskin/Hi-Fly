@@ -37,15 +37,8 @@ public class EnemyShip : MonoBehaviour
         {
             if (health.IsAlive())
             {
-                if (GameManager.Get().playerMovement == GameManager.PlayerMovement.ON_RAILS)
-                {
-                    SteerOnRails();
-                }
-                else
-                {
-                    if (isSmart) Steer_Smart();
-                    else Steer_Dumb();
-                }
+                if (isSmart) Steer_Smart();
+                else Steer_Dumb();
 
                 shootTimer -= Time.deltaTime;
                 if (shootTimer <= 0 && !effect.enabled)
@@ -90,6 +83,7 @@ public class EnemyShip : MonoBehaviour
     void Die()
     {
         var explosion = GameManager.Get().objectPool.Spawn("explosion", transform.position);
+        EnemyWaveManager.Get().enemiesInWave--;
         gameObject.SetActive(false);
     }
 
@@ -115,31 +109,7 @@ public class EnemyShip : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(Vector3.Lerp(transform.forward, direction, turnRate * Time.deltaTime));
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
     }
-
-    void SteerOnRails()
-    {
-        Vector3 heading = GetDirectionTowardsTarget();
-        if (Vector3.Dot(Camera.main.transform.forward, heading) > 0)
-        {
-            direction = SteerTowardsTarget();
-            transform.rotation = Quaternion.LookRotation(direction);
-            transform.position += transform.forward * moveSpeed * Time.deltaTime;
-
-            shootTimer -= Time.deltaTime;
-            if (shootTimer <= 0 && !effect.enabled)
-            {
-                if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) > shootThreshold)
-                {
-                    ShootAtPlayer();
-                }
-            }
-        }
-        else
-        {
-            gameObject.SetActive(false);
-        }
-    }
-
+    
     void ShootAtPlayer()
     {
         if(Physics.Linecast(transform.position, GameManager.Get().playerShip.transform.position,out RaycastHit hit))

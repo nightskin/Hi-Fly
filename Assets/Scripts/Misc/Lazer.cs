@@ -44,8 +44,8 @@ public class Lazer : MonoBehaviour
 
             if(endFire)
             {
-                renderer.startWidth = Mathf.Lerp(renderer.startWidth, 0, 10 * Time.deltaTime);
-                renderer.endWidth = Mathf.Lerp(renderer.endWidth, 0, 10 * Time.deltaTime);
+                renderer.startWidth = Mathf.Lerp(renderer.startWidth, 0, 10 * Time.fixedDeltaTime);
+                renderer.endWidth = Mathf.Lerp(renderer.endWidth, 0, 10 * Time.fixedDeltaTime);
                 if(renderer.endWidth <= 0)
                 {
                     gameObject.SetActive(false);

@@ -89,12 +89,12 @@
                 },
                 {
                     "name": "ToggleWeapon",
-                    "type": "Value",
-                    "id": "9577dd1f-4289-4c72-b286-6eb2adc96f94",
-                    "expectedControlType": "Axis",
+                    "type": "Button",
+                    "id": "4a67ad4a-2fb3-4dde-ac3c-af5d2449bf3e",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -374,136 +374,26 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "DpadV",
-                    "id": "576873b4-51be-497d-b20a-791848e6d5aa",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ToggleWeapon",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "89154e83-f33c-4d31-974a-2869cb7f7b35",
-                    "path": "<Gamepad>/dpad/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "ToggleWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "0196b8b8-2408-4cad-a325-d20872cb559d",
+                    "name": "",
+                    "id": "5b6b905f-2895-4921-9ad1-3e7eac6daf64",
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "ToggleWeapon",
                     "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "DpadH",
-                    "id": "1f29a493-ed03-4dbe-b669-048489bf3baf",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ToggleWeapon",
-                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "negative",
-                    "id": "0bf3c307-12bc-47a2-9281-ecfb8a6b472d",
-                    "path": "<Gamepad>/dpad/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "ToggleWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "31332bcd-b577-424a-a71f-92d47ccc9c16",
-                    "path": "<Gamepad>/dpad/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "ToggleWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "ScrollWheel",
-                    "id": "97d34aad-2b12-4c23-96aa-55a73a4a6d18",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ToggleWeapon",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "37bd96f3-8aa7-4127-af42-a972bbed2b4e",
-                    "path": "<Mouse>/scroll/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "ToggleWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "f86c1aa4-733c-4038-97f5-908c1356244e",
-                    "path": "<Mouse>/scroll/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "ToggleWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "QE",
-                    "id": "f97097cc-7724-4769-a396-a1061182fd1a",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ToggleWeapon",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "26d19c97-502c-4baf-9453-451b48d227ac",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "ToggleWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "8bc914ec-f6f7-488c-a60d-0ce79b59d8a1",
+                    "name": "",
+                    "id": "161a6972-23b3-4c9e-a0ff-13ad488ec71b",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": ";KeyboardMouse",
                     "action": "ToggleWeapon",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         },

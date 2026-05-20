@@ -3,16 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
-{
-    public enum PlayerMovement
-    {
-        ALL_RANGE,
-        ON_RAILS,
-    }
-    public PlayerMovement playerMovement;
-
-
-    public ObjectPoolManager objectPool;
+{   public ObjectPoolManager objectPool;
 
     //Other Stuff
     static GameManager instance;

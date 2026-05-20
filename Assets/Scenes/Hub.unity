@@ -628,8 +628,11 @@ MonoBehaviour:
   objectPool: {fileID: 4419068242589922780}
   minTime: 5
   maxTime: 20
-  maxEnemies: 10
-  minEnemies: 5
+  minEnemies: 10
+  maxEnemies: 20
+  infinite: 1
+  enemiesInWave: 0
+  timeBeforeNextWave: 0
 --- !u!1001 &1926307067
 PrefabInstance:
   m_ObjectHideFlags: 0
