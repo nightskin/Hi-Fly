@@ -22,36 +22,26 @@ public class PlayerShip : MonoBehaviour
     //Necessary Components
     public HealthSystem health;
     public PlayerCamera camera;
-    public Transform mesh;
     [SerializeField] GameObject boostEffect;
     [SerializeField] GameObject lockUI;
     [SerializeField] Transform hud;
     [SerializeField] Material chargeMaterial;
     [SerializeField] ParticleSystem chargeEffect;
-    [SerializeField] Material thrusterMaterial;
+    [SerializeField] GameObject[] trails;
     [SerializeField] Transform bulletSpawn;
     [SerializeField] CharacterController controller;
 
     //Flight variables
     float speed;
+    float targetSpeed;
     Vector3 steer;
     
-    [HideInInspector] public bool boosting = false;
+    [HideInInspector] public bool thrusting = false;
     [SerializeField][Min(1)] float turnSpeed = 100;
     [SerializeField] float baseSpeed = 50;
     [SerializeField] float boostSpeed = 200;
+    [SerializeField] float thrustSpeed = 250;
     [SerializeField] float acceleration = 10;
-    Vector3 offset = Vector3.one *  0.5f;
-
-    //Barrel Rolls
-    [HideInInspector] public bool evading = false;
-    int evadeDirection = 0;
-    float evadeTimer;
-    float evadeSpeed = 360 * 5;
-
-    //Strafe Mode
-    [HideInInspector] public bool strafeMode = false;
-
 
     //For Shooting
     public enum Weapon
@@ -64,7 +54,6 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] Text weaponText;
     [SerializeField] Image reticle;
     [SerializeField] LayerMask lockOnLayer;
-    Vector2 reticlePosition;
     RaycastHit lockOn;
 
     [HideInInspector] public List<HomingTarget> targets = new List<HomingTarget>();
@@ -91,26 +80,26 @@ public class PlayerShip : MonoBehaviour
 
 
         Cursor.visible = false;
-        mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
-        mesh.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameSettings.playerStripeColor);
+        GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
+        GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameSettings.playerStripeColor);
 
-        reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
-        reticle.rectTransform.position = reticlePosition;
-        speed = baseSpeed;
+
+        targetSpeed = baseSpeed;
 
         weaponText.text = equipedWeapon.ToString();
 
-        InputManager.player.CenterCrosshair.performed += CenterCrosshair;
-        InputManager.player.ToggleStrafeMode.performed += StrafeMode_pressed;
+        InputManager.player.Thrust.performed += Thrust_pressed;
+        InputManager.player.Thrust.canceled += Thrust_released;
+        InputManager.player.Boost.performed += Boost_pressed;
+        InputManager.player.Boost.canceled += Boost_released;
         InputManager.player.ToggleWeapon.performed += ToggleWeapon_pressed;
-        InputManager.player.Roll.performed += Roll_pressed;
         InputManager.player.Shoot.performed += Shoot_pressed;
         InputManager.player.Shoot.canceled += Shoot_released;
     }
     void FixedUpdate()
     {   
         //Handles acceleration
-        speed = Mathf.Lerp(speed, speed, acceleration * Time.fixedDeltaTime);
+        speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.fixedDeltaTime);
 
         //Handles targeting
         Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
@@ -175,33 +164,9 @@ public class PlayerShip : MonoBehaviour
     {
         if (health.IsAlive() && !GameManager.Get().gamePaused)
         {
-            if (strafeMode) StrafeControls();
-            else BoostControls();
+            if (thrusting) ThrustControls();
+            else StrafeControls();
 
-            //Evading
-            if (evading)
-            {
-                mesh.localEulerAngles += new Vector3(0, 0, evadeDirection * evadeSpeed * Time.deltaTime);
-                evadeTimer += Time.deltaTime;
-                if (evadeTimer > 1)
-                {
-                    evading = false;
-                }
-            }
-            else
-            {
-                mesh.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(mesh.localEulerAngles.z, steer.x * -45, 10 * Time.deltaTime));
-            }
-
-            //Boosting
-            if(InputManager.player.Boost.IsPressed())
-            {
-                SetBoost(true);
-            }
-            else
-            {
-                SetBoost(false);
-            }
 
             //Handles Lazer
             if(InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.LAZER)
@@ -213,12 +178,48 @@ public class PlayerShip : MonoBehaviour
     }
     void OnDestroy()
     {
-        InputManager.player.CenterCrosshair.performed -= CenterCrosshair;
-        InputManager.player.ToggleStrafeMode.performed -= StrafeMode_pressed;
-        InputManager.player.ToggleWeapon.performed += ToggleWeapon_pressed;
-        InputManager.player.Roll.performed -= Roll_pressed;
+        InputManager.player.Thrust.performed -= Thrust_pressed;
+        InputManager.player.Thrust.canceled -= Thrust_released;
+        InputManager.player.Boost.performed -= Boost_pressed;
+        InputManager.player.Boost.canceled -= Boost_released;
+        InputManager.player.ToggleWeapon.performed -= ToggleWeapon_pressed;
         InputManager.player.Shoot.performed -= Shoot_pressed;
         InputManager.player.Shoot.canceled -= Shoot_released;
+    }
+    
+    private void Thrust_pressed(InputAction.CallbackContext obj)
+    {
+        thrusting = true;
+        targetSpeed = thrustSpeed;
+        boostEffect.SetActive(true);
+
+        for(int i = 0; i < trails.Length; i++)
+        {
+            trails[i].gameObject.SetActive(true);
+        }
+
+    }
+
+    private void Thrust_released(InputAction.CallbackContext obj)
+    {
+        thrusting = false;
+        targetSpeed = baseSpeed;
+        boostEffect.SetActive(false);
+
+        for(int i = 0; i < trails.Length; i++)
+        {
+            trails[i].gameObject.SetActive(false);
+        }
+    }
+
+    private void Boost_pressed(InputAction.CallbackContext obj)
+    {
+        targetSpeed = boostSpeed;
+    }
+
+    private void Boost_released(InputAction.CallbackContext obj)
+    {
+        targetSpeed = baseSpeed;
     }
     
     private void Shoot_pressed(InputAction.CallbackContext obj)
@@ -265,35 +266,6 @@ public class PlayerShip : MonoBehaviour
             }
         }
     }
-
-    private void StrafeMode_pressed(InputAction.CallbackContext obj) 
-    {
-        if (!GameManager.Get().gamePaused && !GameManager.Get().gameOver)
-        {
-            if (strafeMode)
-            {
-                SetStrafeMode(false);
-            }
-            else
-            {
-                SetStrafeMode(true);
-            }
-        }
-    }
-    
-    private void CenterCrosshair(InputAction.CallbackContext obj)
-    {
-        reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
-        reticle.rectTransform.position = reticlePosition;
-    }
-    
-    private void Roll_pressed(InputAction.CallbackContext obj)
-    {
-        evadeTimer = 0;
-        evading = true;
-        if (evadeDirection == 1) evadeDirection = -1;
-        else evadeDirection = 1;
-    }
     
     private void ToggleWeapon_pressed(InputAction.CallbackContext obj)
     {
@@ -317,38 +289,7 @@ public class PlayerShip : MonoBehaviour
         controller.enabled = true;
     }
 
-    public void SetStrafeMode(bool active)
-    {
-        strafeMode = active;
-        if(strafeMode)
-        {
-            speed = baseSpeed;
-            reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
-            reticle.rectTransform.position = reticlePosition;
-            camera.transform.parent = transform;
-        }
-        else
-        {
-            speed = baseSpeed;
-            camera.transform.parent = transform.parent;
-        }
-    }
 
-    public void SetBoost(bool active)
-    {
-        boosting = active;
-        if(boosting && !strafeMode)
-        {
-            speed = boostSpeed;
-            boostEffect.SetActive(true);
-        }
-        else
-        {
-            speed = baseSpeed;
-            boostEffect.SetActive(false);
-        }
-    }
-    
     void StrafeControls()
     {
         //Moving
@@ -365,7 +306,7 @@ public class PlayerShip : MonoBehaviour
         transform.rotation *= Quaternion.AngleAxis(-lookY * turnSpeed * Time.deltaTime, Vector3.right);
     }
 
-    void BoostControls()
+    void ThrustControls()
     {
         //Forward Movement
         steer.x = InputManager.player.Steer.ReadValue<Vector2>().x;
@@ -383,22 +324,6 @@ public class PlayerShip : MonoBehaviour
             transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, 5 * Time.deltaTime));
         }
 
-
-        //Aiming
-        if (InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD)
-        {
-            reticlePosition += InputManager.player.Aim.ReadValue<Vector2>() * GameSettings.aimSensitivy * Time.deltaTime;
-            reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
-            reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
-            reticle.rectTransform.position = reticlePosition;
-        }
-        else if(InputManager.controlScheme == InputManager.ControlScheme.DESKTOP)
-        {
-            reticlePosition = Input.mousePosition;
-            reticlePosition.x = Mathf.Clamp(reticlePosition.x, reticle.rectTransform.sizeDelta.x / 2, Screen.width - (reticle.rectTransform.sizeDelta.x / 2));
-            reticlePosition.y = Mathf.Clamp(reticlePosition.y, reticle.rectTransform.sizeDelta.y / 2, Screen.height - (reticle.rectTransform.sizeDelta.y / 2));
-            reticle.rectTransform.position = reticlePosition;
-        }
     }
 
     void FireBlaster()
@@ -408,7 +333,7 @@ public class PlayerShip : MonoBehaviour
         if (obj)
         {
             Bullet b = obj.GetComponent<Bullet>();
-            b.owner = mesh.gameObject;
+            b.owner = gameObject;
 
             if(chargeAmount >= 1)
             {
@@ -472,7 +397,7 @@ public class PlayerShip : MonoBehaviour
                 GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                 Bullet b = obj.GetComponent<Bullet>();
                 //Set Needed Variables
-                b.owner = mesh.gameObject;
+                b.owner = gameObject;
 
                 if(chargeAmount >= 1)
                 {
@@ -502,7 +427,7 @@ public class PlayerShip : MonoBehaviour
         if (!lazer)
         {
             lazer = GameManager.Get().objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
-            lazer.owner = mesh.gameObject;
+            lazer.owner = gameObject;
             lazer.damage = lazerPower;
             lazer.speed = lazerSpeed;
 

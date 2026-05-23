@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
         [SerializeField] GameObject gameOverMenu;
     [SerializeField] GameObject gamePauseMenu;
 
-    [HideInInspector] public PlayerShip playerShip;
+    public PlayerShip playerObject;
     public GameObject[] playerUIToHideOnPause;
 
     [HideInInspector] public bool gameOver;
@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour
         gameOver = false;
         gamePaused = false;
 
-        playerShip = transform.Find("PlayerShip").GetComponent<PlayerShip>();
         eventSystem = GetComponent<EventSystem>();
 
     }
@@ -67,11 +66,11 @@ public class GameManager : MonoBehaviour
                 {
                     playerUIToHideOnPause[i].SetActive(false);
                 }
-                if (playerShip.gameObject.activeSelf)
+                if (playerObject.gameObject.activeSelf)
                 {
-                    playerShip.camera.transform.parent = transform;
-                    playerShip.SetBoost(false);
-                    playerShip.gameObject.SetActive(false);
+                    playerObject.camera.transform.parent = transform;
+                    //playerObject.SetBoost(false);
+                    playerObject.gameObject.SetActive(false);
                 }
                 gameOverTimer -= Time.deltaTime;
             }

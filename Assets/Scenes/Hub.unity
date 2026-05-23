@@ -633,7 +633,19 @@ MonoBehaviour:
   infinite: 1
   enemiesInWave: 0
   timeBeforeNextWave: 0
---- !u!1001 &1926307067
+--- !u!114 &4419068242589922780 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4419068241582400892, guid: 3502377a63101434aa59a6d9127fb3b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 9120474620811477194}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9815d1878dfaf8b4e8360e8457175d21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &4590910827063220006
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -715,18 +727,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f9a426b5fc9288e48bcdc4a92bb825db, type: 3}
---- !u!114 &4419068242589922780 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4419068241582400892, guid: 3502377a63101434aa59a6d9127fb3b5,
-    type: 3}
-  m_PrefabInstance: {fileID: 9120474620811477194}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9815d1878dfaf8b4e8360e8457175d21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &9120474620811477194
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -803,5 +803,5 @@ SceneRoots:
   - {fileID: 9120474620811477194}
   - {fileID: 203844589}
   - {fileID: 349310802}
-  - {fileID: 1926307067}
+  - {fileID: 4590910827063220006}
   - {fileID: 1875457828}

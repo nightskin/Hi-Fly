@@ -11,14 +11,14 @@ public class PlayerCollisions : MonoBehaviour
     {
         if (other.tag == "Surface" || other.tag == "Destructible")
         {
-            if(!playerShip.strafeMode)
+            if(!playerShip.thrusting)
             {
                 health.TakeDamage(10);
                 audioSource.PlayOneShot(crashSound);
                 if (health.IsDead())
                 {
                     GameObject.Find("ObjectPool").GetComponent<ObjectPoolManager>().Spawn("explosion", transform.position);
-                    GameManager.Get().playerShip.gameObject.SetActive(false);
+                    GameManager.Get().playerObject.gameObject.SetActive(false);
                     GameManager.Get().gameOver = true;
                 }
             }

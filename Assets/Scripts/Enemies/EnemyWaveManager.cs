@@ -44,7 +44,7 @@ public class EnemyWaveManager : MonoBehaviour
 
         for (int i = 0; i < enemiesInWave; i++)
         {
-            Vector3 AheadOfPlayer = GameManager.Get().playerShip.transform.position + (GameManager.Get().playerShip.transform.forward * 500);
+            Vector3 AheadOfPlayer = GameManager.Get().playerObject.transform.position + (GameManager.Get().playerObject.transform.forward * 500);
             objectPool.Spawn("enemy", AheadOfPlayer + Random.insideUnitSphere * 500);
         }
         waveInProgress = true;

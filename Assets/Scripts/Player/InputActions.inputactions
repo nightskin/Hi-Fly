@@ -34,15 +34,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Mouse_Position",
-                    "type": "PassThrough",
-                    "id": "a2f9f9c2-308e-43af-a853-3c060d206453",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Boost",
                     "type": "Button",
                     "id": "511da5e6-3ba5-40d3-9072-0d9ee7aa1521",
@@ -52,36 +43,18 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Thrust",
+                    "type": "Button",
+                    "id": "b33b6618-8fb3-4ba3-b145-ad4d82eb2cb3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Shoot",
                     "type": "Button",
                     "id": "e7079d14-1be9-4c0b-8f9f-85c1f3919d30",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "ToggleStrafeMode",
-                    "type": "Button",
-                    "id": "10c9dd9b-d8e7-42e0-89f6-b5e6e1e310bd",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "CenterCrosshair",
-                    "type": "Button",
-                    "id": "721a3e3f-4f33-4e30-93c0-256bf80040ab",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Roll",
-                    "type": "Button",
-                    "id": "612b4740-ed6d-4f6a-a198-780f26d37e54",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -231,83 +204,6 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "0aebcca0-f105-442e-a7d9-2c5b1bc4192a",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "ToggleStrafeMode",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c76880b7-91e3-4aa8-84c6-f3adec40df2f",
-                    "path": "<Gamepad>/select",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "ToggleStrafeMode",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "24b4dc68-e9fe-41c5-a5b0-870ba680111c",
-                    "path": "<Gamepad>/rightStickPress",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "CenterCrosshair",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "69181037-482f-4070-9cb7-82de8ae141af",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardMouse",
-                    "action": "Mouse_Position",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ff665218-9f37-40db-bbd9-f29c1dba633b",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Roll",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6efbdad2-71ce-4643-955c-34398048c588",
-                    "path": "<Mouse>/middleButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "Roll",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "efebe149-0598-4c34-9d7a-cf632bbb35e1",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "Roll",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
                     "name": "Gamepad",
                     "id": "0fa0e930-075f-495e-acf0-be9cd77f447e",
                     "path": "1DAxis",
@@ -392,6 +288,28 @@
                     "processors": "",
                     "groups": ";KeyboardMouse",
                     "action": "ToggleWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "367e11f4-fea3-4c63-86ab-5d9726d6e4be",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "Thrust",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c3376b57-002e-4ce0-a128-1d097b1d0464",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Thrust",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

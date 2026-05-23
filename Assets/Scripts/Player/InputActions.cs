@@ -120,15 +120,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Mouse_Position"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""a2f9f9c2-308e-43af-a853-3c060d206453"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Boost"",
                     ""type"": ""Button"",
                     ""id"": ""511da5e6-3ba5-40d3-9072-0d9ee7aa1521"",
@@ -138,36 +129,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Thrust"",
+                    ""type"": ""Button"",
+                    ""id"": ""b33b6618-8fb3-4ba3-b145-ad4d82eb2cb3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Shoot"",
                     ""type"": ""Button"",
                     ""id"": ""e7079d14-1be9-4c0b-8f9f-85c1f3919d30"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""ToggleStrafeMode"",
-                    ""type"": ""Button"",
-                    ""id"": ""10c9dd9b-d8e7-42e0-89f6-b5e6e1e310bd"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""CenterCrosshair"",
-                    ""type"": ""Button"",
-                    ""id"": ""721a3e3f-4f33-4e30-93c0-256bf80040ab"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Roll"",
-                    ""type"": ""Button"",
-                    ""id"": ""612b4740-ed6d-4f6a-a198-780f26d37e54"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -317,83 +290,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""0aebcca0-f105-442e-a7d9-2c5b1bc4192a"",
-                    ""path"": ""<Keyboard>/r"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardMouse"",
-                    ""action"": ""ToggleStrafeMode"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c76880b7-91e3-4aa8-84c6-f3adec40df2f"",
-                    ""path"": ""<Gamepad>/select"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""ToggleStrafeMode"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""24b4dc68-e9fe-41c5-a5b0-870ba680111c"",
-                    ""path"": ""<Gamepad>/rightStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""CenterCrosshair"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""69181037-482f-4070-9cb7-82de8ae141af"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
-                    ""action"": ""Mouse_Position"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ff665218-9f37-40db-bbd9-f29c1dba633b"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Roll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6efbdad2-71ce-4643-955c-34398048c588"",
-                    ""path"": ""<Mouse>/middleButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardMouse"",
-                    ""action"": ""Roll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""efebe149-0598-4c34-9d7a-cf632bbb35e1"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardMouse"",
-                    ""action"": ""Roll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
                     ""name"": ""Gamepad"",
                     ""id"": ""0fa0e930-075f-495e-acf0-be9cd77f447e"",
                     ""path"": ""1DAxis"",
@@ -478,6 +374,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";KeyboardMouse"",
                     ""action"": ""ToggleWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""367e11f4-fea3-4c63-86ab-5d9726d6e4be"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardMouse"",
+                    ""action"": ""Thrust"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3376b57-002e-4ce0-a128-1d097b1d0464"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Thrust"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -969,12 +887,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_Steer = m_Player.FindAction("Steer", throwIfNotFound: true);
         m_Player_Ascend_Descend = m_Player.FindAction("Ascend_Descend", throwIfNotFound: true);
         m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
-        m_Player_Mouse_Position = m_Player.FindAction("Mouse_Position", throwIfNotFound: true);
         m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
+        m_Player_Thrust = m_Player.FindAction("Thrust", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
-        m_Player_ToggleStrafeMode = m_Player.FindAction("ToggleStrafeMode", throwIfNotFound: true);
-        m_Player_CenterCrosshair = m_Player.FindAction("CenterCrosshair", throwIfNotFound: true);
-        m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
         m_Player_ToggleWeapon = m_Player.FindAction("ToggleWeapon", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -1069,12 +984,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Steer;
     private readonly InputAction m_Player_Ascend_Descend;
     private readonly InputAction m_Player_Aim;
-    private readonly InputAction m_Player_Mouse_Position;
     private readonly InputAction m_Player_Boost;
+    private readonly InputAction m_Player_Thrust;
     private readonly InputAction m_Player_Shoot;
-    private readonly InputAction m_Player_ToggleStrafeMode;
-    private readonly InputAction m_Player_CenterCrosshair;
-    private readonly InputAction m_Player_Roll;
     private readonly InputAction m_Player_ToggleWeapon;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
@@ -1100,29 +1012,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Aim => m_Wrapper.m_Player_Aim;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Mouse_Position".
-        /// </summary>
-        public InputAction @Mouse_Position => m_Wrapper.m_Player_Mouse_Position;
-        /// <summary>
         /// Provides access to the underlying input action "Player/Boost".
         /// </summary>
         public InputAction @Boost => m_Wrapper.m_Player_Boost;
         /// <summary>
+        /// Provides access to the underlying input action "Player/Thrust".
+        /// </summary>
+        public InputAction @Thrust => m_Wrapper.m_Player_Thrust;
+        /// <summary>
         /// Provides access to the underlying input action "Player/Shoot".
         /// </summary>
         public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/ToggleStrafeMode".
-        /// </summary>
-        public InputAction @ToggleStrafeMode => m_Wrapper.m_Player_ToggleStrafeMode;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/CenterCrosshair".
-        /// </summary>
-        public InputAction @CenterCrosshair => m_Wrapper.m_Player_CenterCrosshair;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/Roll".
-        /// </summary>
-        public InputAction @Roll => m_Wrapper.m_Player_Roll;
         /// <summary>
         /// Provides access to the underlying input action "Player/ToggleWeapon".
         /// </summary>
@@ -1162,24 +1062,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Aim.started += instance.OnAim;
             @Aim.performed += instance.OnAim;
             @Aim.canceled += instance.OnAim;
-            @Mouse_Position.started += instance.OnMouse_Position;
-            @Mouse_Position.performed += instance.OnMouse_Position;
-            @Mouse_Position.canceled += instance.OnMouse_Position;
             @Boost.started += instance.OnBoost;
             @Boost.performed += instance.OnBoost;
             @Boost.canceled += instance.OnBoost;
+            @Thrust.started += instance.OnThrust;
+            @Thrust.performed += instance.OnThrust;
+            @Thrust.canceled += instance.OnThrust;
             @Shoot.started += instance.OnShoot;
             @Shoot.performed += instance.OnShoot;
             @Shoot.canceled += instance.OnShoot;
-            @ToggleStrafeMode.started += instance.OnToggleStrafeMode;
-            @ToggleStrafeMode.performed += instance.OnToggleStrafeMode;
-            @ToggleStrafeMode.canceled += instance.OnToggleStrafeMode;
-            @CenterCrosshair.started += instance.OnCenterCrosshair;
-            @CenterCrosshair.performed += instance.OnCenterCrosshair;
-            @CenterCrosshair.canceled += instance.OnCenterCrosshair;
-            @Roll.started += instance.OnRoll;
-            @Roll.performed += instance.OnRoll;
-            @Roll.canceled += instance.OnRoll;
             @ToggleWeapon.started += instance.OnToggleWeapon;
             @ToggleWeapon.performed += instance.OnToggleWeapon;
             @ToggleWeapon.canceled += instance.OnToggleWeapon;
@@ -1203,24 +1094,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Aim.started -= instance.OnAim;
             @Aim.performed -= instance.OnAim;
             @Aim.canceled -= instance.OnAim;
-            @Mouse_Position.started -= instance.OnMouse_Position;
-            @Mouse_Position.performed -= instance.OnMouse_Position;
-            @Mouse_Position.canceled -= instance.OnMouse_Position;
             @Boost.started -= instance.OnBoost;
             @Boost.performed -= instance.OnBoost;
             @Boost.canceled -= instance.OnBoost;
+            @Thrust.started -= instance.OnThrust;
+            @Thrust.performed -= instance.OnThrust;
+            @Thrust.canceled -= instance.OnThrust;
             @Shoot.started -= instance.OnShoot;
             @Shoot.performed -= instance.OnShoot;
             @Shoot.canceled -= instance.OnShoot;
-            @ToggleStrafeMode.started -= instance.OnToggleStrafeMode;
-            @ToggleStrafeMode.performed -= instance.OnToggleStrafeMode;
-            @ToggleStrafeMode.canceled -= instance.OnToggleStrafeMode;
-            @CenterCrosshair.started -= instance.OnCenterCrosshair;
-            @CenterCrosshair.performed -= instance.OnCenterCrosshair;
-            @CenterCrosshair.canceled -= instance.OnCenterCrosshair;
-            @Roll.started -= instance.OnRoll;
-            @Roll.performed -= instance.OnRoll;
-            @Roll.canceled -= instance.OnRoll;
             @ToggleWeapon.started -= instance.OnToggleWeapon;
             @ToggleWeapon.performed -= instance.OnToggleWeapon;
             @ToggleWeapon.canceled -= instance.OnToggleWeapon;
@@ -1474,13 +1356,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAim(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Mouse_Position" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMouse_Position(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "Boost" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1488,33 +1363,19 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBoost(InputAction.CallbackContext context);
         /// <summary>
+        /// Method invoked when associated input action "Thrust" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnThrust(InputAction.CallbackContext context);
+        /// <summary>
         /// Method invoked when associated input action "Shoot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnShoot(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "ToggleStrafeMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnToggleStrafeMode(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "CenterCrosshair" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCenterCrosshair(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Roll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRoll(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "ToggleWeapon" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

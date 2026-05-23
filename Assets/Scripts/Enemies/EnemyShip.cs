@@ -112,7 +112,7 @@ public class EnemyShip : MonoBehaviour
     
     void ShootAtPlayer()
     {
-        if(Physics.Linecast(transform.position, GameManager.Get().playerShip.transform.position,out RaycastHit hit))
+        if(Physics.Linecast(transform.position, GameManager.Get().playerObject.transform.position,out RaycastHit hit))
         {
             if(hit.transform.tag == "Player")
             {
@@ -141,7 +141,7 @@ public class EnemyShip : MonoBehaviour
     
     Vector3 GetDirectionTowardsTarget()
     {
-        return (GameManager.Get().playerShip.transform.position - transform.position).normalized;
+        return (GameManager.Get().playerObject.transform.position - transform.position).normalized;
     }
     
     Vector3 SteerTowardsTarget()

@@ -185,24 +185,14 @@ public class Bullet : MonoBehaviour
                     }
                     else if(rayhit.transform.tag == "Player")
                     {
-                        if(GameManager.Get().playerShip.evading)
+                        var obj = objectPool.Spawn("powerBombExplosion", rayhit.point);
+                        PowerBomb bomb = obj.GetComponent<PowerBomb>();
+                        if (bomb)
                         {
-                            homingTarget = null;
-                            owner = rayhit.transform.gameObject;
-                            life = lifetime;
-                            direction = Vector3.Reflect(direction, rayhit.normal);
+                            bomb.blastRadius = blastRadius;
+                            bomb.damage = damage;
                         }
-                        else
-                        {
-                            var obj = objectPool.Spawn("powerBombExplosion", rayhit.point);
-                            PowerBomb bomb = obj.GetComponent<PowerBomb>();
-                            if (bomb)
-                            {
-                                bomb.blastRadius = blastRadius;
-                                bomb.damage = damage;
-                            }
-                            DeSpawn();
-                        }
+                        DeSpawn();
                     }
 
                 }
@@ -243,30 +233,20 @@ public class Bullet : MonoBehaviour
                     }
                     else if (rayhit.transform.tag == "Player")
                     {
-                        if(GameManager.Get().playerShip.evading)
+                        HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
+                        if (health)
                         {
-                            homingTarget = null;
-                            owner = rayhit.transform.gameObject;
-                            life = lifetime;
-                            direction = Vector3.Reflect(direction, rayhit.normal);
-                        }
-                        else
-                        {
-                            HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
-                            if (health)
+                            health.TakeDamage(damage);
+                            if (health.IsDead())
                             {
-                                health.TakeDamage(damage);
-                                if (health.IsDead())
-                                {
-                                    GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
-                                    rayhit.transform.gameObject.SetActive(false);
-                                    GameManager.Get().gameOver = true;
-                                }
+                                GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
+                                rayhit.transform.gameObject.SetActive(false);
+                                GameManager.Get().gameOver = true;
                             }
-                            hit = true;
-                            sfx.clip = hitSound;
-                            sfx.Play();
                         }
+                        hit = true;
+                        sfx.clip = hitSound;
+                        sfx.Play();
                     }
                     else if (rayhit.transform.tag == "Drill")
                     {

@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ChargeMat
-  m_Shader: {fileID: -6465566751694194690, guid: 09e790dbd1b4abd44bcbd9cd5f8fd764,
+  m_Shader: {fileID: -6465566751694194690, guid: a20fc8f9e8436980084839dd8a949116,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
