@@ -3,7 +3,7 @@ using UnityEngine;
 public class Planet : MonoBehaviour
 {
     [SerializeField] GameObject chunkPrefab;
-    public float threshold = 3;
+    [Range(0,1)] public float threshold = 0.6f;
 
     [HideInInspector] public Color landColor;
     [HideInInspector] public Color WaterColor;
@@ -48,7 +48,7 @@ public class Planet : MonoBehaviour
         for(int i = 0; i < chunks.Length; i++)
         {
             var obj = Instantiate(chunkPrefab, transform);
-            obj.transform.localPosition = Voxel.ToPosition(i, chunkResolution, voxelSize * (voxelsPerChunk - 3));
+            obj.transform.localPosition = Voxel.IndexToPosition(i, chunkResolution, voxelSize * (voxelsPerChunk - 3));
             chunks[i] = obj.GetComponent<PlanetChunk>();
         }
 

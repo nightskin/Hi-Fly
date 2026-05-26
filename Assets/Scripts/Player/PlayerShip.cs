@@ -309,14 +309,17 @@ public class PlayerShip : MonoBehaviour
     void ThrustControls()
     {
         //Forward Movement
-        steer.x = InputManager.player.Steer.ReadValue<Vector2>().x;
-        steer.y = InputManager.player.Steer.ReadValue<Vector2>().y;
+        steer = InputManager.player.Steer.ReadValue<Vector2>();
 
+        if(steer.magnitude == 0)
+        {
+            steer = InputManager.player.Aim.ReadValue<Vector2>(); 
+        }
 
         controller.Move(transform.forward * speed * Time.deltaTime);
 
         transform.rotation *= Quaternion.AngleAxis(steer.x * turnSpeed * Time.deltaTime, Vector3.up);
-        transform.rotation *= Quaternion.AngleAxis(steer.y * turnSpeed * Time.deltaTime, Vector3.right);
+        transform.rotation *= Quaternion.AngleAxis(-steer.y * turnSpeed * Time.deltaTime, Vector3.right);
 
         //Auto Level
         if (steer.magnitude == 0)

@@ -7,7 +7,7 @@ using UnityEngine;
     public float value = 0;
     public Vector3 position;
 
-    public static Vector3 ToPosition(int i, int voxelRes, float voxelSize)
+    public static Vector3 IndexToPosition(int i, int voxelRes, float voxelSize)
     {
         int x = i % voxelRes;
         int y = i / voxelRes % voxelRes;
@@ -15,7 +15,7 @@ using UnityEngine;
         return new Vector3(x, y, z) * voxelSize;
     }
 
-    public static int ToIndex(Vector3 position, int voxelRes ,float voxelSize)
+    public static int PositionToIndex(Vector3 position, int voxelRes ,float voxelSize)
     {
         return ((int)(position.x / voxelSize)) + ((int)(position.y / voxelSize)  * voxelRes) + ((int)(position.z / voxelSize) * voxelRes * voxelRes);
     }

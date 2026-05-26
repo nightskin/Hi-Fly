@@ -3,14 +3,21 @@ using UnityEngine;
 
 class GalaxyQuadrant
 {
-    public GalaxyQuadrant(int t, Vector3 pos)
+    public GalaxyQuadrant(QuadrantType t, Vector3 pos)
     {
         position = pos;
         type = t;
     }
 
     public Vector3 position;
-    public int type;
+    public enum QuadrantType
+    {
+        EMPTY,
+        ASTEROID_FIELD,
+        PLANET,
+        BLACK_HOLE,
+    }
+    public QuadrantType type;
 }
 
 public class Galaxy : MonoBehaviour
@@ -28,9 +35,9 @@ public class Galaxy : MonoBehaviour
 
 
     [SerializeField] int numberOfPlanets = 10;
-    [SerializeField] GameObject[] mainLevels;
-    //[SerializeField] GameObject[] sideQuests;
+    [SerializeField] GameObject blackHolePrefab;
     [SerializeField] GameObject asteroidFieldPrefab;
+    [SerializeField] GameObject planetPrefab;
 
 
     void Awake()
@@ -53,38 +60,27 @@ public class Galaxy : MonoBehaviour
             {
                 float y = noise.Evaluate(new Vector3(x, 0, z));
                 Vector3 quadrantPosition = new Vector3(x, y, z) * quadrantSize;
-                quadrants.Add(new GalaxyQuadrant(0, quadrantPosition));
+                GalaxyQuadrant.QuadrantType t = (GalaxyQuadrant.QuadrantType)Random.Range(0,4);
+                quadrants.Add(new GalaxyQuadrant(t, quadrantPosition));
             }
         }
 
-        // Add Levels
-        if(mainLevels.Length > 0)
-        {
-            foreach(GameObject level in mainLevels)
-            {
-                int randomIndex = Random.Range(0, quadrants.Count);
-                quadrants[randomIndex].type = 1;
-                var lvl = Instantiate(level, quadrants[randomIndex].position, Quaternion.identity, transform);
-            }
-        }
         
-        //Add Asteroid Fields
-        if (asteroidFieldPrefab)
+        for(int i = 0; i < quadrants.Count; i++)
         {
-            for (int i = 0; i < quadrants.Count; i++)
+            if(quadrants[i].type == GalaxyQuadrant.QuadrantType.EMPTY) continue;
+            else if(quadrants[i].type == GalaxyQuadrant.QuadrantType.ASTEROID_FIELD && asteroidFieldPrefab)
             {
-                if (quadrants[i].type == 0)
-                {
-                    int makeAsteroidField = Random.Range(0, spawnAsteroidFieldChance + 1);
-                    if (makeAsteroidField == 0)
-                    {
-                        quadrants[i].type = 2;
-                        Instantiate(asteroidFieldPrefab, quadrants[i].position, Quaternion.identity, transform);
-                    }
-                }
+                Instantiate(asteroidFieldPrefab, quadrants[i].position, Quaternion.identity, transform);
+            }
+            else if(quadrants[i].type == GalaxyQuadrant.QuadrantType.PLANET && planetPrefab)
+            {
+                Instantiate(planetPrefab, quadrants[i].position, Quaternion.identity, transform);
+            }
+            else if(quadrants[i].type == GalaxyQuadrant.QuadrantType.BLACK_HOLE && blackHolePrefab)
+            {
+                Instantiate(blackHolePrefab,quadrants[i].position,Quaternion.identity,transform);
             }
         }
-
-
     }
 }

@@ -44,7 +44,7 @@ public class PlanetChunk : MonoBehaviour
         pos.x = Mathf.Round(pos.x / planet.voxelSize) * planet.voxelSize;
         pos.y = Mathf.Round(pos.y / planet.voxelSize) * planet.voxelSize;
         pos.z = Mathf.Round(pos.z / planet.voxelSize) * planet.voxelSize;
-        int i = Voxel.ToIndex(pos, planet.voxelsPerChunk, planet.voxelSize);
+        int i = Voxel.PositionToIndex(pos, planet.voxelsPerChunk, planet.voxelSize);
 
         //If voxel is already deactivated check the next one
         if (voxels[i].value < planet.isoLevel)
@@ -53,7 +53,7 @@ public class PlanetChunk : MonoBehaviour
             pos.x = Mathf.Round(pos.x / planet.voxelSize) * planet.voxelSize;
             pos.y = Mathf.Round(pos.y / planet.voxelSize) * planet.voxelSize;
             pos.z = Mathf.Round(pos.z / planet.voxelSize) * planet.voxelSize;
-            i = Voxel.ToIndex(pos, planet.voxelsPerChunk, planet.voxelSize);
+            i = Voxel.PositionToIndex(pos, planet.voxelsPerChunk, planet.voxelSize);
             voxels[i].value = 0;
         }
         else
@@ -87,7 +87,7 @@ public class PlanetChunk : MonoBehaviour
         for (int i = 0; i < voxels.Length; i++)
         {
             voxels[i] = new Voxel();
-            voxels[i].position = Voxel.ToPosition(i, planet.voxelsPerChunk, planet.voxelSize);
+            voxels[i].position = Voxel.IndexToPosition(i, planet.voxelsPerChunk, planet.voxelSize);
 
             float distanceFromCenter = Vector3.Distance(Vector3.one * planet.radius, transform.localPosition + voxels[i].position);
 
@@ -97,11 +97,11 @@ public class PlanetChunk : MonoBehaviour
             }
             else
             {
-                float maxDistance = Vector3.Distance(Vector3.one * planet.radius, Voxel.ToPosition(0, planet.voxelsPerChunk, planet.voxelSize));
+                float maxDistance = Vector3.Distance(Vector3.one * planet.radius, Voxel.IndexToPosition(0, planet.voxelsPerChunk, planet.voxelSize));
                 float invertedDistanceFromCenter = Mathf.Abs(distanceFromCenter - maxDistance);
                 voxels[i].value = invertedDistanceFromCenter / maxDistance;
                 
-                if(distanceFromCenter >= planet.radius - (planet.voxelSize * planet.threshold))
+                if(voxels[i].value < planet.threshold)
                 {
                     voxels[i].color = Color.white;
                 }
@@ -111,7 +111,7 @@ public class PlanetChunk : MonoBehaviour
                 }
 
 
-                Vector3 index3d = Voxel.ToPosition(i, planet.voxelsPerChunk, 1);
+                Vector3 index3d = Voxel.IndexToPosition(i, planet.voxelsPerChunk, 1);
                 
                 if (index3d.x <= 0 || index3d.y <= 0 || index3d.z <= 0 || index3d.x >= planet.voxelsPerChunk - 1 || index3d.y >= planet.voxelsPerChunk - 1 || index3d.z >= planet.voxelsPerChunk - 1)
                 {
@@ -130,17 +130,17 @@ public class PlanetChunk : MonoBehaviour
         int i = voxels.Length;
         while (i > 0)
         {
-            Vector3 position = Voxel.ToPosition(i, planet.voxelsPerChunk, planet.voxelSize);
+            Vector3 position = Voxel.IndexToPosition(i, planet.voxelsPerChunk, planet.voxelSize);
             Voxel[] points = new Voxel[]
             {
-                    voxels[Voxel.ToIndex(position + new Vector3(0,0,-1),planet.voxelsPerChunk,planet.voxelSize)],
-                    voxels[Voxel.ToIndex(position +  new Vector3(-1, 0, -1),planet.voxelsPerChunk, planet.voxelSize)],
-                    voxels[Voxel.ToIndex(position +  new Vector3(-1, 0, 0),planet.voxelsPerChunk, planet.voxelSize)],
-                    voxels[Voxel.ToIndex(position,planet.voxelsPerChunk,planet.voxelSize)],
-                    voxels[Voxel.ToIndex(position + new Vector3(0, -1, -1), planet.voxelsPerChunk, planet.voxelSize)],
-                    voxels[Voxel.ToIndex(position + new Vector3(-1, -1, -1), planet.voxelsPerChunk, planet.voxelSize)],
-                    voxels[Voxel.ToIndex(position + new Vector3(-1, -1, 0), planet.voxelsPerChunk, planet.voxelSize)],
-                    voxels[Voxel.ToIndex(position + new Vector3(0, -1, 0), planet.voxelsPerChunk, planet.voxelSize)]
+                    voxels[Voxel.PositionToIndex(position + new Vector3(0,0,-1),planet.voxelsPerChunk,planet.voxelSize)],
+                    voxels[Voxel.PositionToIndex(position +  new Vector3(-1, 0, -1),planet.voxelsPerChunk, planet.voxelSize)],
+                    voxels[Voxel.PositionToIndex(position +  new Vector3(-1, 0, 0),planet.voxelsPerChunk, planet.voxelSize)],
+                    voxels[Voxel.PositionToIndex(position,planet.voxelsPerChunk,planet.voxelSize)],
+                    voxels[Voxel.PositionToIndex(position + new Vector3(0, -1, -1), planet.voxelsPerChunk, planet.voxelSize)],
+                    voxels[Voxel.PositionToIndex(position + new Vector3(-1, -1, -1), planet.voxelsPerChunk, planet.voxelSize)],
+                    voxels[Voxel.PositionToIndex(position + new Vector3(-1, -1, 0), planet.voxelsPerChunk, planet.voxelSize)],
+                    voxels[Voxel.PositionToIndex(position + new Vector3(0, -1, 0), planet.voxelsPerChunk, planet.voxelSize)]
             };
 
             int cubeIndex = Voxel.GetState(points, planet.isoLevel);

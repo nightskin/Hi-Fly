@@ -460,8 +460,10 @@ MonoBehaviour:
   quadrantSize: 1000
   numberOfQuadrants: {x: 10, y: 10}
   numberOfPlanets: 5
-  mainLevels: []
+  blackHolePrefab: {fileID: 0}
   asteroidFieldPrefab: {fileID: 8392389577210535039, guid: 3f6a0aaf88c483a46934fd2c16e95966,
+    type: 3}
+  planetPrefab: {fileID: 7254729520471589415, guid: 751443c34999fee47bf913cb69f519dd,
     type: 3}
 --- !u!1001 &958192644
 PrefabInstance:
@@ -597,7 +599,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1875457828
 Transform:
   m_ObjectHideFlags: 0
