@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.Mathematics;
 
 public class HomingTarget
 {
@@ -21,7 +22,7 @@ public class PlayerShip : MonoBehaviour
 {
     //Necessary Components
     public HealthSystem health;
-    public PlayerCamera camera;
+    public PlayerCamera playerCamera;
     [SerializeField] GameObject boostEffect;
     [SerializeField] GameObject lockUI;
     [SerializeField] Transform hud;
@@ -29,14 +30,16 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] ParticleSystem chargeEffect;
     [SerializeField] GameObject[] trails;
     [SerializeField] Transform bulletSpawn;
+    [SerializeField] Transform mesh;
     [SerializeField] CharacterController controller;
 
     //Flight variables
     float speed;
     float targetSpeed;
-    Vector3 steer;
+    Vector3 moveInput;
+    Vector2 reticlePosition;
+    [HideInInspector] public bool forwardBoost;
     
-    [HideInInspector] public bool thrusting = false;
     [SerializeField][Min(1)] float turnSpeed = 100;
     [SerializeField] float baseSpeed = 50;
     [SerializeField] float boostSpeed = 200;
@@ -60,17 +63,22 @@ public class PlayerShip : MonoBehaviour
     float chargeAmount = 0;
     Color chargeColor;
     Lazer lazer = null;
-    
-    public int baseFirePower = 3;
-    public float blastRadius = 10;
 
-    public int lazerPower = 1;
-    public float lazerSpeed = 0.01f;
-    
-    public int maxTargets = 5;
+    [SerializeField] int baseFirePower = 3;
+    [SerializeField] float blastRadius = 10;
+    [SerializeField] int lazerPower = 1;
+    [SerializeField] float lazerSpeed = 0.01f;
+    [SerializeField] int maxTargets = 5;
     
     void Start()
     {
+        InputManager.player.Boost.performed += Boost_pressed;
+        InputManager.player.Boost.canceled += Boost_released;
+        InputManager.player.ToggleWeapon.performed += ToggleWeapon_pressed;
+        InputManager.player.Shoot.performed += Shoot_pressed;
+        InputManager.player.Shoot.canceled += Shoot_released;
+        InputManager.player.CenterReticle.performed += CenterReticle_pressed;
+
         for (int i = 0; i < maxTargets; i++)
         {
             var l = Instantiate(lockUI, hud);
@@ -80,21 +88,12 @@ public class PlayerShip : MonoBehaviour
 
 
         Cursor.visible = false;
-        GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
-        GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameSettings.playerStripeColor);
-
+        mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
+        mesh.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameSettings.playerStripeColor);
 
         targetSpeed = baseSpeed;
-
         weaponText.text = equipedWeapon.ToString();
-
-        InputManager.player.Thrust.performed += Thrust_pressed;
-        InputManager.player.Thrust.canceled += Thrust_released;
-        InputManager.player.Boost.performed += Boost_pressed;
-        InputManager.player.Boost.canceled += Boost_released;
-        InputManager.player.ToggleWeapon.performed += ToggleWeapon_pressed;
-        InputManager.player.Shoot.performed += Shoot_pressed;
-        InputManager.player.Shoot.canceled += Shoot_released;
+        playerCamera.transform.parent = transform;
     }
     void FixedUpdate()
     {   
@@ -164,69 +163,71 @@ public class PlayerShip : MonoBehaviour
     {
         if (health.IsAlive() && !GameManager.Get().gamePaused)
         {
-            if (thrusting) ThrustControls();
+            if (forwardBoost) ThrustControls();
             else StrafeControls();
 
+            //Auto Level
+            if (moveInput.magnitude == 0 && InputManager.player.Aim.ReadValue<Vector2>().magnitude == 0 &&  transform.localEulerAngles.z != 0)
+            {
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, 5 * Time.deltaTime));
+            }
+
+            //veering left and right
+            float turnX = InputManager.player.Steer.ReadValue<Vector2>().x * -45;
+            mesh.localEulerAngles = new Vector3(0,0,turnX);
 
             //Handles Lazer
             if(InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.LAZER)
             {
                 UpdateLazer();
             }
-
         }
     }
     void OnDestroy()
     {
-        InputManager.player.Thrust.performed -= Thrust_pressed;
-        InputManager.player.Thrust.canceled -= Thrust_released;
         InputManager.player.Boost.performed -= Boost_pressed;
         InputManager.player.Boost.canceled -= Boost_released;
         InputManager.player.ToggleWeapon.performed -= ToggleWeapon_pressed;
         InputManager.player.Shoot.performed -= Shoot_pressed;
         InputManager.player.Shoot.canceled -= Shoot_released;
-    }
-    
-    private void Thrust_pressed(InputAction.CallbackContext obj)
-    {
-        thrusting = true;
-        targetSpeed = thrustSpeed;
-        boostEffect.SetActive(true);
-
-        for(int i = 0; i < trails.Length; i++)
-        {
-            trails[i].gameObject.SetActive(true);
-        }
-
+        InputManager.player.CenterReticle.performed -= CenterReticle_pressed;
     }
 
-    private void Thrust_released(InputAction.CallbackContext obj)
-    {
-        thrusting = false;
-        targetSpeed = baseSpeed;
-        boostEffect.SetActive(false);
-
-        for(int i = 0; i < trails.Length; i++)
-        {
-            trails[i].gameObject.SetActive(false);
-        }
-    }
 
     private void Boost_pressed(InputAction.CallbackContext obj)
     {
         targetSpeed = boostSpeed;
+        if(moveInput.magnitude <= 0.1f)
+        {
+            forwardBoost = true;
+            playerCamera.transform.parent = transform.parent;
+            boostEffect.SetActive(true);
+            for(int i = 0; i < trails.Length; i++)
+            {
+                trails[i].gameObject.SetActive(true);
+            }
+        }
     }
 
     private void Boost_released(InputAction.CallbackContext obj)
     {
         targetSpeed = baseSpeed;
+        forwardBoost = false;
+        playerCamera.transform.parent = transform;
+        boostEffect.SetActive(false);
+        reticlePosition = Vector2.zero;
+        reticle.rectTransform.anchoredPosition = reticlePosition;
+        for(int i = 0; i < trails.Length; i++)
+        {
+            trails[i].gameObject.SetActive(false);
+        }
     }
     
     private void Shoot_pressed(InputAction.CallbackContext obj)
     {
         if (equipedWeapon == Weapon.BLASTER)
         {
-                chargeEffect.gameObject.SetActive(true);
+            chargeEffect.gameObject.SetActive(true);
         }
         else if (equipedWeapon == Weapon.LAZER)
         {
@@ -271,62 +272,64 @@ public class PlayerShip : MonoBehaviour
     {
         if(equipedWeapon == Weapon.BLASTER)
         {
+            if(chargeEffect.gameObject.activeSelf) chargeEffect.gameObject.SetActive(false);
             equipedWeapon = Weapon.LAZER;
         }
         else if(equipedWeapon == Weapon.LAZER)
         {
+            if(lazer) lazer.endFire = true;
             equipedWeapon = Weapon.BLASTER;
         }
 
         weaponText.text = equipedWeapon.ToString();
     }
 
+    private void CenterReticle_pressed(InputAction.CallbackContext obj)
+    {
+        reticlePosition = Vector2.zero;
+        reticle.rectTransform.anchoredPosition = reticlePosition;
+    }
+
     public void Teleport(Vector3 position)
     {
         controller.enabled = false;
         transform.position = position;
-        camera.transform.position = position + (transform.up * 3) - (camera.transform.forward * camera.distanceFromPlayer);
         controller.enabled = true;
     }
-
 
     void StrafeControls()
     {
         //Moving
-        steer.x = InputManager.player.Steer.ReadValue<Vector2>().x;
-        steer.y = InputManager.player.Steer.ReadValue<Vector2>().y;
-        steer.z = InputManager.player.Ascend_Descend.ReadValue<float>();
+        moveInput.x = InputManager.player.Steer.ReadValue<Vector2>().x;
+        moveInput.y = InputManager.player.Steer.ReadValue<Vector2>().y;
+        moveInput.z = InputManager.player.Ascend_Descend.ReadValue<float>();
 
-        controller.Move(((transform.forward * steer.y) + (transform.right * steer.x) + (transform.up * steer.z)).normalized * speed * Time.deltaTime);
+        controller.Move(((transform.forward * moveInput.y) + (transform.right * moveInput.x) + (transform.up * moveInput.z)).normalized * speed * Time.deltaTime);
 
         //Aiming
         float lookX = InputManager.player.Aim.ReadValue<Vector2>().x;
         float lookY = InputManager.player.Aim.ReadValue<Vector2>().y;
-        transform.rotation *= Quaternion.AngleAxis(lookX * turnSpeed * Time.deltaTime, Vector3.up);
-        transform.rotation *= Quaternion.AngleAxis(-lookY * turnSpeed * Time.deltaTime, Vector3.right);
+        transform.rotation *= Quaternion.AngleAxis(lookX, Vector3.up);
+        transform.rotation *= Quaternion.AngleAxis(-lookY, Vector3.right);
     }
 
     void ThrustControls()
     {
         //Forward Movement
-        steer = InputManager.player.Steer.ReadValue<Vector2>();
-
-        if(steer.magnitude == 0)
-        {
-            steer = InputManager.player.Aim.ReadValue<Vector2>(); 
-        }
-
+        moveInput = InputManager.player.Steer.ReadValue<Vector2>().normalized;
         controller.Move(transform.forward * speed * Time.deltaTime);
+        
+        //Turning
+        transform.rotation *= Quaternion.AngleAxis(moveInput.x, Vector3.up);
+        transform.rotation *= Quaternion.AngleAxis(moveInput.y, Vector3.right);
 
-        transform.rotation *= Quaternion.AngleAxis(steer.x * turnSpeed * Time.deltaTime, Vector3.up);
-        transform.rotation *= Quaternion.AngleAxis(-steer.y * turnSpeed * Time.deltaTime, Vector3.right);
 
-        //Auto Level
-        if (steer.magnitude == 0)
-        {
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, 5 * Time.deltaTime));
-        }
-
+        //reticle movement
+        Vector2 reticleInput = InputManager.player.Aim.ReadValue<Vector2>();
+        reticlePosition += reticleInput * GameSettings.aimSensitivy * Time.deltaTime;
+        reticlePosition.x = Mathf.Clamp(reticlePosition.x,-400,400);
+        reticlePosition.y = Mathf.Clamp(reticlePosition.y,-183,183);
+        reticle.rectTransform.anchoredPosition = reticlePosition;
     }
 
     void FireBlaster()
@@ -359,7 +362,7 @@ public class PlayerShip : MonoBehaviour
             }
             else
             {
-                Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(reticle.rectTransform.position);
+                Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
                     if (hit.transform.gameObject == b.owner)

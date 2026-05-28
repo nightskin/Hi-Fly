@@ -43,15 +43,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Thrust",
-                    "type": "Button",
-                    "id": "b33b6618-8fb3-4ba3-b145-ad4d82eb2cb3",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Shoot",
                     "type": "Button",
                     "id": "e7079d14-1be9-4c0b-8f9f-85c1f3919d30",
@@ -62,8 +53,17 @@
                 },
                 {
                     "name": "ToggleWeapon",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "4a67ad4a-2fb3-4dde-ac3c-af5d2449bf3e",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CenterReticle",
+                    "type": "Button",
+                    "id": "bde6798d-18f5-4058-8a2d-b58414d940fd",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -271,45 +271,100 @@
                 },
                 {
                     "name": "",
-                    "id": "5b6b905f-2895-4921-9ad1-3e7eac6daf64",
+                    "id": "2360caf3-467a-46dd-9e6a-475d2104a7d3",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "ToggleWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d9fecca4-3795-474e-ba90-2aee79492abb",
+                    "path": "<VirtualMouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "ToggleWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "QE",
+                    "id": "62c26df5-9d6f-4337-8021-371712b72d7f",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleWeapon",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "83d05e17-d6dc-4a1e-8cd8-4a96e2bb5e91",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "ToggleWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "33a84a9d-95fb-4c9b-adf4-52a1f16b1b0f",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "ToggleWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Dpad",
+                    "id": "b67b064c-ddb9-47e1-8f12-8a0b062f6e07",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleWeapon",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "c889620e-0256-4674-8b46-46eda6d137a1",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "ToggleWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "261bbc09-52e7-4ad1-965e-4e6f5d5de52d",
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "ToggleWeapon",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
-                    "id": "161a6972-23b3-4c9e-a0ff-13ad488ec71b",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "ToggleWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "367e11f4-fea3-4c63-86ab-5d9726d6e4be",
-                    "path": "<Mouse>/middleButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "Thrust",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c3376b57-002e-4ce0-a128-1d097b1d0464",
-                    "path": "<Gamepad>/leftShoulder",
+                    "id": "112799ee-0a83-43a3-be46-d6a8f96090e8",
+                    "path": "<Gamepad>/rightStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Thrust",
+                    "action": "CenterReticle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
