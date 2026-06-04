@@ -19,7 +19,7 @@ public class Bullet : MonoBehaviour
 
     //Physics Variables
     [HideInInspector] public Transform homingTarget = null;
-    [HideInInspector] public GameObject owner = null;
+    public GameObject owner = null;
     [HideInInspector] public Vector3 direction;
 
     Vector3 prevPosition;
@@ -120,7 +120,7 @@ public class Bullet : MonoBehaviour
         {
             if (!sfx.isPlaying)
             {
-                    DeSpawn();
+                DeSpawn();
             }
         }
     }

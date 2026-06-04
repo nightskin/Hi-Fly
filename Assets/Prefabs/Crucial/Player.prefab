@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5599651886887294462}
   - component: {fileID: 8977292426134536927}
   - component: {fileID: 4931498280169647350}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: PlayerObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,10 +53,7 @@ MonoBehaviour:
   hud: {fileID: 6819837170472286716}
   chargeMaterial: {fileID: 2100000, guid: 04fadf6323676cc4dab2dff141b385cc, type: 2}
   chargeEffect: {fileID: 2810059126631421823}
-  trails:
-  - {fileID: 5904987443165990523}
-  - {fileID: 6615905816226276916}
-  - {fileID: 6615905817581332611}
+  thruster: {fileID: 6509697227734718973}
   bulletSpawn: {fileID: 8436338386794596101}
   mesh: {fileID: 3005499506416242416}
   controller: {fileID: 4931498280169647350}
@@ -71,7 +68,6 @@ MonoBehaviour:
   lockOnLayer:
     serializedVersion: 2
     m_Bits: 64
-  aimSpeed: 1000
   baseFirePower: 3
   blastRadius: 10
   lazerPower: 1
@@ -5983,7 +5979,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6537373327734691009
 Transform:
   m_ObjectHideFlags: 0
@@ -6116,7 +6112,7 @@ TrailRenderer:
     generateLightingData: 0
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
-  m_Emitting: 1
+  m_Emitting: 0
   m_ApplyActiveColorSpace: 1
 --- !u!1 &5993670140306848420
 GameObject:
@@ -6287,7 +6283,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6615905816226276915
 Transform:
   m_ObjectHideFlags: 0
@@ -6438,7 +6434,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6615905817581332610
 Transform:
   m_ObjectHideFlags: 0
@@ -6896,7 +6892,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8436338386794596101}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: BulletSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7220,7 +7216,7 @@ GameObject:
   - component: {fileID: 1069085150}
   - component: {fileID: 1069085152}
   - component: {fileID: 1069085151}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: Player
   m_TagString: GameController
   m_Icon: {fileID: 0}
@@ -7819,7 +7815,7 @@ GameObject:
   - component: {fileID: 8504905812486363883}
   - component: {fileID: 8504905812486363880}
   - component: {fileID: 5049433877476630419}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}

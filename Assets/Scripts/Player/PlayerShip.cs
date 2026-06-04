@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using System.Collections.Generic;
 using System.Collections;
-using Unity.Mathematics;
+using System.Collections.Generic;
 
 public class HomingTarget
 {
@@ -28,7 +27,7 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] Transform hud;
     [SerializeField] Material chargeMaterial;
     [SerializeField] ParticleSystem chargeEffect;
-    [SerializeField] GameObject[] trails;
+    [SerializeField] TrailRenderer thruster;
     [SerializeField] Transform bulletSpawn;
     [SerializeField] Transform mesh;
     [SerializeField] CharacterController controller;
@@ -172,9 +171,6 @@ public class PlayerShip : MonoBehaviour
                 transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, 5 * Time.deltaTime));
             }
 
-            //veering left and right
-            float turnX = InputManager.player.Steer.ReadValue<Vector2>().x * -45;
-            mesh.localEulerAngles = new Vector3(0,0,turnX);
 
             //Handles Lazer
             if(InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.LAZER)
@@ -202,10 +198,7 @@ public class PlayerShip : MonoBehaviour
             forwardBoost = true;
             playerCamera.transform.parent = transform.parent;
             boostEffect.SetActive(true);
-            for(int i = 0; i < trails.Length; i++)
-            {
-                trails[i].gameObject.SetActive(true);
-            }
+            thruster.emitting = true;
         }
     }
 
@@ -217,10 +210,7 @@ public class PlayerShip : MonoBehaviour
         boostEffect.SetActive(false);
         reticlePosition = Vector2.zero;
         reticle.rectTransform.anchoredPosition = reticlePosition;
-        for(int i = 0; i < trails.Length; i++)
-        {
-            trails[i].gameObject.SetActive(false);
-        }
+        thruster.emitting = false;
     }
     
     private void Shoot_pressed(InputAction.CallbackContext obj)
@@ -306,6 +296,10 @@ public class PlayerShip : MonoBehaviour
 
         controller.Move(((transform.forward * moveInput.y) + (transform.right * moveInput.x) + (transform.up * moveInput.z)).normalized * speed * Time.deltaTime);
 
+        //veering left and right
+        float turnX = InputManager.player.Steer.ReadValue<Vector2>().x * -45;
+        mesh.localEulerAngles = new Vector3(0,0,turnX);
+
         //Aiming
         float lookX = InputManager.player.Aim.ReadValue<Vector2>().x;
         float lookY = InputManager.player.Aim.ReadValue<Vector2>().y;
@@ -316,20 +310,17 @@ public class PlayerShip : MonoBehaviour
     void ThrustControls()
     {
         //Forward Movement
-        moveInput = InputManager.player.Steer.ReadValue<Vector2>().normalized;
+        moveInput = InputManager.player.Aim.ReadValue<Vector2>();
         controller.Move(transform.forward * speed * Time.deltaTime);
         
         //Turning
         transform.rotation *= Quaternion.AngleAxis(moveInput.x, Vector3.up);
-        transform.rotation *= Quaternion.AngleAxis(moveInput.y, Vector3.right);
+        transform.rotation *= Quaternion.AngleAxis(-moveInput.y, Vector3.right);
 
 
-        //reticle movement
-        Vector2 reticleInput = InputManager.player.Aim.ReadValue<Vector2>();
-        reticlePosition += reticleInput * GameSettings.aimSensitivy * Time.deltaTime;
-        reticlePosition.x = Mathf.Clamp(reticlePosition.x,-400,400);
-        reticlePosition.y = Mathf.Clamp(reticlePosition.y,-183,183);
-        reticle.rectTransform.anchoredPosition = reticlePosition;
+        //veering left and right
+        float turnX = InputManager.player.Aim.ReadValue<Vector2>().x * -45;
+        mesh.localEulerAngles = new Vector3(0,0,turnX);
     }
 
     void FireBlaster()
@@ -339,7 +330,7 @@ public class PlayerShip : MonoBehaviour
         if (obj)
         {
             Bullet b = obj.GetComponent<Bullet>();
-            b.owner = gameObject;
+            b.owner = mesh.gameObject;
 
             if(chargeAmount >= 1)
             {
@@ -403,7 +394,7 @@ public class PlayerShip : MonoBehaviour
                 GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                 Bullet b = obj.GetComponent<Bullet>();
                 //Set Needed Variables
-                b.owner = gameObject;
+                b.owner = mesh.gameObject;
 
                 if(chargeAmount >= 1)
                 {
@@ -433,7 +424,7 @@ public class PlayerShip : MonoBehaviour
         if (!lazer)
         {
             lazer = GameManager.Get().objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
-            lazer.owner = gameObject;
+            lazer.owner = mesh.gameObject;
             lazer.damage = lazerPower;
             lazer.speed = lazerSpeed;
 
