@@ -147,13 +147,13 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""CenterReticle"",
-                    ""type"": ""Button"",
-                    ""id"": ""bde6798d-18f5-4058-8a2d-b58414d940fd"",
-                    ""expectedControlType"": """",
+                    ""name"": ""RotateZ"",
+                    ""type"": ""Value"",
+                    ""id"": ""61580a5c-f835-4abd-8f88-2061728e5e62"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -367,50 +367,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""d9fecca4-3795-474e-ba90-2aee79492abb"",
-                    ""path"": ""<VirtualMouse>/scroll/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardMouse"",
-                    ""action"": ""ToggleWeapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""QE"",
-                    ""id"": ""62c26df5-9d6f-4337-8021-371712b72d7f"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ToggleWeapon"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""83d05e17-d6dc-4a1e-8cd8-4a96e2bb5e91"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""ToggleWeapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""33a84a9d-95fb-4c9b-adf4-52a1f16b1b0f"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""ToggleWeapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""Dpad"",
                     ""id"": ""b67b064c-ddb9-47e1-8f12-8a0b062f6e07"",
                     ""path"": ""1DAxis"",
@@ -444,15 +400,70 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""112799ee-0a83-43a3-be46-d6a8f96090e8"",
-                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""name"": ""QE"",
+                    ""id"": ""80cb833c-735c-4d97-8823-00d5ebd718d9"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateZ"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""185e8120-cef3-4439-9a9b-d95966dd0401"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardMouse"",
+                    ""action"": ""RotateZ"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""90c60f3c-c3ea-4098-8849-fecfa683a285"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardMouse"",
+                    ""action"": ""RotateZ"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""ShoulderBtns"",
+                    ""id"": ""b718e875-79df-424a-a22e-02641982d34b"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateZ"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""f50befba-00d8-4021-8ae4-98b1217ae87c"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""CenterReticle"",
+                    ""action"": ""RotateZ"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": false
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""4831e027-5a7f-4d72-9157-c16664510ef6"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""RotateZ"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -945,7 +956,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
         m_Player_ToggleWeapon = m_Player.FindAction("ToggleWeapon", throwIfNotFound: true);
-        m_Player_CenterReticle = m_Player.FindAction("CenterReticle", throwIfNotFound: true);
+        m_Player_RotateZ = m_Player.FindAction("RotateZ", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_UnPause = m_UI.FindAction("UnPause", throwIfNotFound: true);
@@ -1042,7 +1053,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Boost;
     private readonly InputAction m_Player_Shoot;
     private readonly InputAction m_Player_ToggleWeapon;
-    private readonly InputAction m_Player_CenterReticle;
+    private readonly InputAction m_Player_RotateZ;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1079,9 +1090,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @ToggleWeapon => m_Wrapper.m_Player_ToggleWeapon;
         /// <summary>
-        /// Provides access to the underlying input action "Player/CenterReticle".
+        /// Provides access to the underlying input action "Player/RotateZ".
         /// </summary>
-        public InputAction @CenterReticle => m_Wrapper.m_Player_CenterReticle;
+        public InputAction @RotateZ => m_Wrapper.m_Player_RotateZ;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1126,9 +1137,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @ToggleWeapon.started += instance.OnToggleWeapon;
             @ToggleWeapon.performed += instance.OnToggleWeapon;
             @ToggleWeapon.canceled += instance.OnToggleWeapon;
-            @CenterReticle.started += instance.OnCenterReticle;
-            @CenterReticle.performed += instance.OnCenterReticle;
-            @CenterReticle.canceled += instance.OnCenterReticle;
+            @RotateZ.started += instance.OnRotateZ;
+            @RotateZ.performed += instance.OnRotateZ;
+            @RotateZ.canceled += instance.OnRotateZ;
         }
 
         /// <summary>
@@ -1158,9 +1169,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @ToggleWeapon.started -= instance.OnToggleWeapon;
             @ToggleWeapon.performed -= instance.OnToggleWeapon;
             @ToggleWeapon.canceled -= instance.OnToggleWeapon;
-            @CenterReticle.started -= instance.OnCenterReticle;
-            @CenterReticle.performed -= instance.OnCenterReticle;
-            @CenterReticle.canceled -= instance.OnCenterReticle;
+            @RotateZ.started -= instance.OnRotateZ;
+            @RotateZ.performed -= instance.OnRotateZ;
+            @RotateZ.canceled -= instance.OnRotateZ;
         }
 
         /// <summary>
@@ -1432,12 +1443,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnToggleWeapon(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "CenterReticle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "RotateZ" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCenterReticle(InputAction.CallbackContext context);
+        void OnRotateZ(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

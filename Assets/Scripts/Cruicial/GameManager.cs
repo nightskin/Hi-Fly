@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
                 }
                 if (playerObject.gameObject.activeSelf)
                 {
-                    playerObject.playerCamera.transform.parent = transform;
+                    playerObject.camera.transform.parent = transform;
                     playerObject.gameObject.SetActive(false);
                 }
                 gameOverTimer -= Time.deltaTime;

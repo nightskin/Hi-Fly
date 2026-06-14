@@ -13,7 +13,7 @@ public class Bullet : MonoBehaviour
     public float intensity = 2.0f;
     public float lifetime = 5;
     public int damage = 10;
-    public float speed = 1000;
+    public float maxSpeed = 1000;
     public float blastRadius = 5;
     [HideInInspector] public bool explosive = false;
 
@@ -30,7 +30,6 @@ public class Bullet : MonoBehaviour
     {
         objectPool = GameManager.Get().objectPool;    
     }
-
     void OnEnable()
     {
         trail.Clear();
@@ -42,14 +41,31 @@ public class Bullet : MonoBehaviour
         prevPosition = transform.position;
         life = lifetime;
     }
-
     void OnDisable()
     {
         homingTarget = null;
         trail.emitting = false;
     }
-    
     void FixedUpdate()
+    {
+        if(!GameManager.Get().gamePaused)
+        {
+            //If bullet has not hit something check collisions
+            if (!hit)
+            {
+                CheckCollisions();
+            }
+            else
+            {
+                if (!sfx.isPlaying)
+                {
+                    DeSpawn();
+                }
+            }
+        }
+    }
+
+    void Update()
     {
         if(!GameManager.Get().gamePaused)
         {
@@ -57,7 +73,10 @@ public class Bullet : MonoBehaviour
             prevPosition = transform.position;
             if (homingTarget)
             {
-                transform.position = Vector3.MoveTowards(transform.position, homingTarget.transform.position, speed * Time.fixedDeltaTime);
+                Vector3 targetDirection = (homingTarget.transform.position - transform.position).normalized;
+                direction = Vector3.Lerp(direction, targetDirection, 10 * Time.deltaTime);
+                float speed = Mathf.Lerp(0, maxSpeed, 20 * Time.deltaTime);
+                transform.position += direction * speed * Time.deltaTime;
                 if(!hit)
                 {
                     if (Vector3.Distance(transform.position, homingTarget.position) < 1)
@@ -90,35 +109,15 @@ public class Bullet : MonoBehaviour
             }
             else
             {
-                transform.position += direction * speed * Time.fixedDeltaTime;
+                transform.position += direction * maxSpeed * Time.deltaTime;
             }
 
             //Destroy Bullet After A Certain Time has Past
             if (life > 0)
             {
-                life -= Time.fixedDeltaTime;
+                life -= Time.deltaTime;
             }
             else
-            {
-                DeSpawn();
-            }
-
-
-
-        }
-    }
-
-    
-    void Update()
-    {
-        //If bullet has not hit something check collisions
-        if (!hit)
-        {
-            CheckCollisions();
-        }
-        else
-        {
-            if (!sfx.isPlaying)
             {
                 DeSpawn();
             }
@@ -259,7 +258,6 @@ public class Bullet : MonoBehaviour
             }
         }
     }
-
     void DeSpawn()
     {
         gameObject.SetActive(false);

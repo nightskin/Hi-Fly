@@ -61,13 +61,13 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "CenterReticle",
-                    "type": "Button",
-                    "id": "bde6798d-18f5-4058-8a2d-b58414d940fd",
-                    "expectedControlType": "",
+                    "name": "RotateZ",
+                    "type": "Value",
+                    "id": "61580a5c-f835-4abd-8f88-2061728e5e62",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -281,50 +281,6 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "d9fecca4-3795-474e-ba90-2aee79492abb",
-                    "path": "<VirtualMouse>/scroll/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "ToggleWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "QE",
-                    "id": "62c26df5-9d6f-4337-8021-371712b72d7f",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ToggleWeapon",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "83d05e17-d6dc-4a1e-8cd8-4a96e2bb5e91",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "ToggleWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "33a84a9d-95fb-4c9b-adf4-52a1f16b1b0f",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "ToggleWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "Dpad",
                     "id": "b67b064c-ddb9-47e1-8f12-8a0b062f6e07",
                     "path": "1DAxis",
@@ -358,15 +314,70 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "112799ee-0a83-43a3-be46-d6a8f96090e8",
-                    "path": "<Gamepad>/rightStickPress",
+                    "name": "QE",
+                    "id": "80cb833c-735c-4d97-8823-00d5ebd718d9",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateZ",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "185e8120-cef3-4439-9a9b-d95966dd0401",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "RotateZ",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "90c60f3c-c3ea-4098-8849-fecfa683a285",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "RotateZ",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "ShoulderBtns",
+                    "id": "b718e875-79df-424a-a22e-02641982d34b",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateZ",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "f50befba-00d8-4021-8ae4-98b1217ae87c",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "CenterReticle",
+                    "action": "RotateZ",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "4831e027-5a7f-4d72-9157-c16664510ef6",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "RotateZ",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },

@@ -57,7 +57,7 @@ public class EnemyWaveManager : MonoBehaviour
 
     void Start()
     {
-        timeBeforeNextWave = Random.Range(minEnemies, maxEnemies+1);
+        timeBeforeNextWave = Random.Range(minTime, maxTime);
     }
     
     void FixedUpdate()

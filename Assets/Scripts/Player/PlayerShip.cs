@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 
 public class HomingTarget
 {
@@ -21,7 +22,7 @@ public class PlayerShip : MonoBehaviour
 {
     //Necessary Components
     public HealthSystem health;
-    public PlayerCamera playerCamera;
+    public Camera camera;
     [SerializeField] GameObject boostEffect;
     [SerializeField] GameObject lockUI;
     [SerializeField] Transform hud;
@@ -32,17 +33,14 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] Transform mesh;
     [SerializeField] CharacterController controller;
 
-    //Flight variables
     float speed;
     float targetSpeed;
-    Vector3 moveInput;
-    Vector2 reticlePosition;
-    [HideInInspector] public bool forwardBoost;
-    
+    Vector3 moveInput = Vector3.zero;
+    float autoLevel = 0;
+
     [SerializeField][Min(1)] float turnSpeed = 100;
     [SerializeField] float baseSpeed = 50;
     [SerializeField] float boostSpeed = 200;
-    [SerializeField] float thrustSpeed = 250;
     [SerializeField] float acceleration = 10;
 
     //For Shooting
@@ -76,7 +74,6 @@ public class PlayerShip : MonoBehaviour
         InputManager.player.ToggleWeapon.performed += ToggleWeapon_pressed;
         InputManager.player.Shoot.performed += Shoot_pressed;
         InputManager.player.Shoot.canceled += Shoot_released;
-        InputManager.player.CenterReticle.performed += CenterReticle_pressed;
 
         for (int i = 0; i < maxTargets; i++)
         {
@@ -92,7 +89,7 @@ public class PlayerShip : MonoBehaviour
 
         targetSpeed = baseSpeed;
         weaponText.text = equipedWeapon.ToString();
-        playerCamera.transform.parent = transform;
+        if(!camera) camera = Camera.main;
     }
     void FixedUpdate()
     {   
@@ -162,13 +159,17 @@ public class PlayerShip : MonoBehaviour
     {
         if (health.IsAlive() && !GameManager.Get().gamePaused)
         {
-            if (forwardBoost) ThrustControls();
-            else StrafeControls();
+            Movement();
 
             //Auto Level
-            if (moveInput.magnitude == 0 && InputManager.player.Aim.ReadValue<Vector2>().magnitude == 0 &&  transform.localEulerAngles.z != 0)
+            if (InputManager.player.Aim.ReadValue<Vector2>().magnitude == 0 &&  InputManager.player.RotateZ.ReadValue<float>() == 0 && transform.localEulerAngles.z != 0 && GameSettings.autoLevel)
             {
-                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, 5 * Time.deltaTime));
+                autoLevel = 0;
+            }
+            if(autoLevel < 1)
+            {
+                autoLevel += Time.deltaTime;
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, autoLevel));
             }
 
 
@@ -186,31 +187,17 @@ public class PlayerShip : MonoBehaviour
         InputManager.player.ToggleWeapon.performed -= ToggleWeapon_pressed;
         InputManager.player.Shoot.performed -= Shoot_pressed;
         InputManager.player.Shoot.canceled -= Shoot_released;
-        InputManager.player.CenterReticle.performed -= CenterReticle_pressed;
     }
 
 
     private void Boost_pressed(InputAction.CallbackContext obj)
     {
         targetSpeed = boostSpeed;
-        if(moveInput.magnitude <= 0.1f)
-        {
-            forwardBoost = true;
-            playerCamera.transform.parent = transform.parent;
-            boostEffect.SetActive(true);
-            thruster.emitting = true;
-        }
     }
 
     private void Boost_released(InputAction.CallbackContext obj)
     {
         targetSpeed = baseSpeed;
-        forwardBoost = false;
-        playerCamera.transform.parent = transform;
-        boostEffect.SetActive(false);
-        reticlePosition = Vector2.zero;
-        reticle.rectTransform.anchoredPosition = reticlePosition;
-        thruster.emitting = false;
     }
     
     private void Shoot_pressed(InputAction.CallbackContext obj)
@@ -238,18 +225,9 @@ public class PlayerShip : MonoBehaviour
         else if (equipedWeapon == Weapon.BLASTER)
         {
             chargeEffect.gameObject.SetActive(false);
-            int targetCount = 0;
-            for (int i = 0; i < targets.Count; i++)
+            if (targets.Count > 0)
             {
-                if (targets[i].followTarget)
-                {
-                    targetCount++;
-                }
-            }
-
-            if (targetCount > 0)
-            {
-                StartCoroutine(FireMultiBlaster());
+                FireMultiBlaster();
             }
             else
             {
@@ -273,13 +251,7 @@ public class PlayerShip : MonoBehaviour
 
         weaponText.text = equipedWeapon.ToString();
     }
-
-    private void CenterReticle_pressed(InputAction.CallbackContext obj)
-    {
-        reticlePosition = Vector2.zero;
-        reticle.rectTransform.anchoredPosition = reticlePosition;
-    }
-
+    
     public void Teleport(Vector3 position)
     {
         controller.enabled = false;
@@ -287,12 +259,21 @@ public class PlayerShip : MonoBehaviour
         controller.enabled = true;
     }
 
-    void StrafeControls()
+    void Movement()
     {
         //Moving
         moveInput.x = InputManager.player.Steer.ReadValue<Vector2>().x;
         moveInput.y = InputManager.player.Steer.ReadValue<Vector2>().y;
         moveInput.z = InputManager.player.Ascend_Descend.ReadValue<float>();
+
+        if(moveInput.y > 0)
+        {
+            thruster.emitting = true;
+        }
+        else
+        {
+            thruster.emitting = false;
+        }
 
         controller.Move(((transform.forward * moveInput.y) + (transform.right * moveInput.x) + (transform.up * moveInput.z)).normalized * speed * Time.deltaTime);
 
@@ -303,24 +284,10 @@ public class PlayerShip : MonoBehaviour
         //Aiming
         float lookX = InputManager.player.Aim.ReadValue<Vector2>().x;
         float lookY = InputManager.player.Aim.ReadValue<Vector2>().y;
+        float lookZ = InputManager.player.RotateZ.ReadValue<float>();
         transform.rotation *= Quaternion.AngleAxis(lookX, Vector3.up);
         transform.rotation *= Quaternion.AngleAxis(-lookY, Vector3.right);
-    }
-
-    void ThrustControls()
-    {
-        //Forward Movement
-        moveInput = InputManager.player.Aim.ReadValue<Vector2>();
-        controller.Move(transform.forward * speed * Time.deltaTime);
-        
-        //Turning
-        transform.rotation *= Quaternion.AngleAxis(moveInput.x, Vector3.up);
-        transform.rotation *= Quaternion.AngleAxis(-moveInput.y, Vector3.right);
-
-
-        //veering left and right
-        float turnX = InputManager.player.Aim.ReadValue<Vector2>().x * -45;
-        mesh.localEulerAngles = new Vector3(0,0,turnX);
+        transform.rotation *= Quaternion.AngleAxis(lookZ, Vector3.forward);
     }
 
     void FireBlaster()
@@ -373,20 +340,9 @@ public class PlayerShip : MonoBehaviour
             chargeAmount = 0;
         }
     }
-
-    int GetNumberOfActiveTargets()
+    
+    void FireMultiBlaster()
     {
-        int n = 0;
-        foreach(var t in targets)
-        {
-            if(t.followTarget != null) n++;
-        }
-        return n;
-    }
-
-    IEnumerator FireMultiBlaster()
-    {
-        int numberOfTargets = GetNumberOfActiveTargets();
         for(int i = 0; i < targets.Count; i++)
         {
             if(targets[i].followTarget && targets[i].ui.activeSelf)
@@ -410,10 +366,10 @@ public class PlayerShip : MonoBehaviour
                 }
 
                 b.trail.material.SetColor("_Color", chargeColor);
+                b.direction = Random.insideUnitSphere.normalized;
                 b.homingTarget = targets[i].followTarget;
                 targets[i].followTarget = null;
                 targets[i].ui.SetActive(false);
-                yield return new WaitForSeconds(0.05f);
             }
         }
         chargeAmount = 0;
