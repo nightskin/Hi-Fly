@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShip
   health: {fileID: 4133934921912186936}
-  camera: {fileID: 0}
+  camera: {fileID: 8504905812486363882}
   boostEffect: {fileID: 0}
   lockUI: {fileID: 1722506613295537615, guid: ba686a2ed200db240a8ce6acd3aa5a98, type: 3}
   hud: {fileID: 6819837170472286716}
@@ -58,6 +58,7 @@ MonoBehaviour:
   bulletSpawn: {fileID: 8436338386794596101}
   mesh: {fileID: 3005499506416242416}
   controller: {fileID: 4931498280169647350}
+  thrusting: 0
   turnSpeed: 100
   baseSpeed: 50
   boostSpeed: 200
@@ -71,7 +72,7 @@ MonoBehaviour:
   blastRadius: 10
   lazerPower: 1
   lazerSpeed: 0.01
-  maxTargets: 10
+  maxTargets: 7
 --- !u!143 &4931498280169647350
 CharacterController:
   m_ObjectHideFlags: 0
@@ -7812,6 +7813,7 @@ GameObject:
   - component: {fileID: 8504905812486363882}
   - component: {fileID: 8504905812486363883}
   - component: {fileID: 8504905812486363880}
+  - component: {fileID: 1579700761538995427}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: MainCamera
@@ -7937,6 +7939,20 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1579700761538995427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8504905812486363876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84f1486e85f23594fae9349d7213af31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCamera
+  ship: {fileID: 8977292426134536927}
+  lerpSpeed: 20
 --- !u!1 &8804405294266686944
 GameObject:
   m_ObjectHideFlags: 0

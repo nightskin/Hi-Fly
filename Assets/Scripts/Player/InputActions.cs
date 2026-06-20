@@ -147,13 +147,13 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""RotateZ"",
-                    ""type"": ""Value"",
-                    ""id"": ""61580a5c-f835-4abd-8f88-2061728e5e62"",
-                    ""expectedControlType"": ""Axis"",
+                    ""name"": ""CenterCrossHair"",
+                    ""type"": ""Button"",
+                    ""id"": ""bf4b7b23-79ed-4dc6-aa57-0fea4767bb23"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -400,70 +400,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""QE"",
-                    ""id"": ""80cb833c-735c-4d97-8823-00d5ebd718d9"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateZ"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""185e8120-cef3-4439-9a9b-d95966dd0401"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardMouse"",
-                    ""action"": ""RotateZ"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""90c60f3c-c3ea-4098-8849-fecfa683a285"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardMouse"",
-                    ""action"": ""RotateZ"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""ShoulderBtns"",
-                    ""id"": ""b718e875-79df-424a-a22e-02641982d34b"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateZ"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""f50befba-00d8-4021-8ae4-98b1217ae87c"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""name"": """",
+                    ""id"": ""fa48b3e6-2e19-46b5-890a-a79d72f982d2"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""RotateZ"",
+                    ""action"": ""CenterCrossHair"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""4831e027-5a7f-4d72-9157-c16664510ef6"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""RotateZ"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -956,7 +901,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
         m_Player_ToggleWeapon = m_Player.FindAction("ToggleWeapon", throwIfNotFound: true);
-        m_Player_RotateZ = m_Player.FindAction("RotateZ", throwIfNotFound: true);
+        m_Player_CenterCrossHair = m_Player.FindAction("CenterCrossHair", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_UnPause = m_UI.FindAction("UnPause", throwIfNotFound: true);
@@ -1053,7 +998,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Boost;
     private readonly InputAction m_Player_Shoot;
     private readonly InputAction m_Player_ToggleWeapon;
-    private readonly InputAction m_Player_RotateZ;
+    private readonly InputAction m_Player_CenterCrossHair;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1090,9 +1035,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @ToggleWeapon => m_Wrapper.m_Player_ToggleWeapon;
         /// <summary>
-        /// Provides access to the underlying input action "Player/RotateZ".
+        /// Provides access to the underlying input action "Player/CenterCrossHair".
         /// </summary>
-        public InputAction @RotateZ => m_Wrapper.m_Player_RotateZ;
+        public InputAction @CenterCrossHair => m_Wrapper.m_Player_CenterCrossHair;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1137,9 +1082,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @ToggleWeapon.started += instance.OnToggleWeapon;
             @ToggleWeapon.performed += instance.OnToggleWeapon;
             @ToggleWeapon.canceled += instance.OnToggleWeapon;
-            @RotateZ.started += instance.OnRotateZ;
-            @RotateZ.performed += instance.OnRotateZ;
-            @RotateZ.canceled += instance.OnRotateZ;
+            @CenterCrossHair.started += instance.OnCenterCrossHair;
+            @CenterCrossHair.performed += instance.OnCenterCrossHair;
+            @CenterCrossHair.canceled += instance.OnCenterCrossHair;
         }
 
         /// <summary>
@@ -1169,9 +1114,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @ToggleWeapon.started -= instance.OnToggleWeapon;
             @ToggleWeapon.performed -= instance.OnToggleWeapon;
             @ToggleWeapon.canceled -= instance.OnToggleWeapon;
-            @RotateZ.started -= instance.OnRotateZ;
-            @RotateZ.performed -= instance.OnRotateZ;
-            @RotateZ.canceled -= instance.OnRotateZ;
+            @CenterCrossHair.started -= instance.OnCenterCrossHair;
+            @CenterCrossHair.performed -= instance.OnCenterCrossHair;
+            @CenterCrossHair.canceled -= instance.OnCenterCrossHair;
         }
 
         /// <summary>
@@ -1443,12 +1388,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnToggleWeapon(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "RotateZ" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "CenterCrossHair" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRotateZ(InputAction.CallbackContext context);
+        void OnCenterCrossHair(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

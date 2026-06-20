@@ -1,9 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 
 public class HomingTarget
 {
@@ -33,9 +31,11 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] Transform mesh;
     [SerializeField] CharacterController controller;
 
+    [HideInInspector] public bool thrusting = false;
     float speed;
     float targetSpeed;
     Vector3 moveInput = Vector3.zero;
+    Vector2 lookInput = Vector2.zero;
     float autoLevel = 0;
 
     [SerializeField][Min(1)] float turnSpeed = 100;
@@ -53,6 +53,7 @@ public class PlayerShip : MonoBehaviour
 
     [SerializeField] Text weaponText;
     [SerializeField] Image reticle;
+    Vector2 reticlePosition = Vector2.zero;
     [SerializeField] LayerMask lockOnLayer;
     RaycastHit lockOn;
 
@@ -95,6 +96,15 @@ public class PlayerShip : MonoBehaviour
     {   
         //Handles acceleration
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.fixedDeltaTime);
+
+        if(thrusting)
+        {
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, 70, 10 * Time.fixedDeltaTime);
+        }
+        else
+        {
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, 60, 10 * Time.fixedDeltaTime);
+        }
 
         //Handles targeting
         Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
@@ -159,10 +169,11 @@ public class PlayerShip : MonoBehaviour
     {
         if (health.IsAlive() && !GameManager.Get().gamePaused)
         {
-            Movement();
+            if(thrusting) ThrustControls();
+            else StrafeControls();
 
             //Auto Level
-            if (InputManager.player.Aim.ReadValue<Vector2>().magnitude == 0 &&  InputManager.player.RotateZ.ReadValue<float>() == 0 && transform.localEulerAngles.z != 0 && GameSettings.autoLevel)
+            if (InputManager.player.Aim.ReadValue<Vector2>().magnitude == 0 && transform.localEulerAngles.z != 0 && GameSettings.autoLevel)
             {
                 autoLevel = 0;
             }
@@ -193,11 +204,22 @@ public class PlayerShip : MonoBehaviour
     private void Boost_pressed(InputAction.CallbackContext obj)
     {
         targetSpeed = boostSpeed;
+        if(InputManager.player.Steer.ReadValue<Vector2>().magnitude == 0)
+        {
+            thrusting = true;
+            thruster.emitting = true;
+            camera.transform.parent = transform.parent;
+        }
     }
 
     private void Boost_released(InputAction.CallbackContext obj)
     {
         targetSpeed = baseSpeed;
+        thrusting = false;
+        thruster.emitting = false;
+        camera.transform.parent = transform;
+        reticle.rectTransform.anchoredPosition = Vector2.zero;
+        reticlePosition = Vector2.zero;
     }
     
     private void Shoot_pressed(InputAction.CallbackContext obj)
@@ -225,7 +247,7 @@ public class PlayerShip : MonoBehaviour
         else if (equipedWeapon == Weapon.BLASTER)
         {
             chargeEffect.gameObject.SetActive(false);
-            if (targets.Count > 0)
+            if (GetActiveTargets() > 0)
             {
                 FireMultiBlaster();
             }
@@ -259,7 +281,20 @@ public class PlayerShip : MonoBehaviour
         controller.enabled = true;
     }
 
-    void Movement()
+    int GetActiveTargets()
+    {
+        int i = 0;
+        foreach(HomingTarget target in targets)
+        {
+            if(target.ui.activeSelf)
+            {
+                i++;
+            }
+        }
+        return i;
+    }
+
+    void StrafeControls()
     {
         //Moving
         moveInput.x = InputManager.player.Steer.ReadValue<Vector2>().x;
@@ -282,12 +317,30 @@ public class PlayerShip : MonoBehaviour
         mesh.localEulerAngles = new Vector3(0,0,turnX);
 
         //Aiming
-        float lookX = InputManager.player.Aim.ReadValue<Vector2>().x;
-        float lookY = InputManager.player.Aim.ReadValue<Vector2>().y;
-        float lookZ = InputManager.player.RotateZ.ReadValue<float>();
-        transform.rotation *= Quaternion.AngleAxis(lookX, Vector3.up);
-        transform.rotation *= Quaternion.AngleAxis(-lookY, Vector3.right);
-        transform.rotation *= Quaternion.AngleAxis(lookZ, Vector3.forward);
+        lookInput = InputManager.player.Aim.ReadValue<Vector2>();
+        transform.rotation *= Quaternion.AngleAxis(lookInput.x, Vector3.up);
+        transform.rotation *= Quaternion.AngleAxis(-lookInput.y, Vector3.right);
+    }
+
+    void ThrustControls()
+    {
+        controller.Move(transform.forward * speed * Time.deltaTime);
+        
+        //veering left and right
+        float turnX = InputManager.player.Steer.ReadValue<Vector2>().x * -45;
+        mesh.localEulerAngles = new Vector3(0,0,turnX);
+
+        //Steering
+        lookInput = InputManager.player.Steer.ReadValue<Vector2>();
+        transform.rotation *= Quaternion.AngleAxis(lookInput.x, Vector3.up);
+        transform.rotation *= Quaternion.AngleAxis(-lookInput.y, Vector3.right);
+
+        //Aiming
+        Vector2 aimInput = InputManager.player.Aim.ReadValue<Vector2>();
+        reticlePosition += aimInput * Time.deltaTime;
+        reticlePosition.x = Mathf.Clamp(reticlePosition.x,-1,1);
+        reticlePosition.y = Mathf.Clamp(reticlePosition.y,-1,1);
+        reticle.rectTransform.anchoredPosition = camera.ViewportToScreenPoint(reticlePosition);
     }
 
     void FireBlaster()
@@ -302,7 +355,7 @@ public class PlayerShip : MonoBehaviour
             if(chargeAmount >= 1)
             {
                 b.explosive = true;
-                b.damage = baseFirePower;
+                b.damage = baseFirePower * 5;
                 b.blastRadius = blastRadius;
             }
             else
