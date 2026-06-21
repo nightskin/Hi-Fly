@@ -154,6 +154,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleThrustMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""d3023ece-7a44-4787-be29-3fb5d0aec7e9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -407,6 +416,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
                     ""action"": ""CenterCrossHair"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""01e61a9e-3170-4877-a9f7-8e65595e9e24"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""ToggleThrustMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""530fca82-d3da-4270-8989-30c9e5afd704"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardMouse"",
+                    ""action"": ""ToggleThrustMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -902,6 +933,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
         m_Player_ToggleWeapon = m_Player.FindAction("ToggleWeapon", throwIfNotFound: true);
         m_Player_CenterCrossHair = m_Player.FindAction("CenterCrossHair", throwIfNotFound: true);
+        m_Player_ToggleThrustMode = m_Player.FindAction("ToggleThrustMode", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_UnPause = m_UI.FindAction("UnPause", throwIfNotFound: true);
@@ -999,6 +1031,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Shoot;
     private readonly InputAction m_Player_ToggleWeapon;
     private readonly InputAction m_Player_CenterCrossHair;
+    private readonly InputAction m_Player_ToggleThrustMode;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1038,6 +1071,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/CenterCrossHair".
         /// </summary>
         public InputAction @CenterCrossHair => m_Wrapper.m_Player_CenterCrossHair;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/ToggleThrustMode".
+        /// </summary>
+        public InputAction @ToggleThrustMode => m_Wrapper.m_Player_ToggleThrustMode;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1085,6 +1122,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @CenterCrossHair.started += instance.OnCenterCrossHair;
             @CenterCrossHair.performed += instance.OnCenterCrossHair;
             @CenterCrossHair.canceled += instance.OnCenterCrossHair;
+            @ToggleThrustMode.started += instance.OnToggleThrustMode;
+            @ToggleThrustMode.performed += instance.OnToggleThrustMode;
+            @ToggleThrustMode.canceled += instance.OnToggleThrustMode;
         }
 
         /// <summary>
@@ -1117,6 +1157,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @CenterCrossHair.started -= instance.OnCenterCrossHair;
             @CenterCrossHair.performed -= instance.OnCenterCrossHair;
             @CenterCrossHair.canceled -= instance.OnCenterCrossHair;
+            @ToggleThrustMode.started -= instance.OnToggleThrustMode;
+            @ToggleThrustMode.performed -= instance.OnToggleThrustMode;
+            @ToggleThrustMode.canceled -= instance.OnToggleThrustMode;
         }
 
         /// <summary>
@@ -1394,6 +1437,13 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCenterCrossHair(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleThrustMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleThrustMode(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

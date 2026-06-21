@@ -53,7 +53,7 @@ public class PlayerShip : MonoBehaviour
 
     [SerializeField] Text weaponText;
     [SerializeField] Image reticle;
-    Vector2 reticlePosition = Vector2.zero;
+    Vector2 reticlePosition = new Vector2(0.5f,0.5f);
     [SerializeField] LayerMask lockOnLayer;
     RaycastHit lockOn;
 
@@ -70,12 +70,6 @@ public class PlayerShip : MonoBehaviour
     
     void Start()
     {
-        InputManager.player.Boost.performed += Boost_pressed;
-        InputManager.player.Boost.canceled += Boost_released;
-        InputManager.player.ToggleWeapon.performed += ToggleWeapon_pressed;
-        InputManager.player.Shoot.performed += Shoot_pressed;
-        InputManager.player.Shoot.canceled += Shoot_released;
-
         for (int i = 0; i < maxTargets; i++)
         {
             var l = Instantiate(lockUI, hud);
@@ -96,15 +90,6 @@ public class PlayerShip : MonoBehaviour
     {   
         //Handles acceleration
         speed = Mathf.Lerp(speed, targetSpeed, acceleration * Time.fixedDeltaTime);
-
-        if(thrusting)
-        {
-            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, 70, 10 * Time.fixedDeltaTime);
-        }
-        else
-        {
-            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, 60, 10 * Time.fixedDeltaTime);
-        }
 
         //Handles targeting
         Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
@@ -173,107 +158,116 @@ public class PlayerShip : MonoBehaviour
             else StrafeControls();
 
             //Auto Level
-            if (InputManager.player.Aim.ReadValue<Vector2>().magnitude == 0 && transform.localEulerAngles.z != 0 && GameSettings.autoLevel)
+            if (InputManager.player.Steer.ReadValue<Vector2>().magnitude == 0  && InputManager.player.Aim.ReadValue<Vector2>().magnitude == 0 && transform.localEulerAngles.z != 0 && GameSettings.autoLevel)
             {
                 autoLevel = 0;
             }
             if(autoLevel < 1)
             {
-                autoLevel += Time.deltaTime;
+                autoLevel += 5 * Time.deltaTime;
                 transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, autoLevel));
             }
 
+            //Center CrossHair
+            if(InputManager.player.CenterCrossHair.WasPressedThisFrame())
+            {
+                if(thrusting)
+                {
+                    reticle.rectTransform.anchoredPosition = Vector2.zero;
+                    reticlePosition = new Vector2(0.5f,0.5f);
+                } 
+            }
+
+            //TogglesThrustMode
+            if(InputManager.player.ToggleThrustMode.WasPressedThisFrame())
+            {
+                if(thrusting)
+                {
+                    thrusting = false;
+                    thruster.emitting = false;
+                    camera.transform.parent = transform;
+                    reticle.rectTransform.anchoredPosition = Vector2.zero;
+                    reticlePosition = new Vector2(0.5f,0.5f);
+                }
+                else
+                {
+                    thrusting = true;
+                    thruster.emitting = true;
+                    camera.transform.parent = transform.parent;
+                }
+            }
+
+            //Boosting
+            if(InputManager.player.Boost.IsPressed())
+            {
+                targetSpeed = boostSpeed;
+            }
+            else
+            {
+                targetSpeed = baseSpeed;
+            }
+
+            //Shooting
+            if(InputManager.player.Shoot.WasPressedThisFrame())
+            {
+                if (equipedWeapon == Weapon.BLASTER)
+                {
+                    chargeEffect.gameObject.SetActive(true);
+                }
+                else if (equipedWeapon == Weapon.LAZER)
+                {
+                    FireLazer();
+                }
+            }
+            else if(InputManager.player.Shoot.WasReleasedThisFrame())
+            {
+                if (equipedWeapon == Weapon.LAZER)
+                {
+                    if (lazer)
+                    {
+                            lazer.GetComponent<Lazer>().endFire = true;
+                            lazer = null;
+                        }
+                    }
+                else if (equipedWeapon == Weapon.BLASTER)
+                {
+                    chargeEffect.gameObject.SetActive(false);
+                    if (GetActiveTargets() > 0)
+                    {
+                        FireMultiBlaster();
+                    }
+                    else
+                    {
+                        FireBlaster();
+                    }
+                }
+            }
 
             //Handles Lazer
             if(InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.LAZER)
             {
                 UpdateLazer();
             }
-        }
-    }
-    void OnDestroy()
-    {
-        InputManager.player.Boost.performed -= Boost_pressed;
-        InputManager.player.Boost.canceled -= Boost_released;
-        InputManager.player.ToggleWeapon.performed -= ToggleWeapon_pressed;
-        InputManager.player.Shoot.performed -= Shoot_pressed;
-        InputManager.player.Shoot.canceled -= Shoot_released;
-    }
 
-
-    private void Boost_pressed(InputAction.CallbackContext obj)
-    {
-        targetSpeed = boostSpeed;
-        if(InputManager.player.Steer.ReadValue<Vector2>().magnitude == 0)
-        {
-            thrusting = true;
-            thruster.emitting = true;
-            camera.transform.parent = transform.parent;
-        }
-    }
-
-    private void Boost_released(InputAction.CallbackContext obj)
-    {
-        targetSpeed = baseSpeed;
-        thrusting = false;
-        thruster.emitting = false;
-        camera.transform.parent = transform;
-        reticle.rectTransform.anchoredPosition = Vector2.zero;
-        reticlePosition = Vector2.zero;
-    }
-    
-    private void Shoot_pressed(InputAction.CallbackContext obj)
-    {
-        if (equipedWeapon == Weapon.BLASTER)
-        {
-            chargeEffect.gameObject.SetActive(true);
-        }
-        else if (equipedWeapon == Weapon.LAZER)
-        {
-            FireLazer();
-        }
-    }
-
-    private void Shoot_released(InputAction.CallbackContext obj)
-    {
-        if (equipedWeapon == Weapon.LAZER)
-        {
-            if (lazer)
+            //Swapping Weapons
+            if(InputManager.player.ToggleWeapon.WasPressedThisFrame())
             {
-                lazer.GetComponent<Lazer>().endFire = true;
-                lazer = null;
-            }
-        }
-        else if (equipedWeapon == Weapon.BLASTER)
-        {
-            chargeEffect.gameObject.SetActive(false);
-            if (GetActiveTargets() > 0)
-            {
-                FireMultiBlaster();
-            }
-            else
-            {
-                FireBlaster();
+                if(equipedWeapon == Weapon.BLASTER)
+                {
+                    if(chargeEffect.gameObject.activeSelf) chargeEffect.gameObject.SetActive(false);
+                    equipedWeapon = Weapon.LAZER;
+                }
+                else if(equipedWeapon == Weapon.LAZER)
+                {
+                    if(lazer) lazer.endFire = true;
+                    equipedWeapon = Weapon.BLASTER;
+                }
+
+                weaponText.text = equipedWeapon.ToString();               
             }
         }
     }
-    
-    private void ToggleWeapon_pressed(InputAction.CallbackContext obj)
-    {
-        if(equipedWeapon == Weapon.BLASTER)
-        {
-            if(chargeEffect.gameObject.activeSelf) chargeEffect.gameObject.SetActive(false);
-            equipedWeapon = Weapon.LAZER;
-        }
-        else if(equipedWeapon == Weapon.LAZER)
-        {
-            if(lazer) lazer.endFire = true;
-            equipedWeapon = Weapon.BLASTER;
-        }
 
-        weaponText.text = equipedWeapon.ToString();
-    }
-    
     public void Teleport(Vector3 position)
     {
         controller.enabled = false;
@@ -338,9 +332,9 @@ public class PlayerShip : MonoBehaviour
         //Aiming
         Vector2 aimInput = InputManager.player.Aim.ReadValue<Vector2>();
         reticlePosition += aimInput * Time.deltaTime;
-        reticlePosition.x = Mathf.Clamp(reticlePosition.x,-1,1);
-        reticlePosition.y = Mathf.Clamp(reticlePosition.y,-1,1);
-        reticle.rectTransform.anchoredPosition = camera.ViewportToScreenPoint(reticlePosition);
+        reticlePosition.x = Mathf.Clamp(reticlePosition.x,0,1);
+        reticlePosition.y = Mathf.Clamp(reticlePosition.y,0,1);
+        reticle.rectTransform.position = camera.ViewportToScreenPoint(reticlePosition);
     }
 
     void FireBlaster()

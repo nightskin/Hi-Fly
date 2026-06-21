@@ -7,7 +7,7 @@ public class PlayerCamera : MonoBehaviour
 
     void Update()
     {
-        if(!GameManager.Get().gamePaused && ship.thrusting)
+        if(!GameManager.Get().gamePaused)
         {
             Vector3 targetPosition = ship.transform.position - (transform.forward * 10) + (transform.up * 3);
             transform.position = Vector3.Lerp(transform.position, targetPosition, lerpSpeed * Time.deltaTime);
