@@ -12,15 +12,14 @@ GameObject:
   - component: {fileID: 7633679061300965354}
   - component: {fileID: 465676840894286673}
   - component: {fileID: 2757920808048779928}
-  - component: {fileID: 1608740405003766520}
-  - component: {fileID: 7631240987136549564}
+  - component: {fileID: -8801327537477412514}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3604450688990281829
 Transform:
   m_ObjectHideFlags: 0
@@ -610,7 +609,7 @@ ParticleSystem:
     maxNumParticles: 50
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 1
-    rotation3D: 1
+    rotation3D: 0
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
@@ -1361,7 +1360,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   ColorModule:
-    enabled: 1
+    enabled: 0
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -1369,8 +1368,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 0.6, a: 1}
-        key1: {r: 1, g: 0.412, b: 0, a: 1}
+        key0: {r: 1, g: 1, b: 0, a: 1}
+        key1: {r: 1, g: 0.25, b: 0, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -1394,7 +1393,7 @@ ParticleSystem:
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_ColorSpace: -1
+        m_ColorSpace: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
       minGradient:
@@ -4819,7 +4818,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &465676840894286673
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4865,7 +4864,8 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_RenderMode: 4
+  m_MaskInteraction: 0
+  m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -4896,7 +4896,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!82 &2757920808048779928
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4994,7 +4993,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1608740405003766520
+--- !u!114 &-8801327537477412514
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5003,20 +5002,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 279913065598733499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d2798e33123144484c659eb3c2299f, type: 3}
+  m_Script: {fileID: 11500000, guid: b127f6ec08a6ab57c90dc30dca63db82, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  durationInSeconds: 1
---- !u!114 &7631240987136549564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 279913065598733499}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14294570097fc6e40b58192ee5df4f31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audio: {fileID: 2757920808048779928}
+  m_EditorClassIdentifier: Assembly-CSharp::Explosion
+  particleSystem: {fileID: 7633679061300965354}
+  useCustomColor: 0
+  color: {r: 0, g: 0, b: 0, a: 1}
+  defaultColor: {r: 4, g: 0.2, b: 0, a: 1}

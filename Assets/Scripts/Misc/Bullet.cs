@@ -15,11 +15,12 @@ public class Bullet : MonoBehaviour
     public int damage = 10;
     public float maxSpeed = 1000;
     public float blastRadius = 5;
-    [HideInInspector] public bool explosive = false;
+    public bool useCustomColor;
+    [ColorUsage(true,true)] public Color defaultColor = Color.white * 4;
 
     //Physics Variables
     [HideInInspector] public Transform homingTarget = null;
-    public GameObject owner = null;
+    [HideInInspector] public GameObject owner = null;
     [HideInInspector] public Vector3 direction;
 
     Vector3 prevPosition;
@@ -81,29 +82,27 @@ public class Bullet : MonoBehaviour
                 {
                     if (Vector3.Distance(transform.position, homingTarget.position) < 1)
                     {
-                        if(explosive)
+                        HealthSystem health = homingTarget.GetComponent<HealthSystem>();
+                        if (health)
                         {
-                            var obj = objectPool.Spawn("powerBombExplosion", homingTarget.position);
-                            PowerBomb bomb = obj.GetComponent<PowerBomb>();
-                            if (bomb)
-                            {
-                                bomb.blastRadius = blastRadius;
-                                bomb.damage = damage;
-                            }
-                            DeSpawn();
-                        }
-                        else
-                        {
-                            HealthSystem health = homingTarget.GetComponent<HealthSystem>();
-                            if (health)
-                            {
-                                health.TakeDamage(damage);
-                                hit = true;
-                                sfx.clip = hitSound;
-                                sfx.Play();
-                            }
+                            health.TakeDamage(damage);
+                            hit = true;
+                            sfx.clip = hitSound;
+                            sfx.Play();
                         }
 
+                        var obj = GameManager.Get().objectPool.Spawn("explosion", homingTarget.transform.position);
+                        if(obj)
+                        {
+                            if(useCustomColor)
+                            {
+                                obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", trail.material.GetColor("_Color"));
+                            }
+                            else
+                            {
+                                obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", Color.orange * 4);
+                            }
+                        }
                     }
                 }
             }
@@ -129,131 +128,112 @@ public class Bullet : MonoBehaviour
         {
             if (rayhit.transform.gameObject != owner)
             {
-                if(explosive)
+                if (rayhit.transform.tag == "Destructible")
                 {
-                    if(rayhit.transform.tag == "Destructible")
+                    var obj = GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
+                    if(useCustomColor)
                     {
-                        var obj = objectPool.Spawn("powerBombExplosion", rayhit.point);
-                        PowerBomb bomb = obj.GetComponent<PowerBomb>();
-                        if (bomb)
-                        {
-                            bomb.blastRadius = blastRadius;
-                            bomb.damage = damage;
-                        }
-                        Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
-                        if (asteroid)
-                        {
-                            asteroid.RemoveBlock(rayhit);
-                            DeSpawn();
-                        }
-                        PlanetChunk planet = rayhit.transform.GetComponent<PlanetChunk>();
-                        if(planet)
-                        {
-                            planet.RemoveBlock(rayhit);
-                            DeSpawn();
-                        }
+                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", trail.material.GetColor("_Color"));
                     }
-                    else if(rayhit.transform.tag == "Surface")
+                    else
                     {
-                        var obj = objectPool.Spawn("powerBombExplosion", rayhit.point);
-                        PowerBomb bomb = obj.GetComponent<PowerBomb>();
-                        if (bomb)
-                        {
-                            bomb.blastRadius = blastRadius;
-                            bomb.damage = damage;
-                        }
-                        DeSpawn();
+                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", Color.orange * 4);
                     }
-                    else if(rayhit.transform.tag == "Enemy")
+                    Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
+                    if (asteroid)
                     {
-                        var obj = objectPool.Spawn("powerBombExplosion", rayhit.point);
-                        PowerBomb bomb = obj.GetComponent<PowerBomb>();
-                        if (bomb)
-                        {
-                            bomb.blastRadius = blastRadius;
-                            bomb.damage = damage;
-                        }
-                        DeSpawn();
+                        asteroid.RemoveBlock(rayhit);
+                        hit = true;
                     }
-                    else if(rayhit.transform.tag == "Drill")
+                    PlanetChunk planet = rayhit.transform.GetComponent<PlanetChunk>();
+                    if(planet)
                     {
-                        owner = null;
-                        life = lifetime;
-                        homingTarget = null;
-                        direction = Vector3.Reflect(direction, rayhit.normal);
+                        planet.RemoveBlock(rayhit);
+                        hit = true;
                     }
-                    else if(rayhit.transform.tag == "Player")
-                    {
-                        var obj = objectPool.Spawn("powerBombExplosion", rayhit.point);
-                        PowerBomb bomb = obj.GetComponent<PowerBomb>();
-                        if (bomb)
-                        {
-                            bomb.blastRadius = blastRadius;
-                            bomb.damage = damage;
-                        }
-                        DeSpawn();
-                    }
-
                 }
-                else
+                else if (rayhit.transform.tag == "Surface")
                 {
-                    if (rayhit.transform.tag == "Destructible")
+                    var obj = GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
+                    if(useCustomColor)
                     {
-                        GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
-                        Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
-                        if (asteroid)
+                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", trail.material.GetColor("_Color"));
+                    }
+                    else
+                    {
+                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", Color.orange * 4);
+                    }
+                    hit = true;
+                }
+                else if (rayhit.transform.tag == "Enemy")
+                {
+                    HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
+                    if (health)
+                    {
+                        health.TakeDamage(damage);
+                        if(health.IsDead())
                         {
-                            asteroid.RemoveBlock(rayhit);
-                            hit = true;
-                        }
-                        PlanetChunk planet = rayhit.transform.GetComponent<PlanetChunk>();
-                        if(planet)
-                        {
-                            planet.RemoveBlock(rayhit);
-                            hit = true;
+                            EnemyShip enemyShip = rayhit.transform.GetComponent<EnemyShip>();
+                            if(enemyShip) enemyShip.Die();
                         }
                     }
-                    else if (rayhit.transform.tag == "Surface")
+                    else
                     {
-                        GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
-                        hit = true;
+                        Debug.Log("Enemy Does Not Have Health Script");
                     }
-                    else if (rayhit.transform.tag == "Enemy")
+                    
+                    var obj = GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
+                    if(useCustomColor)
                     {
-                        HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
-                        if (health)
-                        {
-                            health.TakeDamage(damage);
-                        }
+                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", trail.material.GetColor("_Color"));
+                    }
+                    else
+                    {
+                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", Color.orange * 4);
+                    }
 
-                        sfx.clip = hitSound;
-                        sfx.Play();
-                        hit = true;
-                    }
-                    else if (rayhit.transform.tag == "Player")
+                    sfx.clip = hitSound;
+                    sfx.Play();
+                    hit = true;
+                }
+                else if (rayhit.transform.tag == "Player")
+                {
+                    HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
+                    if (health)
                     {
-                        HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
-                        if (health)
+                        health.TakeDamage(damage);
+                        if (health.IsDead())
                         {
-                            health.TakeDamage(damage);
-                            if (health.IsDead())
-                            {
-                                GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
-                                rayhit.transform.gameObject.SetActive(false);
-                                GameManager.Get().gameOver = true;
-                            }
+                            GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
+                            rayhit.transform.gameObject.SetActive(false);
+                            GameManager.Get().gameOver = true;
                         }
-                        hit = true;
-                        sfx.clip = hitSound;
-                        sfx.Play();
                     }
-                    else if (rayhit.transform.tag == "Drill")
+                    else
                     {
-                        homingTarget = null;
-                        owner = null;
-                        life = lifetime;
-                        direction = Vector3.Reflect(direction, rayhit.normal);
+                        Debug.Log("Player Missing Health Script");
                     }
+
+                    var obj = GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
+                    if(useCustomColor)
+                    {
+                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", trail.material.GetColor("_Color"));
+                    }
+                    else
+                    {
+                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", Color.orange * 4);
+                    }
+                    
+                    hit = true;
+                    sfx.clip = hitSound;
+                    sfx.Play();
+                }
+                else if (rayhit.transform.tag == "Reflective")
+                {
+                    homingTarget = null;
+                    owner = null;
+                    life = lifetime;
+                    direction = Vector3.Reflect(direction, rayhit.normal);
                 }
             }
         }

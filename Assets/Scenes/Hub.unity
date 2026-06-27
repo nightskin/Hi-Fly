@@ -43,7 +43,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 13
-  m_BakeOnSceneLoad: 0
+  m_BakeOnSceneLoad: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 2cef25cc7c568704c904b3fbf72f39a6,
+  m_LightingDataAsset: {fileID: 112000000, guid: aae73f88ac493f10a8d81061f9e5f051,
     type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &147808259
 Transform:
   m_ObjectHideFlags: 0
@@ -464,10 +464,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyWaveManager
   objectPool: {fileID: 4419068242589922780}
-  minTime: 5
-  maxTime: 10
-  minEnemies: 10
-  maxEnemies: 20
+  minTime: 0
+  maxTime: 5
+  minEnemies: 7
+  maxEnemies: 7
   infinite: 1
   enemiesInWave: 0
   timeBeforeNextWave: 0

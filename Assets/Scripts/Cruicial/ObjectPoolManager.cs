@@ -17,7 +17,7 @@ public class ObjectPoolManager : MonoBehaviour
             for(int i = 0; i < data.size; i++) 
             {
                 var obj = Instantiate(data.prefab, poolObj.transform);
-                obj.SetActive(false);
+                if(obj.activeSelf) obj.SetActive(false);
             }
         }        
     }

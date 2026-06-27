@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -59,18 +58,18 @@ public class PlayerShip : MonoBehaviour
 
     [HideInInspector] public List<HomingTarget> targets = new List<HomingTarget>();
     float chargeAmount = 0;
-    Color chargeColor;
     Lazer lazer = null;
 
     [SerializeField] int baseFirePower = 3;
     [SerializeField] float blastRadius = 10;
     [SerializeField] int lazerPower = 1;
     [SerializeField] float lazerSpeed = 0.01f;
-    [SerializeField] int maxTargets = 5;
+    int missileColorIndex = 0;
+    [ColorUsage(true, true)][SerializeField] Color[] missileColors;
     
     void Start()
     {
-        for (int i = 0; i < maxTargets; i++)
+        for (int i = 0; i < missileColors.Length; i++)
         {
             var l = Instantiate(lockUI, hud);
             l.gameObject.SetActive(false);
@@ -105,8 +104,6 @@ public class PlayerShip : MonoBehaviour
         if (InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.BLASTER)
         {
             chargeAmount += Time.fixedDeltaTime;
-            chargeColor = Color.Lerp(Color.green * 2, Color.orangeRed * 2, chargeAmount);
-            chargeMaterial.SetColor("_Color", chargeColor);
 
             for(int i = 0; i < targets.Count; i++)
             {
@@ -345,22 +342,23 @@ public class PlayerShip : MonoBehaviour
         {
             Bullet b = obj.GetComponent<Bullet>();
             b.owner = mesh.gameObject;
+            b.useCustomColor = true;
+            b.trail.material.SetColor("_Color", missileColors[missileColorIndex]);
+            
+            if(missileColorIndex < missileColors.Length - 1) missileColorIndex++;
+            else missileColorIndex = 0;
 
             if(chargeAmount >= 1)
             {
-                b.explosive = true;
                 b.damage = baseFirePower * 5;
                 b.blastRadius = blastRadius;
             }
             else
             {
                 b.damage = baseFirePower;
-                b.explosive = false;
                 b.blastRadius = 0;
             }
 
-            b.trail.material.SetColor("_Color", chargeColor);
-        
             if (lockOn.collider)
             {
                 b.homingTarget = lockOn.collider.transform;
@@ -398,21 +396,18 @@ public class PlayerShip : MonoBehaviour
                 Bullet b = obj.GetComponent<Bullet>();
                 //Set Needed Variables
                 b.owner = mesh.gameObject;
+                b.useCustomColor = true;
+                b.trail.material.SetColor("_Color", missileColors[i]);
 
                 if(chargeAmount >= 1)
                 {
-                    b.explosive = true;
                     b.damage = baseFirePower * 5;
-                    b.blastRadius = blastRadius;
                 }
                 else
                 {
                     b.damage = baseFirePower;
-                    b.explosive = false;
-                    b.blastRadius = 0;
                 }
 
-                b.trail.material.SetColor("_Color", chargeColor);
                 b.direction = Random.insideUnitSphere.normalized;
                 b.homingTarget = targets[i].followTarget;
                 targets[i].followTarget = null;

@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7305079670371382636
 Transform:
   m_ObjectHideFlags: 0
@@ -37,7 +37,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!96 &7305079670371382639
 TrailRenderer:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -83,6 +83,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Time: 0.1
   m_PreviewTimeScale: 1
   m_Parameters:
@@ -150,7 +151,6 @@ TrailRenderer:
     shadowBias: 0.5
     generateLightingData: 0
   m_MinVertexDistance: 0.1
-  m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 0
   m_ApplyActiveColorSpace: 0
@@ -170,13 +170,14 @@ MonoBehaviour:
   trail: {fileID: 7305079670371382639}
   shootSound: {fileID: 8300000, guid: cea60a9edf8d0cb44978ac5dba39bc31, type: 3}
   hitSound: {fileID: 8300000, guid: 673b1d10e04d4da4b8cfc53eb2a28282, type: 3}
-  material: {fileID: 2100000, guid: 35a11f0f2716e224abfa290ad27b8134, type: 2}
   intensity: 2
-  lifetime: 5
+  lifetime: 3
   damage: 10
-  speed: 1000
+  maxSpeed: 1000
   blastRadius: 5
-  explosive: 0
+  defaultColor: {r: 4, g: 4, b: 4, a: 4}
+  useCustomColor: 0
+  color: {r: 0, g: 0, b: 0, a: 0}
   homingTarget: {fileID: 0}
   owner: {fileID: 0}
   direction: {x: 0, y: 0, z: 0}

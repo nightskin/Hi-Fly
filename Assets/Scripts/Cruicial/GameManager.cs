@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool gamePaused;
     [HideInInspector] public EventSystem eventSystem;
 
+
     float gameOverTimer = 1;
     bool gameOverActive = false;
     

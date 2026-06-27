@@ -45,7 +45,7 @@ public class EnemyShip : MonoBehaviour
                 {
                     if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) > shootThreshold)
                     {
-                        ShootAtPlayer();
+                        ShootShit();
                     }
                 }
 
@@ -80,9 +80,8 @@ public class EnemyShip : MonoBehaviour
         }
     }
 
-    void Die()
-    {
-        var explosion = GameManager.Get().objectPool.Spawn("explosion", transform.position);
+    public void Die()
+    {   
         EnemyWaveManager.Get().enemiesInWave--;
         gameObject.SetActive(false);
     }
@@ -110,7 +109,7 @@ public class EnemyShip : MonoBehaviour
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
     }
     
-    void ShootAtPlayer()
+    void ShootShit()
     {
         if(Physics.Linecast(transform.position, GameManager.Get().playerObject.transform.position,out RaycastHit hit))
         {
@@ -118,7 +117,8 @@ public class EnemyShip : MonoBehaviour
             {
                 var obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                 var b = obj.GetComponent<Bullet>();
-                b.explosive = false;
+                b.useCustomColor = false;
+                b.trail.material.SetColor("_Color", Color.white * 4);
                 b.direction = (hit.transform.position - bulletSpawn.position).normalized;
                 b.owner = gameObject;
                 b.damage = attackPower;
@@ -129,11 +129,11 @@ public class EnemyShip : MonoBehaviour
             {
                 var obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                 var b = obj.GetComponent<Bullet>();
-                b.explosive = false;
+                b.useCustomColor = false;
+                b.trail.material.SetColor("_Color", Color.white * 4);
                 b.direction = (hit.point - bulletSpawn.position).normalized;
                 b.owner = gameObject;
                 b.damage = attackPower;
-                b.trail.material.SetColor("_Color", Color.white * 2);
             }
             shootTimer = Random.Range(0, fireRate);
         }
