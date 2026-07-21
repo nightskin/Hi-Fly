@@ -15,8 +15,6 @@ public class Bullet : MonoBehaviour
     public int damage = 10;
     public float maxSpeed = 1000;
     public float blastRadius = 5;
-    public bool useCustomColor;
-    [ColorUsage(true,true)] public Color defaultColor = Color.white * 4;
 
     //Physics Variables
     [HideInInspector] public Transform homingTarget = null;
@@ -92,17 +90,6 @@ public class Bullet : MonoBehaviour
                         }
 
                         var obj = GameManager.Get().objectPool.Spawn("explosion", homingTarget.transform.position);
-                        if(obj)
-                        {
-                            if(useCustomColor)
-                            {
-                                obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", trail.material.GetColor("_Color"));
-                            }
-                            else
-                            {
-                                obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", Color.orange * 4);
-                            }
-                        }
                     }
                 }
             }
@@ -131,14 +118,6 @@ public class Bullet : MonoBehaviour
                 if (rayhit.transform.tag == "Destructible")
                 {
                     var obj = GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
-                    if(useCustomColor)
-                    {
-                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", trail.material.GetColor("_Color"));
-                    }
-                    else
-                    {
-                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", Color.orange * 4);
-                    }
                     Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
@@ -155,14 +134,6 @@ public class Bullet : MonoBehaviour
                 else if (rayhit.transform.tag == "Surface")
                 {
                     var obj = GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
-                    if(useCustomColor)
-                    {
-                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", trail.material.GetColor("_Color"));
-                    }
-                    else
-                    {
-                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", Color.orange * 4);
-                    }
                     hit = true;
                 }
                 else if (rayhit.transform.tag == "Enemy")
@@ -183,14 +154,6 @@ public class Bullet : MonoBehaviour
                     }
                     
                     var obj = GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
-                    if(useCustomColor)
-                    {
-                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", trail.material.GetColor("_Color"));
-                    }
-                    else
-                    {
-                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", Color.orange * 4);
-                    }
 
                     sfx.clip = hitSound;
                     sfx.Play();
@@ -215,14 +178,6 @@ public class Bullet : MonoBehaviour
                     }
 
                     var obj = GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
-                    if(useCustomColor)
-                    {
-                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", trail.material.GetColor("_Color"));
-                    }
-                    else
-                    {
-                        obj.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", Color.orange * 4);
-                    }
                     
                     hit = true;
                     sfx.clip = hitSound;

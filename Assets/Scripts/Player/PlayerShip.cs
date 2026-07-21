@@ -64,12 +64,11 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] float blastRadius = 10;
     [SerializeField] int lazerPower = 1;
     [SerializeField] float lazerSpeed = 0.01f;
-    int missileColorIndex = 0;
-    [ColorUsage(true, true)][SerializeField] Color[] missileColors;
+
     
     void Start()
     {
-        for (int i = 0; i < missileColors.Length; i++)
+        for (int i = 0; i < 7; i++)
         {
             var l = Instantiate(lockUI, hud);
             l.gameObject.SetActive(false);
@@ -101,51 +100,6 @@ public class PlayerShip : MonoBehaviour
             reticle.color = Color.white;
         }
 
-        if (InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.BLASTER)
-        {
-            chargeAmount += Time.fixedDeltaTime;
-
-            for(int i = 0; i < targets.Count; i++)
-            {
-                //add any new targets that have not already been added
-                bool alreadyTargeted = false;
-                for(int j = 0 ; j < targets.Count; j++)
-                {
-                    if (targets[j].followTarget == lockOn.transform)
-                    {
-                        alreadyTargeted = true;
-                        break;
-                    }
-                }
-
-                if (!targets[i].ui.activeSelf && !alreadyTargeted)
-                {
-                    targets[i].followTarget = lockOn.transform;
-                    targets[i].ui.SetActive(true);
-                }
-
-                //update targets on screen
-                if (targets[i].followTarget && targets[i].ui.activeSelf)
-                {
-                    Vector3 viewPortPos = Camera.main.WorldToViewportPoint(targets[i].followTarget.position);
-                    if(viewPortPos.x > 0 &&  viewPortPos.x < 1 && viewPortPos.y > 0 && viewPortPos.y < 1 && viewPortPos.z > 0)
-                    {
-                        targets[i].ui.transform.position = Camera.main.WorldToScreenPoint(targets[i].followTarget.position);
-                    }
-                    else
-                    {
-                        targets[i].followTarget = null;
-                        targets[i].ui.SetActive(false);
-                    }
-                }
-                else
-                {
-                    targets[i].followTarget = null;
-                    targets[i].ui.SetActive(false);
-                }
-            }
-
-        }
     }
     void Update()
     {
@@ -222,10 +176,10 @@ public class PlayerShip : MonoBehaviour
                 {
                     if (lazer)
                     {
-                            lazer.GetComponent<Lazer>().endFire = true;
-                            lazer = null;
-                        }
+                        lazer.GetComponent<Lazer>().endFire = true;
+                        lazer = null;
                     }
+                }
                 else if (equipedWeapon == Weapon.BLASTER)
                 {
                     chargeEffect.gameObject.SetActive(false);
@@ -244,6 +198,50 @@ public class PlayerShip : MonoBehaviour
             if(InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.LAZER)
             {
                 UpdateLazer();
+            }
+            //Handles Blaster
+            else if(InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.BLASTER)
+            {
+                chargeAmount += Time.deltaTime;
+                for(int i = 0; i < targets.Count; i++)
+                {
+                    //add any new targets that have not already been added
+                    bool alreadyTargeted = false;
+                    for(int j = 0 ; j < targets.Count; j++)
+                    {
+                        if (targets[j].followTarget == lockOn.transform)
+                        {
+                            alreadyTargeted = true;
+                            break;
+                        }
+                    }
+
+                    if (!targets[i].ui.activeSelf && !alreadyTargeted)
+                    {
+                        targets[i].followTarget = lockOn.transform;
+                        targets[i].ui.SetActive(true);
+                    }
+
+                    //update targets on screen
+                    if (targets[i].followTarget && targets[i].ui.activeSelf)
+                    {
+                        Vector3 viewPortPos = Camera.main.WorldToViewportPoint(targets[i].followTarget.position);
+                        if(viewPortPos.x > 0 &&  viewPortPos.x < 1 && viewPortPos.y > 0 && viewPortPos.y < 1 && viewPortPos.z > 0)
+                        {
+                            targets[i].ui.transform.position = Camera.main.WorldToScreenPoint(targets[i].followTarget.position);
+                        }
+                        else
+                        {
+                            targets[i].followTarget = null;
+                            targets[i].ui.SetActive(false);
+                        }
+                    }
+                    else
+                    {
+                        targets[i].followTarget = null;
+                        targets[i].ui.SetActive(false);
+                    }
+            }
             }
 
             //Swapping Weapons
@@ -342,11 +340,6 @@ public class PlayerShip : MonoBehaviour
         {
             Bullet b = obj.GetComponent<Bullet>();
             b.owner = mesh.gameObject;
-            b.useCustomColor = true;
-            b.trail.material.SetColor("_Color", missileColors[missileColorIndex]);
-            
-            if(missileColorIndex < missileColors.Length - 1) missileColorIndex++;
-            else missileColorIndex = 0;
 
             if(chargeAmount >= 1)
             {
@@ -396,8 +389,6 @@ public class PlayerShip : MonoBehaviour
                 Bullet b = obj.GetComponent<Bullet>();
                 //Set Needed Variables
                 b.owner = mesh.gameObject;
-                b.useCustomColor = true;
-                b.trail.material.SetColor("_Color", missileColors[i]);
 
                 if(chargeAmount >= 1)
                 {

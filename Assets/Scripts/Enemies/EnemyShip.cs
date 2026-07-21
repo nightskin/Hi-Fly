@@ -117,20 +117,15 @@ public class EnemyShip : MonoBehaviour
             {
                 var obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                 var b = obj.GetComponent<Bullet>();
-                b.useCustomColor = false;
-                b.trail.material.SetColor("_Color", Color.white * 4);
                 b.direction = (hit.transform.position - bulletSpawn.position).normalized;
                 b.owner = gameObject;
                 b.damage = attackPower;
-                b.trail.material.SetColor("_Color", Color.white * 2);
 
             }
             else if(hit.transform.tag == "Destructible")
             {
                 var obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
                 var b = obj.GetComponent<Bullet>();
-                b.useCustomColor = false;
-                b.trail.material.SetColor("_Color", Color.white * 4);
                 b.direction = (hit.point - bulletSpawn.position).normalized;
                 b.owner = gameObject;
                 b.damage = attackPower;
