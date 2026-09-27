@@ -21,8 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Lazer
-  m_Shader: {fileID: -6465566751694194690, guid: 09e790dbd1b4abd44bcbd9cd5f8fd764,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 09e790dbd1b4abd44bcbd9cd5f8fd764, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -143,7 +142,7 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1.4980394, g: 0, b: 0, a: 1}
-    - _Color: {r: 2.9960785, g: 0.37336254, b: 0, a: 1}
+    - _Color: {r: 3.5342882, g: 0.195075, b: 2.2063768, a: 1}
     - _DissolveColor: {r: 0.023153365, g: 0.023153365, b: 0.023153365, a: 1}
     - _EmissionColor: {r: 8, g: 8, b: 8, a: 1}
     - _MainColor: {r: 2.9960783, g: 0.5610303, b: 0, a: 1}

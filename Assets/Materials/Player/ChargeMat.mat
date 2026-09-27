@@ -21,8 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ChargeMat
-  m_Shader: {fileID: -6465566751694194690, guid: a20fc8f9e8436980084839dd8a949116,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: a20fc8f9e8436980084839dd8a949116, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -143,7 +142,7 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1.3599991, g: 1.0080006, b: 0, a: 2}
+    - _Color: {r: 7.2628226, g: 7.2628226, b: 7.2628226, a: 2}
     - _DissolveColor: {r: 0, g: 16, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}

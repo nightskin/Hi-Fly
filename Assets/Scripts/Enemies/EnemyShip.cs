@@ -83,6 +83,7 @@ public class EnemyShip : MonoBehaviour
     public void Die()
     {   
         EnemyWaveManager.Get().enemiesInWave--;
+        GameManager.Get().objectPool.Spawn("explosion", transform.position);
         gameObject.SetActive(false);
     }
 
@@ -119,8 +120,7 @@ public class EnemyShip : MonoBehaviour
                 var b = obj.GetComponent<Bullet>();
                 b.direction = (hit.transform.position - bulletSpawn.position).normalized;
                 b.owner = gameObject;
-                b.damage = attackPower;
-
+                b.power = attackPower;
             }
             else if(hit.transform.tag == "Destructible")
             {
@@ -128,7 +128,7 @@ public class EnemyShip : MonoBehaviour
                 var b = obj.GetComponent<Bullet>();
                 b.direction = (hit.point - bulletSpawn.position).normalized;
                 b.owner = gameObject;
-                b.damage = attackPower;
+                b.power = attackPower;
             }
             shootTimer = Random.Range(0, fireRate);
         }
