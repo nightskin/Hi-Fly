@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEngine.Tilemaps;
 
 public class HomingTarget
 {
@@ -35,8 +34,6 @@ public class PlayerShip : MonoBehaviour
     float speed;
     float targetSpeed;
     Vector3 moveInput = Vector3.zero;
-    Vector2 lookInput = Vector2.zero;
-    float autoLevel = 0;
 
     [SerializeField][Min(1)] float turnSpeed = 100;
     [SerializeField] float baseSpeed = 50;
@@ -62,7 +59,6 @@ public class PlayerShip : MonoBehaviour
     Lazer lazer = null;
 
     [SerializeField] int baseFirePower = 3;
-    [SerializeField] float blastRadius = 10;
     [SerializeField] int lazerPower = 1;
     [SerializeField] float lazerSpeed = 0.01f;
 
@@ -119,16 +115,6 @@ public class PlayerShip : MonoBehaviour
             if(thrusting) ThrustControls();
             else StrafeControls();
 
-            //Auto Level
-            if (InputManager.player.Steer.ReadValue<Vector2>().magnitude == 0  && InputManager.player.Aim.ReadValue<Vector2>().magnitude == 0 && transform.localEulerAngles.z != 0 && GameSettings.autoLevel)
-            {
-                autoLevel = 0;
-            }
-            if(autoLevel < 1)
-            {
-                autoLevel += 5 * Time.deltaTime;
-                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.LerpAngle(transform.localEulerAngles.z, 0, autoLevel));
-            }
 
             //TogglesThrustMode
             if(InputManager.player.ToggleThrustMode.WasPressedThisFrame())
@@ -297,9 +283,11 @@ public class PlayerShip : MonoBehaviour
         mesh.localEulerAngles = new Vector3(0,0,turnX);
 
         //Aiming
-        lookInput = InputManager.player.Aim.ReadValue<Vector2>();
-        transform.rotation *= Quaternion.AngleAxis(lookInput.x * turnSpeed * Time.deltaTime, Vector3.up);
-        transform.rotation *= Quaternion.AngleAxis(-lookInput.y * turnSpeed * Time.deltaTime, Vector3.right);
+        Vector2 lookXY = InputManager.player.Aim.ReadValue<Vector2>();
+        float lookZ = InputManager.player.Rotate.ReadValue<float>();
+        transform.rotation *= Quaternion.AngleAxis(lookXY.x * turnSpeed * Time.deltaTime, Vector3.up);
+        transform.rotation *= Quaternion.AngleAxis(-lookXY.y * turnSpeed * Time.deltaTime, Vector3.right);
+        transform.rotation *= Quaternion.AngleAxis(lookZ * turnSpeed * Time.deltaTime, Vector3.forward);
     }
 
     void ThrustControls()
@@ -311,12 +299,15 @@ public class PlayerShip : MonoBehaviour
         mesh.localEulerAngles = new Vector3(0,0,turnX);
 
         //Steering
-        lookInput = InputManager.player.Steer.ReadValue<Vector2>();
-        transform.rotation *= Quaternion.AngleAxis(lookInput.x * turnSpeed * Time.deltaTime, Vector3.up);
-        transform.rotation *= Quaternion.AngleAxis(lookInput.y * turnSpeed * Time.deltaTime, Vector3.right);
+        Vector2 lookXY = InputManager.player.Steer.ReadValue<Vector2>();
+        float lookZ = InputManager.player.Rotate.ReadValue<float>();
+        transform.rotation *= Quaternion.AngleAxis(lookXY.x * turnSpeed * Time.deltaTime, Vector3.up);
+        transform.rotation *= Quaternion.AngleAxis(lookXY.y * turnSpeed * Time.deltaTime, Vector3.right);
+        transform.rotation *= Quaternion.AngleAxis(lookZ * turnSpeed * Time.deltaTime, Vector3.forward);
 
         //Aiming
         Vector2 aimInput = InputManager.player.Aim.ReadValue<Vector2>();
+
         reticlePosition += aimInput * Time.deltaTime;
         reticlePosition.x = Mathf.Clamp(reticlePosition.x,0,1);
         reticlePosition.y = Mathf.Clamp(reticlePosition.y,0,1);
@@ -344,12 +335,12 @@ public class PlayerShip : MonoBehaviour
             if(chargeAmount >= 1)
             {
                 b.power = baseFirePower * 5;
-                b.blastRadius = blastRadius;
+                b.isPowerBomb = true;
             }
             else
             {
                 b.power = baseFirePower;
-                b.blastRadius = 0;
+                b.isPowerBomb = false;
             }
 
             if (lockOn.collider)
@@ -394,12 +385,12 @@ public class PlayerShip : MonoBehaviour
                 if(chargeAmount >= 1)
                 {
                     b.power = baseFirePower * 5;
-                    b.blastRadius = blastRadius;
+                    b.isPowerBomb = true;
                 }
                 else
                 {
                     b.power = baseFirePower;
-                    b.blastRadius = 0;
+                    b.isPowerBomb = false;
                 }
 
                 b.direction = Random.insideUnitSphere.normalized;

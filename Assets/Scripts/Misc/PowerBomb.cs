@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PowerBomb : MonoBehaviour
 {
-    public float blastRadius;
+    float blastRadius;
     public int damage = 30;
 
 
@@ -14,6 +14,7 @@ public class PowerBomb : MonoBehaviour
 
     void OnEnable()
     {
+        blastRadius = 10;
         alreadyHit = new List<Collider>();
         timer = 0;
     }

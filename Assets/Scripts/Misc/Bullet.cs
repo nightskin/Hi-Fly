@@ -14,7 +14,7 @@ public class Bullet : MonoBehaviour
     public float lifetime = 5;
     public int power = 10;
     public float maxSpeed = 1000;
-    public float blastRadius = 0;
+    public bool isPowerBomb = false;
     public bool directHoming = true;
 
     //Physics Variables
@@ -105,7 +105,7 @@ public class Bullet : MonoBehaviour
             {
                 HealthSystem health = homingTarget.GetComponent<HealthSystem>();
                 if(health) health.TakeDamage(power); 
-                if(blastRadius > 0) GameManager.Get().objectPool.Spawn("powerBomb", homingTarget.position);
+                if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", homingTarget.position);
                 hit = true;
             }
         }
@@ -116,7 +116,7 @@ public class Bullet : MonoBehaviour
             {
                 if (rayhit.transform.tag == "Destructible")
                 {
-                    if(blastRadius > 0) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.point);
+                    if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.point);
                     else GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
 
                     Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
@@ -132,12 +132,12 @@ public class Bullet : MonoBehaviour
                 }
                 else if (rayhit.transform.tag == "Surface")
                 {
-                    if(blastRadius > 0) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.point);
+                    if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.point);
                     else GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
                 }
                 else if (rayhit.transform.tag == "Enemy")
                 {
-                    if(blastRadius > 0) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.transform.position);
+                    if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.transform.position);
                     HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
                     if (health)
                     {
