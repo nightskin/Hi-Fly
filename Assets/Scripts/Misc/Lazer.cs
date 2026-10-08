@@ -89,9 +89,9 @@ public class Lazer : MonoBehaviour
         {
             if (rayHit.transform.gameObject != owner)
             {
+                GameManager.Get().objectPool.Spawn("sparks", rayHit.point);
                 if (rayHit.transform.tag == "Destructible")
                 {
-                    GameManager.Get().objectPool.Spawn("explosion", rayHit.point);
                     Asteroid asteroid = rayHit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
@@ -112,10 +112,6 @@ public class Lazer : MonoBehaviour
                         terrain.TeraForm(rayHit, 0.1f);
                         return;
                     }
-                }
-                else if (rayHit.transform.tag == "Surface")
-                {
-                    GameManager.Get().objectPool.Spawn("explosion", rayHit.point);
                 }
                 else if (rayHit.transform.tag == "Enemy")
                 {

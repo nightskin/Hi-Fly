@@ -7,7 +7,6 @@ public class Bullet : MonoBehaviour
     [SerializeField] AudioSource sfx;
     public TrailRenderer trail;
     [SerializeField] AudioClip shootSound;
-    [SerializeField] AudioClip hitSound;
 
     // Bullet Atttributes
     public float intensity = 2.0f;
@@ -103,9 +102,10 @@ public class Bullet : MonoBehaviour
         {
             if(Vector3.Distance(homingTarget.transform.position, owner.transform.position) < 1)
             {
+                if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", homingTarget.position);
+                else GameManager.Get().objectPool.Spawn("sparks", homingTarget.position);
                 HealthSystem health = homingTarget.GetComponent<HealthSystem>();
                 if(health) health.TakeDamage(power); 
-                if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", homingTarget.position);
                 hit = true;
             }
         }
@@ -117,7 +117,7 @@ public class Bullet : MonoBehaviour
                 if (rayhit.transform.tag == "Destructible")
                 {
                     if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.point);
-                    else GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
+                    else GameManager.Get().objectPool.Spawn("sparks", rayhit.point);
 
                     Asteroid asteroid = rayhit.transform.GetComponent<Asteroid>();
                     if (asteroid)
@@ -129,15 +129,19 @@ public class Bullet : MonoBehaviour
                     {
                         planet.RemoveBlock(rayhit);
                     }
+                    hit = true;
                 }
                 else if (rayhit.transform.tag == "Surface")
                 {
                     if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.point);
-                    else GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
+                    else GameManager.Get().objectPool.Spawn("sparks", rayhit.point);
+                    hit = true;
                 }
                 else if (rayhit.transform.tag == "Enemy")
                 {
-                    if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.transform.position);
+                    if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.point);
+                    else GameManager.Get().objectPool.Spawn("sparks", rayhit.point);
+
                     HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
                     if (health)
                     {
@@ -152,12 +156,12 @@ public class Bullet : MonoBehaviour
                     {
                         Debug.Log("Enemy Does Not Have Health Script");
                     }
-                    sfx.clip = hitSound;
-                    sfx.Play();
                     hit = true;
                 }
                 else if (rayhit.transform.tag == "Player")
                 {
+                    if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.point);
+                    else GameManager.Get().objectPool.Spawn("sparks", rayhit.point);
                     HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
                     if (health)
                     {
@@ -173,12 +177,6 @@ public class Bullet : MonoBehaviour
                     {
                         Debug.Log("Player Missing Health Script");
                     }
-
-                    var obj = GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
-                    
-                    hit = true;
-                    sfx.clip = hitSound;
-                    sfx.Play();
                 }
                 else if (rayhit.transform.tag == "Reflective")
                 {
@@ -187,7 +185,6 @@ public class Bullet : MonoBehaviour
                     life = lifetime;
                     direction = Vector3.Reflect(direction, rayhit.normal);
                 }
-                hit = true;
             }
         }
     }

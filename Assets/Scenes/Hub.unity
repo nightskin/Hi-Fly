@@ -522,6 +522,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8977292426134536927, guid: f9a426b5fc9288e48bcdc4a92bb825db, type: 3}
+      propertyPath: lazerPower
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8977292426134536927, guid: f9a426b5fc9288e48bcdc4a92bb825db, type: 3}
+      propertyPath: baseFirePower
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

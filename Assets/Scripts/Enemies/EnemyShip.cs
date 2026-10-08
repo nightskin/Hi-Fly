@@ -8,7 +8,6 @@ public class EnemyShip : MonoBehaviour
     [SerializeField] HealthSystem health;
     [SerializeField][Range(0, 1)] float shootThreshold = 0.75f;
     [SerializeField] float perceptionRadius = 20;
-    [SerializeField] int attackPower = 10;
     [SerializeField] float turnRate = 10;
 
     [SerializeField] float fireRate = 1;
@@ -120,7 +119,7 @@ public class EnemyShip : MonoBehaviour
                 var b = obj.GetComponent<Bullet>();
                 b.direction = (hit.transform.position - bulletSpawn.position).normalized;
                 b.owner = gameObject;
-                b.power = attackPower;
+                b.isPowerBomb = false;
             }
             else if(hit.transform.tag == "Destructible")
             {
@@ -128,7 +127,7 @@ public class EnemyShip : MonoBehaviour
                 var b = obj.GetComponent<Bullet>();
                 b.direction = (hit.point - bulletSpawn.position).normalized;
                 b.owner = gameObject;
-                b.power = attackPower;
+                b.isPowerBomb = false;
             }
             shootTimer = Random.Range(0, fireRate);
         }

@@ -175,10 +175,10 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 4, a: 1}
   - {r: 4, g: 0, b: 4, a: 1}
   renderer: {fileID: 7468776964873725496}
-  damageInterval: 0.01
+  damageInterval: 0.05
   colorChangeRate: 2
   owner: {fileID: 0}
-  damage: 5
+  damage: 15
   speed: 0.01
   direction: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}

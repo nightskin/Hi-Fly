@@ -58,10 +58,6 @@ public class PlayerShip : MonoBehaviour
     float chargeAmount = 0;
     Lazer lazer = null;
 
-    [SerializeField] int baseFirePower = 3;
-    [SerializeField] int lazerPower = 1;
-    [SerializeField] float lazerSpeed = 0.01f;
-
     
     void Start()
     {
@@ -334,12 +330,10 @@ public class PlayerShip : MonoBehaviour
 
             if(chargeAmount >= 1)
             {
-                b.power = baseFirePower * 5;
                 b.isPowerBomb = true;
             }
             else
             {
-                b.power = baseFirePower;
                 b.isPowerBomb = false;
             }
 
@@ -384,12 +378,10 @@ public class PlayerShip : MonoBehaviour
 
                 if(chargeAmount >= 1)
                 {
-                    b.power = baseFirePower * 5;
                     b.isPowerBomb = true;
                 }
                 else
                 {
-                    b.power = baseFirePower;
                     b.isPowerBomb = false;
                 }
 
@@ -409,8 +401,6 @@ public class PlayerShip : MonoBehaviour
         {
             lazer = GameManager.Get().objectPool.Spawn("lazer", Vector3.zero).GetComponent<Lazer>();
             lazer.owner = mesh.gameObject;
-            lazer.damage = lazerPower;
-            lazer.speed = lazerSpeed;
 
             Ray ray = Camera.main.ScreenPointToRay(reticle.rectTransform.position);
             if (Physics.Raycast(ray, out RaycastHit hit, Camera.main.farClipPlane, lockOnLayer))

@@ -92,6 +92,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &-9050664091282969010
 MonoBehaviour:
@@ -105,8 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 836ae75803f93094593366c10053b260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blastRadius: 5
-  damage: 1
+  damage: 5
 --- !u!82 &-8750440975964290690
 AudioSource:
   m_ObjectHideFlags: 0
@@ -305,4 +305,5 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
