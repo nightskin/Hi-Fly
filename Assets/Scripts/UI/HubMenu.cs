@@ -26,7 +26,7 @@ public class HubMenu : MonoBehaviour
     {
         Time.timeScale = 1;
         open = false;
-        GameManager.Get().gamePaused = true;
+        GameManager.Get().state = GameManager.GameState.GAME_PAUSED;
         StartCoroutine(SceneLoader.instance.Load("LevelTransitionScene"));
     }
 

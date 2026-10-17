@@ -451,17 +451,6 @@
                 },
                 {
                     "name": "",
-                    "id": "083b347a-2d43-472c-b17a-0d8704879dde",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MousePosition",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "af4315dc-aea6-4c14-b992-dcf09ed347b4",
                     "path": "<Mouse>/position",
                     "interactions": "",

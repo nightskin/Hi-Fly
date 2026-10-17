@@ -24,17 +24,13 @@ public class Galaxy : MonoBehaviour
 {
     // For Procedural Generation
     public string seed = "One Piece Is Mid";
-    [SerializeField][Min(1)] int spawnAsteroidFieldChance = 3;
-
     public static Noise noise;
 
     public float quadrantSize = 1000;
     public Vector2Int numberOfQuadrants = new Vector2Int(10,10);
 
     List<GalaxyQuadrant> quadrants;
-
-
-    [SerializeField] int numberOfPlanets = 10;
+    
     [SerializeField] GameObject blackHolePrefab;
     [SerializeField] GameObject asteroidFieldPrefab;
     [SerializeField] GameObject planetPrefab;

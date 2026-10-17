@@ -1,0 +1,44 @@
+#pragma kernel GenerateCaves
+
+
+#include "FastNoiseLite.hlsl"
+
+static const uint numthreads = 8;
+
+RWStructuredBuffer<float> weights;
+
+int seed;
+int3 chunkSize;
+int3 worldSize;
+int3 chunkIndex;
+float amplitude;
+float frequency;
+int octaves;
+float groundPercent;
+int fractalType;
+int noiseType;
+
+
+
+int IndexFromCoord(int x, int y, int z)
+{
+    return (z * chunkSize.x * chunkSize.y) + (y * chunkSize.x) + x;
+}
+
+[numthreads(numthreads,numthreads,numthreads)]
+void GenerateCaves (uint3 v : SV_DispatchThreadID)
+{
+    fnl_state noise = fnlCreateState(seed);
+    noise.noise_type = noiseType;
+    noise.fractal_type = fractalType;
+    noise.frequency = frequency;
+    noise.octaves = octaves;
+
+    float3 pos = v + chunkIndex * chunkSize;
+    //if(chunkIndex.x > 0 && v.x == 0) pos.x--;
+    //if(chunkIndex.y > 0 && v.y == 0) pos.y--;
+    //if(chunkIndex.z > 0 && v.z == 0) pos.z--;
+
+        
+    weights[IndexFromCoord(v.x, v.y, v.z)] = fnlGetNoise3D(noise,pos.x,pos.y,pos.z) * amplitude;
+}

@@ -47,7 +47,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if(!GameManager.Get().gamePaused)
+        if(GameManager.Get().state == GameManager.GameState.GAME_PLAY)
         {
             //Basic Movement
             prevPosition = transform.position;
@@ -124,7 +124,7 @@ public class Bullet : MonoBehaviour
                     else GameManager.Get().objectPool.Spawn("sparks", rayhit.point);
                     hit = true;
                 }
-                else if (rayhit.transform.tag == "Enemy")
+                else if (rayhit.transform.tag == "Enemy" || rayhit.transform.tag == "Player")
                 {
                     if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.point);
                     else GameManager.Get().objectPool.Spawn("sparks", rayhit.point);
@@ -144,20 +144,6 @@ public class Bullet : MonoBehaviour
                         Debug.Log("Enemy Does Not Have Health Script");
                     }
                     hit = true;
-                }
-                else if (rayhit.transform.tag == "Player")
-                {
-                    if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", rayhit.point);
-                    else GameManager.Get().objectPool.Spawn("sparks", rayhit.point);
-                    HealthSystem health = rayhit.transform.GetComponent<HealthSystem>();
-                    if (health)
-                    {
-                        health.TakeDamage(power);
-                    }
-                    else
-                    {
-                        Debug.Log("Player Missing Health Script");
-                    }
                 }
                 else if (rayhit.transform.tag == "Reflective")
                 {

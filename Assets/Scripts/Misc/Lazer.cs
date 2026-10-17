@@ -2,12 +2,8 @@ using UnityEngine;
 
 public class Lazer : MonoBehaviour
 {
-    [ColorUsage(true, true)][SerializeField] Color[] colors;
     [SerializeField] LineRenderer renderer;
     [SerializeField][Min(0)] float damageInterval = 0.05f;
-    int colorIndex = 0;
-    [SerializeField][Min(1)] float colorChangeRate = 2.0f;
-    float colorChangeTimer = 0;
 
     [HideInInspector] public GameObject owner = null;
     public int power = 5;
@@ -16,7 +12,7 @@ public class Lazer : MonoBehaviour
     [HideInInspector] public Vector3 origin;
     [HideInInspector] public bool endFire;
 
-    float collisionTimer;
+    float damageTimer = 0;
     float length;
     float t;
 
@@ -26,14 +22,13 @@ public class Lazer : MonoBehaviour
         renderer.endWidth = 1;
         t = 0;
         length = 0;
-        collisionTimer = 0;
-        renderer.sharedMaterial.color = colors[colorIndex];
+        damageTimer = 0;
         endFire = false;
     }
 
     void Update()
     {
-        if (!GameManager.Get().gamePaused)
+        if (GameManager.Get().state == GameManager.GameState.GAME_PLAY)
         {
             if(t < 1) t += speed * Time.deltaTime;
             length = Mathf.Lerp(length, Camera.main.farClipPlane, t);
@@ -51,33 +46,9 @@ public class Lazer : MonoBehaviour
                     gameObject.SetActive(false);
                 }
             }
-
-            if (colorChangeTimer < 1)
-            {
-                colorChangeTimer += colorChangeRate * Time.deltaTime;
-            }
             else
-            {
-                if (colorIndex < colors.Length - 1)
-                {
-                    colorIndex++;
-                }
-                else
-                {
-                    colorIndex = 0;
-                }
-                colorChangeTimer = 0;
-            }
-            renderer.sharedMaterial.SetColor("_Color", Color.Lerp(renderer.sharedMaterial.GetColor("_Color"), colors[colorIndex], colorChangeTimer));
-
-            if (collisionTimer <= 0 && !endFire)
             {
                 CheckCollisions();
-                collisionTimer = damageInterval;
-            }
-            else
-            {
-                collisionTimer -= Time.deltaTime;
             }
 
         }
@@ -89,48 +60,52 @@ public class Lazer : MonoBehaviour
         {
             if (rayHit.transform.gameObject != owner)
             {
-                GameManager.Get().objectPool.Spawn("sparks", rayHit.point);
+
                 if (rayHit.transform.tag == "Destructible")
                 {
+                    if(damageTimer <= 0)
+                    {
+                        GameManager.Get().objectPool.Spawn("sparks", rayHit.point);
+                        damageTimer = damageInterval;
+                    }
+                    else
+                    {
+                        damageTimer -= Time.deltaTime;
+                    }
+
                     Asteroid asteroid = rayHit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
                         asteroid.RemoveBlock(rayHit);
-                        return;
                     }
 
                     PlanetChunk planet = rayHit.transform.GetComponent<PlanetChunk>();
                     if(planet)
                     {
                         planet.RemoveBlock(rayHit);
-                        return;
                     }
 
                     TerrainChunk terrain = rayHit.transform.GetComponent<TerrainChunk>();
                     if (terrain)
                     {
                         terrain.TeraForm(rayHit, 0.1f);
-                        return;
                     }
                 }
-                else if (rayHit.transform.tag == "Enemy")
+                else if (rayHit.transform.tag == "Enemy" || rayHit.transform.tag == "Player")
                 {
-                    HealthSystem health = rayHit.transform.GetComponent<HealthSystem>();
-                    if (health)
+                    if(damageTimer <= 0)
                     {
-                        health.TakeDamage(power);
-                    }
-                }
-                else if (rayHit.transform.tag == "Player")
-                {
-                    PlayerShip player = rayHit.transform.GetComponent<PlayerShip>();
-                    if (player)
-                    {
+                        GameManager.Get().objectPool.Spawn("sparks", rayHit.point);
                         HealthSystem health = rayHit.transform.GetComponent<HealthSystem>();
                         if (health)
                         {
                             health.TakeDamage(power);
                         }
+                        damageTimer = damageInterval;
+                    }
+                    else
+                    {
+                        damageTimer -= Time.deltaTime;
                     }
                 }
             }

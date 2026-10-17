@@ -1,6 +1,16 @@
 using UnityEngine;
 
 
+
+
+public struct Triangle 
+{
+    public Vector3 a;
+    public Vector3 b;
+    public Vector3 c;
+    public static int SizeOf => sizeof(float) * 3 * 3;
+}
+
 [System.Serializable] public class Voxel
 {
     public Color color = Color.black;

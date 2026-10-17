@@ -8,7 +8,7 @@ public class HealthSystem : MonoBehaviour
     [SerializeField] int maxHP = 100;
     [SerializeField] Material[] hitMaterials;
     
-    int hp;
+    public int hp;
     bool flickering = false;
     float flickerTimer;
     float damageFlicker = 0.05f;
@@ -16,7 +16,7 @@ public class HealthSystem : MonoBehaviour
     MeshRenderer meshRenderer;
     Material[] defaultMaterial;
 
-    void Start()
+    void OnEnable()
     {
         meshRenderer = GetComponent<MeshRenderer>();
         defaultMaterial = meshRenderer.materials;

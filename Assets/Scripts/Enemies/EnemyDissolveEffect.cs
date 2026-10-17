@@ -30,7 +30,7 @@ public class EnemyDissolveEffect : MonoBehaviour
     void Update()
     {
         if (!mesh && !skinnedMesh) return;
-        if(!GameManager.Get().gamePaused)
+        if(GameManager.Get().state == GameManager.GameState.GAME_PLAY)
         {
             if (t < 1)
             {

@@ -13,8 +13,6 @@ public class EnemyShip : MonoBehaviour
 
     [SerializeField] float fireRate = 1;
     [SerializeField] float moveSpeed = 75;
-    [SerializeField][Min(1)] float maxTurnTime = 7;
-    [SerializeField][Min(0)] float minTurnTime = 0;
 
     Vector3 direction;
     float shootTimer = 0;
@@ -35,7 +33,7 @@ public class EnemyShip : MonoBehaviour
     
     void Update()
     {
-        if (!GameManager.Get().gamePaused)
+        if (GameManager.Get().state == GameManager.GameState.GAME_PLAY)
         {
             if (health.IsAlive())
             {
@@ -85,10 +83,6 @@ public class EnemyShip : MonoBehaviour
         {
             HealthSystem playerHealth = other.GetComponent<HealthSystem>();
             playerHealth.TakeDamage(2);
-            if (playerHealth.IsDead())
-            {
-                GameManager.Get().gameOver = true;
-            }
             health.TakeDamage(health.MaxHP());
         }
         else if (other.tag == "Destructible" || other.tag == "Surface")

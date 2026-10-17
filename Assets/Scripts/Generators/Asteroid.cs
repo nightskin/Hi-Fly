@@ -7,18 +7,18 @@ using UnityEngine;
 [RequireComponent(typeof (MeshCollider))]
 public class Asteroid : MonoBehaviour
 {
-    Voxel[] voxels = null;
+    float[] voxels = null;
     float isoLevel = 0;
     float radius;
 
-    public int voxelResolution = 10;
-    public float voxelSize = 10;
+    int voxelResolution = 16;
+    float voxelSize = 10;
     
-    Mesh mesh;
-    List<Vector3> verts = new List<Vector3>();
-    List<Vector2> uvs = new List<Vector2>();
-    List<int> tris = new List<int>();
-    int buffer = 0;
+    public static int numThreads = 8;
+    public ComputeShader marchingShader;
+    ComputeBuffer trianglesBuffer;
+    ComputeBuffer triangleCountBuffer;
+    ComputeBuffer weightsBuffer;
 
     int ToVoxelIndex(Vector3 position)
     {
@@ -37,12 +37,6 @@ public class Asteroid : MonoBehaviour
     {
         CreateVoxelData();
         CreateMeshData();
-
-        mesh = new Mesh();
-        mesh.MarkDynamic();
-        GetComponent<MeshFilter>().mesh = mesh;
-        UpdateMesh();
-
     }
     
     public void RemoveBlock(RaycastHit hit)
@@ -54,54 +48,48 @@ public class Asteroid : MonoBehaviour
         int i = ToVoxelIndex(pos);
         
         //If voxel is already deactivated check the next one
-        if(voxels[i].value == -1)
+        if(voxels[i] <= isoLevel)
         {
             pos = transform.InverseTransformPoint(hit.point - (hit.normal * voxelSize / 2));
             pos.x = Mathf.Round(pos.x / voxelSize) * voxelSize;
             pos.y = Mathf.Round(pos.y / voxelSize) * voxelSize;
             pos.z = Mathf.Round(pos.z / voxelSize) * voxelSize; 
             i = ToVoxelIndex(pos);
-            voxels[i].value = -1;
+
+            voxels[i] -= 20 * Time.deltaTime;
         }
         else
         {
-            voxels[i].value = -1;
+            voxels[i] -= 20 * Time.deltaTime;
         }
 
         
         
-        if (BlocksGone())
+        if (GetComponent<MeshFilter>().mesh.vertexCount == 0)
         {
             Destroy(gameObject);
         }
         else
         {
-            verts.Clear();
-            tris.Clear();
-            uvs.Clear();
-            buffer = 0;
             CreateMeshData();
-            UpdateMesh();
         }
     }
     
     void CreateVoxelData()
     {
         radius = Random.Range(voxelSize * (voxelResolution - 1) / 4, voxelSize * (voxelResolution - 1) / 2);
-
-        voxels = new Voxel[(int)Mathf.Pow(voxelResolution, 3)];
+        voxels = new float[(int)Mathf.Pow(voxelResolution, 3)];
         for (int i = 0; i < voxels.Length; i++)
         {
-            voxels[i] = new Voxel();
-            voxels[i].position = ToPosition(i);
-            float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + voxels[i].position);
+            Vector3 position = ToPosition(i);
+            float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + position);
             if (distanceFromCenter > radius)
             {
-                voxels[i].value = -1;
+                voxels[i] = 0;
             }
             else
             {
-                voxels[i].value = 1;
+                voxels[i] = 1;
             }
 
         }
@@ -109,84 +97,95 @@ public class Asteroid : MonoBehaviour
     
     void CreateMeshData()
     {
-        for (int i = voxels.Length; i > 0; i--)
+        trianglesBuffer = new ComputeBuffer(5 * voxelResolution * voxelResolution * voxelResolution, Triangle.SizeOf, ComputeBufferType.Append);
+        triangleCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
+        weightsBuffer = new ComputeBuffer(voxelResolution * voxelResolution * voxelResolution, sizeof(float));
+
+        GetComponent<MeshFilter>().mesh = GetComponent<MeshCollider>().sharedMesh = ConstructMesh(); 
+
+        trianglesBuffer.Release();
+        triangleCountBuffer.Release();
+        weightsBuffer.Release();
+    }
+
+    Mesh CreateMeshFromTriangles(Triangle[] triangles, bool insideOut = false)
+    {
+        Vector3[] vertices = new Vector3[triangles.Length * 3];
+        int[] indices = new int[triangles.Length * 3];
+        List<Vector2> uvs = new List<Vector2>();
+
+        if(insideOut)
         {
-            Vector3 position = ToPosition(i);
-            Voxel[] points = new Voxel[]
+            for (int i = 0; i < triangles.Length; i++) 
             {
-                    voxels[ToVoxelIndex(position + new Vector3(0,0,-1))],
-                    voxels[ToVoxelIndex(position +  new Vector3(-1, 0, -1))],
-                    voxels[ToVoxelIndex(position +  new Vector3(-1, 0, 0))],
-                    voxels[ToVoxelIndex(position)],
-                    voxels[ToVoxelIndex(position + new Vector3(0, -1, -1))],
-                    voxels[ToVoxelIndex(position + new Vector3(-1,-1,-1))],
-                    voxels[ToVoxelIndex(position + new Vector3(-1,-1, 0))],
-                    voxels[ToVoxelIndex(position + new Vector3(0, -1, 0))]
-            };
-            
-            int cubeIndex = Voxel.GetState(points, isoLevel);
-            int[] triangulation = MarchingCubesTables.triTable[cubeIndex];
-
-            Vector3[] triVerts = new Vector3[3];
-            int triIndex = 0;
-
-            foreach (int edgeIndex in triangulation)
+                int startIndex = i * 3; 
+                vertices[startIndex] = triangles[i].a * voxelSize;
+                vertices[startIndex + 1] = triangles[i].b * voxelSize;
+                vertices[startIndex + 2] = triangles[i].c * voxelSize; 
+                indices[startIndex] = startIndex;
+                indices[startIndex + 1] = startIndex + 1;
+                indices[startIndex + 2] = startIndex + 2;
+                uvs.AddRange(Voxel.GetUVs(triangles[i].a, triangles[i].b, triangles[i].c,voxelSize));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < triangles.Length; i++) 
             {
-                if (edgeIndex > -1)
-                {
-                    int a = MarchingCubesTables.edgeConnections[edgeIndex][0];
-                    int b = MarchingCubesTables.edgeConnections[edgeIndex][1];
-                    Vector3 vertexPos = Voxel.MidPoint(points[a], points[b]);
-                    verts.Add(vertexPos);
-                    tris.Add(buffer);
-
-                    if (triIndex == 0)
-                    {
-                        triVerts[0] = vertexPos;
-                        triIndex++;
-                    }
-                    else if(triIndex == 1)
-                    {
-                        triVerts[1] = vertexPos;
-                        triIndex++;
-                    }
-                    else if(triIndex == 2)
-                    {
-                        triVerts[2] = vertexPos;
-                        uvs.AddRange(Voxel.GetUVs(triVerts[0], triVerts[1], triVerts[2], voxelSize));
-                        triIndex = 0;
-                    }
-
-                    buffer++;
-                }
-                else
-                {
-                    break;
-                }
+                int startIndex = i * 3; 
+                vertices[startIndex] = triangles[i].c * voxelSize;
+                vertices[startIndex + 1] = triangles[i].b * voxelSize;
+                vertices[startIndex + 2] = triangles[i].a * voxelSize; 
+                indices[startIndex] = startIndex;
+                indices[startIndex + 1] = startIndex + 1;
+                indices[startIndex + 2] = startIndex + 2;
+                uvs.AddRange(Voxel.GetUVs(triangles[i].c, triangles[i].b, triangles[i].a,voxelSize));
             }
         }
 
+        Mesh mesh = new Mesh();
+        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        mesh.vertices = vertices;
+        mesh.triangles = indices;
+        mesh.uv = uvs.ToArray();
+        mesh.RecalculateNormals();
+        return mesh;
     }
 
+    Mesh ConstructMesh()
+    {
+        marchingShader.SetBuffer(0,"triangles", trianglesBuffer);
+        marchingShader.SetBuffer(0, "weights", weightsBuffer);
+        int[] chunkSize = {voxelResolution, voxelResolution, voxelResolution};
+        marchingShader.SetInts("chunkSize", chunkSize);
+        marchingShader.SetFloat("isoLevel", isoLevel);
+        marchingShader.SetInt("style", 2);
+        weightsBuffer.SetData(voxels);
+        trianglesBuffer.SetCounterValue(0);
+
+        marchingShader.Dispatch(0, voxelResolution / numThreads, voxelResolution / numThreads, voxelResolution / numThreads);
+        Triangle[] triangles = new Triangle[ReadTriangleCount()];
+        
+        trianglesBuffer.GetData(triangles);
+        return CreateMeshFromTriangles(triangles);
+    }
+
+    int ReadTriangleCount()
+    {
+        int[] triCount = {0};
+        ComputeBuffer.CopyCount(trianglesBuffer, triangleCountBuffer, 0);
+        triangleCountBuffer.GetData(triCount);
+        return triCount[0];
+    }
 
     bool BlocksGone()
     {
         for (int i = 0; i < voxelResolution * voxelResolution * voxelResolution; i++)
         {
-            if (voxels[i].value > isoLevel) return false;
+            if (voxels[i] > isoLevel) return false;
         }
 
         return true;
     }
 
-    void UpdateMesh()
-    {
-        mesh.Clear();
-        mesh.vertices = verts.ToArray();
-        mesh.triangles = tris.ToArray();
-        mesh.uv = uvs.ToArray();
-        mesh.RecalculateNormals();
-        mesh.RecalculateTangents();
-        GetComponent<MeshCollider>().sharedMesh = mesh;
-    }
 }

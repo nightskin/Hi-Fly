@@ -63,6 +63,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -84,9 +86,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &8545969406572668287
 MeshCollider:
@@ -122,7 +126,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 934fba810d33d28438b228a9793aeeaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isoLevel: 0.5
-  noiseScale: 0.01
-  voxelResolution: 10
-  voxelSize: 10
+  marchingShader: {fileID: 7200000, guid: 9ab3fbb793f659a4588ff48582bd9c74, type: 3}

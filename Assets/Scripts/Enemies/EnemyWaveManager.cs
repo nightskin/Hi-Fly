@@ -62,7 +62,7 @@ public class EnemyWaveManager : MonoBehaviour
     
     void FixedUpdate()
     {
-        if(!GameManager.Get().gameOver && !GameManager.Get().gamePaused)
+        if(GameManager.Get().state == GameManager.GameState.GAME_PLAY)
         {
             if (waveInProgress)
             {

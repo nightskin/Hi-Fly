@@ -55,8 +55,7 @@ public class PlayerShip : MonoBehaviour
     Vector2 reticlePosition = new Vector2(0.5f,0.5f);
     [SerializeField] LayerMask lockOnLayer;
     RaycastHit lockOn;
-
-    [HideInInspector] public List<HomingTarget> targets = new List<HomingTarget>();
+    
     float chargeAmount = 0;
     Lazer lazer = null;
 
@@ -74,6 +73,7 @@ public class PlayerShip : MonoBehaviour
         weaponText.text = equiped.ToString();
         if(!camera) camera = Camera.main;
     }
+    
     void FixedUpdate()
     {
         //Boosting
@@ -101,9 +101,10 @@ public class PlayerShip : MonoBehaviour
         }
 
     }
+    
     void Update()
     {
-        if (health.IsAlive() && !GameManager.Get().gamePaused)
+        if (health.IsAlive())
         {
             if(thrusting) ThrustControls();
             else StrafeControls();
@@ -191,18 +192,11 @@ public class PlayerShip : MonoBehaviour
             {
                 GameManager.Get().objectPool.Spawn("explosion", transform.position);
                 mesh.gameObject.SetActive(false);
-                GameManager.Get().gameOver = true;
+                GameManager.Get().state = GameManager.GameState.GAME_OVER;
                 justDied = true;
             }
 
         }
-    }
-
-    public void Teleport(Vector3 position)
-    {
-        controller.enabled = false;
-        transform.position = position;
-        controller.enabled = true;
     }
 
     void StrafeControls()
@@ -291,8 +285,6 @@ public class PlayerShip : MonoBehaviour
         GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
         if (obj)
         {
-            targets[0].ui.SetActive(false);
-            targets[0].followTarget = null;
             Bullet b = obj.GetComponent<Bullet>();
             b.owner = mesh.gameObject;
 

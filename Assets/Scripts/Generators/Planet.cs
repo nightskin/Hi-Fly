@@ -12,6 +12,7 @@ public class Planet : MonoBehaviour
     [HideInInspector] public float voxelSize = 10;
     [HideInInspector] public int voxelsPerChunk = 10;
     [HideInInspector] public float isoLevel = 0.5f;
+    [HideInInspector] public Vector2 offset;
 
     PlanetChunk[] chunks;
 
@@ -24,6 +25,7 @@ public class Planet : MonoBehaviour
     {
         landColor = Util.RandomColor();
         WaterColor = Util.RandomColor();
+        offset = new Vector2(transform.position.x, transform.position.z);
         int r = Random.Range(1, 4);
         radius = r * 100;
 

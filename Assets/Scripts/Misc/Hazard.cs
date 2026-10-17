@@ -49,18 +49,11 @@ public class Hazard : MonoBehaviour
                         HealthSystem health = hit.GetComponent<HealthSystem>();
                         if(health) health.TakeDamage(damage);
 
-                        if(health.IsDead())
-                        {
-                            GameManager.Get().gameOver = true;
-                        }
-
                     }
                     else if(hit.tag == "Enemy")
                     {
                         HealthSystem health = hit.GetComponent<HealthSystem>();
                         if(health) health.TakeDamage(damage);
-
-
                     }
                 }
             }
@@ -76,11 +69,6 @@ public class Hazard : MonoBehaviour
                     {
                         HealthSystem health = hit.GetComponent<HealthSystem>();
                         if (health) health.TakeDamage(damage);
-
-                        if (health.IsDead())
-                        {
-                            GameManager.Get().gameOver = true;
-                        }
                     }
                     else if (hit.tag == "Enemy")
                     {
@@ -100,11 +88,6 @@ public class Hazard : MonoBehaviour
             {
                 HealthSystem health = hit.GetComponent<HealthSystem>();
                 if (health) health.TakeDamage(damage);
-
-                if (health.IsDead())
-                {
-                    GameManager.Get().gameOver = true;
-                }
             }
             else if (hit.tag == "Enemy")
             {
@@ -122,11 +105,6 @@ public class Hazard : MonoBehaviour
             {
                 HealthSystem health = hit.transform.GetComponent<HealthSystem>();
                 if (health) health.TakeDamage(damage);
-
-                if (health.IsDead())
-                {
-                    GameManager.Get().gameOver = true;
-                }
             }
             else if (hit.transform.tag == "Enemy")
             {

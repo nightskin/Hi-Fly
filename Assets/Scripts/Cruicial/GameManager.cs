@@ -15,8 +15,14 @@ public class GameManager : MonoBehaviour
     public PlayerShip playerObject;
     public GameObject[] playerUIToHideOnPause;
 
-    [HideInInspector] public bool gameOver;
-    [HideInInspector] public bool gamePaused;
+
+    public enum GameState
+    {
+        GAME_PLAY,
+        GAME_PAUSED,
+        GAME_OVER,
+    }
+    public GameState state;
     [HideInInspector] public EventSystem eventSystem;
 
 
@@ -31,12 +37,9 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         if (!objectPool) objectPool = GameObject.Find("ObjectPool").GetComponent<ObjectPoolManager>();
+        if(!playerObject) playerObject = GameObject.Find("PlayerShip").GetComponent<PlayerShip>();
 
         instance = this;
-
-        gameOver = false;
-        gamePaused = false;
-
         eventSystem = GetComponent<EventSystem>();
 
     }
@@ -59,7 +62,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (gameOver)
+        if (state == GameState.GAME_OVER)
         {
             if (gameOverTimer > 0)
             {
@@ -83,7 +86,7 @@ public class GameManager : MonoBehaviour
 
     private void ChangeUISelectorToMouse_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(gamePaused || gameOver)
+        if(state != GameState.GAME_PLAY)
         {
             if (eventSystem.currentSelectedGameObject) eventSystem.SetSelectedGameObject(null);
         }
@@ -91,7 +94,7 @@ public class GameManager : MonoBehaviour
 
     private void ChangeUISelectorGamepad_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (gamePaused || gameOver)
+        if (state != GameState.GAME_PLAY)
         {
             if(eventSystem.currentSelectedGameObject == null)
             {
@@ -110,7 +113,7 @@ public class GameManager : MonoBehaviour
 
     private void UnPause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(gamePaused)
+        if(state == GameState.GAME_PAUSED)
         {
             Resume();
         }
@@ -118,16 +121,13 @@ public class GameManager : MonoBehaviour
 
     private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(!gameOver)
+        if(state == GameState.GAME_PAUSED)
         {
-            if (gamePaused)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
+            Resume();
+        }
+        else
+        {
+            Pause();
         }
     }
     
@@ -154,8 +154,8 @@ public class GameManager : MonoBehaviour
         }
         if (InputManager.controlScheme == InputManager.ControlScheme.GAMEPAD) eventSystem.SetSelectedGameObject(gamePauseSelectedObject);
         else eventSystem.SetSelectedGameObject(null);
-        gamePaused = true;
-        gamePauseMenu.SetActive(gamePaused);
+        state = GameState.GAME_PAUSED;
+        gamePauseMenu.SetActive(true);
     }
 
     public void Resume()
@@ -166,8 +166,8 @@ public class GameManager : MonoBehaviour
         {
             playerUI.SetActive(true);
         }
-        gamePaused = false;
-        gamePauseMenu.SetActive(gamePaused);
+        state = GameState.GAME_PLAY;
+        gamePauseMenu.SetActive(false);
     }
 
     public void Restart()
