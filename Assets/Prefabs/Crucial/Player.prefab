@@ -58,17 +58,15 @@ MonoBehaviour:
   mesh: {fileID: 3005499506416242416}
   controller: {fileID: 4931498280169647350}
   turnSpeed: 100
-  baseSpeed: 50
+  baseSpeed: 75
   boostSpeed: 200
   acceleration: 10
+  equiped: 1
   weaponText: {fileID: 8868392247206584818}
   reticle: {fileID: 6819837170954737498}
   lockOnLayer:
     serializedVersion: 2
     m_Bits: 64
-  baseFirePower: 3
-  lazerPower: 1
-  lazerSpeed: 0.01
 --- !u!143 &4931498280169647350
 CharacterController:
   m_ObjectHideFlags: 0
@@ -5625,8 +5623,7 @@ GameObject:
   - component: {fileID: 3005499506416242416}
   - component: {fileID: 4688361166219546697}
   - component: {fileID: 549130659815936929}
-  - component: {fileID: 4284513625792625550}
-  - component: {fileID: 8438953176287708885}
+  - component: {fileID: 7311037245192348862}
   - component: {fileID: 3187013315782404312}
   - component: {fileID: 4133934921912186936}
   m_Layer: 3
@@ -5716,105 +5713,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!82 &4284513625792625550
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8887224628787543330}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 84283317677fccd4b8387e052ce42723, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 3.005608
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!65 &8438953176287708885
-BoxCollider:
+--- !u!64 &7311037245192348862
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5831,9 +5731,10 @@ BoxCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.0123477, y: 0.7749239, z: 3.2279482}
-  m_Center: {x: 0.00067192316, y: -0.15167856, z: 0.693516}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5284991553290929056, guid: 0c5101443ff519545a845198d6f12cdf, type: 3}
 --- !u!54 &3187013315782404312
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5875,7 +5776,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthBar: {fileID: 8131623141203150216}
   text: {fileID: 8176406241209065248}
-  maxHP: 100
+  maxHP: 30
   hitMaterials:
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}

@@ -8,8 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Window
-  m_Shader: {fileID: -6465566751694194690, guid: 9131b2b1ddb035241a98871985339ee1,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 9131b2b1ddb035241a98871985339ee1, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -112,6 +111,7 @@ Material:
     - _Max: 1
     - _Metallic: 0
     - _Min: 0.3
+    - _NumberOfShades: 4
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -131,7 +131,7 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _DissolveColor: {r: 0, g: 64, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 0, g: 0, b: 0, a: 1}

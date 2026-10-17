@@ -163,11 +163,13 @@ MonoBehaviour:
   effect: {fileID: -2206290432636866133}
   health: {fileID: 7978833964992945737}
   shootThreshold: 0.25
-  perceptionRadius: 5
-  attackPower: 5
+  separationRadius: 10
   turnRate: 10
-  fireRate: 3
-  moveSpeed: 60
+  fireRate: 2
+  moveSpeed: 100
+  maxTurnTime: 7
+  minTurnTime: 1
+  isSmart: 1
 --- !u!114 &7978833964992945737
 MonoBehaviour:
   m_ObjectHideFlags: 0

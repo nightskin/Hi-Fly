@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
 public class EnemyShip : MonoBehaviour
 {
@@ -7,27 +7,30 @@ public class EnemyShip : MonoBehaviour
     [SerializeField] EnemyDissolveEffect effect;
     [SerializeField] HealthSystem health;
     [SerializeField][Range(0, 1)] float shootThreshold = 0.75f;
-    [SerializeField] float perceptionRadius = 20;
+    [SerializeField] float separationRadius = 5;
+
     [SerializeField] float turnRate = 10;
 
     [SerializeField] float fireRate = 1;
     [SerializeField] float moveSpeed = 75;
+    [SerializeField][Min(1)] float maxTurnTime = 7;
+    [SerializeField][Min(0)] float minTurnTime = 0;
 
-
-    bool isSmart;
     Vector3 direction;
     float shootTimer = 0;
-    float turnTimer;
+    float steerTimer;
+    float pauseTimer = 5;
 
     void OnEnable()
     {
-        isSmart = Util.RandomBool();
+        steerTimer = Random.Range(2.5f,10);
+        pauseTimer = Random.Range(2.5f,10);
         effect.enabled = true;
         health = GetComponent<HealthSystem>();
         health.Heal(health.MaxHP());
         //Set colors
-        GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", Util.RandomColor()); 
-        GetComponent<MeshRenderer>().materials[2].SetColor("_MainColor", Util.RandomColor()); 
+        GetComponent<MeshRenderer>().materials[0].SetColor("_Color", Util.RandomColor()); 
+        GetComponent<MeshRenderer>().materials[2].SetColor("_Color", Util.RandomColor()); 
     }
     
     void Update()
@@ -36,15 +39,34 @@ public class EnemyShip : MonoBehaviour
         {
             if (health.IsAlive())
             {
-                if (isSmart) Steer_Smart();
-                else Steer_Dumb();
+                if(steerTimer > 0)
+                {
+                    steerTimer -= Time.deltaTime;
+                    Steer();
+                }
+                else
+                {
+                    if(pauseTimer > 0)
+                    {
+                        pauseTimer -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        pauseTimer = Random.Range(2.5f,10);
+                        steerTimer = Random.Range(2.5f,10);
+                    }
+                }
+
+
+                transform.rotation = Quaternion.LookRotation(direction);
+                transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
                 shootTimer -= Time.deltaTime;
                 if (shootTimer <= 0 && !effect.enabled)
                 {
                     if (Vector3.Dot(GetDirectionTowardsTarget(), transform.forward) > shootThreshold)
                     {
-                        ShootShit();
+                        ShootAtStuff();
                     }
                 }
 
@@ -62,7 +84,7 @@ public class EnemyShip : MonoBehaviour
         if (other.tag == "Player")
         {
             HealthSystem playerHealth = other.GetComponent<HealthSystem>();
-            playerHealth.TakeDamage(10);
+            playerHealth.TakeDamage(2);
             if (playerHealth.IsDead())
             {
                 GameManager.Get().gameOver = true;
@@ -86,30 +108,12 @@ public class EnemyShip : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void Steer_Smart()
+    void Steer()
     {
-        direction = SteerTowardsTarget() + Seperation();
-        transform.rotation = Quaternion.LookRotation(direction);
-        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+        direction = Seperation() + SteerTowardsTarget(); 
     }
 
-    void Steer_Dumb()
-    {
-        if (turnTimer > 0)
-        {
-            turnTimer -= Time.deltaTime;
-        }
-        else
-        {
-            turnTimer = Random.Range(0, 5);
-            direction = GetDirectionTowardsTarget();
-        }
-
-        transform.rotation = Quaternion.LookRotation(Vector3.Lerp(transform.forward, direction, turnRate * Time.deltaTime));
-        transform.position += transform.forward * moveSpeed * Time.deltaTime;
-    }
-    
-    void ShootShit()
+    void ShootAtStuff()
     {
         if(Physics.Linecast(transform.position, GameManager.Get().playerObject.transform.position,out RaycastHit hit))
         {
@@ -145,22 +149,19 @@ public class EnemyShip : MonoBehaviour
 
     Vector3 Seperation()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, perceptionRadius);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, separationRadius);
         Vector3 steer = Vector3.zero;
         if (colliders.Length > 0)
         {
             foreach (Collider collider in colliders)
             {
-                if (Vector3.Dot(transform.forward, collider.transform.forward) >= shootThreshold)
+                if(Physics.Linecast(transform.position, collider.transform.position, out RaycastHit hit))
                 {
-                    if(Physics.Linecast(transform.position, collider.transform.position, out RaycastHit hit))
-                    {
-                        steer += hit.point;
-                    }
-                    else
-                    {
-                        steer += collider.transform.position;
-                    }
+                    steer += hit.point;
+                }
+                else
+                {
+                    steer += collider.transform.position;
                 }
             }
             steer /= colliders.Length;
@@ -168,5 +169,6 @@ public class EnemyShip : MonoBehaviour
         }
         return steer;
     }
+    
 
 }

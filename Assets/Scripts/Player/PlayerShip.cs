@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 public class HomingTarget
@@ -30,6 +31,7 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] Transform mesh;
     [SerializeField] CharacterController controller;
 
+    bool usingMouse = false;
     bool thrusting = true;
     float speed;
     float targetSpeed;
@@ -41,12 +43,12 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] float acceleration = 10;
 
     //For Shooting
+    public Weapon equiped = Weapon.BLASTER;
     public enum Weapon
     {
-        BLASTER,
         LAZER,
+        BLASTER,
     }
-    Weapon equipedWeapon = Weapon.BLASTER;
 
     [SerializeField] Text weaponText;
     [SerializeField] Image reticle;
@@ -58,23 +60,18 @@ public class PlayerShip : MonoBehaviour
     float chargeAmount = 0;
     Lazer lazer = null;
 
+    bool justDied;
+
     
     void Start()
     {
-
-        for (int i = 0; i < 7; i++)
-        {
-            var l = Instantiate(lockUI, hud);
-            l.gameObject.SetActive(false);
-            targets.Add(new HomingTarget(null, l));
-        }
-
+        justDied = false;
         Cursor.visible = false;
         mesh.GetComponent<MeshRenderer>().materials[0].SetColor("_MainColor", GameSettings.playerBodyColor);
         mesh.GetComponent<MeshRenderer>().materials[1].SetColor("_MainColor", GameSettings.playerStripeColor);
 
         targetSpeed = baseSpeed;
-        weaponText.text = equipedWeapon.ToString();
+        weaponText.text = equiped.ToString();
         if(!camera) camera = Camera.main;
     }
     void FixedUpdate()
@@ -134,18 +131,18 @@ public class PlayerShip : MonoBehaviour
             //Shooting
             if(InputManager.player.Shoot.WasPressedThisFrame())
             {
-                if (equipedWeapon == Weapon.BLASTER)
+                if (equiped == Weapon.BLASTER)
                 {
                     chargeEffect.gameObject.SetActive(true);
                 }
-                else if (equipedWeapon == Weapon.LAZER)
+                else if (equiped == Weapon.LAZER)
                 {
                     FireLazer();
                 }
             }
             else if(InputManager.player.Shoot.WasReleasedThisFrame())
             {
-                if (equipedWeapon == Weapon.LAZER)
+                if (equiped == Weapon.LAZER)
                 {
                     if (lazer)
                     {
@@ -153,86 +150,51 @@ public class PlayerShip : MonoBehaviour
                         lazer = null;
                     }
                 }
-                else if (equipedWeapon == Weapon.BLASTER)
+                else if (equiped == Weapon.BLASTER)
                 {
                     chargeEffect.gameObject.SetActive(false);
-                    if (GetActiveTargets() > 1)
-                    {
-                        FireMultiBlaster();
-                    }
-                    else
-                    {
-                        FireBlaster();
-                    }
+                    FireBlaster();
                 }
             }
 
             //Handles Lazer
-            if(InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.LAZER)
+            if(InputManager.player.Shoot.IsPressed() && equiped == Weapon.LAZER)
             {
                 UpdateLazer();
             }
             //Handles Blaster
-            else if(InputManager.player.Shoot.IsPressed() && equipedWeapon == Weapon.BLASTER)
+            else if(InputManager.player.Shoot.IsPressed() && equiped == Weapon.BLASTER)
             {
                 chargeAmount += Time.deltaTime;
-                for(int i = 0; i < targets.Count; i++)
-                {
-                    //add any new targets that have not already been added
-                    bool alreadyTargeted = false;
-                    for(int j = 0 ; j < targets.Count; j++)
-                    {
-                        if (targets[j].followTarget == lockOn.transform)
-                        {
-                            alreadyTargeted = true;
-                            break;
-                        }
-                    }
-
-                    if (!targets[i].ui.activeSelf && !alreadyTargeted)
-                    {
-                        targets[i].followTarget = lockOn.transform;
-                        targets[i].ui.SetActive(true);
-                    }
-
-                    //update targets on screen
-                    if (targets[i].followTarget && targets[i].ui.activeSelf)
-                    {
-                        Vector3 viewPortPos = Camera.main.WorldToViewportPoint(targets[i].followTarget.position);
-                        if(viewPortPos.x > 0 &&  viewPortPos.x < 1 && viewPortPos.y > 0 && viewPortPos.y < 1 && viewPortPos.z > 0)
-                        {
-                            targets[i].ui.transform.position = Camera.main.WorldToScreenPoint(targets[i].followTarget.position);
-                        }
-                        else
-                        {
-                            targets[i].followTarget = null;
-                            targets[i].ui.SetActive(false);
-                        }
-                    }
-                    else
-                    {
-                        targets[i].followTarget = null;
-                        targets[i].ui.SetActive(false);
-                    }
-            }
             }
 
             //Swapping Weapons
             if(InputManager.player.ToggleWeapon.WasPressedThisFrame())
             {
-                if(equipedWeapon == Weapon.BLASTER)
+                if(equiped == Weapon.BLASTER)
                 {
                     if(chargeEffect.gameObject.activeSelf) chargeEffect.gameObject.SetActive(false);
-                    equipedWeapon = Weapon.LAZER;
+                    equiped = Weapon.LAZER;
                 }
-                else if(equipedWeapon == Weapon.LAZER)
+                else if(equiped == Weapon.LAZER)
                 {
                     if(lazer) lazer.endFire = true;
-                    equipedWeapon = Weapon.BLASTER;
+                    equiped = Weapon.BLASTER;
                 }
 
-                weaponText.text = equipedWeapon.ToString();               
+                weaponText.text = equiped.ToString();               
             }
+        }
+        else
+        {
+            if(!justDied)
+            {
+                GameManager.Get().objectPool.Spawn("explosion", transform.position);
+                mesh.gameObject.SetActive(false);
+                GameManager.Get().gameOver = true;
+                justDied = true;
+            }
+
         }
     }
 
@@ -241,19 +203,6 @@ public class PlayerShip : MonoBehaviour
         controller.enabled = false;
         transform.position = position;
         controller.enabled = true;
-    }
-
-    int GetActiveTargets()
-    {
-        int i = 0;
-        foreach(HomingTarget target in targets)
-        {
-            if(target.ui.activeSelf)
-            {
-                i++;
-            }
-        }
-        return i;
     }
 
     void StrafeControls()
@@ -276,7 +225,7 @@ public class PlayerShip : MonoBehaviour
 
         //veering left and right
         float turnX = moveInput.x * -45;
-        mesh.localEulerAngles = new Vector3(0,0,turnX);
+        mesh.localEulerAngles = new Vector3(0,0, Mathf.LerpAngle(mesh.localEulerAngles.z,turnX, 10 * Time.deltaTime));
 
         //Aiming
         Vector2 lookXY = InputManager.player.Aim.ReadValue<Vector2>();
@@ -292,7 +241,7 @@ public class PlayerShip : MonoBehaviour
     
         //veering left and right
         float turnX = InputManager.player.Steer.ReadValue<Vector2>().x * -45;
-        mesh.localEulerAngles = new Vector3(0,0,turnX);
+        mesh.localEulerAngles = new Vector3(0,0,Mathf.LerpAngle(mesh.localEulerAngles.z,turnX, 10 * Time.deltaTime));
 
         //Steering
         Vector2 lookXY = InputManager.player.Steer.ReadValue<Vector2>();
@@ -301,13 +250,32 @@ public class PlayerShip : MonoBehaviour
         transform.rotation *= Quaternion.AngleAxis(lookXY.y * turnSpeed * Time.deltaTime, Vector3.right);
         transform.rotation *= Quaternion.AngleAxis(lookZ * turnSpeed * Time.deltaTime, Vector3.forward);
 
-        //Aiming
-        Vector2 aimInput = InputManager.player.Aim.ReadValue<Vector2>();
 
-        reticlePosition += aimInput * Time.deltaTime;
-        reticlePosition.x = Mathf.Clamp(reticlePosition.x,0,1);
-        reticlePosition.y = Mathf.Clamp(reticlePosition.y,0,1);
-        reticle.rectTransform.position = camera.ViewportToScreenPoint(reticlePosition);
+        if(Gamepad.current.rightStick.ReadValue().magnitude > 0)
+        {
+            usingMouse = false;
+        }
+        else if(Mouse.current.delta.ReadValue().magnitude > 0)
+        {
+            usingMouse = true;
+        }
+
+
+        //Aiming
+        if(usingMouse)
+        {
+            reticlePosition = Mouse.current.position.ReadValue();
+            reticle.rectTransform.position = reticlePosition;
+        }
+        else
+        {
+            Vector2 aimInput = InputManager.player.Aim.ReadValue<Vector2>();
+            reticlePosition += aimInput * Time.deltaTime;
+            reticlePosition.x = Mathf.Clamp(reticlePosition.x,0,1);
+            reticlePosition.y = Mathf.Clamp(reticlePosition.y,0,1);
+            reticle.rectTransform.position = camera.ViewportToScreenPoint(reticlePosition);
+        }
+
 
         //Center CrossHair
         if(InputManager.player.CenterCrossHair.WasPressedThisFrame())
@@ -340,7 +308,6 @@ public class PlayerShip : MonoBehaviour
             if (lockOn.collider)
             {
                 b.homingTarget = lockOn.collider.transform;
-                b.directHoming = true;
             }
             else
             {
@@ -365,36 +332,6 @@ public class PlayerShip : MonoBehaviour
         }
     }
     
-    void FireMultiBlaster()
-    {
-        for(int i = 0; i < targets.Count; i++)
-        {
-            if(targets[i].followTarget && targets[i].ui.activeSelf)
-            {
-                GameObject obj = GameManager.Get().objectPool.Spawn("bullet", bulletSpawn.position);
-                Bullet b = obj.GetComponent<Bullet>();
-                //Set Needed Variables
-                b.owner = mesh.gameObject;
-
-                if(chargeAmount >= 1)
-                {
-                    b.isPowerBomb = true;
-                }
-                else
-                {
-                    b.isPowerBomb = false;
-                }
-
-                b.direction = Random.insideUnitSphere.normalized;
-                b.homingTarget = targets[i].followTarget;
-                b.directHoming = false;
-                targets[i].followTarget = null;
-                targets[i].ui.SetActive(false);
-            }
-        }
-        chargeAmount = 0;
-    }
-
     void FireLazer()
     {
         if (!lazer)

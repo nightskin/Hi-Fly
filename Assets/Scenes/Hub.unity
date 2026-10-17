@@ -14,12 +14,12 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  m_FogMode: 3
-  m_FogDensity: 0.01
-  m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_Fog: 1
+  m_FogColor: {r: 0.5471698, g: 0.46199715, b: 1, a: 1}
+  m_FogMode: 1
+  m_FogDensity: 0.05
+  m_LinearFogStart: 100
+  m_LinearFogEnd: 10000
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
@@ -235,7 +235,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -446,7 +446,7 @@ MonoBehaviour:
   maxEnemies: 7
   infinite: 1
   enemiesInWave: 0
-  timeBeforeNextWave: 0
+  timeBeforeNextWave: 5
 --- !u!114 &4419068242589922780 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4419068241582400892, guid: 3502377a63101434aa59a6d9127fb3b5, type: 3}
@@ -521,14 +521,6 @@ PrefabInstance:
     - target: {fileID: 8131623141319018978, guid: f9a426b5fc9288e48bcdc4a92bb825db, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8977292426134536927, guid: f9a426b5fc9288e48bcdc4a92bb825db, type: 3}
-      propertyPath: lazerPower
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8977292426134536927, guid: f9a426b5fc9288e48bcdc4a92bb825db, type: 3}
-      propertyPath: baseFirePower
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

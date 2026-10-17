@@ -14,7 +14,6 @@ public class Bullet : MonoBehaviour
     public int power = 10;
     public float maxSpeed = 1000;
     public bool isPowerBomb = false;
-    public bool directHoming = true;
 
     //Physics Variables
     [HideInInspector] public Transform homingTarget = null;
@@ -54,18 +53,7 @@ public class Bullet : MonoBehaviour
             prevPosition = transform.position;
             if (homingTarget)
             {
-                if(directHoming)
-                {
-                    transform.position = Vector3.MoveTowards(transform.position, homingTarget.position, maxSpeed * Time.deltaTime);
-                }
-                else
-                {
-                    Vector3 targetDirection = (homingTarget.transform.position - transform.position).normalized;
-                    direction = Vector3.Lerp(direction, targetDirection, 20 * Time.deltaTime);
-                    transform.position += direction * maxSpeed * Time.deltaTime;
-                }
-
-
+                transform.position = Vector3.MoveTowards(transform.position, homingTarget.position, maxSpeed * Time.deltaTime);
             }
             else
             {
@@ -100,7 +88,7 @@ public class Bullet : MonoBehaviour
     {
         if(homingTarget)
         {
-            if(Vector3.Distance(homingTarget.transform.position, owner.transform.position) < 1)
+            if(Vector3.Distance(homingTarget.transform.position, transform.position) < 1)
             {
                 if(isPowerBomb) GameManager.Get().objectPool.Spawn("powerBomb", homingTarget.position);
                 else GameManager.Get().objectPool.Spawn("sparks", homingTarget.position);
@@ -109,8 +97,7 @@ public class Bullet : MonoBehaviour
                 hit = true;
             }
         }
-
-        if (Physics.Linecast(prevPosition, transform.position, out RaycastHit rayhit))
+        else if (Physics.Linecast(prevPosition, transform.position, out RaycastHit rayhit))
         {
             if (rayhit.transform.gameObject != owner)
             {
@@ -166,12 +153,6 @@ public class Bullet : MonoBehaviour
                     if (health)
                     {
                         health.TakeDamage(power);
-                        if (health.IsDead())
-                        {
-                            GameManager.Get().objectPool.Spawn("explosion", rayhit.point);
-                            rayhit.transform.gameObject.SetActive(false);
-                            GameManager.Get().gameOver = true;
-                        }
                     }
                     else
                     {

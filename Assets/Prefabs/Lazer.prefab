@@ -178,7 +178,7 @@ MonoBehaviour:
   damageInterval: 0.05
   colorChangeRate: 2
   owner: {fileID: 0}
-  damage: 15
+  damage: 2
   speed: 0.01
   direction: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}

@@ -124,6 +124,7 @@ Material:
     - _Max: 1
     - _Metallic: 0
     - _Min: 0.3
+    - _NumberOfShades: 6
     - _OcclusionStrength: 1
     - _Outline: -0.06
     - _OutlineWidth: 0.005

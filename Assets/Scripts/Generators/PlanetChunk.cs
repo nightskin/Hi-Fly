@@ -13,6 +13,7 @@ public class PlanetChunk : MonoBehaviour
     List<Vector3> verts = new List<Vector3>();
     List<int> tris = new List<int>();
     List<Color> colors = new List<Color>();
+    //List<Vector2> uvs = new List<Vector2>();
     int buffer = 0;
 
     public void Generate()
@@ -72,7 +73,7 @@ public class PlanetChunk : MonoBehaviour
             verts.Clear();
             tris.Clear();
             colors.Clear();
-
+            //uvs.Clear();
             CreateMeshData();
             UpdateMesh();
         }
@@ -107,7 +108,7 @@ public class PlanetChunk : MonoBehaviour
                 }
                 else
                 {
-                    voxels[i].color = Color.black;
+                    voxels[i].color = Color.gray1;
                 }
 
 
@@ -116,7 +117,7 @@ public class PlanetChunk : MonoBehaviour
                 if (index3d.x <= 0 || index3d.y <= 0 || index3d.z <= 0 || index3d.x >= planet.voxelsPerChunk - 1 || index3d.y >= planet.voxelsPerChunk - 1 || index3d.z >= planet.voxelsPerChunk - 1)
                 {
                     voxels[i].value = 0;
-                    voxels[i].color = Color.black;
+                    voxels[i].color = Color.gray1;
                 }
 
 
@@ -145,7 +146,9 @@ public class PlanetChunk : MonoBehaviour
 
             int cubeIndex = Voxel.GetState(points, planet.isoLevel);
             int[] triangulation = MarchingCubesTables.triTable[cubeIndex];
-
+            
+            //int triIndex = 0;
+            //Vector3[] triVerts = new Vector3[3];
             foreach (int edgeIndex in triangulation)
             {
                 if (edgeIndex > -1)
@@ -158,6 +161,24 @@ public class PlanetChunk : MonoBehaviour
 
                     verts.Add(vertexPos);
                     tris.Add(buffer);
+
+                    //if (triIndex == 0)
+                    //{
+                    //    triVerts[0] = vertexPos;
+                    //    triIndex++;
+                    //}
+                    //else if(triIndex == 1)
+                    //{
+                    //    triVerts[1] = vertexPos;
+                    //    triIndex++;
+                    //}
+                    //else if(triIndex == 2)
+                    //{
+                    //    triVerts[2] = vertexPos;
+                    //    uvs.AddRange(Voxel.GetUVs(triVerts[0], triVerts[1], triVerts[2], planet.voxelSize));
+                    //    triIndex = 0;
+                    //}
+
                     buffer++;
                 }
                 else
@@ -188,8 +209,8 @@ public class PlanetChunk : MonoBehaviour
         mesh.vertices = verts.ToArray();
         mesh.triangles = tris.ToArray();
         mesh.colors = colors.ToArray();
+        //mesh.uv = uvs.ToArray();
         mesh.RecalculateNormals();
-        mesh.RecalculateTangents();
         GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 }

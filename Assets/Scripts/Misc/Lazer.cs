@@ -10,7 +10,7 @@ public class Lazer : MonoBehaviour
     float colorChangeTimer = 0;
 
     [HideInInspector] public GameObject owner = null;
-    public int damage = 5;
+    public int power = 5;
     public float speed = 0.01f;
     [HideInInspector] public Vector3 direction;
     [HideInInspector] public Vector3 origin;
@@ -118,7 +118,7 @@ public class Lazer : MonoBehaviour
                     HealthSystem health = rayHit.transform.GetComponent<HealthSystem>();
                     if (health)
                     {
-                        health.TakeDamage(damage);
+                        health.TakeDamage(power);
                     }
                 }
                 else if (rayHit.transform.tag == "Player")
@@ -129,13 +129,7 @@ public class Lazer : MonoBehaviour
                         HealthSystem health = rayHit.transform.GetComponent<HealthSystem>();
                         if (health)
                         {
-                            health.TakeDamage(damage);
-                            if (health.IsDead())
-                            {
-                                GameManager.Get().objectPool.Spawn("explosion", rayHit.point);
-                                rayHit.transform.gameObject.SetActive(false);
-                                GameManager.Get().gameOver = true;
-                            }
+                            health.TakeDamage(power);
                         }
                     }
                 }

@@ -37,6 +37,16 @@
                     "priority": 0
                 },
                 {
+                    "name": "MousePosition",
+                    "type": "Button",
+                    "id": "d351877b-c2cd-4b36-80fd-3c6069994447",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
                     "name": "Boost",
                     "type": "Button",
                     "id": "511da5e6-3ba5-40d3-9072-0d9ee7aa1521",
@@ -177,11 +187,11 @@
                 },
                 {
                     "name": "",
-                    "id": "aa6dc2da-c0fd-47ae-80ea-eb39b50257da",
+                    "id": "43fb058a-ad62-47eb-999d-e9631f26a825",
                     "path": "<Mouse>/delta",
                     "interactions": "",
-                    "processors": "NormalizeVector2",
-                    "groups": "KeyboardMouse",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
                     "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -376,7 +386,7 @@
                 {
                     "name": "",
                     "id": "01e61a9e-3170-4877-a9f7-8e65595e9e24",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -436,6 +446,28 @@
                     "processors": "",
                     "groups": ";KeyboardMouse",
                     "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "083b347a-2d43-472c-b17a-0d8704879dde",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MousePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "af4315dc-aea6-4c14-b992-dcf09ed347b4",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "MousePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

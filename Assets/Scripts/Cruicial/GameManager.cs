@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     static GameManager instance;
     [SerializeField] GameObject gameOverSelectedObject;
     [SerializeField] GameObject gamePauseSelectedObject;
-        [SerializeField] GameObject gameOverMenu;
+    [SerializeField] GameObject gameOverMenu;
     [SerializeField] GameObject gamePauseMenu;
 
     public PlayerShip playerObject;
