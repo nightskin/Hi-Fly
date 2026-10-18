@@ -56,7 +56,7 @@ public class Galaxy : MonoBehaviour
             {
                 float y = noise.Evaluate(new Vector3(x, 0, z));
                 Vector3 quadrantPosition = new Vector3(x, y, z) * quadrantSize;
-                GalaxyQuadrant.QuadrantType t = (GalaxyQuadrant.QuadrantType)Random.Range(0,4);
+                GalaxyQuadrant.QuadrantType t = (GalaxyQuadrant.QuadrantType)Random.Range(0,5);
                 quadrants.Add(new GalaxyQuadrant(t, quadrantPosition));
             }
         }

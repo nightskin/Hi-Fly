@@ -8,8 +8,8 @@ public class Lazer : MonoBehaviour
     [HideInInspector] public GameObject owner = null;
     public int power = 5;
     public float speed = 0.01f;
-    [HideInInspector] public Vector3 direction;
     [HideInInspector] public Vector3 origin;
+    [HideInInspector] public Vector3 direction;
     [HideInInspector] public bool endFire;
 
     float damageTimer = 0;
@@ -28,15 +28,17 @@ public class Lazer : MonoBehaviour
 
     void Update()
     {
+        if(t < 1) t += speed * Time.fixedDeltaTime;
+        length = Mathf.Lerp(length, Camera.main.farClipPlane, t);
+        origin = owner.transform.position + owner.transform.forward;
+        renderer.SetPosition(0, origin);
+        renderer.SetPosition(1, origin + (direction * length));
+    }
+
+    void FixedUpdate()
+    {
         if (GameManager.Get().state == GameManager.GameState.GAME_PLAY)
         {
-            if(t < 1) t += speed * Time.deltaTime;
-            length = Mathf.Lerp(length, Camera.main.farClipPlane, t);
-            origin = owner.transform.position + owner.transform.forward;
-            renderer.SetPosition(0, origin);
-            renderer.SetPosition(1, origin + (direction * length));
-            
-
             if(endFire)
             {
                 renderer.startWidth = Mathf.Lerp(renderer.startWidth, 0, 10 * Time.fixedDeltaTime);
@@ -50,7 +52,6 @@ public class Lazer : MonoBehaviour
             {
                 CheckCollisions();
             }
-
         }
     }
     
@@ -70,19 +71,19 @@ public class Lazer : MonoBehaviour
                     }
                     else
                     {
-                        damageTimer -= Time.deltaTime;
+                        damageTimer -= Time.fixedDeltaTime;
                     }
 
                     Asteroid asteroid = rayHit.transform.GetComponent<Asteroid>();
                     if (asteroid)
                     {
-                        asteroid.RemoveBlock(rayHit);
+                        asteroid.Teraform(rayHit);
                     }
 
-                    PlanetChunk planet = rayHit.transform.GetComponent<PlanetChunk>();
+                    Planet planet = rayHit.transform.GetComponent<Planet>();
                     if(planet)
                     {
-                        planet.RemoveBlock(rayHit);
+                        planet.Teraform(rayHit);
                     }
 
                     TerrainChunk terrain = rayHit.transform.GetComponent<TerrainChunk>();
@@ -105,7 +106,7 @@ public class Lazer : MonoBehaviour
                     }
                     else
                     {
-                        damageTimer -= Time.deltaTime;
+                        damageTimer -= Time.fixedDeltaTime;
                     }
                 }
             }

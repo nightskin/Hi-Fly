@@ -360,8 +360,7 @@ MonoBehaviour:
   - {fileID: 5354048514735399070}
   - {fileID: 6746547045096005958}
   - {fileID: 5306602009139378553}
-  gameOver: 0
-  gamePaused: 0
+  state: 0
   eventSystem: {fileID: 0}
 --- !u!114 &304843103665490286
 MonoBehaviour:
@@ -1633,7 +1632,7 @@ MonoBehaviour:
     size: 500
   - name: lazer
     prefab: {fileID: 1705485599940711468, guid: 6d0433dce1a5bd84ea968671a6497b59, type: 3}
-    size: 100
+    size: 50
   - name: explosion
     prefab: {fileID: 279913065598733499, guid: f9e0b7f63787b4f45960fd1168d67997, type: 3}
     size: 500

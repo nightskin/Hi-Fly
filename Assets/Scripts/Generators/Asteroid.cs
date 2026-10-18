@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof (MeshCollider))]
 public class Asteroid : MonoBehaviour
 {
-    float[] voxels = null;
+    float[] voxels;
     float isoLevel = 0;
     float radius;
 
@@ -20,32 +20,19 @@ public class Asteroid : MonoBehaviour
     ComputeBuffer triangleCountBuffer;
     ComputeBuffer weightsBuffer;
 
-    int ToVoxelIndex(Vector3 position)
-    {
-        return ((int)(position.x / voxelSize)) + ((int)(position.y / voxelSize)  * voxelResolution) + ((int)(position.z / voxelSize) * voxelResolution * voxelResolution);
-    }
-
-    Vector3 ToPosition(int i)
-    {
-        int x  = i % voxelResolution;
-        int y = i / voxelResolution % voxelResolution;
-        int z = i / voxelResolution / voxelResolution % voxelResolution;
-        return new Vector3(x,y,z) * voxelSize;
-    }
-    
     void Start()
     {
         CreateVoxelData();
         CreateMeshData();
     }
     
-    public void RemoveBlock(RaycastHit hit)
+    public void Teraform(RaycastHit hit)
     {
         Vector3 pos = transform.InverseTransformPoint(hit.point);
         pos.x = Mathf.Round(pos.x / voxelSize) * voxelSize;
         pos.y = Mathf.Round(pos.y / voxelSize) * voxelSize;
         pos.z = Mathf.Round(pos.z / voxelSize) * voxelSize;
-        int i = ToVoxelIndex(pos);
+        int i = Voxel.PositionToIndex(pos,voxelResolution,voxelSize);
         
         //If voxel is already deactivated check the next one
         if(voxels[i] <= isoLevel)
@@ -54,13 +41,13 @@ public class Asteroid : MonoBehaviour
             pos.x = Mathf.Round(pos.x / voxelSize) * voxelSize;
             pos.y = Mathf.Round(pos.y / voxelSize) * voxelSize;
             pos.z = Mathf.Round(pos.z / voxelSize) * voxelSize; 
-            i = ToVoxelIndex(pos);
+            i = Voxel.PositionToIndex(pos,voxelResolution,voxelSize);
 
-            voxels[i] -= 20 * Time.deltaTime;
+            voxels[i] -= 15 * Time.deltaTime;
         }
         else
         {
-            voxels[i] -= 20 * Time.deltaTime;
+            voxels[i] -= 15 * Time.deltaTime;
         }
 
         
@@ -75,17 +62,52 @@ public class Asteroid : MonoBehaviour
         }
     }
     
+    public void RemoveBlock(RaycastHit hit)
+    {
+        Vector3 pos = transform.InverseTransformPoint(hit.point);
+        pos.x = Mathf.Round(pos.x / voxelSize) * voxelSize;
+        pos.y = Mathf.Round(pos.y / voxelSize) * voxelSize;
+        pos.z = Mathf.Round(pos.z / voxelSize) * voxelSize;
+        int i = Voxel.PositionToIndex(pos,voxelResolution,voxelSize);
+        
+        //If voxel is already deactivated check the next one
+        if(voxels[i] <= isoLevel)
+        {
+            pos = transform.InverseTransformPoint(hit.point - (hit.normal * voxelSize / 2));
+            pos.x = Mathf.Round(pos.x / voxelSize) * voxelSize;
+            pos.y = Mathf.Round(pos.y / voxelSize) * voxelSize;
+            pos.z = Mathf.Round(pos.z / voxelSize) * voxelSize; 
+            i = Voxel.PositionToIndex(pos,voxelResolution,voxelSize);
+            voxels[i] = -1;
+        }
+        else
+        {
+            voxels[i] = -1;
+        }
+
+        
+        
+        if (GetComponent<MeshFilter>().mesh.vertexCount == 0)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            CreateMeshData();
+        }
+    }
+
     void CreateVoxelData()
     {
         radius = Random.Range(voxelSize * (voxelResolution - 1) / 4, voxelSize * (voxelResolution - 1) / 2);
         voxels = new float[(int)Mathf.Pow(voxelResolution, 3)];
         for (int i = 0; i < voxels.Length; i++)
         {
-            Vector3 position = ToPosition(i);
+            Vector3 position = Voxel.IndexToPosition(i,voxelResolution,voxelSize);
             float distanceFromCenter = Vector3.Distance(transform.position + (Vector3.one * radius), transform.position + position);
             if (distanceFromCenter > radius)
             {
-                voxels[i] = 0;
+                voxels[i] = -1;
             }
             else
             {
@@ -177,15 +199,5 @@ public class Asteroid : MonoBehaviour
         triangleCountBuffer.GetData(triCount);
         return triCount[0];
     }
-
-    bool BlocksGone()
-    {
-        for (int i = 0; i < voxelResolution * voxelResolution * voxelResolution; i++)
-        {
-            if (voxels[i] > isoLevel) return false;
-        }
-
-        return true;
-    }
-
+    
 }

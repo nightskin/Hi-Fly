@@ -9,8 +9,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] AudioClip shootSound;
 
     // Bullet Atttributes
-    public float intensity = 2.0f;
-    public float lifetime = 5;
+    public float max_lifetime = 5;
     public int power = 10;
     public float maxSpeed = 1000;
     public bool isPowerBomb = false;
@@ -22,7 +21,7 @@ public class Bullet : MonoBehaviour
 
     Vector3 prevPosition;
     bool hit;
-    float life = 0;
+    float lifetime = 0;
 
     void Start()
     {
@@ -37,7 +36,7 @@ public class Bullet : MonoBehaviour
         sfx.Play();
         trail.emitting = true;
         prevPosition = transform.position;
-        life = lifetime;
+        lifetime = max_lifetime;
     }
     void OnDisable()
     {
@@ -74,9 +73,9 @@ public class Bullet : MonoBehaviour
             }
 
             //Destroy Bullet After A Certain Time has Past
-            if (life > 0)
+            if (lifetime > 0)
             {
-                life -= Time.deltaTime;
+                lifetime -= Time.deltaTime;
             }
             else
             {
@@ -111,7 +110,7 @@ public class Bullet : MonoBehaviour
                     {
                         asteroid.RemoveBlock(rayhit);
                     }
-                    PlanetChunk planet = rayhit.transform.GetComponent<PlanetChunk>();
+                    Planet planet = rayhit.transform.GetComponent<Planet>();
                     if(planet)
                     {
                         planet.RemoveBlock(rayhit);
@@ -149,7 +148,7 @@ public class Bullet : MonoBehaviour
                 {
                     homingTarget = null;
                     owner = null;
-                    life = lifetime;
+                    lifetime = max_lifetime;
                     direction = Vector3.Reflect(direction, rayhit.normal);
                 }
             }

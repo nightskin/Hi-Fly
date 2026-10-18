@@ -166,22 +166,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1617af0ba40f57145943bdd0ffc9a6dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colors:
-  - {r: 2.9960785, g: 0, b: 0, a: 1}
-  - {r: 2.9960785, g: 0.37450984, b: 0, a: 1}
-  - {r: 4, g: 4, b: 0, a: 1}
-  - {r: 0, g: 4, b: 0, a: 1}
-  - {r: 0, g: 4, b: 4, a: 1}
-  - {r: 0, g: 0, b: 4, a: 1}
-  - {r: 4, g: 0, b: 4, a: 1}
   renderer: {fileID: 7468776964873725496}
   damageInterval: 0.05
-  colorChangeRate: 2
   owner: {fileID: 0}
-  damage: 2
+  power: 1
   speed: 0.01
-  direction: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}
+  direction: {x: 0, y: 0, z: 0}
   endFire: 0
 --- !u!82 &983199469248207979
 AudioSource:
