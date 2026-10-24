@@ -521,7 +521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthBar: {fileID: 5723904956434191022}
   text: {fileID: 5678580862339549190}
-  maxHP: 30
+  maxHP: 100
   hitMaterials:
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
   - {fileID: 2100000, guid: 1d0ca21e68e09724b951cdeeebbe4bce, type: 2}
